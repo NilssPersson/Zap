@@ -5,7 +5,7 @@ import Home from './pages/Home'
 
 function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[url('/assets/bg-mobile.svg')] md:bg-[url('/assets/bg-desktop.svg')] bg-cover bg-no-repeat bg-center">
       <Header />
       <main>
         <Routes>
