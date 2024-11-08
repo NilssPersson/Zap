@@ -2,27 +2,29 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function Phomescreen() {
-    return (
-      <div className="h-screen flex flex-col">
-        {/* Top section with the heading */}
-        <header className="flex items-center justify-center py-4"> 
-          <h1 className="text-7xl font-bold font-display">GameShack</h1>
-        </header>
-  
-        {/* Centered Input and Button section */}
-        <div className="flex flex-col items-center justify-start mt-12 w-1/2 mx-auto space-y-8"> 
-          <h2 className="text-4xl font-bold font-display">Enter a room!</h2>
-          <Input
-            type="email"
-            placeholder="Enter code"
-            className="text-center bg-[#FFFFFF] font-display text-3xl"
-          />
-          <Button className="bg-[#00FF9C] text-5xl text-black hover:bg-[#86D293] py-12 px-16 font-display">
-            Join
-          </Button>
-        </div>
+  return (
+    <div className="h-screen flex flex-col items-center justify-center">
+      {/* Top section with the heading */}
+      <header className="flex items-center justify-center py-4">
+        <h1 className="text-8xl font-bold font-display">GameShack</h1>
+      </header>
+
+      {/* Centered Input and Button section */}
+      <div className="bg-[#fefefe] border border-gray-300 rounded-2xl flex flex-col items-center justify-start mt-16 w-1/2 mx-auto space-y-8 py-12 px-8 shadow-lg">
+        
+        
+        <Input
+          type="email"
+          placeholder="Enter code"
+          className="text-center bg-white border border-gray-300 rounded-md font-display text-2xl py-4 px-6 w-full shadow-lg"
+        />
+        
+        <Button className="bg-[#333333] text-2xl text-[#fefefe] hover:bg-[#86D293] py-4 px-6 font-display w-full shadow-lg">
+          Join
+        </Button>
       </div>
-    );
+    </div>
+  );
 }
 
 export default Phomescreen;
