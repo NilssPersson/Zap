@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import About from "./pages/About";
 import Home from "./pages/Home";
 import RoomTest from "./pages/RoomTest";
+import Phomescreen from "./pages/phone/Phomescreen";
 import { KindeProvider } from "@kinde-oss/kinde-auth-react";
 import Builder from "./pages/Builder";
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/builder" element={<Builder />} />
             <Route path="/room-test" element={<RoomTest />} />
+            <Route path="/home" element= {<Phomescreen/>} />
           </Routes>
         </KindeProvider>
       </main>
