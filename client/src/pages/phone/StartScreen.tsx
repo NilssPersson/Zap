@@ -22,7 +22,7 @@ function StartScreen() {
       setErrorMessage("Missing")
       setDrawerOpen(true); // Open drawer if codeValue is missing
     } else if (codeValue === "invalid") {
-      console.log("Add logic to check if code is valid")
+      //console.log("Add logic to check if code is valid")
       setErrorMessage("Invalid")
       setDrawerOpen(true)
       }
