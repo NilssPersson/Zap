@@ -8,7 +8,7 @@ function useGetAuthenticatedUser() {
   const [dbUser, setDbUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || dbUser) return;
 
     const { id } = user;
 
@@ -28,7 +28,7 @@ function useGetAuthenticatedUser() {
     };
 
     fetchUser(id);
-  }, [user]);
+  }, [user, dbUser]);
 
   return { user: dbUser };
 }
