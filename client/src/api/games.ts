@@ -1,6 +1,5 @@
 import { ApiResponse, BaseAPI } from "./base";
 import Game from "@/models/Game";
-import supabase from "./client";
 class GameAPI extends BaseAPI<Game> {
   constructor() {
     super("Game");
@@ -8,7 +7,7 @@ class GameAPI extends BaseAPI<Game> {
 
   // Add game-specific methods here
   async getByUserId(userId: string): Promise<ApiResponse<Game[]>> {
-    const { data, error } = await supabase
+    const { data, error } = await this.client
       .from(this.tableName)
       .select("*")
       .eq("userId", userId);

@@ -1,8 +1,20 @@
+import { Button } from "@/components/ui/button";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+import { WiggleText } from "@/components/WiggleText";
+
 function Home() {
+    const { login, register } = useKindeAuth();
+
     return (
-        <div className="container px-4 py-6">
-        <h1 className="text-2xl font-bold mb-4">Home Page</h1>
-        <p className="text-gray-600">Welcome to our website!</p>
+        <div className="flex-1 flex flex-col items-center justify-center">
+            <WiggleText 
+                text="GameShack" 
+                className="text-7xl font-bold font-display mb-16 fancy-wrap"
+            />
+            <div className="flex flex-col gap-4">
+                <Button className="font-display text-3xl outline outline-3" size="lg" onClick={() => login()}>Login</Button>
+                <Button className="font-display text-3xl outline outline-3" size="lg" onClick={() => register()}>Register</Button>
+            </div>
         </div>
     )
 }
