@@ -4,14 +4,14 @@ import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useGetGames } from "@/hooks/useGames";
+import { useGames } from "@/hooks/useGames";
 import { toast } from "sonner"; // Assuming you're using sonner for notifications
 
 function Builder() {
     const { user } = useGetAuthenticatedUser();
     const [gameName, setGameName] = useState("");
     const [isOpen, setIsOpen] = useState(false);
-    const { games, optimisticCreate, optimisticDelete } = useGetGames();
+    const { resources: games, optimisticCreate, optimisticDelete } = useGames();
 
     const handleCreateGame = async () => {
         if (!gameName.trim() || !user) return;
