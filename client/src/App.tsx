@@ -9,7 +9,7 @@ function App() {
         <KindeProvider
           clientId="7b50afa95aec4cba88bad0abb4b94dfa"
           domain="https://gameshack.kinde.com"
-          redirectUri="http://localhost:5173/builder"
+          redirectUri="http://localhost:5173"
           logoutUri="http://localhost:5173"
         >
           <Header />

@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { HousePlug } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 export function Header() {
+  const location = useLocation()
+
   return (
     <header className="bg-black/20 hidden md:block">
       <div className="container flex h-16 items-center px-4">
@@ -14,10 +16,20 @@ export function Header() {
             </Link>
             <div className="flex items-center font-display">
               <Link to="/">
-                <Button variant="ghost" className="text-lg">Home</Button>
+                <Button 
+                  variant={location.pathname === "/" ? "default" : "ghost"} 
+                  className="text-lg"
+                >
+                  Home
+                </Button>
               </Link>
               <Link to="/about">
-                <Button variant="ghost" className="text-lg">About</Button>
+                <Button 
+                  variant={location.pathname === "/about" ? "default" : "ghost"} 
+                  className="text-lg"
+                >
+                  About
+                </Button>
               </Link>
             </div>
           </nav>
