@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { useKindeAuth } from "@kinde-oss/kinde-auth-react"
 import { HousePlug } from "lucide-react"
 import { Link } from "react-router-dom"
 
 export function Header() {
-  const { login, logout, register, isAuthenticated } = useKindeAuth() 
   return (
     <header className="bg-black/20 hidden md:block">
       <div className="container flex h-16 items-center px-4">
@@ -21,16 +19,6 @@ export function Header() {
               <Link to="/about">
                 <Button variant="ghost" className="text-lg">About</Button>
               </Link>
-            </div>
-            <div className="ml-auto flex items-center gap-2">
-              {isAuthenticated ? (
-                <Button onClick={logout} type="button">Logout</Button>
-              ) : (
-                <>
-                  <Button onClick={() => register()} type="button" variant="outline">Register</Button>
-                  <Button onClick={() => login()} type="button" variant="outline">Login</Button>
-                </>
-              )}
             </div>
           </nav>
         </div>
