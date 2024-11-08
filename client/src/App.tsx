@@ -1,6 +1,7 @@
 import { KindeProvider } from "@kinde-oss/kinde-auth-react";
 import { Header } from "./components/Header";
 import { AppRoutes } from "./routes/AppRoutes";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         >
           <Header />
           <AppRoutes />
+          <Toaster />
         </KindeProvider>
       </main>
     </div>
