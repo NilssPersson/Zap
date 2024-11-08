@@ -1,24 +1,19 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { useGames } from "@/hooks/useGames";
-import { toast } from "sonner"; // Assuming you're using sonner for notifications
-import { Plus } from "lucide-react";
+import { toast } from "sonner";
+import CreateGamePopover from "@/components/games/CreateGamePopover";
+import GameList from "@/components/games/GameList";
 
 function Builder() {
     const { user } = useGetAuthenticatedUser();
-    const [gameName, setGameName] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
     const { resources: games, optimisticCreate, optimisticDelete } = useGames();
 
-    const handleCreateGame = async () => {
-        if (!gameName.trim() || !user) return;
+    const handleCreateGame = async (name: string) => {
+        if (!user) return;
 
         const { error } = await optimisticCreate({
-            name: gameName,
+            name,
             userId: user.id
         });
 
@@ -27,8 +22,6 @@ function Builder() {
             return;
         }
 
-        setGameName("");
-        setIsOpen(false);
         toast.success("Game created successfully");
     };
 
@@ -49,50 +42,14 @@ function Builder() {
                 <CardHeader>
                     <CardTitle className="flex justify-between items-center">
                         <span>My Games</span>
-                        <div className="flex flex-col gap-4">
-                            <Popover open={isOpen} onOpenChange={setIsOpen}>
-                                <PopoverTrigger asChild>
-                                    <Button>
-                                        <span className="flex items-center gap-2">
-                                            Create Game
-                                            <Plus />
-                                        </span>
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-80">
-                                    <div className="flex flex-col gap-4">
-                                        <Input
-                                            placeholder="Game name"
-                                            value={gameName}
-                                            onChange={(e) => setGameName(e.target.value)}
-                                        />
-                                        <Button onClick={handleCreateGame}>
-                                            <span className="flex items-center gap-2">
-                                                Create <Plus />
-                                            </span>
-                                        </Button>
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
-                        </div>
+                        <CreateGamePopover onCreateGame={handleCreateGame} />
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-
-                    <div className="mt-4 space-y-2">
-                        {games.map((game) => (
-                            <div key={game.id} className="flex items-center justify-between p-2 border rounded">
-                                <span>{game.name}</span>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => handleDeleteGame(game.id)}
-                                >
-                                    Delete
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
+                    <GameList 
+                        games={games}
+                        onDeleteGame={handleDeleteGame}
+                    />
                 </CardContent>
             </Card>
         </div>
