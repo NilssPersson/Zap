@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useGames } from "@/hooks/useGames";
 import { toast } from "sonner"; // Assuming you're using sonner for notifications
+import { Plus } from "lucide-react";
 
 function Builder() {
     const { user } = useGetAuthenticatedUser();
@@ -15,10 +16,10 @@ function Builder() {
 
     const handleCreateGame = async () => {
         if (!gameName.trim() || !user) return;
-        
-        const { error } = await optimisticCreate({ 
-            name: gameName, 
-            userId: user.id 
+
+        const { error } = await optimisticCreate({
+            name: gameName,
+            userId: user.id
         });
 
         if (error) {
@@ -33,7 +34,7 @@ function Builder() {
 
     const handleDeleteGame = async (gameId: string) => {
         const { error } = await optimisticDelete(gameId);
-        
+
         if (error) {
             toast.error("Failed to delete game");
             return;
@@ -46,32 +47,44 @@ function Builder() {
         <div className="flex-1 flex flex-col items-center justify-center">
             <Card className="w-full max-w-7xl">
                 <CardHeader>
-                    <CardTitle>My Games</CardTitle>
+                    <CardTitle className="flex justify-between items-center">
+                        <span>My Games</span>
+                        <div className="flex flex-col gap-4">
+                            <Popover open={isOpen} onOpenChange={setIsOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button>
+                                        <span className="flex items-center gap-2">
+                                            Create Game
+                                            <Plus />
+                                        </span>
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-80">
+                                    <div className="flex flex-col gap-4">
+                                        <Input
+                                            placeholder="Game name"
+                                            value={gameName}
+                                            onChange={(e) => setGameName(e.target.value)}
+                                        />
+                                        <Button onClick={handleCreateGame}>
+                                            <span className="flex items-center gap-2">
+                                                Create <Plus />
+                                            </span>
+                                        </Button>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex flex-col gap-4">
-                        <Popover open={isOpen} onOpenChange={setIsOpen}>
-                            <PopoverTrigger asChild>
-                                <Button>Create Game</Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-80">
-                                <div className="flex flex-col gap-4">
-                                    <Input
-                                        placeholder="Game name"
-                                        value={gameName}
-                                        onChange={(e) => setGameName(e.target.value)}
-                                    />
-                                    <Button onClick={handleCreateGame}>Create</Button>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                    </div>
+
                     <div className="mt-4 space-y-2">
                         {games.map((game) => (
                             <div key={game.id} className="flex items-center justify-between p-2 border rounded">
                                 <span>{game.name}</span>
-                                <Button 
-                                    variant="destructive" 
+                                <Button
+                                    variant="destructive"
                                     size="sm"
                                     onClick={() => handleDeleteGame(game.id)}
                                 >
