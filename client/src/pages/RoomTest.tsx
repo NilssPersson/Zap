@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient";
+import supabase from "@/api/client";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
