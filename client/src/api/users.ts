@@ -1,5 +1,4 @@
-import { PostgrestError } from "@supabase/supabase-js";
-import { BaseAPI } from "./base";
+import { ApiResponse, BaseAPI } from "./base";
 import User from "@/models/User";
 
 class UserAPI extends BaseAPI<User> {
@@ -7,7 +6,7 @@ class UserAPI extends BaseAPI<User> {
     super("User");
   }
 
-  async findOrCreate(id: string, email: string): Promise<{ data: User | null; error: PostgrestError | null }> {
+  async findOrCreate(id: string, email: string): Promise<ApiResponse<User>> {
     // First try to find the user
     const { data: existingUser, error: fetchError } = await this.getById(id);
 
