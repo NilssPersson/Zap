@@ -4,18 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-interface CreateGamePopoverProps {
-    onCreateGame: (name: string) => Promise<void>;
+interface CreateQuizPopoverProps {
+    onCreateQuiz: (name: string) => Promise<void>;
 }
 
-function CreateGamePopover({ onCreateGame }: CreateGamePopoverProps) {
-    const [gameName, setGameName] = useState("");
+function CreateQuizPopover({ onCreateQuiz }: CreateQuizPopoverProps) {
+    const [quizName, setQuizName] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
     const handleCreate = async () => {
-        if (!gameName.trim()) return;
-        await onCreateGame(gameName);
-        setGameName("");
+        if (!quizName.trim()) return;
+        await onCreateQuiz(quizName);
+        setQuizName("");
         setIsOpen(false);
     };
 
@@ -24,7 +24,7 @@ function CreateGamePopover({ onCreateGame }: CreateGamePopoverProps) {
             <PopoverTrigger asChild>
                 <Button>
                     <span className="flex items-center gap-2">
-                        Create Game
+                        Create Quiz
                         <Plus />
                     </span>
                 </Button>
@@ -32,9 +32,9 @@ function CreateGamePopover({ onCreateGame }: CreateGamePopoverProps) {
             <PopoverContent className="w-80">
                 <div className="flex flex-col gap-4">
                     <Input
-                        placeholder="Game name"
-                        value={gameName}
-                        onChange={(e) => setGameName(e.target.value)}
+                        placeholder="Quiz name"
+                        value={quizName}
+                        onChange={(e) => setQuizName(e.target.value)}
                     />
                     <Button onClick={handleCreate}>
                         <span className="flex items-center gap-2">
@@ -47,4 +47,4 @@ function CreateGamePopover({ onCreateGame }: CreateGamePopoverProps) {
     );
 }
 
-export default CreateGamePopover; 
+export default CreateQuizPopover; 

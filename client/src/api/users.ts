@@ -22,8 +22,7 @@ class UserAPI extends BaseAPI<User> {
     return await this.create({
       id,
       email,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     });
   }
 }

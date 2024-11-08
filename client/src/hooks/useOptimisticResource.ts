@@ -4,9 +4,8 @@ import useGetAuthenticatedUser from "./useGetAuthenticatedUser";
 
 interface BaseModel {
   id: string;
-  createdAt: string;
-  updatedAt: string;
-  userId?: string;
+  created_at: string;
+  user_id?: string;
 }
 
 interface UseOptimisticResourceOptions<T> {
@@ -48,8 +47,7 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       const optimisticResource = {
         id: tempId,
         ...newResource,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       } as T;
 
       setResources(prev => [...prev, optimisticResource]);

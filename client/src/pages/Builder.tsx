@@ -1,39 +1,39 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
-import { useGames } from "@/hooks/useGames";
+import { useQuizzes } from "@/hooks/useQuizzes";
 import { toast } from "sonner";
-import CreateGamePopover from "@/components/games/CreateGamePopover";
-import GameList from "@/components/games/GameList";
+import CreateQuizPopover from "@/components/quizzes/CreateQuizPopover";
+import QuizList from "@/components/quizzes/QuizList";
 
 function Builder() {
     const { user } = useGetAuthenticatedUser();
-    const { resources: games, optimisticCreate, optimisticDelete } = useGames();
+    const { resources: quizzes, optimisticCreate, optimisticDelete } = useQuizzes();
 
-    const handleCreateGame = async (name: string) => {
+    const handleCreateQuiz = async (name: string) => {
         if (!user) return;
 
         const { error } = await optimisticCreate({
-            name,
-            userId: user.id
+            quiz_name: name,
+            user_id: user.id
         });
 
         if (error) {
-            toast.error("Failed to create game");
+            toast.error("Failed to create quiz");
             return;
         }
 
-        toast.success("Game created successfully");
+        toast.success("Quiz created successfully");
     };
 
-    const handleDeleteGame = async (gameId: string) => {
-        const { error } = await optimisticDelete(gameId);
+    const handleDeleteQuiz = async (quizId: string) => {
+        const { error } = await optimisticDelete(quizId);
 
         if (error) {
-            toast.error("Failed to delete game");
+            toast.error("Failed to delete quiz");
             return;
         }
 
-        toast.success("Game deleted successfully");
+        toast.success("Quiz deleted successfully");
     };
 
     return (
@@ -41,14 +41,14 @@ function Builder() {
             <Card className="w-full max-w-7xl">
                 <CardHeader>
                     <CardTitle className="flex justify-between items-center">
-                        <span>My Games</span>
-                        <CreateGamePopover onCreateGame={handleCreateGame} />
+                        <span>My Quizzes</span>
+                        <CreateQuizPopover onCreateQuiz={handleCreateQuiz} />
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <GameList 
-                        games={games}
-                        onDeleteGame={handleDeleteGame}
+                    <QuizList 
+                        quizzes={quizzes}
+                        onDeleteQuiz={handleDeleteQuiz}
                     />
                 </CardContent>
             </Card>
