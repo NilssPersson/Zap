@@ -18,7 +18,7 @@ function StartScreen() {
 
   const checkCode = () => {
     if (!codeValue) {
-      console.log("Code missing");
+    //  console.log("Code missing");
       setErrorMessage("Missing")
       setDrawerOpen(true); // Open drawer if codeValue is missing
     } else if (codeValue === "invalid") {
@@ -27,8 +27,8 @@ function StartScreen() {
       setDrawerOpen(true)
       }
       else
-      console.log("Code exists: --> Add Join game logic", codeValue); // Handle existing code case
-    
+     // console.log("Code exists: --> Add Join game logic", codeValue); // Handle existing code case
+      null
   };
 
   return (
