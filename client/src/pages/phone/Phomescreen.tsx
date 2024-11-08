@@ -1,15 +1,27 @@
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function Phomescreen() {
     return (
-        <div className="flex flex-col items-center h-screen py-6 space-y-12">
-            <h1 className="text-7xl font-bold mb-8">GameShack</h1>
-            <div className="flex flex-col space-y-24">
-            <Button className="bg-[#FFF4B7] text-black hover:bg-yellow-200 py-8 px-12 text-xl padding: xl">Join Game</Button>
-                <Button className="bg-[#FFFFFF] text-black hover:bg-yellow-200 py-8 px-12 text-xl">Create Game</Button>
-                <Button className="bg-[#FFF4B7] text-black hover:bg-yellow-200 py-8 px-12 text-xl">My Games</Button>
-            </div>
+      <div className="h-screen flex flex-col">
+        {/* Top section with the heading */}
+        <header className="flex items-center justify-center py-4"> {/* Reduced padding here */}
+          <h1 className="text-7xl font-bold font-display">GameShack</h1>
+        </header>
+  
+        {/* Centered Input and Button section */}
+        <div className="flex flex-col items-center justify-start mt-12 w-1/2 mx-auto space-y-8"> {/* Changed flex-grow to mt-12 */}
+          <h2 className="text-4xl font-bold font-display">Enter a room!</h2>
+          <Input
+            type="email"
+            placeholder="Enter code"
+            className="text-center bg-[#FFFFFF] font-display text-3xl"
+          />
+          <Button className="bg-[#00FF9C] text-5xl text-black hover:bg-[#86D293] py-12 px-16 font-display">
+            Join
+          </Button>
         </div>
+      </div>
     );
 }
 
