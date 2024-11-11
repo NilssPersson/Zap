@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import CreateQuizPopover from "@/components/quizzes/CreateQuizPopover";
 import QuizList from "@/components/quizzes/QuizList";
 
-function Builder() {
+function Quizzes() {
     const { user } = useGetAuthenticatedUser();
     const { resources: quizzes, optimisticCreate, optimisticDelete } = useQuizzes();
 
@@ -56,4 +56,4 @@ function Builder() {
     )
 }
 
-export default Builder;
+export default Quizzes;
