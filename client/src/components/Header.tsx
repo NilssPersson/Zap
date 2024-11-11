@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button"
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react"
 import { HousePlug } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
 export function Header() {
   const location = useLocation()
+  const { isAuthenticated, logout } = useKindeAuth()
 
   return (
     <header className="bg-black/20 hidden md:block">
@@ -31,6 +33,11 @@ export function Header() {
                   About
                 </Button>
               </Link>
+              {isAuthenticated && (
+                <Button variant="ghost" className="text-lg" onClick={logout}>
+                  Logout
+                </Button>
+              )}
             </div>
           </nav>
         </div>
