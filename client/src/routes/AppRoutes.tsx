@@ -10,6 +10,8 @@ import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
 import ParticipantManager from "@/pages/Participant/ParticipantManager";
 import QuizLobby from "../pages/QuizLobby";
+import FastAnswer from "../pages/hostQuestions/FastAnswer";
+import Profile from "@/pages/User/Profile";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -38,6 +40,20 @@ export function AppRoutes() {
         element={<ParticipantManager />}
       />
       <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
+      <Route
+        path="/fast-answer"
+        element={
+          <FastAnswer
+            players={["jacob", "nisee", "knorr", "lisa"]}
+            numberOfClicks={4}
+            countDownAnswer={30}
+            question="How old is Jacob?"
+          />
+        }
+      />
+      <Route path="/profile" element={<Profile/>} />
     </Routes>
   );
 }
+
+
