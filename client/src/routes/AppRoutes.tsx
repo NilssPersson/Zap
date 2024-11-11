@@ -5,9 +5,10 @@ import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
 import Builder from "../pages/Builder";
 import MCQ from "../pages/hostQuestions/MCQ";
-import StartScreen from "@/pages/phone/StartScreen";
+import StartScreen from "@/pages/Participant/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
+import ParticipantManager from "@/pages/Participant/ParticipantManager";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -18,7 +19,7 @@ export function AppRoutes() {
       <Route path="/about" element={<About />} />
       <Route path="/room-test" element={<RoomTest />} />
       <Route path="/home" element={<StartScreen />} />
-      
+
       <Route
         path="/question-test"
         element={
@@ -31,6 +32,10 @@ export function AppRoutes() {
       />
       <Route path="/quizzes/:id" element={<QuizView />} />
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
+      <Route
+        path="/:quiz_code/:participantId"
+        element={<ParticipantManager />}
+      />
     </Routes>
   );
-} 
+}
