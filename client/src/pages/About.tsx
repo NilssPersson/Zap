@@ -6,7 +6,7 @@ import filip from "../assets/photos/filip.jpeg";
 
 function About() {
   return (
-    <div className="container mx-64 py-6 bg-black/50 backdrop-blur-md flex-1">
+    <div className="container  bg-black/50 backdrop-blur-md flex-1">
       <h1 className="text-2xl font-bold mb-4 font-display">About Us</h1>
       <p className="mb-4 max-w-2xl">
         Welcome to our about page. This is where you can learn more about our
