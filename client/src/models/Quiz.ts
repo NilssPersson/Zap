@@ -1,9 +1,12 @@
 interface Quiz {
     id: string;
-    user_id: string;
     quiz_name: string;
+    user_id: string;
     created_at: string;
-    played_at: string | null;
+    played_at?: string;
+    primary_color: string;
+    secondary_color: string;
+    background_color: string;
 }
 
 interface QuestionCreated {
