@@ -3,7 +3,7 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import About from "../pages/About";
 import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
-import Builder from "../pages/Builder";
+import Quizzes from "../pages/Quizzes";
 import MCQ from "../pages/hostQuestions/MCQ";
 import StartScreen from "@/pages/Participant/StartScreen";
 import QuizView from "../pages/QuizView";
@@ -16,7 +16,7 @@ export function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={isAuthenticated ? <Builder /> : <Home />} />
+      <Route path="/" element={isAuthenticated ? <Quizzes /> : <Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/room-test" element={<RoomTest />} />
       <Route path="/home" element={<StartScreen />} />

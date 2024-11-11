@@ -1,3 +1,5 @@
+import type { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
+
 export type SlideType = "info" | "score" | "question";
 export type QuestionType = "MCQSA" | "MCQMA" | "FA";
 
@@ -6,7 +8,7 @@ interface BaseSlide {
     title: string;
     content?: string;
     imageUrl?: string;
-    type: SlideType;
+    backgroundStyle?: BackgroundStyle;
 }
 
 interface InfoSlide extends BaseSlide {

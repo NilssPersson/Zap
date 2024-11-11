@@ -18,7 +18,7 @@ export function QuestionOptions({ options, type }: QuestionOptionsProps) {
             {options.map((option) => (
                 <div 
                     key={option.id}
-                    className="flex items-center gap-4 text-[40px] p-6 rounded-xl bg-white/10 backdrop-blur"
+                    className="flex items-center gap-4 text-[40px] p-6 rounded-xl bg-white/10 backdrop-blur outline outline-white/50"
                 >
                     {type === 'MCQSA' ? (
                         <Circle className={cn(

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams} from "react-router-dom";
+import { useParams, /* useNavigate */ } from "react-router-dom";
 import supabase from "@/api/client";
 import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 import Participant from "@/models/Participant";
@@ -14,6 +14,7 @@ interface BroadcastParticipantPayload {
   };
   type: string;
 }
+
 
 const Lobby: React.FC = () => {
   const { id } = useParams();
@@ -48,10 +49,6 @@ const Lobby: React.FC = () => {
       console.log("received");
     })
     .subscribe();
-
-  console.log({ channelA });
-
-
 
 const addInitialParticipants = (quizParticipant: QuizParticipants): void => {
   getParticipant(quizParticipant.participant_id);

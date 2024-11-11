@@ -15,6 +15,7 @@ import {
 import type { Slide, SlideType, QuestionType } from "@/types/quiz";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { BackgroundStyle } from "./QuizBackground";
 
 const slideTypeInfo = {
     info: { icon: InfoIcon, label: 'Information Slide' },
@@ -25,8 +26,12 @@ const slideTypeInfo = {
 } as const;
 
 interface ToolbarProps {
-    slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };
-    onSlideUpdate: (slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean }) => void;
+    slide: Slide & { 
+        titleWiggle?: boolean; 
+        contentWiggle?: boolean;
+        backgroundStyle?: BackgroundStyle;
+    };
+    onSlideUpdate: (slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean; backgroundStyle?: BackgroundStyle }) => void;
 }
 
 export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
@@ -193,6 +198,13 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
     const slideTypeKey = getSlideTypeKey(slide);
     const SlideTypeIcon = slideTypeInfo[slideTypeKey].icon;
 
+    const backgroundStyles: { value: BackgroundStyle; label: string }[] = [
+        { value: 'waves', label: 'Waves' },
+        { value: 'blob', label: 'Blob' },
+        { value: 'blobInverted', label: 'Inverted Blob' },
+        { value: 'circle', label: 'Circles' },
+    ];
+
     return (
         <div className="h-full bg-secondary/90 p-4 flex flex-col gap-4 overflow-y-auto text-black">
             <div className="flex items-center gap-2 text-muted-foreground">
@@ -289,6 +301,27 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
                     className="hidden"
                     onChange={handleImageUpload}
                 />
+            </div>
+
+            <div className="space-y-2">
+                <Label>Background Style</Label>
+                <Select
+                    value={slide.backgroundStyle || 'waves'}
+                    onValueChange={(value: BackgroundStyle) => 
+                        onSlideUpdate({ ...slide, backgroundStyle: value })
+                    }
+                >
+                    <SelectTrigger>
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {backgroundStyles.map(style => (
+                            <SelectItem key={style.value} value={style.value}>
+                                {style.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
 
             {slide.type === 'question' && 'options' in slide && (
