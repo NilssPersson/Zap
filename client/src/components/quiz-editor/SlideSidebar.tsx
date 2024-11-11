@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PlusIcon, CopyIcon, TrashIcon, MoveUpIcon, MoveDownIcon } from "lucide-react";
+import { PlusIcon, CopyIcon, TrashIcon, MoveUpIcon, MoveDownIcon, WrenchIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { SlideCreationMenu } from "./SlideCreationMenu";
@@ -17,6 +17,10 @@ interface SlideSidebarProps {
     onSlideDelete: (slideId: string) => void;
     onSlideDuplicate: (slideId: string) => void;
     onSlideMove: (slideId: string, direction: 'up' | 'down') => void;
+    onSettingsClick: () => void;
+    backgroundColor: string;
+    primaryColor: string;
+    secondaryColor: string;
 }
 
 export function SlideSidebar({ 
@@ -27,7 +31,11 @@ export function SlideSidebar({
     onSlideSelect,
     onSlideDelete,
     onSlideDuplicate,
-    onSlideMove
+    onSlideMove,
+    onSettingsClick,
+    backgroundColor,
+    primaryColor,
+    secondaryColor
 }: SlideSidebarProps) {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -63,28 +71,46 @@ export function SlideSidebar({
             <div className="p-3">
                 <span className="flex items-center justify-between gap-2">
                     <h2 className="text-xl font-bold text-secondary-foreground">{quizName}</h2>
-                    <TooltipProvider>
-                        <Tooltip>
-                            <Popover>
+                    <div className="flex gap-2">
+                        <TooltipProvider>
+                            <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <PopoverTrigger asChild>
-                                        <Button variant="destructive" size="sm" className="aspect-square w-6 h-6">
-                                            <PlusIcon className="w-4 h-4" />
-                                        </Button>
-                                    </PopoverTrigger>
+                                    <Button 
+                                        size="sm" 
+                                        className="aspect-square w-6 h-6"
+                                        onClick={onSettingsClick}
+                                    >
+                                        <WrenchIcon className="w-4 h-4" />
+                                    </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Add Slide</p>
+                                    <p>Quiz Settings</p>
                                 </TooltipContent>
-                                <SlideCreationMenu onAddSlide={onAddSlide} />
-                            </Popover>
-                        </Tooltip>
-                    </TooltipProvider>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <Popover>
+                                    <TooltipTrigger asChild>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="destructive" size="sm" className="aspect-square w-6 h-6">
+                                                <PlusIcon className="w-4 h-4" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Add Slide</p>
+                                    </TooltipContent>
+                                    <SlideCreationMenu onAddSlide={onAddSlide} />
+                                </Popover>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
                 </span>
                 <Separator className="mt-2" />
             </div>
             <div className="flex-1 overflow-y-auto px-3 pt-1 slides-container">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 pb-3">
                     {slides.map((slide, index) => (
                         <div 
                             key={slide.id} 
@@ -105,6 +131,9 @@ export function SlideSidebar({
                             <div className="cursor-pointer">
                                 <SlideRender 
                                     slide={slide} 
+                                    backgroundColor={backgroundColor}
+                                    primaryColor={primaryColor}
+                                    secondaryColor={secondaryColor}
                                 />
                             </div>
                             
@@ -186,6 +215,28 @@ export function SlideSidebar({
                             </div>
                         </div>
                     ))}
+                    
+                    {/* New Slide Button */}
+                    <TooltipProvider>
+                        <Tooltip>
+                            <Popover>
+                                <TooltipTrigger asChild>
+                                    <PopoverTrigger asChild>
+                                        <div 
+                                            className="aspect-video border-2 border-dashed rounded flex items-center justify-center cursor-pointer
+                                                hover:border-primary/50 hover:bg-muted/50 transition-colors"
+                                        >
+                                            <PlusIcon className="w-8 h-8 text-muted-foreground" />
+                                        </div>
+                                    </PopoverTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Add Slide</p>
+                                </TooltipContent>
+                                <SlideCreationMenu onAddSlide={onAddSlide} />
+                            </Popover>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             </div>
         </aside>

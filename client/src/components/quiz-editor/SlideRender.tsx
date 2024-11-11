@@ -2,17 +2,28 @@ import type { Slide } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, Circle } from "lucide-react";
+import { QuizBackground } from "./QuizBackground";
 
 interface SlideRenderProps {
     slide: Slide;
     className?: string;
     thumbnail?: boolean;
+    backgroundColor?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
 }
 
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
 
-export function SlideRender({ slide, className, thumbnail = false }: SlideRenderProps) {
+export function SlideRender({ 
+    slide, 
+    className, 
+    thumbnail = false, 
+    backgroundColor = "#000B58",
+    primaryColor = "#006a67",
+    secondaryColor = "#fff4b7"
+}: SlideRenderProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(1);
 
@@ -124,12 +135,18 @@ export function SlideRender({ slide, className, thumbnail = false }: SlideRender
         <div 
             ref={containerRef}
             className={cn(
-                "relative bg-[url('/assets/bg-desktop.svg')] bg-cover bg-center",
+                "relative",
                 "aspect-video w-full",
                 "overflow-hidden",
                 className
             )}
         >
+            <QuizBackground
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                backgroundColor={backgroundColor}
+                className="absolute inset-0"
+            />
             {slide.imageUrl && (
                 <div 
                     className="absolute inset-0 bg-cover bg-center opacity-20"
