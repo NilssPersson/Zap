@@ -16,6 +16,7 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
 
     return { data: data ? data[0] : null, error };
   }
+
 }
 
 export const quizOngoingApi = new QuizOngoingApi();
