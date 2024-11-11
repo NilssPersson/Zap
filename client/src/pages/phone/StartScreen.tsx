@@ -56,7 +56,7 @@ function StartScreen() {
         <Drawer  open={isDrawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>{errorMessage} Code</DrawerTitle>
+              <DrawerTitle className="text-3xl">{errorMessage} Code</DrawerTitle>
               
               <DrawerDescription>
                 Please enter a valid code to proceed.
