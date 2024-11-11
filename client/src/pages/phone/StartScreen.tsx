@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 import CreateParticipant from "./CreateParticipant";
+import { useAddQuizParticipant } from "@/hooks/useParticipant";
 
 function StartScreen() {
   const [codeValue, setCodeValue] = useState("");
@@ -19,15 +20,18 @@ function StartScreen() {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isAddingParticipant, setIsAddingParticipant] = useState(false);
   const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState("test");
 
   const { ongoingQuiz, isLoading, error, getOngoingQuiz } = useOngoingQuiz();
+  const { participant, addParticipant } = useAddQuizParticipant();
 
   console.log(isAddingParticipant);
   console.log(ongoingQuiz);
 
   function handleAddParticipant() {
     console.log("Participant Added:", { name, avatar });
+    addParticipant(ongoingQuiz!.quiz_code, name, avatar);
+    console.log(participant);
   }
 
   useEffect(() => {
