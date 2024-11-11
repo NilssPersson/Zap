@@ -7,6 +7,8 @@ import type { Slide, SlideType, QuestionType } from '@/types/quiz';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Editor } from '@/components/quiz-editor/Editor';
 import { Toolbar } from '@/components/quiz-editor/Toolbar';
+import { QuizBackground } from '@/components/quiz-editor/QuizBackground';
+import { QuizSettingsToolbar } from '@/components/quiz-editor/QuizSettingsToolbar';
 
 function QuizEdit() {
     const { id } = useParams();
@@ -14,11 +16,12 @@ function QuizEdit() {
     const [error, setError] = useState<string | null>(null);
     const [slides, setSlides] = useState<Slide[]>([]);
     const [activeSlideId, setActiveSlideId] = useState<string | null>(null);
+    const [showSettings, setShowSettings] = useState(false);
 
     useEffect(() => {
         async function fetchQuiz() {
             if (!id) return;
-            
+
             const { data, error } = await quizAPI.getById(id);
             if (error) {
                 setError(error.message);
@@ -58,7 +61,7 @@ function QuizEdit() {
                 break;
             case 'question':
                 if (!questionType) throw new Error('Question type is required');
-                
+
                 switch (questionType) {
                     case 'MCQSA':
                         newSlide = {
@@ -105,9 +108,65 @@ function QuizEdit() {
     };
 
     const handleSlideUpdate = (updatedSlide: Slide) => {
-        setSlides(prev => prev.map(slide => 
+        setSlides(prev => prev.map(slide =>
             slide.id === updatedSlide.id ? updatedSlide : slide
         ));
+    };
+
+    const handleSlideDelete = (slideId: string) => {
+        setSlides(prev => prev.filter(slide => slide.id !== slideId));
+        if (activeSlideId === slideId) {
+            setActiveSlideId(slides.find(s => s.id !== slideId)?.id ?? null);
+        }
+    };
+
+    const handleSlideDuplicate = (slideId: string) => {
+        const currentIndex = slides.findIndex(slide => slide.id === slideId);
+        const slideToClone = slides[currentIndex];
+        if (!slideToClone) return;
+
+        const newSlide = {
+            ...slideToClone,
+            id: crypto.randomUUID(),
+            title: `${slideToClone.title} (Copy)`
+        };
+
+        const newSlides = [...slides];
+        newSlides.splice(currentIndex + 1, 0, newSlide);
+        setSlides(newSlides);
+        setActiveSlideId(newSlide.id);
+    };
+
+    const handleSlideMove = (slideId: string, direction: 'up' | 'down') => {
+        const currentIndex = slides.findIndex(slide => slide.id === slideId);
+        if (currentIndex === -1) return;
+
+        const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+        if (newIndex < 0 || newIndex >= slides.length) return;
+
+        const newSlides = [...slides];
+        [newSlides[currentIndex], newSlides[newIndex]] = [newSlides[newIndex], newSlides[currentIndex]];
+        setSlides(newSlides);
+    };
+
+    const handleQuizUpdate = (updates: {
+        quizName?: string;
+        primaryColor?: string;
+        secondaryColor?: string;
+        backgroundColor?: string;
+    }) => {
+        if (!quiz) return;
+
+        const updatedQuiz = {
+            ...quiz,
+            quiz_name: updates.quizName ?? quiz.quiz_name,
+            primary_color: updates.primaryColor ?? quiz.primary_color,
+            secondary_color: updates.secondaryColor ?? quiz.secondary_color,
+            background_color: updates.backgroundColor ?? quiz.background_color,
+        };
+
+        setQuiz(updatedQuiz);
+        // TODO: Save quiz updates to backend
     };
 
     const activeSlide = slides.find(slide => slide.id === activeSlideId) ?? null;
@@ -117,34 +176,65 @@ function QuizEdit() {
 
     return (
         <div className="flex-1 flex overflow-hidden">
+            <QuizBackground
+                primaryColor={quiz.primary_color}
+                secondaryColor={quiz.secondary_color}
+                backgroundColor={quiz.background_color}
+                className="absolute inset-0 -z-10"
+            />
             <ResizablePanelGroup direction="horizontal" style={{ height: "inherit" }}>
                 <ResizablePanel defaultSize={14} minSize={12} maxSize={20}>
-                    <SlideSidebar 
+                    <SlideSidebar
                         quizName={quiz.quiz_name}
                         slides={slides}
                         onAddSlide={handleAddSlide}
                         activeSlideId={activeSlideId}
-                        onSlideSelect={setActiveSlideId}
+                        onSlideSelect={(slideId) => { 
+                            setActiveSlideId(slideId); 
+                            setShowSettings(false) 
+                        }}
+                        onSlideDelete={handleSlideDelete}
+                        onSlideDuplicate={handleSlideDuplicate}
+                        onSlideMove={handleSlideMove}
+                        onSettingsClick={() => setShowSettings(true)}
+                        backgroundColor={quiz.background_color}
+                        primaryColor={quiz.primary_color}
+                        secondaryColor={quiz.secondary_color}
                     />
                 </ResizablePanel>
-                
+
                 <ResizableHandle withHandle />
-                
+
                 <ResizablePanel defaultSize={60}>
-                    <Editor 
+                    <Editor
                         slide={activeSlide}
+                        backgroundColor={quiz.background_color}
+                        primaryColor={quiz.primary_color}
+                        secondaryColor={quiz.secondary_color}
                     />
                 </ResizablePanel>
-                
+
                 <ResizableHandle withHandle />
-                
+
                 <ResizablePanel defaultSize={20} minSize={15}>
-                    {activeSlide ? (
+                    {showSettings ? (
+                        <QuizSettingsToolbar
+                            quizName={quiz.quiz_name}
+                            primaryColor={quiz.primary_color}
+                            secondaryColor={quiz.secondary_color}
+                            backgroundColor={quiz.background_color}
+                            onUpdate={handleQuizUpdate}
+                        />
+                    ) : activeSlide ? (
                         <Toolbar
                             slide={activeSlide}
                             onSlideUpdate={handleSlideUpdate}
-                        /> 
-                    ) : <div className="h-full flex items-center justify-center text-muted-foreground bg-secondary/90">Select a slide</div>}
+                        />
+                    ) : (
+                        <div className="h-full flex items-center justify-center text-muted-foreground bg-secondary/90">
+                            Select a slide
+                        </div>
+                    )}
                 </ResizablePanel>
             </ResizablePanelGroup>
         </div>

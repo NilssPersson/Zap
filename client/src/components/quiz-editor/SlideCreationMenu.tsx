@@ -15,6 +15,11 @@ interface SlideCreationMenuProps {
 }
 
 export function SlideCreationMenu({ onAddSlide }: SlideCreationMenuProps) {
+
+    const handleAddSlide = (type: SlideType, questionType?: QuestionType) => {
+        onAddSlide(type, questionType);
+    };
+
     return (
         <PopoverContent className="w-56">
             <div className="space-y-2">
@@ -22,29 +27,29 @@ export function SlideCreationMenu({ onAddSlide }: SlideCreationMenuProps) {
                 <SlideOption 
                     label="Information Slide"
                     icon={InfoIcon}
-                    onClick={() => onAddSlide("info")}
+                    onClick={() => handleAddSlide("info")}
                 />
                 <SlideOption 
                     label="Score Slide"
                     icon={BarChart3Icon}
-                    onClick={() => onAddSlide("score")}
+                    onClick={() => handleAddSlide("score")}
                 />
                 <Separator className="my-2" />
                 <h4 className="font-medium leading-none mb-2">Question Types</h4>
                 <SlideOption 
                     label="Single Answer MCQ"
                     icon={CircleDotIcon}
-                    onClick={() => onAddSlide("question", "MCQSA")}
+                    onClick={() => handleAddSlide("question", "MCQSA")}
                 />
                 <SlideOption 
                     label="Multiple Answer MCQ"
                     icon={CheckSquareIcon}
-                    onClick={() => onAddSlide("question", "MCQMA")}
+                    onClick={() => handleAddSlide("question", "MCQMA")}
                 />
                 <SlideOption 
                     label="Free Answer"
                     icon={TypeIcon}
-                    onClick={() => onAddSlide("question", "FA")}
+                    onClick={() => handleAddSlide("question", "FA")}
                 />
             </div>
         </PopoverContent>

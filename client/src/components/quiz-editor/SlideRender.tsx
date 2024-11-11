@@ -1,18 +1,32 @@
 import type { Slide } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Circle } from "lucide-react";
+import { QuizBackground } from "./QuizBackground";
+import { SlideTitle } from "./slide-content/SlideTitle";
+import { SlideContent } from "./slide-content/SlideContent";
+import { QuestionOptions } from "./slide-content/QuestionOptions";
+import { ScoreDisplay } from "./slide-content/ScoreDisplay";
 
 interface SlideRenderProps {
-    slide: Slide;
+    slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };
     className?: string;
     thumbnail?: boolean;
+    backgroundColor?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
 }
 
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
 
-export function SlideRender({ slide, className, thumbnail = false }: SlideRenderProps) {
+export function SlideRender({ 
+    slide, 
+    className, 
+    thumbnail = false, 
+    backgroundColor = "#000B58",
+    primaryColor = "#006a67",
+    secondaryColor = "#fff4b7"
+}: SlideRenderProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(1);
 
@@ -35,42 +49,32 @@ export function SlideRender({ slide, className, thumbnail = false }: SlideRender
 
     const renderContent = () => {
         if (thumbnail) {
-            return (
-                <h2 className="font-display text-[60px] text-center leading-tight">
-                    {slide.title}
-                </h2>
-            );
+            return <SlideTitle title={slide.title} size="small" />;
         }
 
         switch (slide.type) {
             case 'info':
                 return (
                     <div className="space-y-8">
-                        <h2 className="font-display text-[120px] text-center leading-tight">
-                            {slide.title}
-                        </h2>
-                        {slide.content && (
-                            <p className="text-[40px] text-center leading-normal">
-                                {slide.content}
-                            </p>
-                        )}
+                        <SlideTitle 
+                            title={slide.title} 
+                            wiggle={slide.titleWiggle}
+                        />
+                        <SlideContent 
+                            content={slide.content} 
+                            wiggle={slide.contentWiggle}
+                        />
                     </div>
                 );
 
             case 'score':
                 return (
                     <div className="space-y-12">
-                        <h2 className="font-display text-[120px] text-center leading-tight">
-                            {slide.title}
-                        </h2>
-                        <div className="space-y-6">
-                            {slide.mockScores?.map((score, index) => (
-                                <div key={index} className="flex justify-between items-center text-[40px]">
-                                    <span>{score.playerName}</span>
-                                    <span className="font-bold">{score.score}</span>
-                                </div>
-                            ))}
-                        </div>
+                        <SlideTitle 
+                            title={slide.title} 
+                            wiggle={slide.titleWiggle}
+                        />
+                        <ScoreDisplay scores={slide.mockScores} />
                     </div>
                 );
 
@@ -78,38 +82,21 @@ export function SlideRender({ slide, className, thumbnail = false }: SlideRender
                 return (
                     <div className="space-y-12 w-full">
                         <div className="space-y-8">
-                            <h2 className="font-display text-[120px] text-center leading-tight">
-                                {slide.title}
-                            </h2>
-                            {slide.content && (
-                                <p className="text-[40px] text-center leading-normal">
-                                    {slide.content}
-                                </p>
-                            )}
+                            <SlideTitle 
+                                title={slide.title} 
+                                wiggle={slide.titleWiggle}
+                            />
+                            <SlideContent 
+                                content={slide.content} 
+                                wiggle={slide.contentWiggle}
+                            />
                         </div>
 
                         {'options' in slide ? (
-                            <div className="grid grid-cols-2 gap-8 w-full">
-                                {slide.options.map((option) => (
-                                    <div 
-                                        key={option.id}
-                                        className="flex items-center gap-4 text-[40px] p-6 rounded-xl bg-white/10 backdrop-blur"
-                                    >
-                                        {slide.questionType === 'MCQSA' ? (
-                                            <Circle className={cn(
-                                                "w-8 h-8",
-                                                option.isCorrect && "text-green-500"
-                                            )} />
-                                        ) : (
-                                            <CheckCircle2 className={cn(
-                                                "w-8 h-8",
-                                                option.isCorrect && "text-green-500"
-                                            )} />
-                                        )}
-                                        <span>{option.text}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            <QuestionOptions 
+                                options={slide.options}
+                                type={slide.questionType}
+                            />
                         ) : (
                             <div className="text-[40px] text-center italic text-muted-foreground">
                                 Free text answer
@@ -124,12 +111,18 @@ export function SlideRender({ slide, className, thumbnail = false }: SlideRender
         <div 
             ref={containerRef}
             className={cn(
-                "relative bg-[url('/assets/bg-desktop.svg')] bg-cover bg-center",
+                "relative",
                 "aspect-video w-full",
                 "overflow-hidden",
                 className
             )}
         >
+            <QuizBackground
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                backgroundColor={backgroundColor}
+                className="absolute inset-0"
+            />
             {slide.imageUrl && (
                 <div 
                     className="absolute inset-0 bg-cover bg-center opacity-20"

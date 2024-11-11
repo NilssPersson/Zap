@@ -9,6 +9,7 @@ import StartScreen from "@/pages/Participant/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
 import ParticipantManager from "@/pages/Participant/ParticipantManager";
+import QuizLobby from "../pages/QuizLobby";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -36,6 +37,7 @@ export function AppRoutes() {
         path="/:quiz_code/:participantId"
         element={<ParticipantManager />}
       />
+      <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
     </Routes>
   );
 }
