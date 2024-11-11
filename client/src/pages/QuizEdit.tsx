@@ -6,6 +6,7 @@ import { SlideSidebar } from '@/components/quiz-editor/SlideSidebar';
 import type { Slide, SlideType, QuestionType } from '@/types/quiz';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Editor } from '@/components/quiz-editor/Editor';
+import { Toolbar } from '@/components/quiz-editor/Toolbar';
 
 function QuizEdit() {
     const { id } = useParams();
@@ -30,13 +31,75 @@ function QuizEdit() {
     }, [id]);
 
     const handleAddSlide = (type: SlideType, questionType?: QuestionType) => {
-        const newSlide: Slide = {
+        const baseSlide = {
             id: crypto.randomUUID(),
             title: `New ${type} slide`,
             content: '',
-            type,
-            questionType
         };
+
+        let newSlide: Slide;
+
+        switch (type) {
+            case 'info':
+                newSlide = {
+                    ...baseSlide,
+                    type: 'info',
+                };
+                break;
+            case 'score':
+                newSlide = {
+                    ...baseSlide,
+                    type: 'score',
+                    mockScores: [
+                        { playerName: 'Player 1', score: 100 },
+                        { playerName: 'Player 2', score: 80 },
+                    ],
+                };
+                break;
+            case 'question':
+                if (!questionType) throw new Error('Question type is required');
+                
+                switch (questionType) {
+                    case 'MCQSA':
+                        newSlide = {
+                            ...baseSlide,
+                            type: 'question',
+                            questionType: 'MCQSA',
+                            options: Array.from({ length: 4 }, (_, i) => ({
+                                id: crypto.randomUUID(),
+                                text: `Option ${i + 1}`,
+                                isCorrect: i === 0,
+                            })),
+                        };
+                        break;
+                    case 'MCQMA':
+                        newSlide = {
+                            ...baseSlide,
+                            type: 'question',
+                            questionType: 'MCQMA',
+                            options: Array.from({ length: 4 }, (_, i) => ({
+                                id: crypto.randomUUID(),
+                                text: `Option ${i + 1}`,
+                                isCorrect: i <= 1,
+                            })),
+                        };
+                        break;
+                    case 'FA':
+                        newSlide = {
+                            ...baseSlide,
+                            type: 'question',
+                            questionType: 'FA',
+                            correctAnswer: '',
+                        };
+                        break;
+                    default:
+                        throw new Error('Invalid question type');
+                }
+                break;
+            default:
+                throw new Error('Invalid slide type');
+        }
+
         setSlides(prev => [...prev, newSlide]);
         setActiveSlideId(newSlide.id);
     };
@@ -70,14 +133,18 @@ function QuizEdit() {
                 <ResizablePanel defaultSize={60}>
                     <Editor 
                         slide={activeSlide}
-                        onSlideUpdate={handleSlideUpdate}
                     />
                 </ResizablePanel>
                 
                 <ResizableHandle withHandle />
                 
                 <ResizablePanel defaultSize={20} minSize={15}>
-                    <div className="bg-secondary/90 shadow-md h-full"></div>
+                    {activeSlide ? (
+                        <Toolbar
+                            slide={activeSlide}
+                            onSlideUpdate={handleSlideUpdate}
+                        /> 
+                    ) : <div className="h-full flex items-center justify-center text-muted-foreground bg-secondary/90">Select a slide</div>}
                 </ResizablePanel>
             </ResizablePanelGroup>
         </div>
