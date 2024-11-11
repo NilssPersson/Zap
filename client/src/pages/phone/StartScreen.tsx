@@ -55,6 +55,7 @@ function StartScreen() {
         
         <Drawer  open={isDrawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerContent>
+            <div className="flex items-center justify-center">
             <DrawerHeader>
               <DrawerTitle className="text-3xl">{errorMessage} Code</DrawerTitle>
               
@@ -62,11 +63,14 @@ function StartScreen() {
                 Please enter a valid code to proceed.
               </DrawerDescription>
             </DrawerHeader>
+            </div>
+            <div className="flex justify-center">
             <DrawerFooter>
-              <Button className="bg-[#333333] text-[#fefefe]"  onClick={() => setDrawerOpen(false)} variant="outline">
+              <Button  className=" px-8 py-4 rounded-lg shadow-md text-xl bg-[#333333] text-[#fefefe]"  onClick={() => setDrawerOpen(false)} variant="outline">
                 Close
               </Button>
             </DrawerFooter>
+            </div>
           </DrawerContent>
         </Drawer>
       </div>
