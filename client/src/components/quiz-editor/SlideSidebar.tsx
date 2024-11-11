@@ -5,16 +5,25 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { SlideCreationMenu } from "./SlideCreationMenu";
 import type { Slide } from "@/types/quiz";
+import { SlideRender } from "./SlideRender";
 
-interface EditorSidebarProps {
+interface SlideSidebarProps {
     quizName: string;
     slides: Slide[];
     onAddSlide: Parameters<typeof SlideCreationMenu>[0]['onAddSlide'];
+    activeSlideId: string | null;
+    onSlideSelect: (slideId: string) => void;
 }
 
-export function EditorSidebar({ quizName, slides, onAddSlide }: EditorSidebarProps) {
+export function SlideSidebar({ 
+    quizName, 
+    slides, 
+    onAddSlide,
+    activeSlideId,
+    onSlideSelect 
+}: SlideSidebarProps) {
     return (
-        <aside className="min-w-[300px] bg-secondary border-r shadow-md flex flex-col overflow-hidden">
+        <aside className="min-w-[200px] bg-secondary/90 h-full border-r shadow-md flex flex-col overflow-hidden">
             <div className="p-3">
                 <span className="flex items-center justify-between gap-2">
                     <h2 className="text-xl font-bold text-secondary-foreground">{quizName}</h2>
@@ -38,11 +47,19 @@ export function EditorSidebar({ quizName, slides, onAddSlide }: EditorSidebarPro
                 </span>
                 <Separator className="mt-2" />
             </div>
-            <div className="flex-1 overflow-y-auto px-3">
+            <div className="flex-1 overflow-y-auto px-3 pt-1">
                 <div className="flex flex-col gap-2">
                     {slides.map((slide) => (
-                        <div key={slide.id} className="p-2 border rounded aspect-video bg-white">
-                            <h3 className="text-sm font-bold text-secondary-foreground">{slide.title}</h3>
+                        <div 
+                            key={slide.id} 
+                            className={`border rounded overflow-hidden cursor-pointer transition-colors
+                                ${activeSlideId === slide.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary/50'}
+                            `}
+                            onClick={() => onSlideSelect(slide.id)}
+                        >
+                            <SlideRender 
+                                slide={slide} 
+                            />
                         </div>
                     ))}
                 </div>
