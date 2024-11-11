@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, /* useNavigate */ } from "react-router-dom";
 import supabase from "@/api/client";
 
 // Types
@@ -9,7 +8,7 @@ type Player = {
   name: string;
 };
 
-// Broadcast Payload
+/* Broadcast Payload
 interface BroadcastPayload {
   event: string;
   payload: {
@@ -17,17 +16,18 @@ interface BroadcastPayload {
   };
   type: string;
 }
+*/
 
 const Lobby: React.FC = () => {
   const { id } = useParams();
-  const [ongoing_quiz_id, setOngoingQuizId] = useState<string | null>(null);
+  const [, setOngoingQuizId] = useState<string | null>(null);
   const [quiz_code, setQuizCode] = useState<string | null>(null); // Store quiz_code
-  const [players, setPlayers] = useState<Player[]>([]); // Track connected players
-  const navigate = useNavigate();
+  const [, setPlayers] = useState<Player[]>([]); // Track connected players
+  //const navigate = useNavigate();
 
   useEffect(() => {
     const setupLobby = async () => {
-      const channelA = supabase.channel("room-1");
+      //const channelA = supabase.channel("room-1");
 
       // Fetch the quiz code
       try {
@@ -97,10 +97,12 @@ const Lobby: React.FC = () => {
     setupLobby();
   }, [id]);
 
+  /*
   const startGame = () => {
     // Logic to start the game
     navigate(`/quizzes/${id}/play`);
   };
+  */
 
   return (
     <div className="lobby-container">
