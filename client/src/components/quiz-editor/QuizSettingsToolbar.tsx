@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
+import { ColorInput } from "./ColorInput";
 
 interface QuizSettingsToolbarProps {
     quizName: string;
@@ -22,31 +23,27 @@ export function QuizSettingsToolbar({
     secondaryColor = "#fff4b7",
     onUpdate 
 }: QuizSettingsToolbarProps) {
-    const [localPrimary, setLocalPrimary] = useState(primaryColor);
-    const [localSecondary, setLocalSecondary] = useState(secondaryColor);
-    const [localBackground, setLocalBackground] = useState(backgroundColor);
+    const [localColors, setLocalColors] = useState({
+        primary: primaryColor,
+        secondary: secondaryColor,
+        background: backgroundColor
+    });
 
     // Validate and update colors when hex input changes
     useEffect(() => {
         const hexRegex = /^#[0-9A-F]{6}$/i;
-        if (hexRegex.test(localPrimary) && localPrimary !== primaryColor) {
-            onUpdate({ primaryColor: localPrimary });
-        }
-    }, [localPrimary, primaryColor, onUpdate]);
+        const colors = [
+            { key: 'primaryColor', value: localColors.primary, original: primaryColor },
+            { key: 'secondaryColor', value: localColors.secondary, original: secondaryColor },
+            { key: 'backgroundColor', value: localColors.background, original: backgroundColor }
+        ];
 
-    useEffect(() => {
-        const hexRegex = /^#[0-9A-F]{6}$/i;
-        if (hexRegex.test(localSecondary) && localSecondary !== secondaryColor) {
-            onUpdate({ secondaryColor: localSecondary });
-        }
-    }, [localSecondary, secondaryColor, onUpdate]);
-
-    useEffect(() => {
-        const hexRegex = /^#[0-9A-F]{6}$/i;
-        if (hexRegex.test(localBackground) && localBackground !== backgroundColor) {
-            onUpdate({ backgroundColor: localBackground });
-        }
-    }, [localBackground, backgroundColor, onUpdate]);
+        colors.forEach(({ key, value, original }) => {
+            if (hexRegex.test(value) && value !== original) {
+                onUpdate({ [key]: value });
+            }
+        });
+    }, [localColors, primaryColor, secondaryColor, backgroundColor, onUpdate]);
 
     return (
         <div className="h-full bg-secondary/90 p-4 flex flex-col gap-4 overflow-y-auto text-black">
@@ -63,59 +60,26 @@ export function QuizSettingsToolbar({
             <div className="space-y-4">
                 <Label>Color Scheme</Label>
                 
-                <div className="space-y-2">
-                    <Label className="text-sm">Background Color</Label>
-                    <div className="flex gap-2">
-                        <Input
-                            type="color"
-                            value={localBackground}
-                            onChange={(e) => setLocalBackground(e.target.value)}
-                            className="w-12 h-12 p-1 cursor-pointer aspect-square"
-                        />
-                        <Input
-                            value={localBackground}
-                            onChange={(e) => setLocalBackground(e.target.value)}
-                            placeholder="#000B58"
-                            className="font-mono h-12"
-                        />
-                    </div>
-                </div>
+                <ColorInput
+                    label="Background Color"
+                    value={localColors.background}
+                    onChange={(value) => setLocalColors(prev => ({ ...prev, background: value }))}
+                    placeholder="#000B58"
+                />
 
-                <div className="space-y-2">
-                    <Label className="text-sm">Primary Color</Label>
-                    <div className="flex gap-2">
-                        <Input
-                            type="color"
-                            value={localPrimary}
-                            onChange={(e) => setLocalPrimary(e.target.value)}
-                            className="w-12 h-12 p-1 cursor-pointer aspect-square"
-                        />
-                        <Input
-                            value={localPrimary}
-                            onChange={(e) => setLocalPrimary(e.target.value)}
-                            placeholder="#498e77"
-                            className="font-mono h-12"
-                        />
-                    </div>
-                </div>
+                <ColorInput
+                    label="Primary Color"
+                    value={localColors.primary}
+                    onChange={(value) => setLocalColors(prev => ({ ...prev, primary: value }))}
+                    placeholder="#498e77"
+                />
 
-                <div className="space-y-2">
-                    <Label className="text-sm">Secondary Color</Label>
-                    <div className="flex gap-2">
-                        <Input
-                            type="color"
-                            value={localSecondary}
-                            onChange={(e) => setLocalSecondary(e.target.value)}
-                            className="w-12 h-12 p-1 cursor-pointer aspect-square"
-                        />
-                        <Input
-                            value={localSecondary}
-                            onChange={(e) => setLocalSecondary(e.target.value)}
-                            placeholder="#006a67"
-                            className="font-mono h-12"
-                        />
-                    </div>
-                </div>
+                <ColorInput
+                    label="Secondary Color"
+                    value={localColors.secondary}
+                    onChange={(value) => setLocalColors(prev => ({ ...prev, secondary: value }))}
+                    placeholder="#006a67"
+                />
             </div>
         </div>
     );
