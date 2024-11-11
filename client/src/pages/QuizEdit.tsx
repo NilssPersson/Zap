@@ -38,6 +38,7 @@ function QuizEdit() {
             id: crypto.randomUUID(),
             title: `New ${type} slide`,
             content: '',
+            backgroundStyle: 'waves' as const,
         };
 
         let newSlide: Slide;
@@ -128,7 +129,8 @@ function QuizEdit() {
         const newSlide = {
             ...slideToClone,
             id: crypto.randomUUID(),
-            title: `${slideToClone.title} (Copy)`
+            title: `${slideToClone.title} (Copy)`,
+            backgroundStyle: slideToClone.backgroundStyle || 'waves',
         };
 
         const newSlides = [...slides];

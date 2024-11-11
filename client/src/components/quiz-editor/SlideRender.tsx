@@ -25,7 +25,7 @@ export function SlideRender({
     thumbnail = false, 
     backgroundColor = "#000B58",
     primaryColor = "#006a67",
-    secondaryColor = "#fff4b7"
+    secondaryColor = "#fff4b7",
 }: SlideRenderProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [scale, setScale] = useState(1);
@@ -122,6 +122,7 @@ export function SlideRender({
                 secondaryColor={secondaryColor}
                 backgroundColor={backgroundColor}
                 className="absolute inset-0"
+                style={slide.backgroundStyle}
             />
             {slide.imageUrl && (
                 <div 
