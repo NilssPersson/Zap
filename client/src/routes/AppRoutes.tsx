@@ -5,9 +5,10 @@ import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
 import Builder from "../pages/Builder";
 import MCQ from "../pages/hostQuestions/MCQ";
-import StartScreen from "@/pages/phone/StartScreen";
+import StartScreen from "@/pages/Participant/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
+import ParticipantManager from "@/pages/Participant/ParticipantManager";
 import QuizLobby from "../pages/QuizLobby";
 
 export function AppRoutes() {
@@ -32,6 +33,10 @@ export function AppRoutes() {
       />
       <Route path="/quizzes/:id" element={<QuizView />} />
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
+      <Route
+        path="/:quiz_code/:participantId"
+        element={<ParticipantManager />}
+      />
       <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
     </Routes>
   );
