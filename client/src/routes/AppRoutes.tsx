@@ -4,7 +4,7 @@ import About from "../pages/About";
 import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
 import Builder from "../pages/Builder";
-import TrueOrFalse from "../pages/hostQuestions/MSQ";
+import MCQ from "../pages/hostQuestions/MCQ";
 import StartScreen from "@/pages/phone/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
@@ -22,7 +22,7 @@ export function AppRoutes() {
       <Route
         path="/question-test"
         element={
-          <TrueOrFalse
+          <MCQ
             question="What is your favourite fruit?"
             alternatives={["Apple", "Orange", "Pear", "Banana"]}
             countDownAnswer={30}
