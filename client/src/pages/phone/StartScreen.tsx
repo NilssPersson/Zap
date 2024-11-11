@@ -26,9 +26,8 @@ function StartScreen() {
       setErrorMessage("Invalid")
       setDrawerOpen(true)
       }
-      else
-     // console.log("Code exists: --> Add Join game logic", codeValue); // Handle existing code case
-      null
+      
+      
   };
 
   return (
