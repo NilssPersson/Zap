@@ -25,8 +25,8 @@ const slideTypeInfo = {
 } as const;
 
 interface ToolbarProps {
-    slide: Slide;
-    onSlideUpdate: (slide: Slide) => void;
+    slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };
+    onSlideUpdate: (slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean }) => void;
 }
 
 export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
@@ -220,7 +220,18 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
             </div>
 
             <div className="space-y-2">
-                <Label>Title</Label>
+                <div className="flex items-center justify-between">
+                    <Label>Title</Label>
+                    <div className="flex items-center gap-2">
+                        <Label className="text-sm">Dancing Text</Label>
+                        <Switch
+                            checked={slide.titleWiggle}
+                            onCheckedChange={(checked) => 
+                                onSlideUpdate({ ...slide, titleWiggle: checked })
+                            }
+                        />
+                    </div>
+                </div>
                 <Input
                     value={slide.title}
                     onChange={(e) => onSlideUpdate({ ...slide, title: e.target.value })}
@@ -230,12 +241,21 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
             </div>
 
             <div className="space-y-2">
-                <Label>Content</Label>
+                <div className="flex items-center justify-between">
+                    <Label>Content</Label>
+                    <div className="flex items-center gap-2">
+                        <Label className="text-sm">Dancing Text</Label>
+                        <Switch
+                            checked={slide.contentWiggle}
+                            onCheckedChange={(checked) => 
+                                onSlideUpdate({ ...slide, contentWiggle: checked })
+                            }
+                        />
+                    </div>
+                </div>
                 <Textarea 
                     value={slide.content || ''} 
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => 
-                        onSlideUpdate({ ...slide, content: e.target.value })
-                    }
+                    onChange={(e) => onSlideUpdate({ ...slide, content: e.target.value })}
                     placeholder="Add slide content..."
                     className="min-h-[100px] text-black"
                 />

@@ -19,7 +19,7 @@ export function WiggleText({ text, className = "" }: WiggleTextProps) {
             setRotations(Array.from({ length: text.length }, () => 
                 (Math.random() - 0.5) * 10
             ));
-        }, 750);
+        }, 500);
 
         return () => clearInterval(interval);
     }, [text]);
@@ -30,9 +30,12 @@ export function WiggleText({ text, className = "" }: WiggleTextProps) {
                 <span 
                     key={idx} 
                     className="inline-block transition-transform duration-500"
-                    style={{ transform: `rotate(${rotations[idx]}deg)` }}
+                    style={{ 
+                        transform: `rotate(${rotations[idx]}deg)`,
+                        whiteSpace: char === " " ? "pre" : "normal"
+                    }}
                 >
-                    {char}
+                    {char === " " ? "\u00A0" : char}
                 </span>
             ))}
         </div>
