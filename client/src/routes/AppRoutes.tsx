@@ -3,9 +3,9 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import About from "../pages/About";
 import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
-import Phomescreen from "../pages/phone/Phomescreen";
 import Builder from "../pages/Builder";
 import TrueOrFalse from "../pages/hostQuestions/MSQ";
+import StartScreen from "@/pages/phone/StartScreen";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -15,7 +15,7 @@ export function AppRoutes() {
       <Route path="/" element={isAuthenticated ? <Builder /> : <Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/room-test" element={<RoomTest />} />
-      <Route path="/home" element={<Phomescreen />} />
+      <Route path="/home" element={<StartScreen />} />
       <Route
         path="/question-test"
         element={
