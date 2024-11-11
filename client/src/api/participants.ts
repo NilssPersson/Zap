@@ -53,6 +53,17 @@ class ParticipantApi extends BaseAPI<ParticipantApi> {
     // Return the added participant
     return { data: participantData, error: null };
   }
+
+  async getParticipant(participantId: string): Promise<ApiResponse<Participant>> {
+    const { data, error } = await this.client
+      .from("Participant")
+      .select("*")
+      .eq("id", participantId)
+      .single();
+
+    return { data, error };
+  }
+
 }
 
 export const participantApi = new ParticipantApi();

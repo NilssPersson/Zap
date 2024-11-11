@@ -11,7 +11,8 @@ import {
 import { useState, useEffect } from "react";
 import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 import CreateParticipant from "./CreateParticipant";
-import { useAddQuizParticipant } from "@/hooks/useParticipant";
+import { useParticipant } from "@/hooks/useParticipant";
+import { useNavigate } from "react-router-dom";
 
 function StartScreen() {
   const [codeValue, setCodeValue] = useState("");
@@ -22,16 +23,26 @@ function StartScreen() {
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState("test");
 
+  const navigate = useNavigate();
   const { ongoingQuiz, isLoading, error, getOngoingQuiz } = useOngoingQuiz();
-  const { participant, addParticipant } = useAddQuizParticipant();
+  const { addParticipant } = useParticipant();
 
   console.log(isAddingParticipant);
   console.log(ongoingQuiz);
 
-  function handleAddParticipant() {
+  async function handleAddParticipant() {
     console.log("Participant Added:", { name, avatar });
-    addParticipant(ongoingQuiz!.quiz_code, name, avatar);
-    console.log(participant);
+    const newParticipant = await addParticipant(
+      ongoingQuiz!.quiz_code,
+      name,
+      avatar,
+    );
+
+    if (newParticipant) {
+      navigate(`/${ongoingQuiz?.quiz_code}/${newParticipant.id}`);
+    } else {
+      console.error("Failed to add participant");
+    }
   }
 
   useEffect(() => {
@@ -49,7 +60,11 @@ function StartScreen() {
     } else if (ongoingQuiz === undefined && !isLoading) {
       setErrorMessage("Invalid");
       setDrawerOpen(true);
-    } else if (ongoingQuiz !== undefined && !isLoading) {
+    } else if (
+      ongoingQuiz !== undefined &&
+      ongoingQuiz !== null &&
+      !isLoading
+    ) {
       // Quiz found
       setErrorMessage("Quiz Found!");
       setDrawerOpen(true);
