@@ -25,9 +25,7 @@ function StartScreen() {
       //console.log("Add logic to check if code is valid")
       setErrorMessage("Invalid")
       setDrawerOpen(true)
-      }
-      
-      
+    }
   };
 
   return (
