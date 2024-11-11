@@ -25,10 +25,7 @@ function StartScreen() {
       //console.log("Add logic to check if code is valid")
       setErrorMessage("Invalid")
       setDrawerOpen(true)
-      }
-      else
-     // console.log("Code exists: --> Add Join game logic", codeValue); // Handle existing code case
-      null
+    }
   };
 
   return (
@@ -59,7 +56,7 @@ function StartScreen() {
         <Drawer  open={isDrawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>{errorMessage} Code</DrawerTitle>
+              <DrawerTitle className="text-3xl">{errorMessage} Code</DrawerTitle>
               
               <DrawerDescription>
                 Please enter a valid code to proceed.
