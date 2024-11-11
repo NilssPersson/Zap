@@ -110,6 +110,42 @@ function QuizEdit() {
         ));
     };
 
+    const handleSlideDelete = (slideId: string) => {
+        setSlides(prev => prev.filter(slide => slide.id !== slideId));
+        if (activeSlideId === slideId) {
+            setActiveSlideId(slides.find(s => s.id !== slideId)?.id ?? null);
+        }
+    };
+
+    const handleSlideDuplicate = (slideId: string) => {
+        const currentIndex = slides.findIndex(slide => slide.id === slideId);
+        const slideToClone = slides[currentIndex];
+        if (!slideToClone) return;
+
+        const newSlide = {
+            ...slideToClone,
+            id: crypto.randomUUID(),
+            title: `${slideToClone.title} (Copy)`
+        };
+
+        const newSlides = [...slides];
+        newSlides.splice(currentIndex + 1, 0, newSlide);
+        setSlides(newSlides);
+        setActiveSlideId(newSlide.id);
+    };
+
+    const handleSlideMove = (slideId: string, direction: 'up' | 'down') => {
+        const currentIndex = slides.findIndex(slide => slide.id === slideId);
+        if (currentIndex === -1) return;
+
+        const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+        if (newIndex < 0 || newIndex >= slides.length) return;
+
+        const newSlides = [...slides];
+        [newSlides[currentIndex], newSlides[newIndex]] = [newSlides[newIndex], newSlides[currentIndex]];
+        setSlides(newSlides);
+    };
+
     const activeSlide = slides.find(slide => slide.id === activeSlideId) ?? null;
 
     if (error) return <div>Error: {error}</div>;
@@ -125,6 +161,9 @@ function QuizEdit() {
                         onAddSlide={handleAddSlide}
                         activeSlideId={activeSlideId}
                         onSlideSelect={setActiveSlideId}
+                        onSlideDelete={handleSlideDelete}
+                        onSlideDuplicate={handleSlideDuplicate}
+                        onSlideMove={handleSlideMove}
                     />
                 </ResizablePanel>
                 

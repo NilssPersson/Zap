@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, CopyIcon, TrashIcon, MoveUpIcon, MoveDownIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { SlideCreationMenu } from "./SlideCreationMenu";
 import type { Slide } from "@/types/quiz";
 import { SlideRender } from "./SlideRender";
+import { useEffect } from "react";
 
 interface SlideSidebarProps {
     quizName: string;
@@ -13,6 +14,9 @@ interface SlideSidebarProps {
     onAddSlide: Parameters<typeof SlideCreationMenu>[0]['onAddSlide'];
     activeSlideId: string | null;
     onSlideSelect: (slideId: string) => void;
+    onSlideDelete: (slideId: string) => void;
+    onSlideDuplicate: (slideId: string) => void;
+    onSlideMove: (slideId: string, direction: 'up' | 'down') => void;
 }
 
 export function SlideSidebar({ 
@@ -20,8 +24,40 @@ export function SlideSidebar({
     slides, 
     onAddSlide,
     activeSlideId,
-    onSlideSelect 
+    onSlideSelect,
+    onSlideDelete,
+    onSlideDuplicate,
+    onSlideMove
 }: SlideSidebarProps) {
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!activeSlideId || !document.activeElement?.closest('.slides-container')) return;
+
+            const currentIndex = slides.findIndex(slide => slide.id === activeSlideId);
+            if (currentIndex === -1) return;
+
+            switch (e.key) {
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                    if (currentIndex > 0) {
+                        e.preventDefault();
+                        onSlideSelect(slides[currentIndex - 1].id);
+                    }
+                    break;
+                case 'ArrowDown':
+                case 'ArrowRight':
+                    if (currentIndex < slides.length - 1) {
+                        e.preventDefault();
+                        onSlideSelect(slides[currentIndex + 1].id);
+                    }
+                    break;
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [activeSlideId, slides, onSlideSelect]);
+
     return (
         <aside className="min-w-[200px] bg-secondary/90 h-full border-r shadow-md flex flex-col overflow-hidden">
             <div className="p-3">
@@ -47,19 +83,107 @@ export function SlideSidebar({
                 </span>
                 <Separator className="mt-2" />
             </div>
-            <div className="flex-1 overflow-y-auto px-3 pt-1">
+            <div className="flex-1 overflow-y-auto px-3 pt-1 slides-container">
                 <div className="flex flex-col gap-2">
-                    {slides.map((slide) => (
+                    {slides.map((slide, index) => (
                         <div 
                             key={slide.id} 
-                            className={`border rounded overflow-hidden cursor-pointer transition-colors
+                            className={`group relative border rounded overflow-hidden transition-colors
                                 ${activeSlideId === slide.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary/50'}
                             `}
                             onClick={() => onSlideSelect(slide.id)}
+                            tabIndex={0}
+                            role="button"
+                            aria-selected={activeSlideId === slide.id}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    onSlideSelect(slide.id);
+                                }
+                            }}
                         >
-                            <SlideRender 
-                                slide={slide} 
-                            />
+                            <div className="cursor-pointer">
+                                <SlideRender 
+                                    slide={slide} 
+                                />
+                            </div>
+                            
+                            {/* Slide Actions */}
+                            <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <TooltipProvider>
+                                    {index > 0 && (
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="secondary"
+                                                    size="icon"
+                                                    className="h-6 w-6"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        onSlideMove(slide.id, 'up');
+                                                    }}
+                                                >
+                                                    <MoveUpIcon className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Move Up</TooltipContent>
+                                        </Tooltip>
+                                    )}
+                                    
+                                    {index < slides.length - 1 && (
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="secondary"
+                                                    size="icon"
+                                                    className="h-6 w-6"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        onSlideMove(slide.id, 'down');
+                                                    }}
+                                                >
+                                                    <MoveDownIcon className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Move Down</TooltipContent>
+                                        </Tooltip>
+                                    )}
+                                    
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="secondary"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onSlideDuplicate(slide.id);
+                                                }}
+                                            >
+                                                <CopyIcon className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Duplicate</TooltipContent>
+                                    </Tooltip>
+                                    
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="destructive"
+                                                size="icon"
+                                                className="h-6 w-6"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onSlideDelete(slide.id);
+                                                }}
+                                            >
+                                                <TrashIcon className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Delete</TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
                         </div>
                     ))}
                 </div>

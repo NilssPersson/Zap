@@ -2,9 +2,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { PlusIcon, MinusIcon, ImageIcon } from "lucide-react";
-import type { Slide } from "@/types/quiz";
+import { 
+    PlusIcon, 
+    MinusIcon, 
+    ImageIcon,
+    InfoIcon,
+    BarChart3Icon,
+    CircleDotIcon,
+    CheckSquareIcon,
+    TypeIcon
+} from "lucide-react";
+import type { Slide, SlideType, QuestionType } from "@/types/quiz";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const slideTypeInfo = {
+    info: { icon: InfoIcon, label: 'Information Slide' },
+    score: { icon: BarChart3Icon, label: 'Score Slide' },
+    'question:MCQSA': { icon: CircleDotIcon, label: 'Single Answer MCQ' },
+    'question:MCQMA': { icon: CheckSquareIcon, label: 'Multiple Answer MCQ' },
+    'question:FA': { icon: TypeIcon, label: 'Free Answer Question' },
+} as const;
 
 interface ToolbarProps {
     slide: Slide;
@@ -93,8 +111,114 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
         });
     };
 
+    const getSlideTypeKey = (slide: Slide) => {
+        if (slide.type === 'question') {
+            return `question:${slide.questionType}` as const;
+        }
+        return slide.type;
+    };
+
+    const handleSlideTypeChange = (value: string) => {
+        const [type, questionType] = value.split(':') as [SlideType, QuestionType?];
+        
+        let updatedSlide: Slide;
+        const baseSlide = {
+            id: slide.id,
+            title: slide.title,
+            content: slide.content,
+            imageUrl: slide.imageUrl,
+        };
+
+        switch (type) {
+            case 'info':
+                updatedSlide = {
+                    ...baseSlide,
+                    type: 'info',
+                };
+                break;
+            case 'score':
+                updatedSlide = {
+                    ...baseSlide,
+                    type: 'score',
+                    mockScores: [],
+                };
+                break;
+            case 'question':
+                if (!questionType) throw new Error('Question type is required');
+                
+                switch (questionType) {
+                    case 'MCQSA':
+                        updatedSlide = {
+                            ...baseSlide,
+                            type: 'question',
+                            questionType: 'MCQSA',
+                            options: Array.from({ length: 4 }, (_, i) => ({
+                                id: crypto.randomUUID(),
+                                text: `Option ${i + 1}`,
+                                isCorrect: i === 0,
+                            })),
+                        };
+                        break;
+                    case 'MCQMA':
+                        updatedSlide = {
+                            ...baseSlide,
+                            type: 'question',
+                            questionType: 'MCQMA',
+                            options: Array.from({ length: 4 }, (_, i) => ({
+                                id: crypto.randomUUID(),
+                                text: `Option ${i + 1}`,
+                                isCorrect: i <= 1,
+                            })),
+                        };
+                        break;
+                    case 'FA':
+                        updatedSlide = {
+                            ...baseSlide,
+                            type: 'question',
+                            questionType: 'FA',
+                            correctAnswer: '',
+                        };
+                        break;
+                    default:
+                        throw new Error('Invalid question type');
+                }
+                break;
+            default:
+                throw new Error('Invalid slide type');
+        }
+
+        onSlideUpdate(updatedSlide);
+    };
+
+    const slideTypeKey = getSlideTypeKey(slide);
+    const SlideTypeIcon = slideTypeInfo[slideTypeKey].icon;
+
     return (
         <div className="h-full bg-secondary/90 p-4 flex flex-col gap-4 overflow-y-auto text-black">
+            <div className="flex items-center gap-2 text-muted-foreground">
+                <SlideTypeIcon className="h-4 w-4" />
+                <span className="text-sm">{slideTypeInfo[slideTypeKey].label}</span>
+            </div>
+
+            <div className="space-y-2">
+                <Label>Slide Type</Label>
+                <Select
+                    value={slideTypeKey}
+                    onValueChange={handleSlideTypeChange}
+                >
+                    <SelectTrigger>
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="info">Information Slide</SelectItem>
+                        <SelectItem value="score">Score Slide</SelectItem>
+                        <SelectItem value="question:MCQSA">Single Answer MCQ</SelectItem>
+                        <SelectItem value="question:MCQMA">Multiple Answer MCQ</SelectItem>
+                        <SelectItem value="question:FA">Free Answer Question</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
             <div className="space-y-2">
                 <Label>Title</Label>
                 <Input
