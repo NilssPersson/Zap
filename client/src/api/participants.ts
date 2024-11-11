@@ -1,4 +1,4 @@
-import Participant from "@/models/QuizOngoing";
+import Participant from "@/models/Participant";
 import { ApiResponse, BaseAPI } from "./base";
 
 class ParticipantApi extends BaseAPI<ParticipantApi> {
