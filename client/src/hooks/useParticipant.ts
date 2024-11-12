@@ -63,5 +63,28 @@ export function useParticipant() {
     }
   }, []);
 
-  return { participant, isLoading, error, addParticipant, getParticipant };
+  const updateParticipantAnswer = useCallback(async (participantId: string, answer: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await participantApi.updateParticipantAnswer(participantId, answer);
+
+      if (response.error) {
+        setError("Error updating participant answer: " + response.error);
+        setParticipant(null);
+      } else {
+        setParticipant(response.data);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred: " + err);
+      setParticipant(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  , []);
+
+
+  return { participant, isLoading, error, addParticipant, getParticipant,updateParticipantAnswer};
 }
