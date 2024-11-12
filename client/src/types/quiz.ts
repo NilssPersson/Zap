@@ -8,6 +8,7 @@ interface BaseSlide {
     title: string;
     content?: string;
     imageUrl?: string;
+    imageScale?: number;
     backgroundStyle?: BackgroundStyle;
 }
 

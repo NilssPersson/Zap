@@ -62,11 +62,17 @@ export function SlideRender({
                         />
                         {slide.imageUrl && (
                             <div className="flex justify-center">
-                                <img 
-                                    src={slide.imageUrl} 
-                                    alt={slide.title}
-                                    className="max-h-[400px] w-auto object-contain"
-                                />
+                                <div className="relative flex items-center justify-center">
+                                    <img 
+                                        src={slide.imageUrl} 
+                                        alt={slide.title}
+                                        className="w-auto max-h-[600px] object-contain"
+                                        style={{ 
+                                            height: `${(slide.imageScale || 1) * 400}px`,
+                                            transition: 'height 0.2s ease-out'
+                                        }}
+                                    />
+                                </div>
                             </div>
                         )}
                         <SlideContent 
@@ -97,11 +103,17 @@ export function SlideRender({
                             />
                             {slide.imageUrl && (
                                 <div className="flex justify-center">
-                                    <img 
-                                        src={slide.imageUrl} 
-                                        alt={slide.title}
-                                        className="max-h-[400px] w-auto object-contain"
-                                    />
+                                    <div className="relative flex items-center justify-center">
+                                        <img 
+                                            src={slide.imageUrl} 
+                                            alt={slide.title}
+                                            className="w-auto max-h-[400px] object-contain"
+                                            style={{ 
+                                                height: `${(slide.imageScale || 1) * 400}px`,
+                                                transition: 'height 0.2s ease-out'
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             )}
                             <SlideContent 

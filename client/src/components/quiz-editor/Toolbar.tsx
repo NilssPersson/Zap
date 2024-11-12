@@ -17,6 +17,7 @@ import type { Slide, SlideType, QuestionType } from "@/types/quiz";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { BackgroundStyle } from "./QuizBackground";
+import { Slider } from "@/components/ui/slider";
 
 const slideTypeInfo = {
     info: { icon: InfoIcon, label: 'Information Slide' },
@@ -44,7 +45,8 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
         reader.onloadend = () => {
             onSlideUpdate({
                 ...slide,
-                imageUrl: reader.result as string
+                imageUrl: reader.result as string,
+                imageScale: 1
             });
         };
         reader.readAsDataURL(file);
@@ -306,6 +308,30 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
                     onChange={handleImageUpload}
                 />
             </div>
+
+            {slide.imageUrl && (
+                <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                        <Label>Image Scale</Label>
+                        <span className="text-sm text-muted-foreground">
+                            {Math.round((slide.imageScale || 1) * 100)}%
+                        </span>
+                    </div>
+                    <Slider
+                        value={[(slide.imageScale || 1) * 100]}
+                        onValueChange={([value]) => 
+                            onSlideUpdate({
+                                ...slide,
+                                imageScale: value / 100
+                            })
+                        }
+                        min={10}
+                        max={200}
+                        step={5}
+                        className="w-full"
+                    />
+                </div>
+            )}
 
             <div className="space-y-2">
                 <Label>Background Style</Label>
