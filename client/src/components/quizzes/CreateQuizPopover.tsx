@@ -19,6 +19,12 @@ function CreateQuizPopover({ onCreateQuiz }: CreateQuizPopoverProps) {
         setIsOpen(false);
     };
 
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleCreate();
+        }
+    };
+
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
@@ -35,6 +41,7 @@ function CreateQuizPopover({ onCreateQuiz }: CreateQuizPopoverProps) {
                         placeholder="Quiz name"
                         value={quizName}
                         onChange={(e) => setQuizName(e.target.value)}
+                        onKeyUp={handleKeyPress}
                     />
                     <Button onClick={handleCreate}>
                         <span className="flex items-center gap-2">

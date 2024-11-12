@@ -3,20 +3,22 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import About from "../pages/About";
 import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
-import Builder from "../pages/Builder";
+import Quizzes from "../pages/Quizzes";
 import MCQ from "../pages/hostQuestions/MCQ";
 import StartScreen from "@/pages/Participant/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
 import ParticipantManager from "@/pages/Participant/ParticipantManager";
 import QuizLobby from "../pages/QuizLobby";
+import FastAnswer from "../pages/hostQuestions/FastAnswer";
+import Profile from "@/pages/User/Profile";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
 
   return (
     <Routes>
-      <Route path="/" element={isAuthenticated ? <Builder /> : <Home />} />
+      <Route path="/" element={isAuthenticated ? <Quizzes /> : <Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/room-test" element={<RoomTest />} />
       <Route path="/home" element={<StartScreen />} />
@@ -38,6 +40,20 @@ export function AppRoutes() {
         element={<ParticipantManager />}
       />
       <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
+      <Route
+        path="/fast-answer"
+        element={
+          <FastAnswer
+            players={["jacob", "nisee", "knorr", "lisa"]}
+            numberOfClicks={4}
+            countDownAnswer={30}
+            question="How old is Jacob?"
+          />
+        }
+      />
+      <Route path="/profile" element={<Profile/>} />
     </Routes>
   );
 }
+
+
