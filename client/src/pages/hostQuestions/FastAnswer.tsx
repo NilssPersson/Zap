@@ -42,12 +42,10 @@ const FastAnswer: React.FC<FastAnswerProps> = ({
   // Function to handle player answers
   const playerHasAnswered = (player: string) => {
     console.log(player)
-    
     if (answeredPlayers.includes(player)) {
         console.log(player + "has already answered") 
         return;
     }
-
     if (currentPlayer == ""){
         setIsAnswering(true)
         setIsTimerRunning(false)
@@ -62,7 +60,6 @@ const FastAnswer: React.FC<FastAnswerProps> = ({
         setQueue((prev) => [...prev, player]);  // Adds the player to the queue
         return;
     }
-    
   };
 
   // Function to remove a player from the queue
@@ -79,14 +76,15 @@ const FastAnswer: React.FC<FastAnswerProps> = ({
       // If no players are left, reset current player
       setCurrentPlayer('');
       setIsAnswering(false)
+      setIsTimerRunning(true)
     }
   };
 
 
   return (
     <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
-      <div className="flex flex-col items-center justify-center w-full max-w-md space-y-8">
-        <h1 className="justify-center text-6xl font-bold font-display flex items-center">
+      <div className="flex-col items-center justify-center w-full space-y-8 flex">
+        <h1 className=" justify-center bg-black  text-8xl font-bold font-display  items-center">
           {question}
         </h1>
 
@@ -107,18 +105,16 @@ const FastAnswer: React.FC<FastAnswerProps> = ({
           {totalAnswers} / {numberOfClicks}
         </h1>
 
-        {isAnswering && (
-          <div className="text-4xl text-500 mt-4">
-            {currentPlayer} is answering...
-          </div>
-        )}
+        <div style={{ minHeight: "3rem" }} className="text-4xl text-500 mt-4">
+          {isAnswering && (
+            <div>{currentPlayer} is answering...</div>
+          )}
+        </div>
+
+        
 
 
-        {queue.length > 0 && isAnswering && (
-          <div className="text-4xl text-yellow-500 mt-4">
-            {queue[0]} is next in line.
-          </div>
-        )}
+      
       </div>
     </div>
   );
