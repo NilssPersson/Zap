@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Quiz from "@/models/Quiz"
 import { useNavigate } from "react-router-dom";
-// import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
-
-import supabase from "@/api/client";
-
+import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 
 interface QuizListProps {
     quizzes: Quiz[];
@@ -15,46 +12,26 @@ interface QuizListProps {
 
 function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
     const navigate = useNavigate();
-    // const {
-    //   ongoingQuiz,
-    // quizParticipants,
-    // isLoading,
-    // error,
-    // getOngoingQuiz,
-    // getParticipants,
-    // createOngoingQuiz,
-    // } = useOngoingQuiz();
+    const {
+      createOngoingQuiz,
+    } = useOngoingQuiz();
 
     const handleHostGame = async (quizId: string, quizHost: string) => {
       try {
-        const quizCode = "ABCDEF";
-        const today = new Date().toISOString();
-         // Add quiz to ongoing quizes
-        const { data, error } = await supabase
-          .from("QuizOngoing")
-          .insert([
-            {
-              quiz_code: quizCode,
-              host_user_id: quizHost,
-              created_quiz_id: quizId,
-              started_at: today,
-              question_number: 0,
-            },
-          ]) 
-          .select()
-          .single();
-
-        if (error) {
-          throw error;
-        }
-        if (data) {
-          navigate(`/quizzes/${quizCode}/lobby`);
-        }
-        // createOngoingQuiz(quizHost, quizId)
-
-        // if (ongoingQuiz) {
-        //   navigate(`/quizzes/${ongoingQuiz.quiz_code}/lobby`);
-        // }
+        createOngoingQuiz(quizHost, quizId)
+          .then((createdQuiz) => {
+            console.log(createdQuiz);
+            if (createdQuiz?.quiz_code) {
+              navigate(`/quizzes/${createdQuiz.quiz_code}/lobby`);
+            } else {
+              console.error(
+                "Failed to create ongoing quiz or quiz_code is missing"
+              );
+            }
+          })
+          .catch((err) => {
+            console.error("Error creating ongoing quiz:", err);
+          });
       } catch (error) {
         console.error("Failed to start hosting the game:", error);
       }

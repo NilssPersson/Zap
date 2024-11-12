@@ -5,9 +5,9 @@ import { QuizParticipants } from "@/models/Participant";
 
 export function useOngoingQuiz() {
   const [ongoingQuiz, setOngoingQuiz] = useState<QuizOngoing | null>(null);
-  const [quizParticipants, setQuizParticipants] = useState<QuizParticipants[] | null>(
-    null
-  );
+  const [quizParticipants, setQuizParticipants] = useState<
+    QuizParticipants[] | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,29 +45,35 @@ export function useOngoingQuiz() {
   };
 
   // Hook to create ongoing quiz
-  const createOngoingQuiz = useCallback(async (quizHost: string, quizId: string) => {
-    if (!quizHost) {
-      setError("Quiz host is required.");
-      setOngoingQuiz(null);
-      return;
-    }
-    if (!quizId) {
-      setError("Quiz id is required.");
-      setOngoingQuiz(null);
-      return;
-    }
+  const createOngoingQuiz = useCallback(
+    async (quizHost: string, quizId: string) => {
+      if (!quizHost) {
+        setError("Quiz host is required.");
+        setOngoingQuiz(null);
+        return;
+      }
+      if (!quizId) {
+        setError("Quiz id is required.");
+        setOngoingQuiz(null);
+        return;
+      }
 
-    setIsLoading(true);
-    setError(null);
+      setIsLoading(true);
+      setError(null);
 
       try {
-        const response = await quizOngoingApi.createOngoingQuiz(quizHost, quizId);
+        const response = await quizOngoingApi.createOngoingQuiz(
+          quizHost,
+          quizId
+        );
 
         if (response.error) {
           setError("Error creating ongoing quiz");
           setOngoingQuiz(null);
         } else {
           setOngoingQuiz(response.data);
+          setIsLoading(false);
+          return response.data;
         }
       } catch (err) {
         setError("An unexpected error occurred" + err);
@@ -76,7 +82,8 @@ export function useOngoingQuiz() {
         setIsLoading(false);
       }
     },
-    []);
+    []
+  );
 
   const getParticipants = useCallback(async (ongoingQuizId: string) => {
     setIsLoading(true);
