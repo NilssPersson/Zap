@@ -7,13 +7,16 @@ import { useParticipant } from "@/hooks/useParticipant";
 import { useNavigate } from "react-router-dom";
 import { InfoIcon } from "lucide-react";
 
+
 function StartScreen() {
   const [codeValue, setCodeValue] = useState("");
   const [showError, setShowError] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isAddingParticipant, setIsAddingParticipant] = useState(false);
   const [name, setName] = useState("");
+  
   const [avatar, setAvatar] = useState("test");
+  
 
   const navigate = useNavigate();
   const { ongoingQuiz, isLoading, error, getOngoingQuiz } = useOngoingQuiz();
@@ -66,7 +69,7 @@ function StartScreen() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase();
 
-    if (/^[A-Z0-9]{0,6}$/.test(value)) {
+    if (/^[A-Z]{0,4}$/.test(value)) {
       setCodeValue(value);
     }
     if (value.length === 0) {
