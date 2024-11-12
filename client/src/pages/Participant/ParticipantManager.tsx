@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
 import { useParticipant } from "@/hooks/useParticipant";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
 
 export default function ParticipantManager() {
   const [answer, setAnswer] = useState("");
@@ -18,6 +19,8 @@ export default function ParticipantManager() {
     const newChannel = supabase.channel(quiz_code);
     setChannel(newChannel);
 
+    console.log("Participant", participant);
+    console.log(newChannel);
     newChannel.send({
       type: "broadcast",
       event: "PlayerJoined",
@@ -37,10 +40,21 @@ export default function ParticipantManager() {
     channel?.send({
       type: "broadcast",
       event: "Answer",
-      payload: { answer },
+      payload: { participantId, answer },
     });
     updateParticipantAnswer(participantId, answer);
     setAnswer("");
+  }
+
+  // Answer the question
+  function leaveGame() {
+    if (participantId === undefined) return;
+    channel?.send({
+      type: "broadcast",
+      event: "PlayerLeft",
+      payload: { participant },
+    });
+    //navigate("/home");
   }
 
   return (
@@ -53,6 +67,7 @@ export default function ParticipantManager() {
         onChange={(e) => setAnswer(e.target.value)}
       />
       <button onClick={answerQuestion}>Answer</button>
+      <Button onClick={leaveGame}>Leave Game</Button>
     </div>
   );
 }
