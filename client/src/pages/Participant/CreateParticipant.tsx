@@ -1,6 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import Avatar, { genConfig } from "react-nice-avatar";
+import { makeid } from "../User/Profile";
 
 interface CreateParticipantProps {
   name: string;
@@ -28,6 +30,10 @@ export default function CreateParticipant({
     handleAddParticipant();
   };
 
+  function changeAvatarClick() {
+    setAvatar(makeid(10));
+  }
+
   return (
     <>
       {/* Input for name */}
@@ -38,14 +44,15 @@ export default function CreateParticipant({
         onChange={(e) => setName(e.target.value)}
       />
 
-      {/* TODO: Use some avatar generation library */}
-      <Input
-        disabled={true}
-        placeholder="Enter Avatar URL"
-        className="text-[#333333] text-center border-gray-400 rounded-md font-display text-3xl py-8 px-12 w-full shadow-lg"
-        value={avatar}
-        onChange={(e) => setAvatar(e.target.value)}
+      {/* TODO: Maybe change so background is always same color */}
+
+      <Avatar
+        style={{ width: "8rem", height: "8rem" }}
+        {...genConfig(avatar)}  
       />
+      <Button onClick={changeAvatarClick} className="mx-5 bg-blue-500">
+        Randomize
+      </Button>
 
       {/* Join */}
       <Button
