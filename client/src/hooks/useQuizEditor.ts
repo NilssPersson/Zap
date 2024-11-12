@@ -19,25 +19,26 @@ export function useQuizEditor(quizId: string | undefined) {
             setIsLoading(true);
             
             try {
-                // Fetch quiz
-                const { data: quizData, error: quizError } = await quizAPI.getById(quizId);
-                if (quizError) {
-                    setError(quizError.message);
-                    return;
-                }
-                setQuiz(quizData);
+                const [quizResponse, slidesResponse] = await Promise.all([
+                    quizAPI.getById(quizId),
+                    quizAPI.getSlides(quizId)
+                ]);
 
-                // Fetch slides
-                const { data: slidesData, error: slidesError } = await quizAPI.getSlides(quizId);
-                if (slidesError) {
-                    setError(slidesError.message);
+                if (quizResponse.error) {
+                    setError(quizResponse.error.message);
                     return;
                 }
-                setSlides(slidesData || []);
+                if (slidesResponse.error) {
+                    setError(slidesResponse.error.message);
+                    return;
+                }
+
+                setQuiz(quizResponse.data);
+                setSlides(slidesResponse.data || []);
                 
                 // Set first slide as active if there are slides and no active slide
-                if (slidesData?.length && !activeSlideId) {
-                    setActiveSlideId(slidesData[0].id);
+                if (slidesResponse.data?.length && !activeSlideId) {
+                    setActiveSlideId(slidesResponse.data[0].id);
                 }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred');
