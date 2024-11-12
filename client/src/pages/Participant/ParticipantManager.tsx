@@ -1,17 +1,29 @@
 import supabase from "@/api/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { useParams } from "react-router-dom";
 import { useParticipant } from "@/hooks/useParticipant";
-import { useEffect } from "react";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 export default function ParticipantManager() {
-  const [message, setMessage] = useState("test");
+  const [answer, setAnswer] = useState("");
   const { quiz_code, participantId } = useParams();
-  const channelA = supabase.channel(quiz_code?.toString() ?? "ABCDEF");
-  const { participant, getParticipant } = useParticipant();
+  const { participant, getParticipant, updateParticipantAnswer } =
+    useParticipant();
+  const [channel, setChannel] = useState<RealtimeChannel | null>(null);
 
-  console.log(participant);
+  useEffect(() => {
+    if (!quiz_code || !participant || channel !== null) return;
+
+    const newChannel = supabase.channel(quiz_code);
+    setChannel(newChannel);
+
+    newChannel.send({
+      type: "broadcast",
+      event: "PlayerJoined",
+      payload: { participant },
+    });
+  }, [quiz_code, participant, channel]);
 
   useEffect(() => {
     if (participantId) {
@@ -19,33 +31,28 @@ export default function ParticipantManager() {
     }
   }, [participantId, getParticipant]);
 
-  function join() {
-    channelA.send({
+  // Answer the question
+  function answerQuestion() {
+    if (participantId === undefined) return;
+    channel?.send({
       type: "broadcast",
-      event: "test",
-      payload: { participant: participant },
+      event: "Answer",
+      payload: { answer },
     });
-  }
-
-  function leave() {
-    channelA.send({
-      type: "broadcast",
-      event: "PlayerLeft",
-      payload: { participant: participant },
-    });
+    updateParticipantAnswer(participantId, answer);
+    setAnswer("");
   }
 
   return (
     <div>
       <h1>Room Test</h1>
       <Input
-        value={message}
+        value={answer}
         placeholder="Message"
         className="text-black"
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={(e) => setAnswer(e.target.value)}
       />
-      <button onClick={join}>JOIN</button>
-      <button onClick={leave}>LEAVE</button>
+      <button onClick={answerQuestion}>Answer</button>
     </div>
   );
 }
