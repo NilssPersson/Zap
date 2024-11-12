@@ -50,6 +50,10 @@ module.exports = {
         "chart-3": "hsl(var(--chart-3))",
         "chart-4": "hsl(var(--chart-4))",
         "chart-5": "hsl(var(--chart-5))",
+        component: "hsl(var(--component))",
+        "component-background": "hsl(var(--component-background))",
+        textonwbg: "hsl(var(--textonwbg))",
+        "textonwbg-grayonw": "hsl(var(--textonwbg-grayonw))",
       }
     },
   },
