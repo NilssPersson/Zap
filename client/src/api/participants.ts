@@ -32,6 +32,7 @@ class ParticipantApi extends BaseAPI<ParticipantApi> {
         name: participantName,
         avatar,
         quiz_id: ongoingQuizId,
+        has_answered:false
       })
       .select("*")
       .single();
