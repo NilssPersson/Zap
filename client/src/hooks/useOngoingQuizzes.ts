@@ -26,7 +26,8 @@ export function useOngoingQuiz() {
       } catch (err) {
         setError("An unexpected error occurred" + err);
         setOngoingQuiz(null);
-      } finally {
+      } 
+       finally {
         setIsLoading(false);
       }
   };
