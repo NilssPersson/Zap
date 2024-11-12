@@ -18,6 +18,7 @@ interface SlideSidebarProps {
     onSlideDuplicate: (slideId: string) => void;
     onSlideMove: (slideId: string, direction: 'up' | 'down') => void;
     onSettingsClick: () => void;
+    onSaveClick: () => void;
     backgroundColor: string;
     primaryColor: string;
     secondaryColor: string;
@@ -33,6 +34,7 @@ export function SlideSidebar({
     onSlideDuplicate,
     onSlideMove,
     onSettingsClick,
+    onSaveClick,
     backgroundColor,
     primaryColor,
     secondaryColor
@@ -72,6 +74,7 @@ export function SlideSidebar({
                 quizName={quizName}
                 onSettingsClick={onSettingsClick}
                 onAddSlide={onAddSlide}
+                onSaveClick={onSaveClick}
             />
             
             <div className="flex-1 overflow-y-auto px-3 pt-1 slides-container">

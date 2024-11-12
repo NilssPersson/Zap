@@ -21,6 +21,7 @@ function QuizEdit() {
         handleSlideDelete,
         handleSlideDuplicate,
         handleSlideMove,
+        handleSave,
         handleQuizUpdate,
         setActiveSlideId,
         setShowSettings,
@@ -52,6 +53,7 @@ function QuizEdit() {
                         onSlideDuplicate={handleSlideDuplicate}
                         onSlideMove={handleSlideMove}
                         onSettingsClick={() => setShowSettings(true)}
+                        onSaveClick={handleSave}
                         backgroundColor={quiz.background_color}
                         primaryColor={quiz.primary_color}
                         secondaryColor={quiz.secondary_color}

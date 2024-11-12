@@ -9,21 +9,65 @@ export function useQuizEditor(quizId: string | undefined) {
     const [slides, setSlides] = useState<Slide[]>([]);
     const [activeSlideId, setActiveSlideId] = useState<string | null>(null);
     const [showSettings, setShowSettings] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
+    // Fetch quiz and slides
     useEffect(() => {
-        async function fetchQuiz() {
+        async function fetchQuizAndSlides() {
             if (!quizId) return;
+            setIsLoading(true);
+            
+            try {
+                // Fetch quiz
+                const { data: quizData, error: quizError } = await quizAPI.getById(quizId);
+                if (quizError) {
+                    setError(quizError.message);
+                    return;
+                }
+                setQuiz(quizData);
 
-            const { data, error } = await quizAPI.getById(quizId);
-            if (error) {
-                setError(error.message);
-                return;
+                // Fetch slides
+                const { data: slidesData, error: slidesError } = await quizAPI.getSlides(quizId);
+                if (slidesError) {
+                    setError(slidesError.message);
+                    return;
+                }
+                setSlides(slidesData || []);
+                
+                // Set first slide as active if there are slides and no active slide
+                if (slidesData?.length && !activeSlideId) {
+                    setActiveSlideId(slidesData[0].id);
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'An error occurred');
+            } finally {
+                setIsLoading(false);
             }
-            setQuiz(data);
         }
 
-        fetchQuiz();
+        fetchQuizAndSlides();
     }, [quizId]);
+
+    // Save all slides
+    const handleSave = async () => {
+        if (!quizId) return;
+        setIsSaving(true);
+        
+        try {
+            const { error: saveError } = await quizAPI.saveSlides(quizId, slides);
+            if (saveError) {
+                setError(saveError.message);
+                return false;
+            }
+            return true;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to save slides');
+            return false;
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     const handleAddSlide = (type: SlideType, questionType?: QuestionType) => {
         const baseSlide = {
@@ -146,7 +190,7 @@ export function useQuizEditor(quizId: string | undefined) {
         setSlides(newSlides);
     };
 
-    const handleQuizUpdate = (updates: {
+    const handleQuizUpdate = async (updates: {
         quizName?: string;
         primaryColor?: string;
         secondaryColor?: string;
@@ -162,8 +206,13 @@ export function useQuizEditor(quizId: string | undefined) {
             background_color: updates.backgroundColor ?? quiz.background_color,
         };
 
+        const { error: updateError } = await quizAPI.update(quiz.id, updatedQuiz);
+        if (updateError) {
+            setError(updateError.message);
+            return;
+        }
+
         setQuiz(updatedQuiz);
-        // TODO: Save quiz updates to backend
     };
 
     const activeSlide = slides.find(slide => slide.id === activeSlideId) ?? null;
@@ -175,13 +224,17 @@ export function useQuizEditor(quizId: string | undefined) {
         activeSlide,
         activeSlideId,
         showSettings,
+        isLoading,
+        isSaving,
         handleAddSlide,
         handleSlideUpdate,
         handleSlideDelete,
         handleSlideDuplicate,
         handleSlideMove,
         handleQuizUpdate,
+        handleSave,
         setActiveSlideId,
         setShowSettings,
+        setError,
     };
 } 
