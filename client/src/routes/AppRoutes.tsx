@@ -13,6 +13,7 @@ import QuizLobby from "../pages/QuizLobby";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
 
+
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
 
