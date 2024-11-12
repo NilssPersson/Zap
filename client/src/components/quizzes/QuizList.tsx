@@ -8,8 +8,6 @@ interface QuizListProps {
     onDeleteQuiz: (quizId: string) => Promise<void>;
 }
 
-
-
 function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
     const navigate = useNavigate();
     const {
