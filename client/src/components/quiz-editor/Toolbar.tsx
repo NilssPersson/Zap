@@ -10,7 +10,8 @@ import {
     BarChart3Icon,
     CircleDotIcon,
     CheckSquareIcon,
-    TypeIcon
+    TypeIcon,
+    TimerIcon
 } from "lucide-react";
 import type { Slide, SlideType, QuestionType } from "@/types/quiz";
 import { Switch } from "@/components/ui/switch";
@@ -162,6 +163,7 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
                                 text: `Option ${i + 1}`,
                                 isCorrect: i === 0,
                             })),
+                            timeLimit: 0,
                         };
                         break;
                     case 'MCQMA':
@@ -174,6 +176,7 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
                                 text: `Option ${i + 1}`,
                                 isCorrect: i <= 1,
                             })),
+                            timeLimit: 0,
                         };
                         break;
                     case 'FA':
@@ -182,6 +185,7 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
                             type: 'question',
                             questionType: 'FA',
                             correctAnswer: '',
+                            timeLimit: 0,
                         };
                         break;
                     default:
@@ -418,6 +422,46 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
                             </div>
                         ))}
                     </div>
+                </div>
+            )}
+
+            {slide.type === 'question' && (
+                <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                        <Label>Time Limit</Label>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <TimerIcon className="h-4 w-4" />
+                            {!slide.timeLimit ? 'No limit' : `${slide.timeLimit} seconds`}
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Input
+                            type="number"
+                            min="0"
+                            max="300"
+                            value={slide.timeLimit}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value) || 0;
+                                onSlideUpdate({
+                                    ...slide,
+                                    timeLimit: Math.max(0, Math.min(300, value))
+                                });
+                            }}
+                            className="flex-1"
+                        />
+                        <Button
+                            variant="outline"
+                            onClick={() => onSlideUpdate({
+                                ...slide,
+                                timeLimit: 0
+                            })}
+                        >
+                            No Limit
+                        </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        Set to 0 for no time limit. Maximum 300 seconds (5 minutes).
+                    </p>
                 </div>
             )}
         </div>

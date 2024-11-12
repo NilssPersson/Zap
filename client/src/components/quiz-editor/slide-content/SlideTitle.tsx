@@ -1,4 +1,5 @@
 import { WiggleText } from "@/components/WiggleText";
+import { cn } from "@/lib/utils";
 
 interface SlideTitleProps {
     title: string;
@@ -7,7 +8,9 @@ interface SlideTitleProps {
 }
 
 export function SlideTitle({ title, size = "large", wiggle = false }: SlideTitleProps) {
-    const className = `font-display text-[${size === "large" ? "120px" : "60px"}] text-center leading-tight`;
+    const className = cn("font-display text-center leading-tight",
+        size === "large" ? "text-8xl" : "text-4xl"
+    );
     
     return wiggle ? (
         <WiggleText className={className} text={title} />
