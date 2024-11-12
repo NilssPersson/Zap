@@ -5,17 +5,6 @@ import { useParams } from "react-router-dom";
 import { useParticipant } from "@/hooks/useParticipant";
 import { useEffect } from "react";
 
-//import Participant from "@/models/Participant";
-
-// Broadcast Payload
-/*interface BroadcastParticipantPayload {
-  event: string; // Player joined or left event
-  payload: {
-    participant: Participant;
-  };
-  type: string;
-}*/
-
 export default function ParticipantManager() {
   const [message, setMessage] = useState("test");
   const { quiz_code, participantId } = useParams();
