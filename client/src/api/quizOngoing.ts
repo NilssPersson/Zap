@@ -1,6 +1,6 @@
 import QuizOngoing from "@/models/QuizOngoing";
 import { ApiResponse, BaseAPI } from "./base";
-import { QuizParticipants } from "@/models/Participant";
+import Participant from "@/models/Participant";
 
 class QuizOngoingApi extends BaseAPI<QuizOngoing> {
   constructor() {
@@ -34,10 +34,10 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
         .select("quiz_code")
         .eq("quiz_code", quizCode)
         .single();
-
+      // If code does not exist
       if (error && error.code === "PGRST116") {
-        // Code not found, it's unique
         isUnique = true;
+
       } else if (error) {
         console.error("Error checking quiz code:", error);
         throw error;
@@ -59,25 +59,57 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
           quiz_code: quizCode,
           host_user_id: quizHost,
           created_quiz_id: quizId,
-          started_at: new Date().toISOString,
+          started_at: new Date().toISOString().toLocaleString(),
           current_slide_order: 0,
         },
       ])
       .select()
       .single();
-    console.log("createongoing: ", data);
     return { data: data, error };
   }
 
   async getParticipants(
     ongoingQuizId: string
-  ): Promise<ApiResponse<QuizParticipants[]>> {
-    const { data, error } = await this.client
-      .from("QuizParticipants")
-      .select("*")
-      .eq("ongoing_quiz_id", ongoingQuizId);
+  ): Promise<ApiResponse<Participant[]>> {
+    const { data: quizParticipants, error: quizParticipantsError } =
+      await this.client
+        .from("QuizParticipants")
+        .select("*")
+        .eq("ongoing_quiz_id", ongoingQuizId);
 
-    return { data: data, error };
+    if (quizParticipantsError) {
+      return { data: null, error: quizParticipantsError };
+    }
+
+    const participantsPromises = quizParticipants.map(
+      async (quizParticipant) => {
+        const { data: participant, error: participantError } = await this.client
+          .from("Participant")
+          .select("*")
+          .eq("id", quizParticipant.participant_id)
+          .single();
+
+        // If there's an error fetching a Participant, return null for that entry
+        if (participantError) {
+          console.error(
+            `Error fetching participant with id ${quizParticipant.participant_id}:`,
+            participantError
+          );
+          return null;
+        }
+        return participant;
+      }
+    );
+
+    // Resolve all participant fetch requests
+    const participants = await Promise.all(participantsPromises);
+
+    // Filter out any null values in case some participants failed to load
+    const validParticipants = participants.filter(
+      (participant) => participant !== null
+    );
+
+    return { data: validParticipants, error: null };
   }
 }
 

@@ -54,6 +54,8 @@ export function useParticipant() {
         setParticipant(null);
       } else {
         setParticipant(response.data);
+        setIsLoading(false);
+        return response.data;
       }
     } catch (err) {
       setError("An unexpected error occurred: " + err);

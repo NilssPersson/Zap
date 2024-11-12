@@ -1,48 +1,35 @@
 import { useState, useCallback } from "react";
 import { quizOngoingApi } from "@/api/quizOngoing";
 import QuizOngoing from "@/models/QuizOngoing";
-import { QuizParticipants } from "@/models/Participant";
 
 export function useOngoingQuiz() {
   const [ongoingQuiz, setOngoingQuiz] = useState<QuizOngoing | null>(null);
-  const [quizParticipants, setQuizParticipants] = useState<
-    QuizParticipants[] | null
-  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Function to fetch ongoing quiz by quiz code
-  const fetchOngoingQuiz = useCallback(async (quizCode: string) => {
-    setIsLoading(true);
-    setError(null);
+  // Hook to fetch ongoing quiz
+  const getOngoingQuiz = async (quizCode: string) =>{
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const response = await quizOngoingApi.getOngoingQuiz(quizCode);
+      try {
+        const response = await quizOngoingApi.getOngoingQuiz(quizCode);
 
-      if (response.error) {
-        setError("Error fetching ongoing quiz");
+        if (response.error) {
+          setError("Error fetching ongoing quiz");
+          setOngoingQuiz(null);
+        } else {
+          setOngoingQuiz(response.data);
+          setIsLoading(false);
+          return response.data;
+        }
+      } catch (err) {
+        setError("An unexpected error occurred" + err);
         setOngoingQuiz(null);
-      } else {
-        setOngoingQuiz(response.data);
-        return response.data;
+      } 
+       finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError("An unexpected error occurred" + err);
-      setOngoingQuiz(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Hook to fetch ongoing quiz when needed
-  const getOngoingQuiz = async (quizCode: string) => {
-    if (!quizCode) {
-      setError("Quiz code is required.");
-      setOngoingQuiz(null);
-      return;
-    }
-
-    fetchOngoingQuiz(quizCode);
   };
 
   // Hook to create ongoing quiz
@@ -95,22 +82,21 @@ export function useOngoingQuiz() {
 
       if (response.error) {
         setError("Error fetching participant: " + response.error);
-        setQuizParticipants(null);
       } else {
-        setQuizParticipants(response.data);
+        setIsLoading(false);
+        return response.data;
       }
     } catch (err) {
       setError("An unexpected error occurred: " + err);
-      setQuizParticipants(null);
     } finally {
       setIsLoading(false);
     }
+    return null;
   }, []);
 
   // Return the ongoing quiz data, loading state, and any errors
   return {
     ongoingQuiz,
-    quizParticipants,
     isLoading,
     error,
     getOngoingQuiz,
