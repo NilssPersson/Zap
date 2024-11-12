@@ -3,6 +3,7 @@ import { useParams /* useNavigate */ } from "react-router-dom";
 import supabase from "@/api/client";
 import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 import Participant from "@/models/Participant";
+import QuizOngoing from "@/models/QuizOngoing";
 
 // Broadcast Payload
 interface BroadcastParticipantPayload {
@@ -15,15 +16,15 @@ interface BroadcastParticipantPayload {
 
 const Lobby: React.FC = () => {
   const { id } = useParams();
+  const[quizOngoing, setQuizOngoing] = useState<QuizOngoing | null>();
   const [participants, setParticipants] = useState<Participant[]>([]); // Track connected players
-  const { getOngoingQuiz, getParticipants } = useOngoingQuiz();
+  const { getOngoingQuiz, getParticipants, nextSlide} = useOngoingQuiz();
   // const navigate = useNavigate();
 
-  const channelA = supabase.channel(id?.toString() ?? "ABCDEF"); //TODO: error handling
+  const channelA = supabase.channel(id?.toString() ?? "HBME"); //TODO: error handling
 
-  function messageReceived(payload: BroadcastParticipantPayload) {
+  function addParticipant(payload: BroadcastParticipantPayload) {
     if (payload.payload?.participant) {
-
       const newParticipants = [payload.payload.participant];
 
       setParticipants((prevParticipants) => {
@@ -44,13 +45,37 @@ const Lobby: React.FC = () => {
     }
   }
 
+  function removeParticipant(payload: BroadcastParticipantPayload) {
+    if (payload.payload?.participant) {
+      const participantToRemove = payload.payload.participant;
+
+      setParticipants((prevParticipants) => {
+        // Filter out the participant with the matching ID
+        return prevParticipants.filter(
+          (existingParticipant) =>
+            existingParticipant.id !== participantToRemove.id
+        );
+      });
+    } else {
+      console.log("Unexpected payload structure:", payload);
+    }
+  }
+
   channelA
     .on(
       "broadcast",
       { event: "PlayerJoined" },
       (payload: BroadcastParticipantPayload) => {
-        messageReceived(payload);
         console.log("received");
+        addParticipant(payload);
+      }
+    )
+    .on(
+      "broadcast",
+      { event: "PlayerLeft" },
+      (payload: BroadcastParticipantPayload) => {
+        console.log("received");
+        removeParticipant(payload);
       }
     )
     .subscribe();
@@ -62,6 +87,7 @@ const Lobby: React.FC = () => {
         const ongoingQuiz = await getOngoingQuiz(id || "");
         // Add initial participants from database
         if (ongoingQuiz?.id) {
+          setQuizOngoing(ongoingQuiz);
           const initialParticipants = await getParticipants(ongoingQuiz.id);
           if (initialParticipants) {
             setParticipants(initialParticipants);
@@ -75,15 +101,21 @@ const Lobby: React.FC = () => {
     setupLobby();
   }, [id]);
 
-  // const startGame = () => {
-  //   // Logic to start the game
-  //   navigate(`/quizzes/${id}/play`);
-  // };
+  const startGame = async () => {
+    const startedQuiz = await nextSlide(
+      id as string,
+      participants.map((participant) => participant.id)
+    );
+    setQuizOngoing(startedQuiz)
+
+    // Logic to start the game
+    // navigate(`/quizzes/${id}/play`);
+  };
 
   return (
     <div className="lobby-container">
-      <h1>Lobby for Quiz {id}</h1>
-
+      <h1 >Lobby for Quiz {id}</h1>
+      <h1>On slide {quizOngoing?.current_slide_order}</h1>
       <h2>Connected Players</h2>
 
       <ul>
@@ -91,9 +123,7 @@ const Lobby: React.FC = () => {
           <li key={player.id}>{player.name}</li>
         ))}
       </ul>
-      {/* <button onClick={startGame} disabled={players.length === 0}>
-        Start Game
-      </button> */}
+      <button onClick={startGame}>Start Game</button>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 interface QuizOngoing {
-    id: string;
-    quiz_code: string;
-    host_user_id: string;
-    created_quiz_id: string;
-    started_at: string | null;
-    question_number: number;
+  id: string;
+  quiz_code: string;
+  host_user_id: string;
+  created_quiz_id: string;
+  started_at: string | null;
+  current_slide_order: number;
 }
 
 interface QuestionOngoing {

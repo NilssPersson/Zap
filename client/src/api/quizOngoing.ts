@@ -37,7 +37,6 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
       // If code does not exist
       if (error && error.code === "PGRST116") {
         isUnique = true;
-
       } else if (error) {
         console.error("Error checking quiz code:", error);
         throw error;
@@ -66,6 +65,46 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
       .select()
       .single();
     return { data: data, error };
+  }
+
+  async nextSlide(quizCode: string, participants: string[]): Promise<ApiResponse<QuizOngoing>> { 
+    const { data: quizData, error: fetchError } = await this.client
+      .from("QuizOngoing")
+      .select("current_slide_order")
+      .eq("quiz_code", quizCode)
+      .single();
+
+    if (fetchError) {
+      console.error("Error fetching current slide order:", fetchError);
+      return { data: null, error: fetchError };
+    }
+    // Reset participants answers
+    for(const participant of participants){
+      const { error: participantError } = await this.client
+        .from("Participant")
+        .update({ answer: null, has_answered: false })
+        .eq("id", participant)
+        .select()
+        .single();
+
+      if (participantError) {
+        console.error("Error updating participants:", participantError);
+      }
+    }
+
+    // Increment the current_slide_order by 1
+    const { data: updatedData, error: updateError } = await this.client
+      .from("QuizOngoing")
+      .update({ current_slide_order: quizData.current_slide_order + 1 })
+      .eq("quiz_code", quizCode)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error("Error updating slide order:", updateError);
+    }
+
+    return { data: updatedData, error: updateError };
   }
 
   async getParticipants(
