@@ -60,6 +60,15 @@ export function SlideRender({
                             title={slide.title} 
                             wiggle={slide.titleWiggle}
                         />
+                        {slide.imageUrl && (
+                            <div className="flex justify-center">
+                                <img 
+                                    src={slide.imageUrl} 
+                                    alt={slide.title}
+                                    className="max-h-[400px] w-auto object-contain"
+                                />
+                            </div>
+                        )}
                         <SlideContent 
                             content={slide.content} 
                             wiggle={slide.contentWiggle}
@@ -86,6 +95,15 @@ export function SlideRender({
                                 title={slide.title} 
                                 wiggle={slide.titleWiggle}
                             />
+                            {slide.imageUrl && (
+                                <div className="flex justify-center">
+                                    <img 
+                                        src={slide.imageUrl} 
+                                        alt={slide.title}
+                                        className="max-h-[400px] w-auto object-contain"
+                                    />
+                                </div>
+                            )}
                             <SlideContent 
                                 content={slide.content} 
                                 wiggle={slide.contentWiggle}
@@ -124,12 +142,6 @@ export function SlideRender({
                 className="absolute inset-0"
                 style={slide.backgroundStyle}
             />
-            {slide.imageUrl && (
-                <div 
-                    className="absolute inset-0 bg-cover bg-center opacity-20"
-                    style={{ backgroundImage: `url(${slide.imageUrl})` }}
-                />
-            )}
             <div 
                 className="origin-top-left relative"
                 style={{ 
