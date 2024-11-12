@@ -1,23 +1,15 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
 import { useState, useEffect } from "react";
 import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 import CreateParticipant from "./CreateParticipant";
 import { useParticipant } from "@/hooks/useParticipant";
 import { useNavigate } from "react-router-dom";
+import { InfoIcon } from "lucide-react";
 
 function StartScreen() {
   const [codeValue, setCodeValue] = useState("");
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("Missing");
+  const [showError, setShowError] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isAddingParticipant, setIsAddingParticipant] = useState(false);
   const [name, setName] = useState("");
@@ -54,32 +46,20 @@ function StartScreen() {
   // Hande when the search
   useEffect(() => {
     setIsSearchActive(false); // Reset the search state
-    if (error) {
-      setErrorMessage("Invalid");
-      setDrawerOpen(true);
-    } else if (ongoingQuiz === undefined && !isLoading) {
-      setErrorMessage("Invalid");
-      setDrawerOpen(true);
+    if (ongoingQuiz === undefined && !isLoading) {
+      setShowError(true);
     } else if (
       ongoingQuiz !== undefined &&
       ongoingQuiz !== null &&
       !isLoading
     ) {
-      // Quiz found
-      setErrorMessage("Quiz Found!");
-      setDrawerOpen(true);
       setCodeValue("");
       setIsAddingParticipant(true);
     }
   }, [error, ongoingQuiz, isLoading]);
 
   const checkCode = () => {
-    if (!codeValue) {
-      setErrorMessage("Missing");
-      setDrawerOpen(true);
-    } else {
-      setIsSearchActive(true);
-    }
+    setIsSearchActive(true);
   };
 
   // Check the code input, Should only be 6 characters uppercase letters & numbers
@@ -88,6 +68,9 @@ function StartScreen() {
 
     if (/^[A-Z0-9]{0,6}$/.test(value)) {
       setCodeValue(value);
+    }
+    if (value.length === 0) {
+      setShowError(false);
     }
   };
 
@@ -101,7 +84,7 @@ function StartScreen() {
           </h1>
         </header>
 
-        {ongoingQuiz !== null ? (
+        {ongoingQuiz !== null && ongoingQuiz !== undefined ? (
           <CreateParticipant
             name={name}
             avatar={avatar}
@@ -117,39 +100,18 @@ function StartScreen() {
               value={codeValue}
               onChange={handleInputChange}
             />
-
+            {showError && (
+              <div className="flex justify-start items-center w-full text-red-500">
+                <InfoIcon className="w-5 h-5 mr-1" />
+                <p>Invalid Code</p>
+              </div>
+            )}
             <Button
               onClick={checkCode}
               className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full shadow-lg"
             >
               Join
             </Button>
-
-            <Drawer open={isDrawerOpen} onOpenChange={setDrawerOpen}>
-              <DrawerContent>
-                <div className="flex items-center justify-center">
-                  <DrawerHeader>
-                    <DrawerTitle className="text-3xl">
-                      {errorMessage}
-                    </DrawerTitle>
-                    <DrawerDescription>
-                      Please enter a valid code to proceed.
-                    </DrawerDescription>
-                  </DrawerHeader>
-                </div>
-                <div className="flex justify-center">
-                  <DrawerFooter>
-                    <Button
-                      className="px-8 py-4 rounded-lg shadow-md text-xl bg-[#333333] text-[#fefefe]"
-                      onClick={() => setDrawerOpen(false)}
-                      variant="outline"
-                    >
-                      Close
-                    </Button>
-                  </DrawerFooter>
-                </div>
-              </DrawerContent>
-            </Drawer>
           </>
         )}
       </div>

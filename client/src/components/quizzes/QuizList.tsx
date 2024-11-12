@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import Quiz from "@/models/Quiz"
 import { useNavigate } from "react-router-dom";
+// import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
+
 import supabase from "@/api/client";
 
 
@@ -13,6 +15,15 @@ interface QuizListProps {
 
 function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
     const navigate = useNavigate();
+    // const {
+    //   ongoingQuiz,
+    // quizParticipants,
+    // isLoading,
+    // error,
+    // getOngoingQuiz,
+    // getParticipants,
+    // createOngoingQuiz,
+    // } = useOngoingQuiz();
 
     const handleHostGame = async (quizId: string, quizHost: string) => {
       try {
@@ -36,10 +47,14 @@ function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
         if (error) {
           throw error;
         }
-
         if (data) {
-          navigate(`/quizzes/${quizId}/lobby`);
+          navigate(`/quizzes/${quizCode}/lobby`);
         }
+        // createOngoingQuiz(quizHost, quizId)
+
+        // if (ongoingQuiz) {
+        //   navigate(`/quizzes/${ongoingQuiz.quiz_code}/lobby`);
+        // }
       } catch (error) {
         console.error("Failed to start hosting the game:", error);
       }
