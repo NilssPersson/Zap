@@ -5,7 +5,10 @@ import { Toaster } from "sonner";
 
 const environment = import.meta.env.VITE_ENVIRONMENT;
 
-const uri = environment === "DEV" ? "http://localhost:5173" : "https://game-shack-iota.vercel.app/";
+const uri =
+  environment === "DEV"
+    ? "http://localhost:5173"
+    : "https://game-shack-iota.vercel.app/";
 
 function App() {
   return (
