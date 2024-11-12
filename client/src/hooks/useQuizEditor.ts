@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { quizAPI } from '@/api/quizzes';
 import type Quiz from '@/models/Quiz';
 import type { Slide, SlideType, QuestionType } from '@/types/quiz';
+import { toast } from 'sonner';
 
 export function useQuizEditor(quizId: string | undefined) {
     const [quiz, setQuiz] = useState<Quiz | null>(null);
@@ -55,19 +56,25 @@ export function useQuizEditor(quizId: string | undefined) {
         if (!quizId) return;
         setIsSaving(true);
         
-        try {
-            const { error: saveError } = await quizAPI.saveSlides(quizId, slides);
-            if (saveError) {
-                setError(saveError.message);
-                return false;
-            }
-            return true;
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to save slides');
-            return false;
-        } finally {
-            setIsSaving(false);
-        }
+        const savePromise = new Promise((resolve, reject) => {
+            quizAPI.saveSlides(quizId, slides)
+                .then(({ error: saveError }) => {
+                    if (saveError) {
+                        setError(saveError.message);
+                        reject(saveError.message);
+                        return false;
+                    }
+                    resolve('Slides saved successfully');
+                    return true;
+                })
+                .catch(reject);
+        });
+
+        toast.promise(savePromise, {
+            loading: 'Saving slides...',
+            success: 'Slides saved successfully',
+            error: (err) => `Error: ${err}`
+        });
     };
 
     const handleAddSlide = (type: SlideType, questionType?: QuestionType) => {
