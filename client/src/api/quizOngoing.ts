@@ -22,7 +22,7 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
     quizHost: string,
     quizId: string
   ): Promise<ApiResponse<QuizOngoing>> {
-    const quizCode = "ABCDEF";
+    const quizCode = "AABBCD";
     const { data, error } = await this.client
       .from("QuizOngoing")
       .insert([

@@ -61,6 +61,7 @@ export function useQuizEditor(quizId: string | undefined) {
                             ...baseSlide,
                             type: 'question',
                             questionType: 'MCQSA',
+                            timeLimit: 0,
                             options: Array.from({ length: 4 }, (_, i) => ({
                                 id: crypto.randomUUID(),
                                 text: `Option ${i + 1}`,
@@ -73,6 +74,7 @@ export function useQuizEditor(quizId: string | undefined) {
                             ...baseSlide,
                             type: 'question',
                             questionType: 'MCQMA',
+                            timeLimit: 0,
                             options: Array.from({ length: 4 }, (_, i) => ({
                                 id: crypto.randomUUID(),
                                 text: `Option ${i + 1}`,
@@ -85,6 +87,7 @@ export function useQuizEditor(quizId: string | undefined) {
                             ...baseSlide,
                             type: 'question',
                             questionType: 'FA',
+                            timeLimit: 0,
                             correctAnswer: '',
                         };
                         break;

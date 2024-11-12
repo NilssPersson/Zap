@@ -14,9 +14,9 @@ function CreateQuizPopover({ onCreateQuiz }: CreateQuizPopoverProps) {
 
     const handleCreate = async () => {
         if (!quizName.trim()) return;
-        await onCreateQuiz(quizName);
         setQuizName("");
         setIsOpen(false);
+        await onCreateQuiz(quizName);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {

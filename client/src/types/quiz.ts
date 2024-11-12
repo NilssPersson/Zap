@@ -8,6 +8,7 @@ interface BaseSlide {
     title: string;
     content?: string;
     imageUrl?: string;
+    imageScale?: number;
     backgroundStyle?: BackgroundStyle;
 }
 
@@ -23,6 +24,7 @@ interface ScoreSlide extends BaseSlide {
 interface QuestionSlideBase extends BaseSlide {
     type: "question";
     questionType: QuestionType;
+    timeLimit: number; // in seconds, 0 means no limit
 }
 
 interface MCQSASlide extends QuestionSlideBase {
