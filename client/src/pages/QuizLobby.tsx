@@ -21,20 +21,6 @@ const Lobby: React.FC = () => {
 
   const channelA = supabase.channel(id?.toString() ?? "ABCDEF"); //TODO: error handling
 
-  // function messageReceived(payload: BroadcastParticipantPayload) {
-  //   if (payload.payload?.participant && payload.payload?.participant //no in participants
-  //   ) {
-  //     setParticipants((prevParticipants) => [
-  //       ...prevParticipants,
-  //       ...(Array.isArray(payload.payload.participant)
-  //         ? payload.payload.participant
-  //         : [payload.payload.participant]),
-  //     ]);
-  //   } else {
-  //     console.log("Unexpected payload structure:", payload);
-  //   }
-  // }
-
   function messageReceived(payload: BroadcastParticipantPayload) {
     if (payload.payload?.participant) {
 

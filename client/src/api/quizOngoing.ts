@@ -59,13 +59,12 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
           quiz_code: quizCode,
           host_user_id: quizHost,
           created_quiz_id: quizId,
-          started_at: new Date().toISOString,
+          started_at: new Date().toISOString().toLocaleString(),
           current_slide_order: 0,
         },
       ])
       .select()
       .single();
-    console.log("createongoing: ", data);
     return { data: data, error };
   }
 
