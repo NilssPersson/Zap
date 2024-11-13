@@ -68,7 +68,7 @@ class ParticipantApi extends BaseAPI<ParticipantApi> {
   async updateParticipantAnswer(participantId: string, answer: string): Promise<ApiResponse<Participant>> {
     const { data, error } = await this.client
       .from("Participant")
-      .update({ answer,hasanswered:true })  
+      .update({ answer,has_answered:true })  
       .eq("id", participantId)  
       .single();
   
