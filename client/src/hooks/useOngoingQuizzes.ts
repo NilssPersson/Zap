@@ -73,6 +73,36 @@ export function useOngoingQuiz() {
     []
   );
 
+   const nextSlide = useCallback(
+     async (quizCode: string, participants: string[]) => {
+       setIsLoading(true);
+       setError(null);
+
+       try {
+         const response = await quizOngoingApi.nextSlide(
+           quizCode,
+           participants
+         );
+
+         if (response.error) {
+           setError("Error updating slide: " + response.error);
+           setOngoingQuiz(null);
+         } else {
+           setIsLoading(false);
+           setOngoingQuiz(response.data);
+           return response.data;
+         }
+       } catch (err) {
+         setError("An unexpected error occurred: " + err);
+         setOngoingQuiz(null);
+       } finally {
+         setIsLoading(false);
+       }
+       return null;
+     },
+     []
+   );
+
   const getParticipants = useCallback(async (ongoingQuizId: string) => {
     setIsLoading(true);
     setError(null);
@@ -123,6 +153,10 @@ export function useOngoingQuiz() {
     getOngoingQuiz,
     getParticipants,
     createOngoingQuiz,
+<<<<<<< HEAD
     getCurrentSlide,
+=======
+    nextSlide
+>>>>>>> 551e2ef0c24bf69bcd502b431299d6bb6b20ee08
   };
 }

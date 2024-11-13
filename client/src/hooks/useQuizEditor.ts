@@ -38,7 +38,7 @@ export function useQuizEditor(quizId: string | undefined) {
                 setSlides(slidesResponse.data || []);
                 
                 // Set first slide as active if there are slides and no active slide
-                if (slidesResponse.data?.length && !activeSlideId) {
+                if (slidesResponse.data?.length) {
                     setActiveSlideId(slidesResponse.data[0].id);
                 }
             } catch (err) {
