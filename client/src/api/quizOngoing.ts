@@ -150,6 +150,38 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
 
     return { data: validParticipants, error: null };
   }
+
+  async getCurrentSlide(quiz_code: string) {
+    const { data, error } = await this.client
+      .from("QuizOngoing")
+      .select(`
+        current_slide_order,
+        QuizSlides (
+          slide_order,
+          Slides (
+            id,
+            type,
+            title,
+            content,
+            image_url,
+            image_scale,
+            background_style
+          )
+        )
+      `)
+      .eq("quiz_code", quiz_code)
+      .single();
+  
+    // Filter to get the slide matching the current slide order
+    const currentSlide = data?.QuizSlides.find(
+      (slide: any) => slide.slide_order === data.current_slide_order
+    );
+  
+    return { data: currentSlide, error };
+  }
+  
+
+
 }
 
 export const quizOngoingApi = new QuizOngoingApi();

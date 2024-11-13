@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useParticipant } from "@/hooks/useParticipant";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
+import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 
 export default function ParticipantManager() {
   const [answer, setAnswer] = useState("");
@@ -12,6 +13,16 @@ export default function ParticipantManager() {
   const { participant, getParticipant, updateParticipantAnswer } =
     useParticipant();
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
+  const { ongoingQuiz, getOngoingQuiz, getCurrentSlide } = useOngoingQuiz();
+  //const [currentSlide, setCurrentSlide] = useState<any>(null);
+
+  useEffect(() => {
+    if (quiz_code && !ongoingQuiz) {
+      getOngoingQuiz(quiz_code);
+      //const slide = getCurrentSlide(quiz_code);
+      //setCurrentSlide(slide);
+    }
+  }, [quiz_code, ongoingQuiz, getOngoingQuiz, getCurrentSlide]);
 
   useEffect(() => {
     if (!quiz_code || !participant || channel !== null) return;
@@ -37,6 +48,7 @@ export default function ParticipantManager() {
   // Answer the question
   function answerQuestion() {
     if (participantId === undefined) return;
+    console.log("????");
     channel?.send({
       type: "broadcast",
       event: "Answer",
