@@ -12,7 +12,7 @@ import ParticipantManager from "@/pages/Participant/ParticipantManager";
 import QuizLobby from "../pages/QuizLobby";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
-
+import SlideRank from "@/components/quiz-editor/slide-content/SlideRank";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -52,9 +52,25 @@ export function AppRoutes() {
           />
         }
       />
-      <Route path="/profile" element={<Profile/>} />
+      <Route path="/profile" element={<Profile />} />
+      <Route
+        path="sliderank"
+        element={
+          <SlideRank
+            ranking={[
+              { name: "Tyskland", score: 1 },
+              { name: "Tyskland", score: 1 },
+              { name: "Tyskland", score: 1 },
+              { name: "Tyskland", score: 1 },
+              { name: "Frankrike", score: 2 },
+              { name: "Grekland", score: 4 },
+              { name: "Holland", score: 5 },
+              { name: "Sverige", score: 3 },
+            ]}
+            
+          />
+        }
+      />
     </Routes>
   );
 }
-
-

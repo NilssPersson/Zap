@@ -104,6 +104,18 @@ export function useQuizEditor(quizId: string | undefined) {
                     ],
                 };
                 break;
+            
+            case 'rank':
+                newSlide = {
+                    ...baseSlide,
+                    type: 'rank',
+                    timeLimit: 0,
+                    ranking: []
+
+                };
+                break;    
+
+
             case 'question':
                 if (!questionType) throw new Error('Question type is required');
 
