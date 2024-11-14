@@ -59,7 +59,7 @@ function DraggableDroppableItem({ rank, index, originalIndex }: { rank: RankItem
 
 
 // Main SlideRank component
-export function SlideRank({ ranking }: { ranking: RankItem[]; isAscending: boolean }) {
+export function SlideRank({ ranking }: { ranking: RankItem[] }) {
   const [currentRanking, setCurrentRanking] = useState<RankItem[]>(ranking);
 
   // Randomize the ranking on the first render
