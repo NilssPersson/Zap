@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 import CreateParticipant from "./CreateParticipant";
-import { useParticipant } from "@/hooks/useParticipant";
-import { useNavigate } from "react-router-dom";
-import { InfoIcon } from "lucide-react";
 
+import { InfoIcon } from "lucide-react";
+import { checkIfGameExists, addParticipant } from "@/services/client";
 
 function StartScreen() {
   const [codeValue, setCodeValue] = useState("");
@@ -14,37 +13,39 @@ function StartScreen() {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isAddingParticipant, setIsAddingParticipant] = useState(false);
   const [name, setName] = useState("");
-  
-  const [avatar, setAvatar] = useState("test");
-  
+  //const [lobbyState, setLobbyState] = useState("enterCode"); // enterCode or createParticipant
 
-  const navigate = useNavigate();
-  const { ongoingQuiz, isLoading, error, getOngoingQuiz } = useOngoingQuiz();
-  const { addParticipant } = useParticipant();
+  const [avatar, setAvatar] = useState("test");
+
+  //const navigate = useNavigate();
+  const { ongoingQuiz, isLoading, error } = useOngoingQuiz();
 
   console.log(isAddingParticipant);
   console.log(ongoingQuiz);
 
   async function handleAddParticipant() {
     console.log("Participant Added:", { name, avatar });
-    const newParticipant = await addParticipant(
-      ongoingQuiz!.quiz_code,
-      name,
-      avatar,
-    );
+    const participantId = await addParticipant(codeValue, name, avatar);
 
-    if (newParticipant) {
-      navigate(`/${ongoingQuiz?.quiz_code}/${newParticipant.id}`);
+    console.log("wooohio" + participantId);
+    //navigate(`/${ongoingQuiz?.quiz_code}/${newParticipant.id}`);
+  }
+
+  async function QuizExists(quizCode: string) {
+    const exists = await checkIfGameExists(quizCode);
+    if (exists) {
+      // Logic for when the game exists
     } else {
-      console.error("Failed to add participant");
+      // Logic for when the game does not exist
+      setShowError(true);
     }
   }
 
   useEffect(() => {
     if (isSearchActive && codeValue) {
-      getOngoingQuiz(codeValue); // Fetch the quiz
+      QuizExists(codeValue);
     }
-  }, [isSearchActive, codeValue, getOngoingQuiz]);
+  }, [isSearchActive, codeValue]);
 
   // Hande when the search
   useEffect(() => {
