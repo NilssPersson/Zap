@@ -1,31 +1,31 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CreateParticipant from "./CreateParticipant";
 import { InfoIcon } from "lucide-react";
 import { checkIfGameExists, addParticipant } from "@/services/client";
+import { useNavigate } from "react-router-dom";
 
-function StartScreen() {
-  const [codeValue, setCodeValue] = useState("");
+export default function StartScreen() {
+  const [quizCode, setQuizCode] = useState("");
   const [showError, setShowError] = useState(false);
-  const [isSearchActive, setIsSearchActive] = useState(false);
   const [name, setName] = useState("");
   const [view, setView] = useState("enterCode"); // enterCode, createParticipant
-
   const [avatar, setAvatar] = useState("test");
+
+  const navigate = useNavigate();
 
   async function handleAddParticipant() {
     console.log("Participant Added:", { name, avatar });
-    const participantId = await addParticipant(codeValue, name, avatar);
-
-    console.log("wooohio" + participantId);
-    //navigate(`/${ongoingQuiz?.quiz_code}/${newParticipant.id}`);
+    const participantId = await addParticipant(quizCode, name, avatar);
+    navigate(`/${quizCode}/${participantId}`);
   }
 
-  async function QuizExists(quizCode: string) {
-    const exists = await checkIfGameExists(quizCode);
-    if (exists) {
+  async function checkCode() {
+    const quizExists = await checkIfGameExists(quizCode);
+    if (quizExists) {
       // Logic for when the game exists
+      // TODO: Check if there exist a "gameName" and avatar for the user, then just add the participant
       setView("createParticipant");
     } else {
       // Logic for when the game does not exist
@@ -33,25 +33,12 @@ function StartScreen() {
     }
   }
 
-  useEffect(() => {
-    if (isSearchActive && codeValue) {
-      QuizExists(codeValue);
-      setIsSearchActive(false);
-    }
-  }, [isSearchActive, codeValue]);
-
-  const checkCode = () => {
-    setIsSearchActive(true);
-  };
-
   // Check the code input, Should only be 6 characters uppercase letters & numbers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase();
 
     if (/^[A-Z]{0,4}$/.test(value)) {
-      setCodeValue(value);
-    }
-    if (value.length === 0) {
+      setQuizCode(value);
       setShowError(false);
     }
   };
@@ -78,7 +65,7 @@ function StartScreen() {
             <Input
               placeholder="Code"
               className="text-[#333333] text-center border-gray-400 rounded-md font-display text-3xl py-8 px-12 w-full shadow-lg"
-              value={codeValue}
+              value={quizCode}
               onChange={handleInputChange}
             />
             {showError && (
@@ -99,5 +86,3 @@ function StartScreen() {
     </div>
   );
 }
-
-export default StartScreen;
