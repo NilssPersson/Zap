@@ -153,10 +153,7 @@ export function useOngoingQuiz() {
     getOngoingQuiz,
     getParticipants,
     createOngoingQuiz,
-<<<<<<< HEAD
     getCurrentSlide,
-=======
     nextSlide
->>>>>>> 551e2ef0c24bf69bcd502b431299d6bb6b20ee08
   };
 }

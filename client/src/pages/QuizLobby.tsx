@@ -18,10 +18,11 @@ const Lobby: React.FC = () => {
   const { id } = useParams();
   const[quizOngoing, setQuizOngoing] = useState<QuizOngoing | null>();
   const [participants, setParticipants] = useState<Participant[]>([]); // Track connected players
-  const { getOngoingQuiz, getParticipants, nextSlide} = useOngoingQuiz();
+  const { getOngoingQuiz, getParticipants, nextSlide, getCurrentSlide} =
+    useOngoingQuiz();
   // const navigate = useNavigate();
 
-  const channelA = supabase.channel(id?.toString() ?? "HBME"); //TODO: error handling
+  const channel = supabase.channel(id?.toString() ?? "ZFYV"); //TODO: error handling
 
   function addParticipant(payload: BroadcastParticipantPayload) {
     if (payload.payload?.participant) {
@@ -61,7 +62,7 @@ const Lobby: React.FC = () => {
     }
   }
 
-  channelA
+  channel
     .on(
       "broadcast",
       { event: "PlayerJoined" },
@@ -107,17 +108,22 @@ const Lobby: React.FC = () => {
       participants.map((participant) => participant.id)
     );
     setQuizOngoing(startedQuiz)
+        console.log("Sending message");
 
-    // Logic to start the game
-    // navigate(`/quizzes/${id}/play`);
+    channel.send({
+      type: "broadcast",
+      event: "nextQuestion",
+      payload: {message: "new question"},
+    });
+    console.log("Sent message");
   };
+
 
   return (
     <div className="lobby-container">
       <h1 >Lobby for Quiz {id}</h1>
       <h1>On slide {quizOngoing?.current_slide_order}</h1>
       <h2>Connected Players</h2>
-
       <ul>
         {participants.map((player) => (
           <li key={player.id}>{player.name}</li>
