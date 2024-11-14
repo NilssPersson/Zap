@@ -1,78 +1,44 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
+import { useState } from "react";
 import CreateParticipant from "./CreateParticipant";
-import { useParticipant } from "@/hooks/useParticipant";
-import { useNavigate } from "react-router-dom";
 import { InfoIcon } from "lucide-react";
+import { checkIfGameExists, addParticipant } from "@/services/client";
+import { useNavigate } from "react-router-dom";
 
-
-function StartScreen() {
-  const [codeValue, setCodeValue] = useState("");
+export default function StartScreen() {
+  const [quizCode, setQuizCode] = useState("");
   const [showError, setShowError] = useState(false);
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  const [isAddingParticipant, setIsAddingParticipant] = useState(false);
   const [name, setName] = useState("");
-  
+  const [view, setView] = useState("enterCode"); // enterCode, createParticipant
   const [avatar, setAvatar] = useState("test");
-  
 
   const navigate = useNavigate();
-  const { ongoingQuiz, isLoading, error, getOngoingQuiz } = useOngoingQuiz();
-  const { addParticipant } = useParticipant();
-
-  console.log(isAddingParticipant);
-  console.log(ongoingQuiz);
 
   async function handleAddParticipant() {
     console.log("Participant Added:", { name, avatar });
-    const newParticipant = await addParticipant(
-      ongoingQuiz!.quiz_code,
-      name,
-      avatar,
-    );
-
-    if (newParticipant) {
-      navigate(`/${ongoingQuiz?.quiz_code}/${newParticipant.id}`);
-    } else {
-      console.error("Failed to add participant");
-    }
+    const participantId = await addParticipant(quizCode, name, avatar);
+    navigate(`/${quizCode}/${participantId}`);
   }
 
-  useEffect(() => {
-    if (isSearchActive && codeValue) {
-      getOngoingQuiz(codeValue); // Fetch the quiz
-    }
-  }, [isSearchActive, codeValue, getOngoingQuiz]);
-
-  // Hande when the search
-  useEffect(() => {
-    setIsSearchActive(false); // Reset the search state
-    if (ongoingQuiz === undefined && !isLoading) {
+  async function checkCode() {
+    const quizExists = await checkIfGameExists(quizCode);
+    if (quizExists) {
+      // Logic for when the game exists
+      // TODO: Check if there exist a "gameName" and avatar for the user, then just add the participant
+      setView("createParticipant");
+    } else {
+      // Logic for when the game does not exist
       setShowError(true);
-    } else if (
-      ongoingQuiz !== undefined &&
-      ongoingQuiz !== null &&
-      !isLoading
-    ) {
-      setCodeValue("");
-      setIsAddingParticipant(true);
     }
-  }, [error, ongoingQuiz, isLoading]);
-
-  const checkCode = () => {
-    setIsSearchActive(true);
-  };
+  }
 
   // Check the code input, Should only be 6 characters uppercase letters & numbers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase();
 
     if (/^[A-Z]{0,4}$/.test(value)) {
-      setCodeValue(value);
-    }
-    if (value.length === 0) {
+      setQuizCode(value);
       setShowError(false);
     }
   };
@@ -86,8 +52,7 @@ function StartScreen() {
             GameShack
           </h1>
         </header>
-
-        {ongoingQuiz !== null && ongoingQuiz !== undefined ? (
+        {view === "createParticipant" ? (
           <CreateParticipant
             name={name}
             avatar={avatar}
@@ -100,7 +65,7 @@ function StartScreen() {
             <Input
               placeholder="Code"
               className="text-[#333333] text-center border-gray-400 rounded-md font-display text-3xl py-8 px-12 w-full shadow-lg"
-              value={codeValue}
+              value={quizCode}
               onChange={handleInputChange}
             />
             {showError && (
@@ -121,5 +86,3 @@ function StartScreen() {
     </div>
   );
 }
-
-export default StartScreen;
