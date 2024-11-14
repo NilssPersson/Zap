@@ -1,9 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 import CreateParticipant from "./CreateParticipant";
-
 import { InfoIcon } from "lucide-react";
 import { checkIfGameExists, addParticipant } from "@/services/client";
 
@@ -11,17 +9,10 @@ function StartScreen() {
   const [codeValue, setCodeValue] = useState("");
   const [showError, setShowError] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [isAddingParticipant, setIsAddingParticipant] = useState(false);
   const [name, setName] = useState("");
-  //const [lobbyState, setLobbyState] = useState("enterCode"); // enterCode or createParticipant
+  const [view, setView] = useState("enterCode"); // enterCode, createParticipant
 
   const [avatar, setAvatar] = useState("test");
-
-  //const navigate = useNavigate();
-  const { ongoingQuiz, isLoading, error } = useOngoingQuiz();
-
-  console.log(isAddingParticipant);
-  console.log(ongoingQuiz);
 
   async function handleAddParticipant() {
     console.log("Participant Added:", { name, avatar });
@@ -35,6 +26,7 @@ function StartScreen() {
     const exists = await checkIfGameExists(quizCode);
     if (exists) {
       // Logic for when the game exists
+      setView("createParticipant");
     } else {
       // Logic for when the game does not exist
       setShowError(true);
@@ -44,23 +36,9 @@ function StartScreen() {
   useEffect(() => {
     if (isSearchActive && codeValue) {
       QuizExists(codeValue);
+      setIsSearchActive(false);
     }
   }, [isSearchActive, codeValue]);
-
-  // Hande when the search
-  useEffect(() => {
-    setIsSearchActive(false); // Reset the search state
-    if (ongoingQuiz === undefined && !isLoading) {
-      setShowError(true);
-    } else if (
-      ongoingQuiz !== undefined &&
-      ongoingQuiz !== null &&
-      !isLoading
-    ) {
-      setCodeValue("");
-      setIsAddingParticipant(true);
-    }
-  }, [error, ongoingQuiz, isLoading]);
 
   const checkCode = () => {
     setIsSearchActive(true);
@@ -87,8 +65,7 @@ function StartScreen() {
             GameShack
           </h1>
         </header>
-
-        {ongoingQuiz !== null && ongoingQuiz !== undefined ? (
+        {view === "createParticipant" ? (
           <CreateParticipant
             name={name}
             avatar={avatar}
