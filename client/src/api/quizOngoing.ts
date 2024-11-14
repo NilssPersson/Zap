@@ -156,28 +156,18 @@ class QuizOngoingApi extends BaseAPI<QuizOngoing> {
       .from("QuizOngoing")
       .select(`
         current_slide_order,
-        QuizSlides (
-          slide_order,
-          Slides (
-            id,
-            type,
-            title,
-            content,
-            image_url,
-            image_scale,
-            background_style
-          )
-        )
+        created_quiz_id
       `)
       .eq("quiz_code", quiz_code)
       .single();
   
     // Filter to get the slide matching the current slide order
-    const currentSlide = data?.QuizSlides.find(
-      (slide: any) => slide.slide_order === data.current_slide_order
-    );
+    console.log(data);
+    //const currentSlide = data?.QuizSlides.find(
+    //  (slide: any) => slide.slide_order === data.current_slide_order
+    //);
   
-    return { data: currentSlide, error };
+    return { data: data, error };
   }
   
 
