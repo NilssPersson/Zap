@@ -24,5 +24,5 @@ export const useGameStatus = (quizCode:string) => {
     };
   }, [quizCode]);
 
-  return { hasAnswered, questionNumber, setHasAnswered };
+  return { questionNumber};
 };
