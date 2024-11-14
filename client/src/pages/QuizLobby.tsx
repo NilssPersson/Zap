@@ -37,8 +37,8 @@ const Lobby: React.FC = () => {
     <div className="lobby-container">
       <h1></h1>
       <h1>Lobby for Quiz {quizCode}</h1>
-      <h1>Current slide {ongoingQuiz.currentSlide}</h1>
-      <button onClick={startGame}>Start Game</button>
+      {/* <h1>Current slide {ongoingQuiz.currentSlide}</h1>
+      <button onClick={startGame}>Start Game</button> */}
     </div>
   );
 };
