@@ -7,6 +7,14 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
 
+interface BroadcastPayload {
+  event: string;
+  payload: {
+    message: string;
+  };
+  type: string;
+}
+
 export default function ParticipantManager() {
   const [answer, setAnswer] = useState("");
   const { quiz_code, participantId } = useParams();
@@ -14,13 +22,15 @@ export default function ParticipantManager() {
     useParticipant();
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const { ongoingQuiz, getOngoingQuiz, getCurrentSlide } = useOngoingQuiz();
-  //const [currentSlide, setCurrentSlide] = useState<any>(null);
+  const [currentSlide, setCurrentSlide] = useState<any>(null);
+
+  console.log(currentSlide);
 
   useEffect(() => {
     if (quiz_code && !ongoingQuiz) {
       getOngoingQuiz(quiz_code);
-      //const slide = getCurrentSlide(quiz_code);
-      //setCurrentSlide(slide);
+      const slide = getCurrentSlide(quiz_code);
+      setCurrentSlide(slide);
     }
   }, [quiz_code, ongoingQuiz, getOngoingQuiz, getCurrentSlide]);
 
@@ -29,6 +39,16 @@ export default function ParticipantManager() {
 
     const newChannel = supabase.channel(quiz_code);
     setChannel(newChannel);
+
+    newChannel
+      .on(
+        "broadcast",
+        { event: "nextQuestion" },
+        (payload: BroadcastPayload) => {
+          console.log(payload);
+        },
+      )
+      .subscribe();
 
     console.log("Participant", participant);
     console.log(newChannel);
