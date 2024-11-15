@@ -33,7 +33,7 @@ export default function StartScreen() {
     }
   }
 
-  // Check the code input, Should only be 6 characters uppercase letters & numbers
+  // Check the code input, Should only be 4 Uppercase letters
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase();
 

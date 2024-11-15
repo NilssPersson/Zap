@@ -13,7 +13,6 @@ import QuizLobby from "../pages/QuizLobby";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
 
-
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
 
@@ -37,7 +36,7 @@ export function AppRoutes() {
       <Route path="/quizzes/:id" element={<QuizView />} />
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
       <Route
-        path="/:quiz_code/:participantId"
+        path="/:quizCode/:participantId"
         element={<ParticipantManager />}
       />
       <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
@@ -52,9 +51,7 @@ export function AppRoutes() {
           />
         }
       />
-      <Route path="/profile" element={<Profile/>} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }
-
-
