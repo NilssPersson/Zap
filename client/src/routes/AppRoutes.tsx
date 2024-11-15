@@ -12,6 +12,7 @@ import ParticipantManager from "@/pages/Participant/ParticipantManager";
 import QuizLobby from "../pages/QuizLobby";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
+import RankView from "@/components/quiz-phone-view/rankView";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -52,6 +53,23 @@ export function AppRoutes() {
         }
       />
       <Route path="/profile" element={<Profile />} />
+      <Route
+        path="rankview"
+        element={
+          <RankView
+            ranking={[
+              { name: "Tyskland", score: 1 },
+              { name: "Tyskland", score: 1 },
+              { name: "Tyskland", score: 1 },
+              { name: "Tyskland", score: 1 },
+              { name: "Frankrike", score: 2 },
+              { name: "Grekland", score: 4 },
+              { name: "Holland", score: 5 },
+              { name: "Sverige", score: 3 },
+            ]}
+          />
+        }
+      />
     </Routes>
   );
 }

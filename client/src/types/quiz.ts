@@ -1,6 +1,6 @@
 import type { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
 
-export type SlideType = "info" | "score" | "question";
+export type SlideType = "info" | "score" | "question" | "rank";
 export type QuestionType = "MCQSA" | "MCQMA" | "FA";
 
 interface BaseSlide {
@@ -20,6 +20,13 @@ interface ScoreSlide extends BaseSlide {
     type: "score";
     mockScores?: { playerName: string; score: number }[];
 }
+
+interface RankSlide extends BaseSlide {
+    ranking: { name: string; score: number }[]; // List of items with name and score// Sort order: true for ascending, false for descending
+    type: "rank";
+    timeLimit: number;
+  }
+  
 
 interface QuestionSlideBase extends BaseSlide {
     type: "question";
@@ -50,4 +57,6 @@ interface FASlide extends QuestionSlideBase {
     correctAnswer: string;
 }
 
-export type Slide = InfoSlide | ScoreSlide | MCQSASlide | MCQMASlide | FASlide; 
+
+
+export type Slide = InfoSlide | ScoreSlide | MCQSASlide | MCQMASlide | FASlide | RankSlide; 

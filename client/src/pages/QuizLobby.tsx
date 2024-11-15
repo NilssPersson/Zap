@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams /* useNavigate */ } from "react-router-dom";
-import supabase from "@/api/client";
-import Participant from "@/models/Participant";
 import { useOngoingQuiz } from "@/services/host";
 
 const Lobby: React.FC = () => {
   const { id } = useParams();
-  const [ongoingQuiz, setQuizOngoing] = useState<any | null>();
+  const [setQuizOngoing] = useState<any | null>();
   const { quizCode, incrementSlide, getOngoingQuiz } = useOngoingQuiz();
 
   useEffect(() => {
