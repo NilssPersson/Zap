@@ -59,8 +59,8 @@ export function AppRoutes() {
           element={
             <ScoreBoard
             scoreboard={[
-              { name: "Alice", points: 100, newPoints: 110 },
-              { name: "Bob", points: 80, newPoints: 140 },
+              { name: "Alice", points: 100, newPoints: 500 },
+              { name: "Bob", points: 80, newPoints: 700 },
               { name: "Charlie", points: 70, newPoints: 75 },
               { name: "Diana", points: 60, newPoints: 90 },
               { name: "Eve", points: 50, newPoints: 55 },

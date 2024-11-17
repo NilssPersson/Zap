@@ -40,7 +40,7 @@ function DraggableDroppableItem({ rank, index, originalIndex }: { rank: RankItem
     return (
       <div className="flex items-center w-full">
         {/* Rank number column (fixed outside of the draggable component) */}
-        <div className="m-4 rounded-full text-4xl font-bold">{`#${originalIndex + 1}`}</div>
+        <div className=" m-4 rounded-full text-4xl font-bold">{`${originalIndex + 1}`}</div>
   
         {/* Draggable item column (rank name moves) */}
         <div
@@ -48,7 +48,9 @@ function DraggableDroppableItem({ rank, index, originalIndex }: { rank: RankItem
           style={{ ...style, minHeight: '64px' }}
           {...listeners}
           {...attributes}
-          className={`font-display flex items-center justify-start bg-component-background p-4 rounded-xl backdrop-blur-md flex-grow ${isOver ? 'bg-green-300' : ''}`}
+          className={`font-display flex items-center justify-start p-4 rounded-xl backdrop-blur-md flex-grow shadow-lg ${
+            isOver ? 'bg-green-500' : index % 2 === 0 ? 'bg-component-background' : 'bg-gray-300'
+          }`}
         >
           <span className="text-3xl font-bold text-textonwbg-grayonw">{rank.name}</span>
         </div>
