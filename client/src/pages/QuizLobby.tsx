@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Participant from "@/models/Participant";
 import "tw-elements"; // Import Tailwind Elements JS
 import "tailwindcss/tailwind.css"; // Tailwind CSS
@@ -18,6 +18,7 @@ interface LobbyProps {
 export default function QuizLobby({ quizCode, participants }: LobbyProps) {
   const [participantList, setParticipantList] = useState<Participant[]>([]);
   const { incrementSlide } = useOngoingQuiz();
+  const participantsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const newParticipants = Object.values(participants); // Convert object to array of participants
@@ -32,25 +33,38 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
     });
   }, [participants]);
 
+  useEffect(() => {
+    if (participantsRef.current) {
+      // Ensure scrolling happens after the DOM is updated
+      setTimeout(() => {
+        participantsRef.current!.scrollTop =
+          participantsRef.current!.scrollHeight;
+      }, 0);
+    }
+  }, [participantList]); 
+
   const startGame = async () => {
     await incrementSlide(quizCode);
   };
 
   return (
     <div className="lobby-container">
-        <div className="flex flex-row items-center justify-between p-20 mb-20 mt-20">
-      <h1 className="text-5xl font-display ">Join Lobby: {quizCode}</h1>
+      <div className="flex flex-row items-center justify-between p-20 mb-15 mt-20">
+        <h1 className="text-5xl font-display ">Join Lobby: {quizCode}</h1>
         <QRCode
-          style={{ height: "auto", width: "20%", margin:"3" }}
+          style={{ height: "auto", width: "20%", margin: "3" }}
           value={"https://game-shack-iota.vercel.app/play/" + { quizCode }}
           viewBox={`0 0 256 256`}
         />
       </div>
-      <div className="grid grid-cols-4 gap-4">
+      <div
+        ref={participantsRef}
+        className="grid grid-cols-4 gap-4 bg-black/50 backdrop-blur-md m-10 rounded-lg max-h-80 overflow-y-auto"
+      >
         {participantList.map((participant, index) => (
           <div
             key={index}
-            className="flex flex-col items-center justify-center p-4 rounded-lg animate-[zoom-in_1s_ease-in-out]"
+            className="flex flex-col items-center justify-center p-4 rounded-lg animate-[zoom-in_1s_ease-in-out] "
           >
             <Avatar
               style={{ width: "4.5rem", height: "4.5rem" }}
