@@ -15,7 +15,6 @@ const HostLogic: React.FC = () => {
         // Add initial participants from database
         if (currentQuiz) {
           setOngoingQuiz(currentQuiz);
-          console.log("ongoingQuiz set: ", ongoingQuiz);
         }
       } catch (error) {
         console.error("Error setting up lobby:", error);
@@ -31,7 +30,6 @@ const HostLogic: React.FC = () => {
   };
 
   if (ongoingQuiz?.currentSlide === 0) {
-    console.log([participants]);
     // Render QuizLobby when currentSlide is 0 Record<string, Participant>
     return (
       <QuizLobby quizCode={quizCode} participants={participants?participants :{}} />
