@@ -63,9 +63,9 @@ export default function StartScreen() {
         ) : (
           <>
             <Input
-              placeholder="Code"
+              placeholder="Quiz Code"
               className={`text-[#333333] text-center font-display text-3xl py-8 px-12 w-full shadow-lg ${
-                showError && "border-red-500 animate-shake"
+                showError && "border-red-500 animate-shake selected:none"
               }`}
               value={quizCode}
               onChange={handleInputChange}
