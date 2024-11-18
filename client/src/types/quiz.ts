@@ -1,4 +1,5 @@
 import type { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
+import Quiz from "@/models/Quiz";
 
 export type SlideType = "info" | "score" | "question" | "rank";
 export type QuestionType = "MCQSA" | "MCQMA" | "FA";
@@ -57,6 +58,26 @@ interface FASlide extends QuestionSlideBase {
     correctAnswer: string;
 }
 
+interface OngoingQuiz {
+    id: string;
+    created_at: string;
+    currentSlide: number;
+    quiz: Quiz;
+    quizId: string;
+    quizHost: string;
+    participants: { [id: string]: Participant };
+}
 
+interface Participant {
+    answer: string;
+    answerTime: string;
+    hasAnswered: boolean;
+    avatar: string;
+    name: string;
+    participantId: string;
+    score: number;
+}
 
 export type Slide = InfoSlide | ScoreSlide | MCQSASlide | MCQMASlide | FASlide | RankSlide; 
+
+export type { OngoingQuiz, Participant };

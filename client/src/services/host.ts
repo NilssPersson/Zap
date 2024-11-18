@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ref, off, onValue, increment, runTransaction, update, set, get } from "firebase/database";
 import { database } from "@/firebase";
 import Participant from "@/models/Participant";
+import Quiz from "@/models/Quiz";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
@@ -104,12 +105,17 @@ export const useOngoingQuiz = () => {
   };
 
   
-  async function createOngoingQuiz(quizHost: string): Promise<any> {
+  async function createOngoingQuiz(_quiz: Quiz): Promise<any> {
     const db = database;
     const quizCode = await generateQuizCode();
+
+    console.log(_quiz)
+
     const quiz = {
       currentSlide: 0,
-      quizHost: quizHost,
+      quiz: _quiz,
+      quizId: _quiz.id,
+      quizHost: _quiz.user_id,
       participants: {},
       startedAt: new Date().toISOString().toLocaleString(),
     }
