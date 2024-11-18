@@ -95,7 +95,6 @@ export const useOngoingQuiz = () => {
       const quiz = await get(quizRef);
       if(await !quiz.exists()){
         isUnique = true
-        console.log("Returning quizc", quizCode)
         return quizCode;
       }
     }
@@ -114,8 +113,6 @@ export const useOngoingQuiz = () => {
       startedAt: new Date().toISOString().toLocaleString(),
     }
     try{
-        console.log("Setting quiz:", quiz)
-        console.log("With quizcode:", quizCode);
         await set(ref(db, "ongoingQuizzes/" + quizCode), quiz);
         return quizCode;
     }
@@ -129,7 +126,6 @@ export const useOngoingQuiz = () => {
     try {
       const ongoingQuiz =  await get(quizRef);
       setQuizCode(quizCode);
-      console.log("In getOngoing quiz, got:", ongoingQuiz.val());
       return ongoingQuiz.val();
     } catch (error) {
       console.error("Failed to get ongoing quiz", error);
