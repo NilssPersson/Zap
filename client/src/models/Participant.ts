@@ -1,11 +1,11 @@
 interface Participant {
-    id: string;
-    name: string;
-    avatar: string | null;
-    hasAnswered: boolean;
-    quiz_id: string;
-    answer: string | null;
-    points: number;
+  answer: string;
+  answerTime: string;
+  avatar: string | null;
+  hasAnswered: boolean;
+  name: string;
+  participantId: string;
+  score: number;
 }
 
 interface QuizParticipants {

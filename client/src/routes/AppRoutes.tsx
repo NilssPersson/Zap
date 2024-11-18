@@ -5,15 +5,15 @@ import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
 import Quizzes from "../pages/Quizzes";
 import MCQ from "../pages/hostQuestions/MCQ";
-import StartScreen from "@/pages/Participant/StartScreen";
+import StartScreen from "@/pages/joinQuiz/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
-import ParticipantManager from "@/pages/Participant/ParticipantManager";
-import QuizLobby from "../pages/QuizLobby";
+import ParticipantLogic from "@/pages/participantQuizView/ParticipantLogic";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
-import RankView from "@/components/quiz-phone-view/RankView"
+import RankView from "@/components/quiz-phone-view/rankView";
 import ScoreBoard from "@/pages/host/Scoreboard";
+import HostLogic from "@/pages/HostLogic";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -23,7 +23,7 @@ export function AppRoutes() {
       <Route path="/" element={isAuthenticated ? <Quizzes /> : <Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/room-test" element={<RoomTest />} />
-      <Route path="/home" element={<StartScreen />} />
+      <Route path="/play" element={<StartScreen />} />
 
       <Route
         path="/question-test"
@@ -38,10 +38,10 @@ export function AppRoutes() {
       <Route path="/quizzes/:id" element={<QuizView />} />
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
       <Route
-        path="/:quiz_code/:participantId"
-        element={<ParticipantManager />}
+        path="/play/:quizCode/:participantId"
+        element={<ParticipantLogic />}
       />
-      <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
+      <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
       <Route
         path="/fast-answer"
         element={
@@ -82,7 +82,6 @@ export function AppRoutes() {
               { name: "Holland", score: 5 },
               { name: "Sverige", score: 3 },
             ]}
-            
           />
         }
       />

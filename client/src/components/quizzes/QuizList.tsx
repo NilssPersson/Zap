@@ -1,37 +1,31 @@
 import { Button } from "@/components/ui/button";
 import Quiz from "@/models/Quiz"
 import { useNavigate } from "react-router-dom";
-import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
+import { useOngoingQuiz } from "@/services/host";
 
 interface QuizListProps {
     quizzes: Quiz[];
     onDeleteQuiz: (quizId: string) => Promise<void>;
 }
 
-function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
+function QuizList({ quizzes, onDeleteQuiz}: QuizListProps) {
     const navigate = useNavigate();
-    const {
-      createOngoingQuiz,
-    } = useOngoingQuiz();
+    const {createOngoingQuiz} =
+      useOngoingQuiz();
 
-    const handleHostGame = async (quizId: string, quizHost: string) => {
+    const handleHostGame = async ( quizHost: string) => {
       try {
-        createOngoingQuiz(quizHost, quizId)
-          .then((createdQuiz) => {
-            console.log(createdQuiz);
-            if (createdQuiz?.quiz_code) {
-              navigate(`/quizzes/${createdQuiz.quiz_code}/lobby`);
-            } else {
-              console.error(
-                "Failed to create ongoing quiz or quiz_code is missing"
-              );
-            }
-          })
-          .catch((err) => {
+        const quizCode = await createOngoingQuiz(quizHost)
+        console.log("Created quiz: ", quizCode);
+        if (quizCode) {
+          navigate(`/quizzes/${quizCode}/lobby`);
+        } else {
+          console.error(
+            "Failed to create ongoing quiz or quiz_code is missing"
+          );
+        }
+      }catch(err) {
             console.error("Error creating ongoing quiz:", err);
-          });
-      } catch (error) {
-        console.error("Failed to start hosting the game:", error);
       }
     };
 
@@ -47,7 +41,7 @@ function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => handleHostGame(quiz.id, quiz.user_id)}
+              onClick={() => handleHostGame(quiz.user_id)}
             >
               Host Game
             </Button>{" "}
