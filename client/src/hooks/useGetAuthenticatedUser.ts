@@ -1,4 +1,4 @@
-import { userAPI } from "@/api/users";
+import { userService } from "@/services/users";
 import User from "@/models/User";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ function useGetAuthenticatedUser() {
     if (!id) return;
 
     const fetchUser = async (id: string) => {
-      const { data, error } = await userAPI.findOrCreate(id, user.email ?? "");
+      const { data, error } = await userService.findOrCreate(id, user.email ?? "");
 
       if (error) {
         console.error("Error fetching/creating user:", error);

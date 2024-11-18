@@ -1,9 +1,9 @@
-import { quizAPI } from "@/api/quizzes";
+import { quizService } from "@/services/quizzes";
 import { createOptimisticResourceHook } from "./useOptimisticResource";
 import Quiz from "@/models/Quiz";
 
 const useQuizzes = createOptimisticResourceHook<Quiz>({
-  api: quizAPI,
+  api: quizService,
   userScoped: true
 });
 

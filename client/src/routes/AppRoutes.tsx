@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import About from "../pages/About";
 import Home from "../pages/Home";
-import RoomTest from "../pages/RoomTest";
 import Quizzes from "../pages/Quizzes";
 import MCQ from "../pages/hostQuestions/MCQ";
 import StartScreen from "@/pages/joinQuiz/StartScreen";
@@ -22,7 +21,6 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={isAuthenticated ? <Quizzes /> : <Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/room-test" element={<RoomTest />} />
       <Route path="/play" element={<StartScreen />} />
 
       <Route

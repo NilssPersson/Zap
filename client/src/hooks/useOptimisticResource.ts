@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { BaseAPI, ApiResponse } from "@/api/base";
+import { BaseService, FirebaseResponse } from "@/services/base";
 import useGetAuthenticatedUser from "./useGetAuthenticatedUser";
 
 interface BaseModel {
@@ -9,8 +9,12 @@ interface BaseModel {
 }
 
 interface UseOptimisticResourceOptions<T> {
-  api: BaseAPI<T>;
+  api: BaseService<T>;
   userScoped?: boolean; // Whether the resource is scoped to the user
+}
+
+interface UserScopedService<T> extends BaseService<T> {
+  getByUserId: (userId: string) => Promise<FirebaseResponse<T[]>>;
 }
 
 export function createOptimisticResourceHook<T extends BaseModel>(options: UseOptimisticResourceOptions<T>) {
@@ -23,10 +27,10 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       if (options.userScoped && !user) return;
       
       setIsLoading(true);
-      let response: ApiResponse<T[]>;
+      let response: FirebaseResponse<T[]>;
       
       if (options.userScoped && user) {
-        response = await (options.api as any).getByUserId(user.id);
+        response = await (options.api as UserScopedService<T>).getByUserId(user.id);
       } else {
         response = await options.api.list();
       }
@@ -53,6 +57,8 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       setResources(prev => [...prev, optimisticResource]);
 
       const { data, error } = await options.api.create(newResource);
+
+      console.log(data)
 
       if (error) {
         setResources(prev => prev.filter(resource => resource.id !== tempId));

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { quizAPI } from '@/api/quizzes';
+import { quizService } from '@/services/quizzes';
 import type Quiz from '@/models/Quiz';
 import type { Slide, SlideType, QuestionType } from '@/types/quiz';
 import { toast } from 'sonner';
@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 export function useQuizEditor(quizId: string | undefined) {
     const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [slides, setSlides] = useState<Slide[]>([]);
     const [activeSlideId, setActiveSlideId] = useState<string | null>(null);
     const [showSettings, setShowSettings] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -20,27 +19,14 @@ export function useQuizEditor(quizId: string | undefined) {
             setIsLoading(true);
             
             try {
-                const [quizResponse, slidesResponse] = await Promise.all([
-                    quizAPI.getById(quizId),
-                    quizAPI.getSlides(quizId)
-                ]);
+                const { data, error } = await quizService.getById(quizId)
 
-                if (quizResponse.error) {
-                    setError(quizResponse.error.message);
+                if (error) {
+                    setError(error.message);
                     return;
                 }
-                if (slidesResponse.error) {
-                    setError(slidesResponse.error.message);
-                    return;
-                }
-
-                setQuiz(quizResponse.data);
-                setSlides(slidesResponse.data || []);
-                
-                // Set first slide as active if there are slides and no active slide
-                if (slidesResponse.data?.length) {
-                    setActiveSlideId(slidesResponse.data[0].id);
-                }
+                setQuiz(data);
+                setActiveSlideId(data?.slides?.[0]?.id || null);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred');
             } finally {
@@ -57,7 +43,7 @@ export function useQuizEditor(quizId: string | undefined) {
         setIsSaving(true);
         
         const savePromise = new Promise((resolve, reject) => {
-            quizAPI.saveSlides(quizId, slides)
+            quizService.update(quizId, { slides: quiz?.slides || [] })
                 .then(({ error: saveError }) => {
                     if (saveError) {
                         setError(saveError.message);
@@ -163,26 +149,26 @@ export function useQuizEditor(quizId: string | undefined) {
                 throw new Error('Invalid slide type');
         }
 
-        setSlides(prev => [...prev, newSlide]);
+        setQuiz(prev => prev ? { ...prev, slides: [...(prev.slides || []), newSlide] } : null);
         setActiveSlideId(newSlide.id);
     };
 
     const handleSlideUpdate = (updatedSlide: Slide) => {
-        setSlides(prev => prev.map(slide =>
+        setQuiz(prev => prev ? { ...prev, slides: prev.slides.map(slide =>
             slide.id === updatedSlide.id ? updatedSlide : slide
-        ));
+        ) } : null);
     };
 
     const handleSlideDelete = (slideId: string) => {
-        setSlides(prev => prev.filter(slide => slide.id !== slideId));
+        setQuiz(prev => prev ? { ...prev, slides: prev.slides.filter(slide => slide.id !== slideId) } : null);
         if (activeSlideId === slideId) {
-            setActiveSlideId(slides.find(s => s.id !== slideId)?.id ?? null);
+            setActiveSlideId(quiz?.slides.find(s => s.id !== slideId)?.id ?? null);
         }
     };
 
     const handleSlideDuplicate = (slideId: string) => {
-        const currentIndex = slides.findIndex(slide => slide.id === slideId);
-        const slideToClone = slides[currentIndex];
+        const currentIndex = quiz?.slides.findIndex(slide => slide.id === slideId) || 0;
+        const slideToClone = quiz?.slides[currentIndex];
         if (!slideToClone) return;
 
         const newSlide = {
@@ -192,22 +178,22 @@ export function useQuizEditor(quizId: string | undefined) {
             backgroundStyle: slideToClone.backgroundStyle || 'waves',
         };
 
-        const newSlides = [...slides];
+        const newSlides = [...quiz?.slides || []];
         newSlides.splice(currentIndex + 1, 0, newSlide);
-        setSlides(newSlides);
+        setQuiz(prev => prev ? { ...prev, slides: newSlides } : null);
         setActiveSlideId(newSlide.id);
     };
 
     const handleSlideMove = (slideId: string, direction: 'up' | 'down') => {
-        const currentIndex = slides.findIndex(slide => slide.id === slideId);
-        if (currentIndex === -1) return;
+        const currentIndex = quiz?.slides.findIndex(slide => slide.id === slideId);
+        if (currentIndex === -1 || currentIndex === undefined) return;
 
         const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-        if (newIndex < 0 || newIndex >= slides.length) return;
+        if (newIndex < 0 || newIndex >= (quiz?.slides.length || 0)) return;
 
-        const newSlides = [...slides];
+        const newSlides = [...quiz?.slides || []];
         [newSlides[currentIndex], newSlides[newIndex]] = [newSlides[newIndex], newSlides[currentIndex]];
-        setSlides(newSlides);
+        setQuiz(prev => prev ? { ...prev, slides: newSlides } : null);
     };
 
     const handleQuizUpdate = async (updates: {
@@ -226,7 +212,7 @@ export function useQuizEditor(quizId: string | undefined) {
             background_color: updates.backgroundColor ?? quiz.background_color,
         };
 
-        const { error: updateError } = await quizAPI.update(quiz.id, updatedQuiz);
+        const { error: updateError } = await quizService.update(quiz.id, updatedQuiz);
         if (updateError) {
             setError(updateError.message);
             return;
@@ -235,12 +221,12 @@ export function useQuizEditor(quizId: string | undefined) {
         setQuiz(updatedQuiz);
     };
 
-    const activeSlide = slides.find(slide => slide.id === activeSlideId) ?? null;
+    const activeSlide = quiz?.slides?.find(slide => slide.id === activeSlideId) ?? null;
 
     return {
         quiz,
         error,
-        slides,
+        slides: quiz?.slides || [],
         activeSlide,
         activeSlideId,
         showSettings,
