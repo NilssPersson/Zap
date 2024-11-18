@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import Avatar, { genConfig } from "react-nice-avatar";
+import { InfoIcon } from "lucide-react";
 
 interface CreateParticipantProps {
   name: string;
@@ -32,15 +33,15 @@ export default function CreateParticipant({
   setAvatar,
   handleAddParticipant,
 }: CreateParticipantProps) {
-  const [errorMessage, setErrorMessage] = useState("");
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     setAvatar(createRandomId());
   }, [setAvatar]);
 
   const handleSubmit = () => {
-    if (!name || !avatar) {
-      setErrorMessage("Both name and avatar are required.");
+    if (!name) {
+      setShowError(true);
       return;
     }
 
@@ -52,18 +53,14 @@ export default function CreateParticipant({
     setAvatar(randomString);
   }
 
+  function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setName(e.target.value);
+    setShowError(false);
+  }
+
   return (
     <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
       <div className="flex flex-col items-center justify-center w-full max-w-md space-y-4 bg-[#fefefe] rounded-2xl p-8 shadow-lg">
-        <Input
-          placeholder="Enter Name"
-          className="text-[#333333] text-center border-gray-400 rounded-md font-display text-3xl py-8 px-12 w-full shadow-lg"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        {/* TODO: Maybe change so background is always same color */}
-
         <Avatar
           style={{ width: "8rem", height: "8rem" }}
           {...genConfig(avatar)}
@@ -71,6 +68,20 @@ export default function CreateParticipant({
         <Button onClick={changeAvatarClick} className="mx-5 bg-blue-400">
           Randomize
         </Button>
+        <Input
+          placeholder="Enter Name"
+          className={`text-[#333333] text-center font-display text-3xl py-8 px-12 w-full shadow-lg ${
+            showError && "border-red-500 animate-shake "
+          }`}
+          value={name}
+          onChange={handleNameChange}
+        />
+        {showError && (
+          <div className="flex justify-start items-center w-full text-red-500">
+            <InfoIcon className="w-5 h-5 mr-1" />
+            <p className="font-display">Name is required</p>
+          </div>
+        )}
 
         {/* Join */}
         <Button
@@ -81,11 +92,6 @@ export default function CreateParticipant({
         </Button>
 
         {/* TODO: Better error, if any */}
-        {errorMessage && (
-          <div className="text-red-500 text-xl font-semibold mt-4">
-            {errorMessage}
-          </div>
-        )}
       </div>
     </div>
   );

@@ -4,13 +4,10 @@ import { useState } from "react";
 import { InfoIcon } from "lucide-react";
 import { checkIfGameExists } from "@/services/client";
 import { useNavigate } from "react-router-dom";
-import useSound from "use-sound";
-import errorSound from "@/components/sounds/errorSound.mp3";
 
 export default function StartScreen() {
   const [quizCode, setQuizCode] = useState("");
   const [showError, setShowError] = useState(false);
-  const [playErrorSound] = useSound(errorSound);
 
   const navigate = useNavigate();
 
@@ -22,7 +19,6 @@ export default function StartScreen() {
     } else {
       // Logic for when the game does not exist
       setShowError(true);
-      playErrorSound();
     }
   }
 
@@ -49,7 +45,7 @@ export default function StartScreen() {
           <Input
             placeholder="Quiz Code"
             className={`text-[#333333] text-center font-display text-3xl py-8 px-12 w-full shadow-lg ${
-              showError && "border-red-500 animate-shake "
+              showError && "border-red-500 animate-Shake"
             }`}
             value={quizCode}
             onChange={handleInputChange}
