@@ -60,6 +60,7 @@ interface FASlide extends QuestionSlideBase {
 
 interface OngoingQuiz {
     id: string;
+    startedAt: string;
     created_at: string;
     currentSlide: number;
     quiz: Quiz;
