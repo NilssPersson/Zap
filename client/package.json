@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "firebase": "^11.0.1",
+    "framer-motion": "^11.11.17",
     "i": "^0.3.7",
     "lucide": "^0.454.0",
     "lucide-react": "^0.454.0",
@@ -44,6 +45,7 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "tw-elements": "^2.0.0",
+    "use-sound": "^4.0.3",
     "vaul": "^1.1.1"
   },
   "devDependencies": {

@@ -5,6 +5,8 @@ import CreateParticipant from "./CreateParticipant";
 import { InfoIcon } from "lucide-react";
 import { checkIfGameExists, addParticipant } from "@/services/client";
 import { useNavigate } from "react-router-dom";
+import useSound from "use-sound";
+import errorSound from "@/components/sounds/errorSound.mp3";
 
 export default function StartScreen() {
   const [quizCode, setQuizCode] = useState("");
@@ -12,6 +14,7 @@ export default function StartScreen() {
   const [name, setName] = useState("");
   const [view, setView] = useState("enterCode"); // enterCode, createParticipant
   const [avatar, setAvatar] = useState("test");
+  const [playErrorSound] = useSound(errorSound);
 
   const navigate = useNavigate();
 
@@ -30,6 +33,7 @@ export default function StartScreen() {
     } else {
       // Logic for when the game does not exist
       setShowError(true);
+      playErrorSound();
     }
   }
 
@@ -65,7 +69,7 @@ export default function StartScreen() {
             <Input
               placeholder="Quiz Code"
               className={`text-[#333333] text-center font-display text-3xl py-8 px-12 w-full shadow-lg ${
-                showError && "border-red-500 animate-shake selected:none"
+                showError && "border-red-500 animate-shake "
               }`}
               value={quizCode}
               onChange={handleInputChange}
@@ -73,7 +77,7 @@ export default function StartScreen() {
             {showError && (
               <div className="flex justify-start items-center w-full text-red-500">
                 <InfoIcon className="w-5 h-5 mr-1" />
-                <p>Invalid Code</p>
+                <p className="font-display">Invalid Code</p>
               </div>
             )}
             <Button
