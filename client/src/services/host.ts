@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { ref, off, onValue, increment, runTransaction, update, set, get } from "firebase/database";
 import { database } from "@/firebase";
-import QuizOngoing from "@/models/QuizOngoing";
+import Participant from "@/models/Participant";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
-  const [participants, setPaticipants] = useState([]);
+  const [participants, setPaticipants] = useState<Participant[]>([]);
 
     useEffect(() => {
     const participantsRef = ref(database, `ongoingQuizzes/${quizCode}/participants`);
@@ -42,36 +42,39 @@ export const useOngoingQuiz = () => {
       // Reference to all participants
       const participantRef = ref(
         database,
-        `ongoingQuizzes/${quizCode}/Participants/`
+        `ongoingQuizzes/${quizCode}/participants/`
       );
 
       // Get all participants to update
-      const participantsSnapshot = await get(participantRef);
+      const participantsSnapshot = (await get(participantRef));
       if (participantsSnapshot.exists()) {
         const updates: { [key: string]: any } = {};
-        participantsSnapshot.forEach((participant) => {
+        participantsSnapshot.forEach((participant: any) => {
           const participantKey = participant.key;
           updates[
-            `ongoingQuizzes/${quizCode}/Participants/${participantKey}/hasAnswered`
+            `ongoingQuizzes/${quizCode}/participants/${participantKey}/hasAnswered`
           ] = false;
           updates[
-            `ongoingQuizzes/${quizCode}/Participants/${participantKey}/Answer`
-          ] = null;
+            `ongoingQuizzes/${quizCode}/participants/${participantKey}/Answer`
+          ] = "";
         });
-
         // Apply the updates to all participants
         await update(ref(database), updates);
         console.log("All participants' answers reset successfully");
       } else {
         console.log("No participants found");
       }
+
     } catch (error) {
       console.error(
         "Error updating CurrentSlideOrder or resetting participants:",
         error
       );
     }
-
+    const ongoingQuiz = await get(
+      ref(database, `ongoingQuizzes/${quizCode}`)
+    );
+    return ongoingQuiz.val();
 
   };
 
@@ -125,7 +128,9 @@ export const useOngoingQuiz = () => {
     const quizRef = ref(database, "ongoingQuizzes/" + quizCode);
     try {
       const ongoingQuiz =  await get(quizRef);
-      return ongoingQuiz;
+      setQuizCode(quizCode);
+      console.log("In getOngoing quiz, got:", ongoingQuiz.val());
+      return ongoingQuiz.val();
     } catch (error) {
       console.error("Failed to get ongoing quiz", error);
     }

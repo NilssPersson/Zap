@@ -9,10 +9,10 @@ import StartScreen from "@/pages/joinQuiz/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
 import ParticipantLogic from "@/pages/participantQuizView/ParticipantLogic";
-import QuizLobby from "../pages/QuizLobby";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
 import RankView from "@/components/quiz-phone-view/rankView";
+import HostLogic from "@/pages/HostLogic";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -40,7 +40,7 @@ export function AppRoutes() {
         path="/play/:quizCode/:participantId"
         element={<ParticipantLogic />}
       />
-      <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
+      <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
       <Route
         path="/fast-answer"
         element={

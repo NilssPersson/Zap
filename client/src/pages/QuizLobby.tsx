@@ -1,55 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useParams /* useNavigate */ } from "react-router-dom";
-import { useOngoingQuiz } from "@/services/host";
+import { useEffect, useState } from "react";
+import Participant from "@/models/Participant";
 
-const Lobby: React.FC = () => {
-  const { id } = useParams();
-  const [setQuizOngoing] = useState<any | null>();
-  const { quizCode, incrementSlide, getOngoingQuiz } = useOngoingQuiz();
+interface LobbyProps {
+  quizCode: string;
+  participants: Record<string, Participant>;
+}
+
+//animations och key frames
+
+export default function QuizLobby({ quizCode, participants }: LobbyProps) {
+  const [participantNames, setParticipantNames] = useState<string[]>([]);
 
   useEffect(() => {
-    const setupLobby = async () => {
-      try {
-        const ongoingQuiz = await getOngoingQuiz(id || "");
-        // Add initial participants from database
-        if (ongoingQuiz) {
-          setQuizOngoing(ongoingQuiz);
+    const newNames = Object.values(participants).map(
+      (participant) => participant.name
+    ); // Convert object to array
+    setParticipantNames((prevNames) => {
+      // Add only new participants to avoid duplicates
+      const updatedNames = [...prevNames];
+      newNames.forEach((name) => {
+        if (!prevNames.includes(name)) {
+          updatedNames.push(name);
         }
-      } catch (error) {
-        console.error("Error setting up lobby:", error);
-      }
-    };
-
-    setupLobby();
-  }, [id]);
-
-  const startGame = async () => {
-    const startedQuiz = await incrementSlide(quizCode);
-    setQuizOngoing(startedQuiz);
-
-    // Logic to start the game
-    // navigate(`/quizzes/${id}/play`);
-  };
+      });
+      return updatedNames;
+    });
+  }, [participants]);
 
   return (
     <div className="lobby-container">
-      <h1></h1>
-      <h1>Lobby for Quiz {quizCode}</h1>
-      {/* <h1>Current slide {ongoingQuiz.currentSlide}</h1>
-      <button onClick={startGame}>Start Game</button> */}
+        <h1>Quiz Lobby: {quizCode}</h1>
+      <h2>Participants:</h2>
+      <ul>
+        {participantNames.map((name, index) => (
+          <li key={index} className="participant">
+            {name}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
-
-{
-  /* <h1>Lobby for Quiz {quizCode}</h1>
-      <h1>On slide {ongoingQuiz.currentSlide}</h1>
-      <h2>Connected Players</h2>
-      {/* <ul>
-        {ongoingQuiz.participants.map((player:any) => (
-          <li key={player.id}>{player.name}</li>
-        ))}
-      </ul> */
 }
-
-export default Lobby;
