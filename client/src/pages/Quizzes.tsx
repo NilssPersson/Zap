@@ -67,7 +67,7 @@ function Quizzes() {
                         {ongoingQuizzes.map(ongoingQuiz => (
                             <div key={ongoingQuiz.id} className="flex items-center gap-2 border p-2 rounded">
                                 <span>{ongoingQuiz.id}</span>
-                                {ongoingQuiz.quiz && <span>Quiz: {ongoingQuiz.quiz.quiz_name}</span>}
+                                {ongoingQuiz.quiz && <span className="bg-primary text-white p-2 rounded">Quiz: {ongoingQuiz.quiz.quiz_name}</span>}
                                 <div className="mr-auto" />
                                 <Button variant="outline" onClick={() => handleGoToLobby(ongoingQuiz.id)}>Go to Lobby</Button>
                                 <Button variant="destructive" onClick={() => handleDeleteOngoingQuiz(ongoingQuiz.id)}>Delete</Button>
