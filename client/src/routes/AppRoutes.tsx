@@ -8,8 +8,8 @@ import MCQ from "../pages/hostQuestions/MCQ";
 import StartScreen from "@/pages/Participant/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
-import ParticipantLogic from "@/pages/Participant/ParticipantLogic";
-import QuizLobby from "../pages/QuizLobby";
+import ParticipantManager from "@/pages/Participant/ParticipantManager";
+import QuizLobby from "../pages/HostLogic";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
 import RankView from "@/components/quiz-phone-view/rankView";
@@ -38,7 +38,7 @@ export function AppRoutes() {
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
       <Route
         path="/play/:quizCode/:participantId"
-        element={<ParticipantLogic />}
+        element={<ParticipantManager />}
       />
       <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
       <Route
