@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { addAnswer, useGameStatus } from "@/services/client";
 
-export default function ParticipantManager() {
+export default function ParticipantLogic() {
   const [answer, setAnswer] = useState("");
   const { quizCode, participantId } = useParams();
 
@@ -30,7 +30,9 @@ export default function ParticipantManager() {
         className="text-black"
         onChange={(e) => setAnswer(e.target.value)}
       />
-      <Button onClick={answerQuestion}>Answer</Button>
+      <Button disabled={hasAnswered} onClick={answerQuestion}>
+        Answer
+      </Button>
       <p>{score}</p>
     </div>
   );

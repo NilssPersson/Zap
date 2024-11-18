@@ -18,7 +18,7 @@ export default function StartScreen() {
   async function handleAddParticipant() {
     console.log("Participant Added:", { name, avatar });
     const participantId = await addParticipant(quizCode, name, avatar);
-    navigate(`/${quizCode}/${participantId}`);
+    navigate(`/play/${quizCode}/${participantId}`);
   }
 
   async function checkCode() {
@@ -64,7 +64,9 @@ export default function StartScreen() {
           <>
             <Input
               placeholder="Code"
-              className="text-[#333333] text-center border-gray-400 rounded-md font-display text-3xl py-8 px-12 w-full shadow-lg"
+              className={`text-[#333333] text-center font-display text-3xl py-8 px-12 w-full shadow-lg ${
+                showError && "border-red-500 animate-shake"
+              }`}
               value={quizCode}
               onChange={handleInputChange}
             />
@@ -76,7 +78,7 @@ export default function StartScreen() {
             )}
             <Button
               onClick={checkCode}
-              className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full shadow-lg"
+              className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full"
             >
               Join
             </Button>

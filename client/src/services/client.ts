@@ -44,9 +44,9 @@ export const addAnswer = async (quizCode:string, participantId:string, answer:st
 };
 
 export const useGameStatus = (quizCode:string, participantId:string) => {
-  const [hasAnswered, setHasAnswered] = useState(null);
-  const [currentSlide, setCurrentSlide] = useState(null);
-  const [score, setScore] = useState(null);
+  const [hasAnswered, setHasAnswered] = useState(undefined);
+  const [currentSlide, setCurrentSlide] = useState(undefined);
+  const [score, setScore] = useState(undefined);
 
   useEffect(() => {
     const slideRef = ref(database, `ongoingQuizzes/${quizCode}/currentSlide`);
