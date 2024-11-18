@@ -5,14 +5,14 @@ import Home from "../pages/Home";
 import RoomTest from "../pages/RoomTest";
 import Quizzes from "../pages/Quizzes";
 import MCQ from "../pages/hostQuestions/MCQ";
-import StartScreen from "@/pages/Participant/StartScreen";
+import StartScreen from "@/pages/joinQuiz/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
-import ParticipantManager from "@/pages/Participant/ParticipantManager";
-import QuizLobby from "../pages/HostLogic";
+import ParticipantLogic from "@/pages/participantQuizView/ParticipantLogic";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
 import RankView from "@/components/quiz-phone-view/rankView";
+import HostLogic from "@/pages/HostLogic";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -38,9 +38,9 @@ export function AppRoutes() {
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
       <Route
         path="/play/:quizCode/:participantId"
-        element={<ParticipantManager />}
+        element={<ParticipantLogic />}
       />
-      <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
+      <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
       <Route
         path="/fast-answer"
         element={

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { addAnswer, useGameStatus } from "@/services/client";
+import TeamInfo from "./components/teamInfo";
 
 export default function ParticipantLogic() {
   const [answer, setAnswer] = useState("");
@@ -34,6 +35,7 @@ export default function ParticipantLogic() {
         Answer
       </Button>
       <p>{score}</p>
+      <TeamInfo name={"Test"} score={score} avatar="test" />
     </div>
   );
 }
