@@ -5,6 +5,8 @@ import CreateParticipant from "./CreateParticipant";
 import { InfoIcon } from "lucide-react";
 import { checkIfGameExists, addParticipant } from "@/services/client";
 import { useNavigate } from "react-router-dom";
+import useSound from "use-sound";
+import errorSound from "@/components/sounds/errorSound.mp3";
 
 export default function StartScreen() {
   const [quizCode, setQuizCode] = useState("");
@@ -12,6 +14,7 @@ export default function StartScreen() {
   const [name, setName] = useState("");
   const [view, setView] = useState("enterCode"); // enterCode, createParticipant
   const [avatar, setAvatar] = useState("test");
+  const [playErrorSound] = useSound(errorSound);
 
   const navigate = useNavigate();
 
@@ -30,6 +33,7 @@ export default function StartScreen() {
     } else {
       // Logic for when the game does not exist
       setShowError(true);
+      playErrorSound();
     }
   }
 
