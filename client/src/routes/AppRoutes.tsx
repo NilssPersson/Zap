@@ -12,6 +12,7 @@ import ParticipantLogic from "@/pages/participantQuizView/ParticipantLogic";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
 import RankView from "@/components/quiz-phone-view/rankView";
+import ScoreBoard from "@/pages/host/Scoreboard";
 import HostLogic from "@/pages/HostLogic";
 
 export function AppRoutes() {
@@ -54,6 +55,20 @@ export function AppRoutes() {
       />
       <Route path="/profile" element={<Profile />} />
       <Route
+          path="/scoreboard"
+          element={
+            <ScoreBoard
+            scoreboard={[
+              { name: "Alice", points: 100, newPoints: 500 },
+              { name: "Bob", points: 80, newPoints: 700 },
+              { name: "Charlie", points: 70, newPoints: 75 },
+              { name: "Diana", points: 60, newPoints: 90 },
+              { name: "Eve", points: 50, newPoints: 55 },
+            ]}
+          />
+          }
+        />
+      <Route
         path="rankview"
         element={
           <RankView
@@ -70,6 +85,8 @@ export function AppRoutes() {
           />
         }
       />
+      
+     
     </Routes>
   );
 }
