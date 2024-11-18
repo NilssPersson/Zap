@@ -32,9 +32,9 @@ const HostLogic: React.FC = () => {
 
   if (ongoingQuiz?.currentSlide === 0) {
     console.log([participants]);
-    // Render QuizLobby when currentSlide is 0
+    // Render QuizLobby when currentSlide is 0 Record<string, Participant>
     return (
-      <QuizLobby quizCode={quizCode} participants={participants} />
+      <QuizLobby quizCode={quizCode} participants={participants?participants :{}} />
     );
   }
 
@@ -46,7 +46,7 @@ const HostLogic: React.FC = () => {
       <h2>Participants:</h2>
       <ul>
         {ongoingQuiz?.participants &&
-          Object.entries(participants).map(([id, participant]) => (
+          Object.entries(participants?participants:{}).map(([id, participant]) => (
             <li key={id}>{participant.name}</li>
           ))}
       </ul>

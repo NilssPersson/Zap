@@ -1,13 +1,13 @@
 // Skapa och lyssna på pågående quiz answer och uppdatera
 
 import { useState, useEffect } from "react";
-import { ref, off, onValue, increment, runTransaction, update, set, get } from "firebase/database";
+import { ref, off, onValue, runTransaction, update, set, get } from "firebase/database";
 import { database } from "@/firebase";
 import Participant from "@/models/Participant";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
-  const [participants, setPaticipants] = useState<Participant[]>([]);
+  const [participants, setPaticipants] = useState<Record<string, Participant>>();
 
     useEffect(() => {
     const participantsRef = ref(database, `ongoingQuizzes/${quizCode}/participants`);

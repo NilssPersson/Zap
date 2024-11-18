@@ -12,6 +12,10 @@ module.exports = {
     },
     extend: {
       keyframes: {
+        "zoom-in": {
+          "0%": { transform: "scale(0.5)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
         "accordion-down": {
           from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -39,6 +43,7 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         shake: "shake 0.6s cubic-bezier(.36,.07,.19,.97) both",
+        "zoom-in": "zoom-in 0.5s ease-in-out",
       },
       colors: {
         primary: "hsl(var(--primary))",
@@ -72,5 +77,8 @@ module.exports = {
       },
     },
   },
+  safelist: [
+    "animate-[zoom-in_0.5s_ease-in-out]",
+  ],
   plugins: [require("tailwindcss-animate")],
 };
