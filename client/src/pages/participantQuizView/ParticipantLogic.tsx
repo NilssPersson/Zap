@@ -34,7 +34,6 @@ export default function ParticipantLogic() {
       <Button disabled={hasAnswered} onClick={answerQuestion}>
         Answer
       </Button>
-      <p>{score}</p>
       <TeamInfo name={"Test"} score={score} avatar="test" />
     </div>
   );
