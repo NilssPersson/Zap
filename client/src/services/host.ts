@@ -1,7 +1,7 @@
 // Skapa och lyssna på pågående quiz answer och uppdatera
 
 import { useState, useEffect } from "react";
-import { ref, off, onValue, runTransaction, update, set, get } from "firebase/database";
+import { ref, off, onValue, runTransaction, update, set, get, DataSnapshot } from "firebase/database";
 import { database } from "@/firebase";
 import Participant from "@/models/Participant";
 
@@ -12,12 +12,13 @@ export const useOngoingQuiz = () => {
     useEffect(() => {
     const participantsRef = ref(database, `ongoingQuizzes/${quizCode}/participants`);
     
-    const handleQuizChange = (snapshot: any) => {
+    const handleQuizChange = (snapshot: DataSnapshot) => {
     if (snapshot.exists()) {
       const newParticipants = snapshot.val();
       setPaticipants(newParticipants);
     } else {
-      console.error("Game not found");
+      console.error("No participants found");
+      setPaticipants({});
     }
     };
 

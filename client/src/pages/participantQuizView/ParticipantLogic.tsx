@@ -7,10 +7,15 @@ import {
   useGameStatus,
   addParticipant,
   removeParticipant,
+  getParticipant,
+  checkIfGameExists,
+  participantExists,
 } from "@/services/client";
 import TeamInfo from "./components/teamInfo";
 import CreateParticipant from "./components/CreateParticipant";
 import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export default function ParticipantLogic() {
   const [answer, setAnswer] = useState("");
@@ -20,19 +25,58 @@ export default function ParticipantLogic() {
   const [participantId, setParticipantId] = useState<string | undefined>(
     undefined,
   );
+  const [cookies, setCookie, removeCookie] = useCookies(["participantId"]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(participantId);
-  }, [participantId]);
+    const checkQuiz = async () => {
+      if (!quizCode) return;
+      const quizExists = await checkIfGameExists(quizCode);
+
+      if (!quizExists) {
+        navigate("/play");
+        removeCookie("participantId");
+      }
+    };
+    const fetchParticipant = async () => {
+      if (!quizCode) return;
+      if (cookies.participantId) {
+        setParticipantId(cookies.participantId);
+        const exists = await participantExists(quizCode, cookies.participantId);
+        if (!exists) {
+          removeCookie("participantId");
+          setParticipantId(undefined);
+        } else {
+          try {
+            const data = await getParticipant(
+              quizCode as string,
+              cookies.participantId,
+            );
+            setName(data.name);
+            setAvatar(data.avatar);
+          } catch (error) {
+            console.error("Error fetching participant data:", error);
+          }
+        }
+      }
+    };
+
+    fetchParticipant();
+    checkQuiz();
+  }, [cookies, quizCode, navigate, removeCookie]);
 
   async function handleRemoveParticipant() {
     if (!quizCode || !participantId) return;
     const res = await removeParticipant(quizCode, participantId);
-    if (res) setParticipantId(undefined);
+    if (res) {
+      removeCookie("participantId");
+      navigate("/play");
+    }
   }
 
   async function handleAddParticipant() {
     const createdId = await addParticipant(quizCode as string, name, avatar);
+    setCookie("participantId", createdId);
     setParticipantId(createdId);
   }
 
@@ -41,10 +85,7 @@ export default function ParticipantLogic() {
     participantId as string,
   );
 
-  console.log(hasAnswered, currentSlide, score);
-
   async function answerQuestion() {
-    console.log(quizCode);
     if (!quizCode || !participantId || !answer) return;
     await addAnswer(quizCode, participantId, answer);
   }
@@ -81,7 +122,7 @@ export default function ParticipantLogic() {
             onChange={(e) => setAnswer(e.target.value)}
           />
           <Button disabled={hasAnswered} onClick={answerQuestion}>
-            Answer
+            Answer {currentSlide}
           </Button>
         </div>
       </div>

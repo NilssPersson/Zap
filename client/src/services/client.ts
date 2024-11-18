@@ -10,8 +10,19 @@ export const checkIfGameExists = async (quizCode:string) => {
   return quizSnap.exists();
 }
 
+export const participantExists = async (quizCode:string, participantId:string) => {
+  const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+  const participantSnap = await get(participantRef);
+  return participantSnap.exists();
+}
+
 export const addParticipant = async (quizCode:string, name:string, avatar:string) => {
   const participantId = crypto.randomUUID();
+  const quizExists = await checkIfGameExists(quizCode);
+  if (!quizExists) {
+    console.error("Game does not exist");
+    return;
+  }
   try {
     const teamRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
     await set(teamRef, {
@@ -47,7 +58,7 @@ export const useGameStatus = (quizCode:string, participantId:string) => {
   const [hasAnswered, setHasAnswered] = useState<boolean>(false);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
-
+  
   useEffect(() => {
     const slideRef = ref(database, `ongoingQuizzes/${quizCode}/currentSlide`);
     const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
@@ -92,4 +103,10 @@ export const removeParticipant = async (quizCode:string, participantId:string) =
     console.error(error);
     return false;
   }
+}
+
+export const getParticipant = async (quizCode:string, participantId:string) => {
+  const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+  const participantSnap = await get(participantRef);
+  return participantSnap.val();
 }
