@@ -83,3 +83,13 @@ export const useGameStatus = (quizCode:string, participantId:string) => {
   return { hasAnswered, currentSlide,score };
 };
 
+export const removeParticipant = async (quizCode:string, participantId:string) => {
+  const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+  try {
+    await set(participantRef, null);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
