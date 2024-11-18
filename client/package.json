@@ -28,12 +28,9 @@
     "@types/firebase": "^3.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-<<<<<<< HEAD
     "firebase": "^11.0.1",
     "i": "^0.3.7",
-=======
     "framer-motion": "^11.11.17",
->>>>>>> 926d61cc17d5f5f97c868c711daa5b965c8b9c79
     "lucide": "^0.454.0",
     "lucide-react": "^0.454.0",
     "next-themes": "^0.4.3",

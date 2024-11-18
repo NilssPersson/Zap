@@ -73,7 +73,7 @@ export default function StartScreen() {
             {showError && (
               <div className="flex justify-start items-center w-full text-red-500">
                 <InfoIcon className="w-5 h-5 mr-1" />
-                <p>Invalid Code</p>
+                <p className="font-display">Invalid Code</p>
               </div>
             )}
             <Button
