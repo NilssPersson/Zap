@@ -19,6 +19,7 @@ export const participantExists = async (quizCode:string, participantId:string) =
 export const addParticipant = async (quizCode:string, name:string, avatar:string) => {
   const participantId = crypto.randomUUID();
   const quizExists = await checkIfGameExists(quizCode);
+ 
   if (!quizExists) {
     console.error("Game does not exist");
     return;
@@ -41,6 +42,13 @@ export const addParticipant = async (quizCode:string, name:string, avatar:string
 };
 
 export const addAnswer = async (quizCode:string, participantId:string, answer:string) => {
+  const participantInQuiz = await participantExists(quizCode, participantId);
+
+  if (!participantInQuiz) {
+    console.error("Participant does not exist in quiz");
+    return;
+  }
+
   const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
 
   try {

@@ -31,38 +31,42 @@ export default function ParticipantLogic() {
   useEffect(() => {
     const checkQuiz = async () => {
       if (!quizCode) return;
-      const quizExists = await checkIfGameExists(quizCode);
 
-      if (!quizExists) {
-        navigate("/play");
-        removeCookie("participantId");
+      try {
+        const quizExists = await checkIfGameExists(quizCode);
+
+        if (!quizExists) {
+          navigate("/play");
+          removeCookie("participantId");
+        }
+      } catch (error) {
+        console.error("Error checking quiz existence:", error);
       }
     };
+
     const fetchParticipant = async () => {
-      if (!quizCode) return;
-      if (cookies.participantId) {
-        setParticipantId(cookies.participantId);
+      if (!quizCode || !cookies.participantId) return;
+
+      try {
         const exists = await participantExists(quizCode, cookies.participantId);
+        // The participant has either been removed or was from another quiz
         if (!exists) {
           removeCookie("participantId");
           setParticipantId(undefined);
-        } else {
-          try {
-            const data = await getParticipant(
-              quizCode as string,
-              cookies.participantId,
-            );
-            setName(data.name);
-            setAvatar(data.avatar);
-          } catch (error) {
-            console.error("Error fetching participant data:", error);
-          }
+          return;
         }
+
+        const data = await getParticipant(quizCode, cookies.participantId);
+        setParticipantId(cookies.participantId);
+        setName(data.name);
+        setAvatar(data.avatar);
+      } catch (error) {
+        console.error("Error fetching participant data:", error);
       }
     };
 
-    fetchParticipant();
     checkQuiz();
+    fetchParticipant();
   }, [cookies, quizCode, navigate, removeCookie]);
 
   async function handleRemoveParticipant() {

@@ -14,9 +14,9 @@ export default function TeamInfo({ name, avatar, score }: TeamInfoProps) {
           style={{ width: "3rem", height: "3rem" }}
           {...genConfig(avatar)}
         />
-        <h1 className="pl-3 font-display text-2xl">{name}</h1>
+        <h1 className="pl-3 font-display text-3xl">{name}</h1>
       </div>
-      <p className="text-2xl font-display pr-2">{score}</p>
+      <p className="text-3xl font-display pr-2">{score}</p>
     </div>
   );
 }

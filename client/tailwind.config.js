@@ -77,6 +77,6 @@ module.exports = {
       },
     },
   },
-  safelist: ["animate-[zoom-in_0.5s_ease-in-out]", "animate-shake"],
+  safelist: ["animate-[zoom-in_0.5s_ease-in-out]"],
   plugins: [require("tailwindcss-animate")],
 };
