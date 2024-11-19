@@ -5,7 +5,8 @@ import { QuizBackground } from "./QuizBackground";
 import { SlideTitle } from "./slide-content/SlideTitle";
 import { SlideContent } from "./slide-content/SlideContent";
 import { QuestionOptions } from "./slide-content/QuestionOptions";
-import { ScoreDisplay } from "./slide-content/ScoreDisplay";
+
+import ScoreBoard from "@/pages/host/Scoreboard";
 import { SlideRank } from "./slide-content/SlideRank";
 interface SlideRenderProps {
   slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };
@@ -83,7 +84,9 @@ export function SlideRender({
         return (
           <div className="space-y-12 w-full">
             <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
-            <ScoreDisplay />
+            <ScoreBoard
+              scoreboard={slide.mockScores || []}
+            />
           </div>
         );
 
@@ -91,10 +94,7 @@ export function SlideRender({
         return (
           <div className="space-y-12 w-full">
             <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
-            <SlideRank
-              ranking={slide.ranking}
-              
-            />
+            <SlideRank ranking={slide.ranking} />
           </div>
         );
 

@@ -1,9 +1,10 @@
 import type { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
+import {ScoreSlideInterface} from "@/components/quiz-editor/slide-master/master-score"
 
 export type SlideType = "info" | "score" | "question" | "rank";
 export type QuestionType = "MCQSA" | "MCQMA" | "FA";
 
-interface BaseSlide {
+export interface BaseSlide {
     id: string;
     title: string;
     content?: string;
@@ -12,29 +13,23 @@ interface BaseSlide {
     backgroundStyle?: BackgroundStyle;
 }
 
-interface InfoSlide extends BaseSlide {
+export interface InfoSlide extends BaseSlide {
     type: "info";
 }
 
-interface ScoreSlide extends BaseSlide {
-    type: "score";
-    mockScores?: { playerName: string; score: number }[];
-}
-
-interface RankSlide extends BaseSlide {
+export interface RankSlide extends BaseSlide {
     ranking: { name: string; score: number }[]; // List of items with name and score// Sort order: true for ascending, false for descending
     type: "rank";
     timeLimit: number;
   }
-  
-
-interface QuestionSlideBase extends BaseSlide {
+   
+export interface QuestionSlideBase extends BaseSlide {
     type: "question";
     questionType: QuestionType;
     timeLimit: number; // in seconds, 0 means no limit
 }
 
-interface MCQSASlide extends QuestionSlideBase {
+export interface MCQSASlide extends QuestionSlideBase {
     questionType: "MCQSA";
     options: Array<{
         id: string;
@@ -43,7 +38,7 @@ interface MCQSASlide extends QuestionSlideBase {
     }>;
 }
 
-interface MCQMASlide extends QuestionSlideBase {
+export interface MCQMASlide extends QuestionSlideBase {
     questionType: "MCQMA";
     options: Array<{
         id: string;
@@ -52,11 +47,11 @@ interface MCQMASlide extends QuestionSlideBase {
     }>;
 }
 
-interface FASlide extends QuestionSlideBase {
+export interface FASlide extends QuestionSlideBase {
     questionType: "FA";
     correctAnswer: string;
 }
 
 
 
-export type Slide = InfoSlide | ScoreSlide | MCQSASlide | MCQMASlide | FASlide | RankSlide; 
+export type Slide = InfoSlide | ScoreSlideInterface | MCQSASlide | MCQMASlide | FASlide | RankSlide;

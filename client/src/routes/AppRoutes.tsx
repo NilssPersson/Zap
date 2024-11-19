@@ -12,7 +12,7 @@ import ParticipantManager from "@/pages/Participant/ParticipantManager";
 import QuizLobby from "../pages/QuizLobby";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
-import RankView from "@/components/quiz-phone-view/RankView"
+import RankView from "@/components/quiz-phone-view/rankView"
 import ScoreBoard from "@/pages/host/Scoreboard";
 
 export function AppRoutes() {
