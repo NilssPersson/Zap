@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import Avatar, { genConfig } from "react-nice-avatar";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface Player {
-  name: string;
-  points: number;
-  newPoints: number;
-}
 
-interface ScoreBoardProps {
-  scoreboard: Player[];
-}
 
 function Counter({ value, shouldAnimate }: { value: number; shouldAnimate: boolean }) {
   const [displayValue, setDisplayValue] = useState(value); // Initialize with the final value
@@ -36,6 +28,17 @@ function Counter({ value, shouldAnimate }: { value: number; shouldAnimate: boole
   }, [value, displayValue, shouldAnimate]);
 
   return <span>{displayValue}</span>;
+}
+
+
+interface ScoreBoardProps {
+  scoreboard: Player[];
+}
+
+interface Player {
+  name: string;
+  points: number;
+  newPoints: number;
 }
 
 function ScoreBoard({ scoreboard }: ScoreBoardProps) {

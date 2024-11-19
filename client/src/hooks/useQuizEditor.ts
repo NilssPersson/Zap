@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { quizService } from '@/services/quizzes';
 import type Quiz from '@/models/Quiz';
-import type { Slide, SlideType, QuestionType } from '@/types/quiz';
+import type { Slide, SlideType, QuestionType } from '@/models/Quiz';
 import { toast } from 'sonner';
 
 export function useQuizEditor(quizId: string | undefined) {
@@ -39,11 +39,11 @@ export function useQuizEditor(quizId: string | undefined) {
 
     // Save all slides
     const handleSave = async () => {
-        if (!quizId) return;
+        if (!quizId || !quiz) return;
         setIsSaving(true);
         
         const savePromise = new Promise((resolve, reject) => {
-            quizService.update(quizId, { slides: quiz?.slides || [] })
+            quizService.update(quizId, quiz)
                 .then(({ error: saveError }) => {
                     if (saveError) {
                         setError(saveError.message);
@@ -85,8 +85,10 @@ export function useQuizEditor(quizId: string | undefined) {
                     ...baseSlide,
                     type: 'score',
                     mockScores: [
-                        { playerName: 'Player 1', score: 100 },
-                        { playerName: 'Player 2', score: 80 },
+                        { name: 'Player 1', points: 100, newPoints: 120 },
+                        { name: 'Player 2', points: 80, newPoints: 121 },
+
+                        
                     ],
                 };
                 break;
@@ -202,21 +204,15 @@ export function useQuizEditor(quizId: string | undefined) {
         secondaryColor?: string;
         backgroundColor?: string;
     }) => {
-        if (!quiz) return;
+        if (!quiz || !quizId) return;
 
         const updatedQuiz = {
             ...quiz,
             quiz_name: updates.quizName ?? quiz.quiz_name,
-            primary_color: updates.primaryColor ?? quiz.primary_color,
-            secondary_color: updates.secondaryColor ?? quiz.secondary_color,
-            background_color: updates.backgroundColor ?? quiz.background_color,
+            primary_color: updates.primaryColor ?? quiz.primary_color ?? "#006a67",
+            secondary_color: updates.secondaryColor ?? quiz.secondary_color ?? "#fff4b7",
+            background_color: updates.backgroundColor ?? quiz.background_color ?? "#000B58",
         };
-
-        const { error: updateError } = await quizService.update(quiz.id, updatedQuiz);
-        if (updateError) {
-            setError(updateError.message);
-            return;
-        }
 
         setQuiz(updatedQuiz);
     };

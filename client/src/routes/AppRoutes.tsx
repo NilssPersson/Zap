@@ -10,7 +10,7 @@ import QuizEdit from "../pages/QuizEdit";
 import ParticipantLogic from "@/pages/participantQuizView/ParticipantLogic";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
-import RankView from "@/components/quiz-phone-view/rankView";
+import RankView from "@/components/quiz-phone-view/rankView"
 import ScoreBoard from "@/pages/host/Scoreboard";
 import HostLogic from "@/pages/HostLogic";
 
