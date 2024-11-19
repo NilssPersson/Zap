@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { ref, off, onValue, runTransaction, update, set, get, DataSnapshot } from "firebase/database";
 import { database } from "@/firebase";
 import Participant from "@/models/Participant";
-import Quiz from "@/models/Quiz";
+import Quiz, { Question, QuestionType, QuestionTypes } from "@/models/Quiz";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
@@ -57,7 +57,7 @@ export const useOngoingQuiz = () => {
             `ongoingQuizzes/${quizCode}/participants/${participantKey}/hasAnswered`
           ] = false;
           updates[
-            `ongoingQuizzes/${quizCode}/participants/${participantKey}/Answer`
+            `ongoingQuizzes/${quizCode}/participants/${participantKey}/answer`
           ] = "";
         });
         // Apply the updates to all participants
@@ -77,8 +77,18 @@ export const useOngoingQuiz = () => {
       ref(database, `ongoingQuizzes/${quizCode}`)
     );
     return ongoingQuiz.val();
-
   };
+
+  const updateScore = async(quizCode: string, questionType: QuestionTypes) => {
+    switch(questionType){
+        case QuestionTypes.FA:
+            break;
+        default: {
+            break;
+        }
+    }
+
+  }
 
   const generateQuizCode = async (): Promise<string> => {
     let quizCode = "";
