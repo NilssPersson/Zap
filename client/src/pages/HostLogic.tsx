@@ -3,9 +3,10 @@ import { useParams /* useNavigate */ } from "react-router-dom";
 import { useOngoingQuiz } from "@/services/host";
 import QuizLobby from "./QuizLobby";
 import { Button } from "@/components/ui/button";
+import { OngoingQuiz, QuestionSlide, QuestionTypes, SlideTypes } from "@/models/Quiz";
 const HostLogic: React.FC = () => {
   const { id } = useParams();
-  const [ongoingQuiz, setOngoingQuiz] = useState<any | null>();
+  const [ongoingQuiz, setOngoingQuiz] = useState<OngoingQuiz>();
   const [currentSlide, setCurrentSlide] = useState(0);
   const { quizCode, participants, incrementSlide, getOngoingQuiz } =
     useOngoingQuiz();
@@ -53,14 +54,19 @@ const HostLogic: React.FC = () => {
       </div>
     );
   } else {
-    switch (ongoingQuiz?.slides[currentSlide]?.type) {
-      case "info": {
+    switch (ongoingQuiz?.quiz.slides[currentSlide].type) {
+      case SlideTypes.info: {
         //statements;
         break;
       }
-      case "question": {
-        switch (ongoingQuiz?.slides[currentSlide]?.type) {
-          case "MCQ": {
+      case SlideTypes.score: {
+        //statements;
+        break;
+      }
+      case SlideTypes.question: {
+        const questionSlide = ongoingQuiz?.quiz.slides[currentSlide] as QuestionSlide;
+        switch (questionSlide.questionType) {
+          case QuestionTypes.FA: {
             return (
               <div className="flex flex-col">
                 <Button onClick={nextSlide} className="m-5">
@@ -68,7 +74,33 @@ const HostLogic: React.FC = () => {
                 </Button>
               </div>
             );
-            break;
+          }
+          case QuestionTypes.MCQMA: {
+            return (
+              <div className="flex flex-col">
+                <Button onClick={nextSlide} className="m-5">
+                  Start Game
+                </Button>
+              </div>
+            );
+          }
+          case QuestionTypes.MCQSA: {
+            return (
+              <div className="flex flex-col">
+                <Button onClick={nextSlide} className="m-5">
+                  Start Game
+                </Button>
+              </div>
+            );
+          }
+          case QuestionTypes.RANK: {
+            return (
+              <div className="flex flex-col">
+                <Button onClick={nextSlide} className="m-5">
+                  Start Game
+                </Button>
+              </div>
+            );
           }
           default: {
             return (
