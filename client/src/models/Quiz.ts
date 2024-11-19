@@ -46,7 +46,7 @@ export interface BaseSlide {
   type: SlideType;
 }
 
-interface InfoSlide extends BaseSlide {
+export interface InfoSlide extends BaseSlide {
   type: SlideTypes.info;
 }
 
@@ -76,14 +76,14 @@ interface QuestionSlideBase extends BaseSlide {
   answerType: answerType;
 }
 
-interface RankSlide extends QuestionSlideBase {
+export interface RankSlide extends QuestionSlideBase {
   ranking: { name: string; score: number }[];
   questionType: QuestionTypes.RANK;
   timeLimit: number;
   answerType: answerTypes.rank;
 }
 
-interface MCQSASlide extends QuestionSlideBase {
+export interface MCQSASlide extends QuestionSlideBase {
   questionType: QuestionTypes.MCQSA;
   options: Array<{
     id: string;
@@ -93,7 +93,7 @@ interface MCQSASlide extends QuestionSlideBase {
   answerType: answerTypes.singleString;
 }
 
-interface MCQMASlide extends QuestionSlideBase {
+export interface MCQMASlide extends QuestionSlideBase {
   questionType: QuestionTypes.MCQMA;
   options: Array<{
     id: string;
@@ -103,7 +103,7 @@ interface MCQMASlide extends QuestionSlideBase {
   answerType: answerTypes.multipleStrings;
 }
 
-interface FASlide extends QuestionSlideBase {
+export interface FASlide extends QuestionSlideBase {
   questionType: QuestionTypes.FA;
   correctAnswer: string;
   answerType: answerTypes.freeText;

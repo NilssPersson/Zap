@@ -25,6 +25,7 @@ import McqmaView from "@/components/quiz-phone-view/McqmaView";
 import ScoreView from "@/components/quiz-phone-view/ScoreView";
 import RankView from "@/components/quiz-phone-view/RankView";
 import FastAnswerView from "@/components/quiz-phone-view/FastAnswerView";
+import { InfoSlide, Slide } from "@/models/Quiz";
 
 export default function ParticipantLogic() {
   const [name, setName] = useState("");
@@ -34,7 +35,7 @@ export default function ParticipantLogic() {
     undefined,
   );
   const [cookies, setCookie, removeCookie] = useCookies(["participantId"]);
-  const [questions, setQuestions] = useState<any[]>();
+  const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
 
   const { hasAnswered, currentSlide, score } = useGameStatus(
@@ -135,8 +136,8 @@ export default function ParticipantLogic() {
     const questionType = questions?.[currentSlide - 1].type;
     const currentQuestion = questions?.[currentSlide - 1];
 
-    if (questionType === "question") {
-      const questionTypeType = questions?.[currentSlide - 1].questionType;
+    if (currentQuestion.type === "question") {
+      const questionTypeType = currentQuestion.questionType;
       if (questionTypeType === "MCQMA") {
         return (
           <McqmaView
@@ -158,13 +159,16 @@ export default function ParticipantLogic() {
             answerQuestion={answerQuestion}
           />
         );
+      } else if (questionTypeType === "rank") {
+        return (
+          <RankView
+            question={currentQuestion}
+            answerQuestion={answerQuestion}
+          />
+        );
       }
-    } else if (questionType === "rank") {
-      return (
-        <RankView question={currentQuestion} answerQuestion={answerQuestion} />
-      );
     } else if (questionType === "info") {
-      return <InfoView slide={currentQuestion} />;
+      return <InfoView slide={currentQuestion as InfoSlide} />;
     } else if (questionType === "score") {
       return <ScoreView />;
     }

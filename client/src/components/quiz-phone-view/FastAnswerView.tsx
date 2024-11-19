@@ -1,9 +1,10 @@
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { FASlide } from "@/models/Quiz";
 
 interface FastAnswerViewProps {
-  question: any;
+  question: FASlide;
   answerQuestion: (answer: string) => void;
 }
 

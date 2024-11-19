@@ -10,6 +10,7 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
+import { RankSlide } from "@/models/Quiz";
 
 // Define a type for the ranking items
 type RankItem = {
@@ -87,7 +88,7 @@ function DraggableDroppableItem({
 }
 
 interface RankViewProps {
-  question: any;
+  question: RankSlide;
   answerQuestion: (answer: string) => void;
 }
 
