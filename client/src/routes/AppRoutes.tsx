@@ -35,10 +35,7 @@ export function AppRoutes() {
       />
       <Route path="/quizzes/:id" element={<QuizView />} />
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
-      <Route
-        path="/play/:quizCode/:participantId"
-        element={<ParticipantLogic />}
-      />
+      <Route path="/play/:quizCode/" element={<ParticipantLogic />} />
       <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
       <Route
         path="/fast-answer"
@@ -53,9 +50,9 @@ export function AppRoutes() {
       />
       <Route path="/profile" element={<Profile />} />
       <Route
-          path="/scoreboard"
-          element={
-            <ScoreBoard
+        path="/scoreboard"
+        element={
+          <ScoreBoard
             scoreboard={[
               { name: "Alice", points: 100, newPoints: 500 },
               { name: "Bob", points: 80, newPoints: 700 },
@@ -64,8 +61,8 @@ export function AppRoutes() {
               { name: "Eve", points: 50, newPoints: 55 },
             ]}
           />
-          }
-        />
+        }
+      />
       <Route
         path="rankview"
         element={
@@ -83,8 +80,6 @@ export function AppRoutes() {
           />
         }
       />
-      
-     
     </Routes>
   );
 }

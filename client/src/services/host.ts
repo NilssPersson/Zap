@@ -1,24 +1,25 @@
 // Skapa och lyssna på pågående quiz answer och uppdatera
 
 import { useState, useEffect } from "react";
-import { ref, off, onValue, increment, runTransaction, update, set, get } from "firebase/database";
+import { ref, off, onValue, runTransaction, update, set, get, DataSnapshot } from "firebase/database";
 import { database } from "@/firebase";
 import Participant from "@/models/Participant";
 import Quiz from "@/models/Quiz";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
-  const [participants, setPaticipants] = useState<Participant[]>([]);
+  const [participants, setPaticipants] = useState<Record<string, Participant>>();
 
     useEffect(() => {
     const participantsRef = ref(database, `ongoingQuizzes/${quizCode}/participants`);
     
-    const handleQuizChange = (snapshot: any) => {
+    const handleQuizChange = (snapshot: DataSnapshot) => {
     if (snapshot.exists()) {
       const newParticipants = snapshot.val();
       setPaticipants(newParticipants);
     } else {
-      console.error("Game not found");
+      console.error("No participants found");
+      setPaticipants({});
     }
     };
 
@@ -96,7 +97,6 @@ export const useOngoingQuiz = () => {
       const quiz = await get(quizRef);
       if(await !quiz.exists()){
         isUnique = true
-        console.log("Returning quizc", quizCode)
         return quizCode;
       }
     }
@@ -120,8 +120,6 @@ export const useOngoingQuiz = () => {
       startedAt: new Date().toISOString().toLocaleString(),
     }
     try{
-        console.log("Setting quiz:", quiz)
-        console.log("With quizcode:", quizCode);
         await set(ref(db, "ongoingQuizzes/" + quizCode), quiz);
         return quizCode;
     }
@@ -135,7 +133,6 @@ export const useOngoingQuiz = () => {
     try {
       const ongoingQuiz =  await get(quizRef);
       setQuizCode(quizCode);
-      console.log("In getOngoing quiz, got:", ongoingQuiz.val());
       return ongoingQuiz.val();
     } catch (error) {
       console.error("Failed to get ongoing quiz", error);
