@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { ref, off, onValue, runTransaction, update, set, get, DataSnapshot } from "firebase/database";
 import { database } from "@/firebase";
 import Participant from "@/models/Participant";
-import Quiz, { Question, QuestionType, QuestionTypes } from "@/models/Quiz";
+import Quiz, { QuestionSlide, QuestionType, QuestionTypes, answerTypes } from "@/models/Quiz";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
@@ -79,13 +79,27 @@ export const useOngoingQuiz = () => {
     return ongoingQuiz.val();
   };
 
-  const updateScore = async(quizCode: string, questionType: QuestionTypes) => {
-    switch(questionType){
-        case QuestionTypes.FA:
-            break;
-        default: {
-            break;
-        }
+  const updateScore = async(quizCode: string, questionType: answerTypes) => {
+
+    switch (questionType) {
+      case answerTypes.singleString: {
+
+
+      }
+      case answerTypes.freeText: {
+      
+    }
+    
+    case answerTypes.multipleStrings: {
+    
+    }
+    
+    case answerTypes.rank: {
+    
+    }
+      default: {
+        break;
+      }
     }
 
   }
