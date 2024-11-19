@@ -4,7 +4,6 @@ import "tw-elements"; // Import Tailwind Elements JS
 import "tailwindcss/tailwind.css"; // Tailwind CSS
 import Avatar, { genConfig } from "react-nice-avatar";
 import { useOngoingQuiz } from "@/services/host";
-import { Button } from "@/components/ui/button";
 import QRCode from "react-qr-code";
 
 
@@ -43,10 +42,6 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
     }
   }, [participantList]); 
 
-  const startGame = async () => {
-    await incrementSlide(quizCode);
-  };
-
   return (
     <div className="lobby-container">
       <div className="flex flex-row items-center justify-between p-20 mb-15 mt-20">
@@ -74,9 +69,6 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
           </div>
         ))}
       </div>
-      <Button onClick={startGame} className="m-5">
-        Start Game
-      </Button>
     </div>
   );
 }
