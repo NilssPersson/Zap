@@ -1,137 +1,82 @@
-import React, { useEffect, useState } from "react";
-import { useParams /* useNavigate */ } from "react-router-dom";
-import supabase from "@/api/client";
-import { useOngoingQuiz } from "@/hooks/useOngoingQuizzes";
+import { useEffect, useState, useRef } from "react";
 import Participant from "@/models/Participant";
-import QuizOngoing from "@/models/QuizOngoing";
+import "tw-elements"; // Import Tailwind Elements JS
+import "tailwindcss/tailwind.css"; // Tailwind CSS
+import Avatar, { genConfig } from "react-nice-avatar";
+import { useOngoingQuiz } from "@/services/host";
+import { Button } from "@/components/ui/button";
+import QRCode from "react-qr-code";
 
-// Broadcast Payload
-interface BroadcastParticipantPayload {
-  event: string; // PlayerLeft or PlayerJoined
-  payload: {
-    participant: Participant;
-  };
-  type: string;
+
+interface LobbyProps {
+  quizCode: string;
+  participants: Record<string, Participant>;
 }
 
-const Lobby: React.FC = () => {
-  const { id } = useParams();
-  const[quizOngoing, setQuizOngoing] = useState<QuizOngoing | null>();
-  const [participants, setParticipants] = useState<Participant[]>([]); // Track connected players
-  const { getOngoingQuiz, getParticipants, nextSlide, getCurrentSlide} =
-    useOngoingQuiz();
-  // const navigate = useNavigate();
+//animations och key frames
 
-  const channel = supabase.channel(id?.toString() ?? "ZFYV"); //TODO: error handling
-
-  function addParticipant(payload: BroadcastParticipantPayload) {
-    if (payload.payload?.participant) {
-      const newParticipants = [payload.payload.participant];
-
-      setParticipants((prevParticipants) => {
-        // Filter out any new participants that are already in prevParticipants
-        const uniqueNewParticipants = newParticipants.filter(
-          (newParticipant) =>
-            !prevParticipants.some(
-              (existingParticipant) =>
-                existingParticipant.id === newParticipant.id
-            )
-        );
-
-        // Return the previous participants plus only the unique new ones
-        return [...prevParticipants, ...uniqueNewParticipants];
-      });
-    } else {
-      console.log("Unexpected payload structure:", payload);
-    }
-  }
-
-  function removeParticipant(payload: BroadcastParticipantPayload) {
-    if (payload.payload?.participant) {
-      const participantToRemove = payload.payload.participant;
-
-      setParticipants((prevParticipants) => {
-        // Filter out the participant with the matching ID
-        return prevParticipants.filter(
-          (existingParticipant) =>
-            existingParticipant.id !== participantToRemove.id
-        );
-      });
-    } else {
-      console.log("Unexpected payload structure:", payload);
-    }
-  }
-
-  channel
-    .on(
-      "broadcast",
-      { event: "PlayerJoined" },
-      (payload: BroadcastParticipantPayload) => {
-        console.log("received");
-        addParticipant(payload);
-      }
-    )
-    .on(
-      "broadcast",
-      { event: "PlayerLeft" },
-      (payload: BroadcastParticipantPayload) => {
-        console.log("received");
-        removeParticipant(payload);
-      }
-    )
-    .subscribe();
-
+export default function QuizLobby({ quizCode, participants }: LobbyProps) {
+  const [participantList, setParticipantList] = useState<Participant[]>([]);
+  const { incrementSlide } = useOngoingQuiz();
+  const participantsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const setupLobby = async () => {
-      try {
-        const ongoingQuiz = await getOngoingQuiz(id || "");
-        // Add initial participants from database
-        if (ongoingQuiz?.id) {
-          setQuizOngoing(ongoingQuiz);
-          const initialParticipants = await getParticipants(ongoingQuiz.id);
-          if (initialParticipants) {
-            setParticipants(initialParticipants);
-          }
-        } // TODO: handle no ID
-      } catch (error) {
-        console.error("Error setting up lobby:", error);
-      }
-    };
+    const newParticipants = Object.values(participants); // Convert object to array of participants
+    setParticipantList((prevList) => {
+      const updatedList = [...prevList];
+      newParticipants.forEach((participant) => {
+        if (!prevList.some((p) => p.name === participant.name)) {
+          updatedList.push(participant);
+        }
+      });
+      return updatedList;
+    });
+  }, [participants]);
 
-    setupLobby();
-  }, [id]);
+  useEffect(() => {
+    if (participantsRef.current) {
+      // Ensure scrolling happens after the DOM is updated
+      setTimeout(() => {
+        participantsRef.current!.scrollTop =
+          participantsRef.current!.scrollHeight;
+      }, 0);
+    }
+  }, [participantList]); 
 
   const startGame = async () => {
-    const startedQuiz = await nextSlide(
-      id as string,
-      participants.map((participant) => participant.id)
-    );
-    setQuizOngoing(startedQuiz)
-        console.log("Sending message");
-
-    channel.send({
-      type: "broadcast",
-      event: "nextQuestion",
-      payload: {message: "new question"},
-    });
-    console.log("Sent message");
+    await incrementSlide(quizCode);
   };
-
 
   return (
     <div className="lobby-container">
-      <h1 >Lobby for Quiz {id}</h1>
-      <h1>On slide {quizOngoing?.current_slide_order}</h1>
-      <h2>Connected Players</h2>
-      <ul>
-        {participants.map((player) => (
-          <li key={player.id}>{player.name}</li>
+      <div className="flex flex-row items-center justify-between p-20 mb-15 mt-20">
+        <h1 className="text-5xl font-display ">Join Lobby: {quizCode}</h1>
+        <QRCode
+          style={{ height: "auto", width: "20%", margin: "3" }}
+          value={"https://game-shack-iota.vercel.app/play/" + { quizCode }}
+          viewBox={`0 0 256 256`}
+        />
+      </div>
+      <div
+        ref={participantsRef}
+        className="grid grid-cols-4 gap-4 bg-black/50 backdrop-blur-md m-10 rounded-lg max-h-80 overflow-y-auto"
+      >
+        {participantList.map((participant, index) => (
+          <div
+            key={index}
+            className="flex flex-col items-center justify-center p-4 rounded-lg animate-[zoom-in_1s_ease-in-out] "
+          >
+            <Avatar
+              style={{ width: "4.5rem", height: "4.5rem" }}
+              {...genConfig(participant.avatar ? participant.avatar : "")}
+            />
+            <span className="text-2xl font-display">{participant.name}</span>
+          </div>
         ))}
-      </ul>
-      <button onClick={startGame}>Start Game</button>
+      </div>
+      <Button onClick={startGame} className="m-5">
+        Start Game
+      </Button>
     </div>
   );
-};
-
-export default Lobby;
+}

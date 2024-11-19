@@ -1,5 +1,5 @@
 
-import {BaseSlide} from "@/types/quiz"
+import {BaseSlide} from "@/models/Quiz";
 import { SlideOption } from "../SlideOption";
 import { BarChart3Icon } from "lucide-react";
 import React from "react";
@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusIcon, MinusIcon } from  "lucide-react";
-import { SlideType } from "@/types/quiz";
+import { SlideType } from "@/models/Quiz";
 
 
 

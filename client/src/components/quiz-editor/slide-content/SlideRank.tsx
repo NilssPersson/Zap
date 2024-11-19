@@ -8,11 +8,11 @@ type RankItem = {
 
 // Main SlideRank component
 export function SlideRank({ ranking }: { ranking: RankItem[] }) {
-  const [currentRanking, setCurrentRanking] = useState<RankItem[]>(ranking);
+  const [currentRanking, setCurrentRanking] = useState<RankItem[]>(ranking || []);
 
   // Randomize the ranking on the first render
   useEffect(() => {
-    const randomizedRanking = [...ranking];
+    const randomizedRanking = [...(ranking || [])];
     setCurrentRanking(randomizedRanking); // Update state with randomized ranking
   }, [ranking]);
 

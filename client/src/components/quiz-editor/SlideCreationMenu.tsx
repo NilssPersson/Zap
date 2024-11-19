@@ -7,7 +7,7 @@ import {
   TypeIcon,
   
 } from "lucide-react";
-import type { SlideType, QuestionType } from "@/types/quiz";
+import type { SlideType, QuestionType } from "@/models/Quiz";
 import { SlideOption } from "./SlideOption";
 import { MasterScoreOption } from "./slide-master/master-score";
 import { MasterRankOption } from "./slide-master/master-rank";

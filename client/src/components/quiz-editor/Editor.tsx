@@ -1,4 +1,4 @@
-import type { Slide } from "@/types/quiz";
+import type { Slide } from "@/models/Quiz";
 import { SlideRender } from "./SlideRender";
 
 interface EditorProps {

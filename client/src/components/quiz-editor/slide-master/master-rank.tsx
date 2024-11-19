@@ -1,8 +1,8 @@
-import { BaseSlide } from "@/types/quiz";
+import { BaseSlide } from "@/models/Quiz";
 import { SlideOption } from "../SlideOption";
 import { ListOrdered } from "lucide-react";
 import React, { useState } from "react";
-import { SlideType } from "@/types/quiz";
+import { SlideType } from "@/models/Quiz";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 

@@ -1,16 +1,19 @@
 import { useState, useCallback, useEffect } from "react";
-import { BaseAPI, ApiResponse } from "@/api/base";
+import { BaseService, FirebaseResponse } from "@/services/base";
 import useGetAuthenticatedUser from "./useGetAuthenticatedUser";
 
 interface BaseModel {
   id: string;
-  created_at: string;
   user_id?: string;
 }
 
 interface UseOptimisticResourceOptions<T> {
-  api: BaseAPI<T>;
+  api: BaseService<T>;
   userScoped?: boolean; // Whether the resource is scoped to the user
+}
+
+interface UserScopedService<T> extends BaseService<T> {
+  getByUserId: (userId: string) => Promise<FirebaseResponse<T[]>>;
 }
 
 export function createOptimisticResourceHook<T extends BaseModel>(options: UseOptimisticResourceOptions<T>) {
@@ -23,10 +26,10 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       if (options.userScoped && !user) return;
       
       setIsLoading(true);
-      let response: ApiResponse<T[]>;
+      let response: FirebaseResponse<T[]>;
       
       if (options.userScoped && user) {
-        response = await (options.api as any).getByUserId(user.id);
+        response = await (options.api as UserScopedService<T>).getByUserId(user.id);
       } else {
         response = await options.api.list();
       }
@@ -42,12 +45,11 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       fetchResources();
     }, [fetchResources]);
 
-    const optimisticCreate = async (newResource: Partial<T>) => {
+    const optimisticCreate = useCallback(async (newResource: Partial<T>) => {
       const tempId = `temp_${Date.now()}`;
       const optimisticResource = {
         id: tempId,
         ...newResource,
-        created_at: new Date().toISOString(),
       } as T;
 
       setResources(prev => [...prev, optimisticResource]);
@@ -64,9 +66,9 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       ));
 
       return { data, error: null };
-    };
+    }, []);
 
-    const optimisticUpdate = async (id: string, updates: Partial<T>) => {
+    const optimisticUpdate = useCallback(async (id: string, updates: Partial<T>) => {
       setResources(prev => prev.map(resource =>
         resource.id === id ? { ...resource, ...updates } : resource
       ));
@@ -79,9 +81,9 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       }
 
       return { data, error: null };
-    };
+    }, [fetchResources]);
 
-    const optimisticDelete = async (id: string) => {
+    const optimisticDelete = useCallback(async (id: string) => {
       const previousResources = [...resources];
       setResources(prev => prev.filter(resource => resource.id !== id));
 
@@ -93,7 +95,7 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       }
 
       return { data, error: null };
-    };
+    }, [resources]);
 
     if (options.userScoped && !user) {
       return { 

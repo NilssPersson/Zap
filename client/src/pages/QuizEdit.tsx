@@ -39,7 +39,7 @@ function QuizEdit() {
                 className="absolute inset-0 -z-10"
             />
             <ResizablePanelGroup direction="horizontal" style={{ height: "inherit" }}>
-                <ResizablePanel defaultSize={14} minSize={12} maxSize={20}>
+                <ResizablePanel defaultSize={20} minSize={12} maxSize={20}>
                     <SlideSidebar
                         quizName={quiz.quiz_name}
                         slides={slides}

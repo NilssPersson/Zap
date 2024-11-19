@@ -16,7 +16,7 @@ import {
   TimerIcon,
   ListOrdered,
 } from "lucide-react";
-import type { Slide, SlideType, QuestionType } from "@/types/quiz";
+import type { Slide, SlideType, QuestionType } from "@/models/Quiz";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,

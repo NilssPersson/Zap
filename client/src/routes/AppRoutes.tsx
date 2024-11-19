@@ -2,18 +2,21 @@ import { Routes, Route } from "react-router-dom";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import About from "../pages/About";
 import Home from "../pages/Home";
-import RoomTest from "../pages/RoomTest";
 import Quizzes from "../pages/Quizzes";
 import MCQ from "../pages/hostQuestions/MCQ";
-import StartScreen from "@/pages/Participant/StartScreen";
+import StartScreen from "@/pages/joinQuiz/StartScreen";
 import QuizView from "../pages/QuizView";
 import QuizEdit from "../pages/QuizEdit";
-import ParticipantManager from "@/pages/Participant/ParticipantManager";
-import QuizLobby from "../pages/QuizLobby";
+import ParticipantLogic from "@/pages/participantQuizView/ParticipantLogic";
 import FastAnswer from "../pages/hostQuestions/FastAnswer";
 import Profile from "@/pages/User/Profile";
+<<<<<<< HEAD
 import RankView from "@/components/quiz-phone-view/rankView"
+=======
+import RankView from "@/components/quiz-phone-view/rankView";
+>>>>>>> 7ffdf207571b0fd5eaad2cebf067ce80d9066fc8
 import ScoreBoard from "@/pages/host/Scoreboard";
+import HostLogic from "@/pages/HostLogic";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -22,8 +25,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={isAuthenticated ? <Quizzes /> : <Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/room-test" element={<RoomTest />} />
-      <Route path="/home" element={<StartScreen />} />
+      <Route path="/play" element={<StartScreen />} />
 
       <Route
         path="/question-test"
@@ -37,11 +39,8 @@ export function AppRoutes() {
       />
       <Route path="/quizzes/:id" element={<QuizView />} />
       <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
-      <Route
-        path="/:quiz_code/:participantId"
-        element={<ParticipantManager />}
-      />
-      <Route path="/quizzes/:id/lobby" element={<QuizLobby />} />
+      <Route path="/play/:quizCode/" element={<ParticipantLogic />} />
+      <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
       <Route
         path="/fast-answer"
         element={
@@ -55,9 +54,9 @@ export function AppRoutes() {
       />
       <Route path="/profile" element={<Profile />} />
       <Route
-          path="/scoreboard"
-          element={
-            <ScoreBoard
+        path="/scoreboard"
+        element={
+          <ScoreBoard
             scoreboard={[
               { name: "Alice", points: 100, newPoints: 500 },
               { name: "Bob", points: 80, newPoints: 700 },
@@ -66,8 +65,8 @@ export function AppRoutes() {
               { name: "Eve", points: 50, newPoints: 55 },
             ]}
           />
-          }
-        />
+        }
+      />
       <Route
         path="rankview"
         element={
@@ -82,12 +81,9 @@ export function AppRoutes() {
               { name: "Holland", score: 5 },
               { name: "Sverige", score: 3 },
             ]}
-            
           />
         }
       />
-      
-     
     </Routes>
   );
 }
