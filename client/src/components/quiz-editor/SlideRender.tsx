@@ -2,12 +2,8 @@ import type { Slide } from "@/models/Quiz";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { QuizBackground } from "./QuizBackground";
-import { SlideTitle } from "./slide-content/SlideTitle";
-import { SlideContent } from "./slide-content/SlideContent";
-import { QuestionOptions } from "./slide-content/QuestionOptions";
+import { getSlideComponents } from "./slide-master";
 
-import ScoreBoard from "@/pages/host/Scoreboard";
-import { SlideRank } from "./slide-content/SlideRank";
 interface SlideRenderProps {
   slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };
   className?: string;
@@ -23,7 +19,6 @@ const SLIDE_HEIGHT = 1080;
 export function SlideRender({
   slide,
   className,
-  thumbnail = false,
   backgroundColor = "#000B58",
   primaryColor = "#006a67",
   secondaryColor = "#fff4b7",
@@ -48,96 +43,7 @@ export function SlideRender({
     return () => resizeObserver.disconnect();
   }, []);
 
-  const renderContent = () => {
-    if (thumbnail) {
-      return <SlideTitle title={slide.title} size="small" />;
-    }
-
-    switch (slide.type) {
-      case "info":
-        return (
-          <div className="space-y-8">
-            <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
-            {slide.imageUrl && (
-              <div className="flex justify-center">
-                <div className="relative flex items-center justify-center">
-                  <img
-                    src={slide.imageUrl}
-                    alt={slide.title}
-                    className="w-auto object-contain"
-                    style={{
-                      height: `${(slide.imageScale || 1) * 400}px`,
-                      transition: "height 0.2s ease-out",
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-            <SlideContent
-              content={slide.content}
-              wiggle={slide.contentWiggle}
-            />
-          </div>
-        );
-
-      case "score":
-        return (
-          <div className="space-y-12 w-full">
-            <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
-            <ScoreBoard
-              scoreboard={slide.mockScores || []}
-            />
-          </div>
-        );
-
-      case "rank":
-        return (
-          <div className="space-y-12 w-full">
-            <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
-            <SlideRank ranking={slide.ranking} />
-          </div>
-        );
-
-      case "question":
-        return (
-          <div className="space-y-12 w-full">
-            <div className="space-y-8">
-              <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
-              {slide.imageUrl && (
-                <div className="flex justify-center">
-                  <div className="relative flex items-center justify-center">
-                    <img
-                      src={slide.imageUrl}
-                      alt={slide.title}
-                      className="w-auto max-h-[400px] object-contain"
-                      style={{
-                        height: `${(slide.imageScale || 1) * 400}px`,
-                        transition: "height 0.2s ease-out",
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-              <SlideContent
-                content={slide.content}
-                wiggle={slide.contentWiggle}
-              />
-            </div>
-
-            {"options" in slide ? (
-              <QuestionOptions
-                options={slide.options}
-                type={slide.questionType}
-              />
-            ) : (
-              <div className="text-[40px] text-center italic text-muted-foreground">
-                Free text answer
-              </div>
-            )}
-          </div>
-        );
-    }
-  };
+  const SlideComponent = getSlideComponents(slide);
 
   return (
     <div
@@ -165,7 +71,7 @@ export function SlideRender({
         }}
       >
         <div className="w-full h-full flex items-center justify-center p-16">
-          {renderContent()}
+          <SlideComponent.Render slide={slide} />
         </div>
       </div>
     </div>

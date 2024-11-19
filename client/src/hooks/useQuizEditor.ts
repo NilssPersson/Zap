@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { quizService } from '@/services/quizzes';
 import type Quiz from '@/models/Quiz';
-import type { Slide, SlideType, QuestionType } from '@/models/Quiz';
+import { type Slide, type SlideType, type QuestionType, SlideTypes, QuestionTypes } from '@/models/Quiz';
 import { toast } from 'sonner';
 
 export function useQuizEditor(quizId: string | undefined) {
@@ -17,7 +17,7 @@ export function useQuizEditor(quizId: string | undefined) {
         async function fetchQuizAndSlides() {
             if (!quizId) return;
             setIsLoading(true);
-            
+
             try {
                 const { data, error } = await quizService.getById(quizId)
 
@@ -41,7 +41,7 @@ export function useQuizEditor(quizId: string | undefined) {
     const handleSave = async () => {
         if (!quizId || !quiz) return;
         setIsSaving(true);
-        
+
         const savePromise = new Promise((resolve, reject) => {
             quizService.update(quizId, quiz)
                 .then(({ error: saveError }) => {
@@ -77,33 +77,21 @@ export function useQuizEditor(quizId: string | undefined) {
             case 'info':
                 newSlide = {
                     ...baseSlide,
-                    type: 'info',
+                    type: SlideTypes.info,
                 };
                 break;
             case 'score':
                 newSlide = {
                     ...baseSlide,
-                    type: 'score',
+                    type: SlideTypes.score,
                     mockScores: [
                         { name: 'Player 1', points: 100, newPoints: 120 },
                         { name: 'Player 2', points: 80, newPoints: 121 },
 
-                        
+
                     ],
                 };
                 break;
-            
-            case 'rank':
-                newSlide = {
-                    ...baseSlide,
-                    type: 'rank',
-                    timeLimit: 0,
-                    ranking: []
-
-                };
-                break;    
-
-
             case 'question':
                 if (!questionType) throw new Error('Question type is required');
 
@@ -111,8 +99,8 @@ export function useQuizEditor(quizId: string | undefined) {
                     case 'MCQSA':
                         newSlide = {
                             ...baseSlide,
-                            type: 'question',
-                            questionType: 'MCQSA',
+                            type: SlideTypes.question,
+                            questionType: QuestionTypes.MCQSA,
                             timeLimit: 0,
                             options: Array.from({ length: 4 }, (_, i) => ({
                                 id: crypto.randomUUID(),
@@ -124,8 +112,8 @@ export function useQuizEditor(quizId: string | undefined) {
                     case 'MCQMA':
                         newSlide = {
                             ...baseSlide,
-                            type: 'question',
-                            questionType: 'MCQMA',
+                            type: SlideTypes.question,
+                            questionType: QuestionTypes.MCQMA,
                             timeLimit: 0,
                             options: Array.from({ length: 4 }, (_, i) => ({
                                 id: crypto.randomUUID(),
@@ -137,10 +125,20 @@ export function useQuizEditor(quizId: string | undefined) {
                     case 'FA':
                         newSlide = {
                             ...baseSlide,
-                            type: 'question',
-                            questionType: 'FA',
+                            type: SlideTypes.question,
+                            questionType: QuestionTypes.FA,
                             timeLimit: 0,
                             correctAnswer: '',
+                        };
+                        break;
+                    case 'RANK':
+                        newSlide = {
+                            ...baseSlide,
+                            type: SlideTypes.question,
+                            questionType: QuestionTypes.RANK,
+                            timeLimit: 0,
+                            ranking: []
+
                         };
                         break;
                     default:
@@ -156,9 +154,11 @@ export function useQuizEditor(quizId: string | undefined) {
     };
 
     const handleSlideUpdate = (updatedSlide: Slide) => {
-        setQuiz(prev => prev ? { ...prev, slides: prev.slides.map(slide =>
-            slide.id === updatedSlide.id ? updatedSlide : slide
-        ) } : null);
+        setQuiz(prev => prev ? {
+            ...prev, slides: prev.slides.map(slide =>
+                slide.id === updatedSlide.id ? updatedSlide : slide
+            )
+        } : null);
     };
 
     const handleSlideDelete = (slideId: string) => {
