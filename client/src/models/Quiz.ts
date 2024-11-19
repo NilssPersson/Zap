@@ -45,7 +45,7 @@ export interface BaseSlide {
   backgroundStyle?: BackgroundStyle;
 }
 
-interface InfoSlide extends BaseSlide {
+export interface InfoSlide extends BaseSlide {
   type: SlideTypes.info;
 }
 
@@ -59,19 +59,19 @@ export interface ScoreSlide extends BaseSlide {
   mockScores?: { name: string; points: number; newPoints: number }[];
 }
 
-interface QuestionSlideBase extends BaseSlide {
+export interface QuestionSlideBase extends BaseSlide {
   type: SlideTypes.question;
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
 }
 
-interface RankSlide extends QuestionSlideBase {
+export interface RankSlide extends QuestionSlideBase {
   ranking: { name: string; score: number }[];
   questionType: QuestionTypes.RANK;
   timeLimit: number;
 }
 
-interface MCQSASlide extends QuestionSlideBase {
+export interface MCQSASlide extends QuestionSlideBase {
   questionType: QuestionTypes.MCQSA;
   options: Array<{
     id: string;
@@ -80,7 +80,7 @@ interface MCQSASlide extends QuestionSlideBase {
   }>;
 }
 
-interface MCQMASlide extends QuestionSlideBase {
+export interface MCQMASlide extends QuestionSlideBase {
   questionType: QuestionTypes.MCQMA;
   options: Array<{
     id: string;
@@ -89,7 +89,7 @@ interface MCQMASlide extends QuestionSlideBase {
   }>;
 }
 
-interface FASlide extends QuestionSlideBase {
+export interface FASlide extends QuestionSlideBase {
   questionType: QuestionTypes.FA;
   correctAnswer: string;
 }

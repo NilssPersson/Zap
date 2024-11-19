@@ -1,15 +1,21 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { MCQMASlide } from "@/models/Quiz";
 
-interface McqsaViewProps {
-  question: any;
+interface Options {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+}
+interface McqmaViewProps {
+  question: MCQMASlide;
   answerQuestion: (answer: string) => void;
 }
 
-export default function McqsaView({
+export default function McqmaView({
   question,
   answerQuestion,
-}: McqsaViewProps) {
+}: McqmaViewProps) {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
 
   const toggleOption = (index: number) => {
@@ -29,7 +35,7 @@ export default function McqsaView({
     <div className="flex flex-col items-center justify-center h-full pt-80">
       <h1 className="text-3xl font-display text-center">{question.title}</h1>
       <div className="flex flex-col space-y-4">
-        {question.options.map((option: any, index: number) => (
+        {question.options.map((option: Options, index: number) => (
           <Button
             key={option.text}
             onClick={() => toggleOption(index)}
