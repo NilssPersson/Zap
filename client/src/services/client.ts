@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { ref, onValue, off,get,set, update, DataSnapshot } from "firebase/database";
 import { database } from "@/firebase";
 
-
-// Function for checking if a game exists
 export const checkIfGameExists = async (quizCode:string) => {
   const quizRef = ref(database, `ongoingQuizzes/${quizCode}`);
   const quizSnap = await get(quizRef);
@@ -117,4 +115,10 @@ export const getParticipant = async (quizCode:string, participantId:string) => {
   const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
   const participantSnap = await get(participantRef);
   return participantSnap.val();
+}
+
+export const getQuizSlides = async (quizCode:string) => {
+  const questionsRef = ref(database, `ongoingQuizzes/${quizCode}/quiz/slides`);
+  const questionsSnap = await get(questionsRef);
+  return questionsSnap.val();
 }
