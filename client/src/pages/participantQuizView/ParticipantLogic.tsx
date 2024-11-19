@@ -123,43 +123,41 @@ export default function ParticipantLogic() {
 
   // TODO: Kan nog skrivas om bättre.
   function QuizView() {
-    if (!questions) {
-      return <div>Loading Questions...</div>;
-    } else if (currentSlide === 0) {
-      return <LobbyView />;
-    } else if (hasAnswered) {
-      return <HasAnsweredView />;
-    } else if (currentSlide > questions.length) {
-      return <QuizEndedView />;
-    }
+    if (!questions) return <div>Loading Questions...</div>;
+    if (currentSlide === 0) return <LobbyView />;
+    if (hasAnswered) return <HasAnsweredView />;
+    if (currentSlide > questions.length) return <QuizEndedView />;
 
-    const questionType = questions?.[currentSlide - 1].type;
     const currentQuestion = questions?.[currentSlide - 1];
 
+    if (currentQuestion.type === "info")
+      return <InfoView slide={currentQuestion as InfoSlide} />;
+    if (currentQuestion.type === "score") return <ScoreView />;
+
     if (currentQuestion.type === "question") {
-      const questionTypeType = currentQuestion.questionType;
-      if (questionTypeType === "MCQMA") {
+      const questionType = currentQuestion.questionType;
+      if (questionType === "MCQMA") {
         return (
           <McqmaView
             answerQuestion={answerQuestion}
             question={currentQuestion}
           />
         );
-      } else if (questionTypeType === "MCQSA") {
+      } else if (questionType === "MCQSA") {
         return (
           <McqsaView
             answerQuestion={answerQuestion}
             question={currentQuestion}
           />
         );
-      } else if (questionTypeType === "FA") {
+      } else if (questionType === "FA") {
         return (
           <FastAnswerView
             question={currentQuestion}
             answerQuestion={answerQuestion}
           />
         );
-      } else if (questionTypeType === "rank") {
+      } else if (questionType === "rank") {
         return (
           <RankView
             question={currentQuestion}
@@ -167,10 +165,6 @@ export default function ParticipantLogic() {
           />
         );
       }
-    } else if (questionType === "info") {
-      return <InfoView slide={currentQuestion as InfoSlide} />;
-    } else if (questionType === "score") {
-      return <ScoreView />;
     }
 
     // TODO: När en frågetyp inte stöds
