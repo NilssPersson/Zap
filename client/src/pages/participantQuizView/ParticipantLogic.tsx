@@ -103,7 +103,6 @@ export default function ParticipantLogic() {
 
   async function answerQuestion(answer: string) {
     if (!quizCode || !participantId || !answer) return;
-    console.log("2");
     await addAnswer(quizCode, participantId, answer);
   }
 
