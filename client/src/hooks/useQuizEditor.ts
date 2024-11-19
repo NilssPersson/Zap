@@ -39,11 +39,11 @@ export function useQuizEditor(quizId: string | undefined) {
 
     // Save all slides
     const handleSave = async () => {
-        if (!quizId) return;
+        if (!quizId || !quiz) return;
         setIsSaving(true);
         
         const savePromise = new Promise((resolve, reject) => {
-            quizService.update(quizId, { slides: quiz?.slides || [] })
+            quizService.update(quizId, quiz)
                 .then(({ error: saveError }) => {
                     if (saveError) {
                         setError(saveError.message);
@@ -211,12 +211,6 @@ export function useQuizEditor(quizId: string | undefined) {
             secondary_color: updates.secondaryColor ?? quiz.secondary_color ?? "#fff4b7",
             background_color: updates.backgroundColor ?? quiz.background_color ?? "#000B58",
         };
-
-        const { error: updateError } = await quizService.update(quizId, updatedQuiz);
-        if (updateError) {
-            setError(updateError.message);
-            return;
-        }
 
         setQuiz(updatedQuiz);
     };
