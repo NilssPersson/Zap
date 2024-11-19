@@ -24,6 +24,7 @@ import InfoView from "@/components/quiz-phone-view/InfoView";
 import McqmaView from "@/components/quiz-phone-view/McqmaView";
 import ScoreView from "@/components/quiz-phone-view/ScoreView";
 import RankView from "@/components/quiz-phone-view/RankView";
+import FastAnswerView from "@/components/quiz-phone-view/FastAnswerView";
 
 export default function ParticipantLogic() {
   const [name, setName] = useState("");
@@ -150,6 +151,13 @@ export default function ParticipantLogic() {
             question={currentQuestion}
           />
         );
+      } else if (questionTypeType === "FA") {
+        return (
+          <FastAnswerView
+            question={currentQuestion}
+            answerQuestion={answerQuestion}
+          />
+        );
       }
     } else if (questionType === "rank") {
       return (
@@ -159,15 +167,15 @@ export default function ParticipantLogic() {
       return <InfoView slide={currentQuestion} />;
     } else if (questionType === "score") {
       return <ScoreView />;
-    } else {
-      // TODO: När en frågetyp inte stöds
-      return (
-        <div>
-          <h1>Unsupported question type</h1>
-          <p>{JSON.stringify(currentQuestion)}</p>
-        </div>
-      );
     }
+
+    // TODO: När en frågetyp inte stöds
+    return (
+      <div>
+        <h1>Unsupported question type</h1>
+        <p>{JSON.stringify(currentQuestion)}</p>
+      </div>
+    );
   }
 
   return (
