@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -22,9 +21,11 @@ import HasAnsweredView from "@/components/quiz-phone-view/HasAnsweredView";
 import QuizEndedView from "@/components/quiz-phone-view/QuizEndedView";
 import McqsaView from "@/components/quiz-phone-view/McqsaView";
 import InfoView from "@/components/quiz-phone-view/InfoView";
+import McqmaView from "@/components/quiz-phone-view/McqmaView";
+import ScoreView from "@/components/quiz-phone-view/ScoreView";
+import RankView from "@/components/quiz-phone-view/RankView";
 
 export default function ParticipantLogic() {
-  const [answer, setAnswer] = useState("");
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState("");
   const { quizCode } = useParams();
@@ -137,7 +138,12 @@ export default function ParticipantLogic() {
     if (questionType === "question") {
       const questionTypeType = questions?.[currentSlide - 1].questionType;
       if (questionTypeType === "MCQMA") {
-        return <div>MCQMA</div>;
+        return (
+          <McqmaView
+            answerQuestion={answerQuestion}
+            question={currentQuestion}
+          />
+        );
       } else if (questionTypeType === "MCQSA") {
         return (
           <McqsaView
@@ -147,30 +153,19 @@ export default function ParticipantLogic() {
         );
       }
     } else if (questionType === "rank") {
-      return <div>Rank</div>;
+      return (
+        <RankView question={currentQuestion} answerQuestion={answerQuestion} />
+      );
     } else if (questionType === "info") {
       return <InfoView slide={currentQuestion} />;
     } else if (questionType === "score") {
-      return <div>Score</div>;
+      return <ScoreView />;
     } else {
       // TODO: När en frågetyp inte stöds
       return (
-        <div className="flex-1  justify-center p-8">
-          <div className="flex flex-col items-center justify-center w-full space-y-4 bg-[#F4F3F2] rounded-2xl p-8 mt-60 ">
-            <p>We dont support this QuestionType</p>
-            <Input
-              value={answer}
-              placeholder="Answer"
-              className="text-black"
-              onChange={(e) => setAnswer(e.target.value)}
-            />
-            <Button
-              disabled={hasAnswered}
-              onClick={() => answerQuestion(answer)}
-            >
-              Answer {currentSlide}
-            </Button>
-          </div>
+        <div>
+          <h1>Unsupported question type</h1>
+          <p>{JSON.stringify(currentQuestion)}</p>
         </div>
       );
     }
