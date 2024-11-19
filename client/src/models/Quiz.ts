@@ -24,7 +24,7 @@ export type { QuestionCreated };
 export type SlideType = "info" | "score" | "question" | "rank";
 export type QuestionType = "MCQSA" | "MCQMA" | "FA";
 
-interface BaseSlide {
+export interface BaseSlide {
     id: string;
     title: string;
     content?: string;
@@ -37,15 +37,20 @@ interface InfoSlide extends BaseSlide {
     type: "info";
 }
 
-interface ScoreSlide extends BaseSlide {
+export interface ScoreSlideInterface extends BaseSlide {
     type: "score";
-    mockScores?: { playerName: string; score: number }[];
-}
+    mockScores?: { name: string; points: number; newPoints: number }[];
+  }
 
 interface RankSlide extends BaseSlide {
     ranking: { name: string; score: number }[]; // List of items with name and score// Sort order: true for ascending, false for descending
     type: "rank";
     timeLimit: number;
+  }
+  
+export interface ScoreSlide extends BaseSlide {
+    type: "score";
+    mockScores?: { name: string; points: number; newPoints: number }[];
   }
   
 

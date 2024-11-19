@@ -85,8 +85,10 @@ export function useQuizEditor(quizId: string | undefined) {
                     ...baseSlide,
                     type: 'score',
                     mockScores: [
-                        { playerName: 'Player 1', score: 100 },
-                        { playerName: 'Player 2', score: 80 },
+                        { name: 'Player 1', points: 100, newPoints: 120 },
+                        { name: 'Player 2', points: 80, newPoints: 121 },
+
+                        
                     ],
                 };
                 break;
