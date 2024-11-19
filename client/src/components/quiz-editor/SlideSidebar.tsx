@@ -1,7 +1,7 @@
 import { PlusIcon } from "lucide-react";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { SlideCreationMenu } from "./SlideCreationMenu";
-import type { Slide } from "@/types/quiz";
+import type { Slide } from "@/models/Quiz";
 import { SlideRender } from "./SlideRender";
 import { useEffect } from "react";
 import { CustomTooltip } from "@/components/ui/custom-tooltip";

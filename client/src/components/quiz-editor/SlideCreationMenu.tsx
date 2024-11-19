@@ -2,14 +2,17 @@ import { Separator } from "@/components/ui/separator";
 import { PopoverContent } from "@/components/ui/popover";
 import {
   InfoIcon,
-  BarChart3Icon,
   CircleDotIcon,
   CheckSquareIcon,
   TypeIcon,
-  ListOrdered,
+  
 } from "lucide-react";
-import type { SlideType, QuestionType } from "@/types/quiz";
+import type { SlideType, QuestionType } from "@/models/Quiz";
 import { SlideOption } from "./SlideOption";
+import { MasterScoreOption } from "./slide-master/master-score";
+import { MasterRankOption } from "./slide-master/master-rank";
+
+const slideOptions = [MasterScoreOption, MasterRankOption];
 
 interface SlideCreationMenuProps {
   onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
@@ -29,17 +32,13 @@ export function SlideCreationMenu({ onAddSlide }: SlideCreationMenuProps) {
           icon={InfoIcon}
           onClick={() => handleAddSlide("info")}
         />
-        <SlideOption
-          label="Score Slide"
-          icon={BarChart3Icon}
-          onClick={() => handleAddSlide("score")}
-        />
 
-        <SlideOption
-          label="Rank answers"
-          icon={ListOrdered}
-          onClick={() => handleAddSlide("rank")}
-        />
+        {slideOptions.map((slideOption) => {
+          const renderedOption = slideOption({ handleAddSlide });
+          return renderedOption;
+        })}
+
+      
         <Separator className="my-2" />
         <h4 className="font-medium leading-none mb-2">Question Types</h4>
         <SlideOption

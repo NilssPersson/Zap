@@ -4,7 +4,6 @@ import useGetAuthenticatedUser from "./useGetAuthenticatedUser";
 
 interface BaseModel {
   id: string;
-  created_at: string;
   user_id?: string;
 }
 
@@ -46,19 +45,16 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       fetchResources();
     }, [fetchResources]);
 
-    const optimisticCreate = async (newResource: Partial<T>) => {
+    const optimisticCreate = useCallback(async (newResource: Partial<T>) => {
       const tempId = `temp_${Date.now()}`;
       const optimisticResource = {
         id: tempId,
         ...newResource,
-        created_at: new Date().toISOString(),
       } as T;
 
       setResources(prev => [...prev, optimisticResource]);
 
       const { data, error } = await options.api.create(newResource);
-
-      console.log(data)
 
       if (error) {
         setResources(prev => prev.filter(resource => resource.id !== tempId));
@@ -70,9 +66,9 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       ));
 
       return { data, error: null };
-    };
+    }, []);
 
-    const optimisticUpdate = async (id: string, updates: Partial<T>) => {
+    const optimisticUpdate = useCallback(async (id: string, updates: Partial<T>) => {
       setResources(prev => prev.map(resource =>
         resource.id === id ? { ...resource, ...updates } : resource
       ));
@@ -85,9 +81,9 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       }
 
       return { data, error: null };
-    };
+    }, [fetchResources]);
 
-    const optimisticDelete = async (id: string) => {
+    const optimisticDelete = useCallback(async (id: string) => {
       const previousResources = [...resources];
       setResources(prev => prev.filter(resource => resource.id !== id));
 
@@ -99,7 +95,7 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       }
 
       return { data, error: null };
-    };
+    }, [resources]);
 
     if (options.userScoped && !user) {
       return { 

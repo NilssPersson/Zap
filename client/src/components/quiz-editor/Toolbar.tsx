@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { MasterToolbarScore } from "@/components/quiz-editor/slide-master/master-score";
+import { MasterToolbarRank } from "@/components/quiz-editor/slide-master/master-rank";
 import {
   PlusIcon,
   MinusIcon,
@@ -14,7 +16,7 @@ import {
   TimerIcon,
   ListOrdered,
 } from "lucide-react";
-import type { Slide, SlideType, QuestionType } from "@/types/quiz";
+import type { Slide, SlideType, QuestionType } from "@/models/Quiz";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -25,7 +27,6 @@ import {
 } from "@/components/ui/select";
 import type { BackgroundStyle } from "./QuizBackground";
 import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
 
 const slideTypeInfo = {
   info: { icon: InfoIcon, label: "Information Slide" },
@@ -66,8 +67,6 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
     };
     reader.readAsDataURL(file);
   };
-
-  const [newRank, setNewRank] = useState({ name: "", score: 0 });
 
   const addOption = () => {
     if (slide.type !== "question" || !("options" in slide)) return;
@@ -114,38 +113,45 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
   const addMockScore = () => {
     if (slide.type !== "score") return;
 
+    const newMockScores = [
+      ...(slide.mockScores || []),
+      {
+        name: `Player ${(slide.mockScores?.length || 0) + 1}`,
+        points: 0,
+        newPoints: 0,
+      },
+    ];
+
     onSlideUpdate({
       ...slide,
-      mockScores: [
-        ...(slide.mockScores || []),
-        {
-          playerName: `Player ${(slide.mockScores?.length || 0) + 1}`,
-          score: 0,
-        },
-      ],
+      mockScores: newMockScores, // Update mockScores
     });
   };
 
   const removeMockScore = (index: number) => {
     if (slide.type !== "score" || !slide.mockScores) return;
 
+    const updatedScores = slide.mockScores.filter((_, i) => i !== index);
+
     onSlideUpdate({
       ...slide,
-      mockScores: slide.mockScores.filter((_, i) => i !== index),
+      mockScores: updatedScores, // Remove the mock score at the given index
     });
   };
 
   const updateMockScore = (
     index: number,
-    updates: Partial<{ playerName: string; score: number }>
+    updates: Partial<{ name: string; points: number; newPoints: number }>
   ) => {
     if (slide.type !== "score" || !slide.mockScores) return;
 
+    const updatedScores = slide.mockScores.map((score, i) =>
+      i === index ? { ...score, ...updates } : score
+    );
+
     onSlideUpdate({
       ...slide,
-      mockScores: slide.mockScores.map((score, i) =>
-        i === index ? { ...score, ...updates } : score
-      ),
+      mockScores: updatedScores, // Update specific mock score
     });
   };
 
@@ -187,7 +193,6 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
           type: "rank",
           ranking: [],
           timeLimit: 0,
-          
         };
         break;
 
@@ -446,183 +451,65 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
       )}
 
       {slide.type === "score" && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label>Mock Scores (Preview Only)</Label>
-            <Button variant="outline" size="sm" onClick={addMockScore}>
-              <PlusIcon className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="space-y-2">
-            {(slide.mockScores || []).map((score, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <Input
-                  value={score.playerName}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    updateMockScore(index, { playerName: e.target.value })
-                  }
-                  placeholder="Player name..."
-                />
-                <Input
-                  type="number"
-                  value={score.score}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    updateMockScore(index, {
-                      score: parseInt(e.target.value) || 0,
-                    })
-                  }
-                  className="w-24"
-                />
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => removeMockScore(index)}
-                >
-                  <MinusIcon className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
+        <MasterToolbarScore
+          mockScores={slide.mockScores || []}
+          addMockScore={addMockScore}
+          updateMockScore={updateMockScore}
+          removeMockScore={removeMockScore}
+        />
       )}
 
       {slide.type === "rank" && (
-        <div className="space-y-4">
-          <Label>Rank Answer</Label>
+        <MasterToolbarRank
+          initialSlide={slide}
+          onSlideUpdate={(updatedSlide) => {
+            onSlideUpdate(updatedSlide); // Notify the parent or global state
+          }}
+        />
+      )}
 
-          {/* Rendering the list of ranking items */}
-          {slide.ranking.map((rankItem, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <span className="p-2">{index + 1}</span>{" "}
-              {/* Display rank number as index+1 */}
+      {slide.type === "question" ||
+        (slide.type === "rank" && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Time Limit</Label>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <TimerIcon className="h-4 w-4" />
+                {!slide.timeLimit ? "No limit" : `${slide.timeLimit} seconds`}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
               <Input
-                type="text"
-                value={rankItem.name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const updatedRanking = [...slide.ranking];
-                  updatedRanking[index] = {
-                    ...updatedRanking[index],
-                    name: e.target.value,
-                  };
+                type="number"
+                min="0"
+                max="300"
+                value={slide.timeLimit}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 0;
                   onSlideUpdate({
                     ...slide,
-                    ranking: updatedRanking,
+                    timeLimit: Math.max(0, Math.min(300, value)),
                   });
                 }}
-                placeholder="New answer "
-                className="p-2 border border-gray-300 rounded"
+                className="flex-1"
               />
-              {/* Up and Down buttons to reorder the ranking */}
               <Button
-                onClick={() => {
-                  if (index > 0) {
-                    const updatedRanking = [...slide.ranking];
-                    const [movedItem] = updatedRanking.splice(index, 1); // Remove the item
-                    updatedRanking.splice(index - 1, 0, movedItem); // Insert the item at the new position
-                    onSlideUpdate({
-                      ...slide,
-                      ranking: updatedRanking, // Update ranking state with new order
-                    });
-                  }
-                }}
-                className="p-2 bg-gray-300 text-black rounded"
+                variant="outline"
+                onClick={() =>
+                  onSlideUpdate({
+                    ...slide,
+                    timeLimit: 0,
+                  })
+                }
               >
-                ↑
-              </Button>
-              <Button
-                onClick={() => {
-                  if (index < slide.ranking.length - 1) {
-                    const updatedRanking = [...slide.ranking];
-                    const [movedItem] = updatedRanking.splice(index, 1); // Remove the item
-                    updatedRanking.splice(index + 1, 0, movedItem); // Insert the item at the new position
-                    onSlideUpdate({
-                      ...slide,
-                      ranking: updatedRanking, // Update ranking state with new order
-                    });
-                  }
-                }}
-                className="p-2 bg-gray-300 text-black rounded"
-              >
-                ↓
+                No Limit
               </Button>
             </div>
-          ))}
-
-         {/* Input fields for adding new items */}
-         <div className="flex space-x-2">
-            <span className="p-2">{slide.ranking.length + 1}</span>{" "}
-            {/* Display rank number as index+1 */}
-            <Input
-              type="text"
-              value={newRank.name} // newRank should be in your component state
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setNewRank({
-                  ...newRank,
-                  name: e.target.value,
-                })
-              }
-              placeholder="Answer"
-              className="p-2 border border-gray-300 rounded"
-            />
-            <button
-              onClick={() => {
-                // Add new item to ranking
-                const updatedRanking = [...slide.ranking, newRank];
-                onSlideUpdate({
-                  ...slide,
-                  ranking: updatedRanking,
-                });
-                setNewRank({ name: "", score: 0 }); // Reset newRank after adding
-              }}
-              className="p-1 bg-blue-500 text-white rounded"
-            >
-              Add
-            </button>
+            <p className="text-xs text-muted-foreground">
+              Set to 0 for no time limit. Maximum 300 seconds (5 minutes).
+            </p>
           </div>
-        </div>
-      )}
-
-      {slide.type === "question" || slide.type === "rank" && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label>Time Limit</Label>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <TimerIcon className="h-4 w-4" />
-              {!slide.timeLimit ? "No limit" : `${slide.timeLimit} seconds`}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              min="0"
-              max="300"
-              value={slide.timeLimit}
-              onChange={(e) => {
-                const value = parseInt(e.target.value) || 0;
-                onSlideUpdate({
-                  ...slide,
-                  timeLimit: Math.max(0, Math.min(300, value)),
-                });
-              }}
-              className="flex-1"
-            />
-            <Button
-              variant="outline"
-              onClick={() =>
-                onSlideUpdate({
-                  ...slide,
-                  timeLimit: 0,
-                })
-              }
-            >
-              No Limit
-            </Button>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Set to 0 for no time limit. Maximum 300 seconds (5 minutes).
-          </p>
-        </div>
-      )}
+        ))}
     </div>
   );
 }
