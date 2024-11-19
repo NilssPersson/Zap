@@ -43,8 +43,7 @@ export interface BaseSlide {
   imageUrl?: string;
   imageScale?: number;
   backgroundStyle?: BackgroundStyle;
-  contentWiggle?: boolean;
-  titleWiggle?: boolean;
+  type: SlideType;
 }
 
 export interface InfoSlide extends BaseSlide {
@@ -61,16 +60,27 @@ export interface ScoreSlide extends BaseSlide {
   mockScores?: { name: string; points: number; newPoints: number }[];
 }
 
-export interface QuestionSlideBase extends BaseSlide {
+export enum answerTypes {
+  singleString = "singleString", 
+  multipleStrings = "multipleStrings",
+  freeText = "freeText",
+  rank = "rank",
+}
+
+export type answerType = answerTypes;
+
+interface QuestionSlideBase extends BaseSlide {
   type: SlideTypes.question;
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
+  answerType: answerType;
 }
 
 export interface RankSlide extends QuestionSlideBase {
   ranking: { name: string; score: number }[];
   questionType: QuestionTypes.RANK;
   timeLimit: number;
+  answerType: answerTypes.rank;
 }
 
 export interface MCQSASlide extends QuestionSlideBase {
@@ -80,6 +90,7 @@ export interface MCQSASlide extends QuestionSlideBase {
     text: string;
     isCorrect: boolean;
   }>;
+  answerType: answerTypes.singleString;
 }
 
 export interface MCQMASlide extends QuestionSlideBase {
@@ -89,11 +100,13 @@ export interface MCQMASlide extends QuestionSlideBase {
     text: string;
     isCorrect: boolean;
   }>;
+  answerType: answerTypes.multipleStrings;
 }
 
 export interface FASlide extends QuestionSlideBase {
   questionType: QuestionTypes.FA;
   correctAnswer: string;
+  answerType: answerTypes.freeText;
 }
 
 export interface OngoingQuiz {
@@ -116,8 +129,8 @@ export interface Participant {
   score: number;
 }
 
-export type Slide = InfoSlide | ScoreSlide | Question;
+export type Slide = InfoSlide | ScoreSlide | QuestionSlide;
 
-export type Question = MCQSASlide | MCQMASlide | FASlide | RankSlide;
+export type QuestionSlide = MCQSASlide | MCQMASlide | FASlide | RankSlide;
 
 export type { OngoingQuiz, Participant };

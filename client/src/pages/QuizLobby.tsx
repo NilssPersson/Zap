@@ -3,7 +3,6 @@ import Participant from "@/models/Participant";
 import "tw-elements"; // Import Tailwind Elements JS
 import "tailwindcss/tailwind.css"; // Tailwind CSS
 import Avatar, { genConfig } from "react-nice-avatar";
-import { useOngoingQuiz } from "@/services/host";
 import QRCode from "react-qr-code";
 
 
@@ -16,7 +15,6 @@ interface LobbyProps {
 
 export default function QuizLobby({ quizCode, participants }: LobbyProps) {
   const [participantList, setParticipantList] = useState<Participant[]>([]);
-  const { incrementSlide } = useOngoingQuiz();
   const participantsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
