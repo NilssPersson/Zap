@@ -74,6 +74,7 @@ interface QuestionSlideBase extends BaseSlide {
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
   answerType: answerType;
+  answer: string;
 }
 
 interface RankSlide extends QuestionSlideBase {

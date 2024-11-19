@@ -4,22 +4,35 @@ import { useOngoingQuiz } from "@/services/host";
 import QuizLobby from "./QuizLobby";
 import { Button } from "@/components/ui/button";
 import { OngoingQuiz, QuestionSlide, QuestionTypes, SlideTypes } from "@/models/Quiz";
+
+export interface LatestScore{
+  id: string,
+  score: number,
+}
+
 const HostLogic: React.FC = () => {
   const { id } = useParams();
   const [ongoingQuiz, setOngoingQuiz] = useState<OngoingQuiz>();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { quizCode, participants, incrementSlide, getOngoingQuiz } =
-    useOngoingQuiz();
+  const [latestScore, setLatestScore] = useState<LatestScore[]>([]);
+  const {
+    quizCode,
+    participants,
+    incrementSlide,
+    getOngoingQuiz,
+    updateScore, getScore,
+  } = useOngoingQuiz();
 
   useEffect(() => {
     const setupLobby = async () => {
       try {
         const currentQuiz = await getOngoingQuiz(id || "");
-
-        // Add initial participants from database
         if (currentQuiz) {
           setOngoingQuiz(currentQuiz);
         }
+        const currentLatestScore = await getScore(id || "");
+        setLatestScore(currentLatestScore);
+
       } catch (error) {
         console.error("Error setting up lobby:", error);
       }
@@ -28,17 +41,20 @@ const HostLogic: React.FC = () => {
     setupLobby();
   }, [id]);
 
-  const updateScore = async () => {
-    // Save old score
-    // 1000 poäng
-  };
-
   const nextSlide = async () => {
-    await updateScore();
     const startedQuiz = await incrementSlide(quizCode);
     setCurrentSlide(startedQuiz?.currentSlide);
     setOngoingQuiz(startedQuiz);
   };
+
+  const nextSlideQuestion = async (question: QuestionSlide) => {
+    setLatestScore(await getScore(id || ""));
+    await updateScore(quizCode, question);
+    const startedQuiz = await incrementSlide(quizCode);
+    setCurrentSlide(startedQuiz?.currentSlide);
+    setOngoingQuiz(startedQuiz);
+  };
+
 
   if (ongoingQuiz?.currentSlide === 0) {
     // Render QuizLobby when currentSlide is 0 Record<string, Participant>
@@ -69,7 +85,10 @@ const HostLogic: React.FC = () => {
           case QuestionTypes.FA: {
             return (
               <div className="flex flex-col">
-                <Button onClick={nextSlide} className="m-5">
+                <Button
+                  onClick={() => nextSlideQuestion(questionSlide)}
+                  className="m-5"
+                >
                   Start Game
                 </Button>
               </div>
@@ -78,7 +97,10 @@ const HostLogic: React.FC = () => {
           case QuestionTypes.MCQMA: {
             return (
               <div className="flex flex-col">
-                <Button onClick={nextSlide} className="m-5">
+                <Button
+                  onClick={() => nextSlideQuestion(questionSlide)}
+                  className="m-5"
+                >
                   Start Game
                 </Button>
               </div>
@@ -87,7 +109,10 @@ const HostLogic: React.FC = () => {
           case QuestionTypes.MCQSA: {
             return (
               <div className="flex flex-col">
-                <Button onClick={nextSlide} className="m-5">
+                <Button
+                  onClick={() => nextSlideQuestion(questionSlide)}
+                  className="m-5"
+                >
                   Start Game
                 </Button>
               </div>
@@ -96,7 +121,10 @@ const HostLogic: React.FC = () => {
           case QuestionTypes.RANK: {
             return (
               <div className="flex flex-col">
-                <Button onClick={nextSlide} className="m-5">
+                <Button
+                  onClick={() => nextSlideQuestion(questionSlide)}
+                  className="m-5"
+                >
                   Start Game
                 </Button>
               </div>
@@ -105,17 +133,16 @@ const HostLogic: React.FC = () => {
           default: {
             return (
               <div className="flex flex-col">
-                <Button onClick={nextSlide} className="m-5">
+                <Button
+                  onClick={() => nextSlideQuestion(questionSlide)}
+                  className="m-5"
+                >
                   Start Game
                 </Button>
               </div>
             );
           }
         }
-      }
-      case "score": {
-        return <div></div>;
-        break;
       }
       default: {
         <div className="flex flex-col">
