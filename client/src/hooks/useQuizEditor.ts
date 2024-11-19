@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { quizService } from '@/services/quizzes';
 import type Quiz from '@/models/Quiz';
-import { type Slide, type SlideType, type QuestionType, SlideTypes, QuestionTypes } from '@/models/Quiz';
+import { type Slide, type SlideType, type QuestionType, SlideTypes, QuestionTypes, answerTypes } from '@/models/Quiz';
 import { toast } from 'sonner';
 
 export function useQuizEditor(quizId: string | undefined) {
@@ -107,6 +107,7 @@ export function useQuizEditor(quizId: string | undefined) {
                                 text: `Option ${i + 1}`,
                                 isCorrect: i === 0,
                             })),
+                            answerType: answerTypes.singleString,
                         };
                         break;
                     case 'MCQMA':
@@ -120,6 +121,7 @@ export function useQuizEditor(quizId: string | undefined) {
                                 text: `Option ${i + 1}`,
                                 isCorrect: i <= 1,
                             })),
+                            answerType: answerTypes.multipleStrings,
                         };
                         break;
                     case 'FA':
@@ -129,6 +131,7 @@ export function useQuizEditor(quizId: string | undefined) {
                             questionType: QuestionTypes.FA,
                             timeLimit: 0,
                             correctAnswer: '',
+                            answerType: answerTypes.freeText,
                         };
                         break;
                     case 'RANK':
@@ -137,8 +140,8 @@ export function useQuizEditor(quizId: string | undefined) {
                             type: SlideTypes.question,
                             questionType: QuestionTypes.RANK,
                             timeLimit: 0,
-                            ranking: []
-
+                            ranking: [],
+                            answerType: answerTypes.rank,
                         };
                         break;
                     default:
