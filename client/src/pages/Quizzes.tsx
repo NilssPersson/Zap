@@ -7,14 +7,15 @@ import QuizList from "@/components/quizzes/QuizList";
 import { useOngoingQuizzes } from "@/hooks/useOngoingQuizzes";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useCallback } from "react";
 
-function Quizzes() {
+function useQuizzesPage() {
     const navigate = useNavigate();
     const { user } = useGetAuthenticatedUser();
     const { resources: quizzes, optimisticCreate, optimisticDelete } = useQuizzes();
     const { resources: ongoingQuizzes, optimisticDelete: deleteOngoingQuiz } = useOngoingQuizzes();
 
-    const handleCreateQuiz = async (name: string) => {
+    const handleCreateQuiz = useCallback(async (name: string) => {
         if (!user) return;
 
         const { error } = await optimisticCreate({
@@ -28,9 +29,9 @@ function Quizzes() {
         }
 
         toast.success("Quiz created successfully");
-    };
+    }, [user, optimisticCreate]);
 
-    const handleDeleteQuiz = async (quizId: string) => {
+    const handleDeleteQuiz = useCallback(async (quizId: string) => {
         const { error } = await optimisticDelete(quizId);
 
         if (error) {
@@ -39,9 +40,9 @@ function Quizzes() {
         }
 
         toast.success("Quiz deleted successfully");
-    };
+    }, [optimisticDelete]);
 
-    const handleDeleteOngoingQuiz = async (ongoingQuizId: string) => {
+    const handleDeleteOngoingQuiz = useCallback(async (ongoingQuizId: string) => {
         const { error } = await deleteOngoingQuiz(ongoingQuizId);
 
         if (error) {
@@ -50,11 +51,31 @@ function Quizzes() {
         }
 
         toast.success("Room deleted successfully");
-    };
+    }, [deleteOngoingQuiz]);
 
-    const handleGoToLobby = (ongoingQuizId: string) => {
+    const handleGoToLobby = useCallback((ongoingQuizId: string) => {
         navigate(`/quizzes/${ongoingQuizId}/lobby`);
-    };
+    }, [navigate]);
+
+    return {
+        quizzes,
+        ongoingQuizzes,
+        handleCreateQuiz,
+        handleDeleteQuiz,
+        handleDeleteOngoingQuiz,
+        handleGoToLobby
+    }
+}
+
+function Quizzes() {
+    const {
+        quizzes,
+        ongoingQuizzes,
+        handleCreateQuiz,
+        handleDeleteQuiz,
+        handleDeleteOngoingQuiz,
+        handleGoToLobby
+    } = useQuizzesPage();
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
@@ -85,12 +106,12 @@ function Quizzes() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <QuizList 
+                    <QuizList
                         quizzes={quizzes}
                         onDeleteQuiz={handleDeleteQuiz}
                     />
                 </CardContent>
-            </Card>            
+            </Card>
         </div>
     )
 }
