@@ -132,5 +132,3 @@ export interface Participant {
 export type Slide = InfoSlide | ScoreSlide | QuestionSlide;
 
 export type QuestionSlide = MCQSASlide | MCQMASlide | FASlide | RankSlide;
-
-export type { OngoingQuiz, Participant };

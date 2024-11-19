@@ -1,4 +1,4 @@
-import { OngoingQuiz } from "@/types/quiz";
+import { OngoingQuiz } from "@/models/Quiz";
 import { BaseService, FirebaseResponse } from "./base";
 import { query, orderByChild, equalTo, get, endAt, startAt } from "firebase/database";
 

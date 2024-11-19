@@ -157,7 +157,7 @@ export default function ParticipantLogic() {
             answerQuestion={answerQuestion}
           />
         );
-      } else if (questionType === "rank") {
+      } else if (questionType === "RANK") {
         return (
           <RankView
             question={currentQuestion}
