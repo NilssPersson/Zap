@@ -17,7 +17,7 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
       </div>
 
       <SlideComponent.Toolbar
-        slide={slide}
+        slide={slide as never}
         onSlideUpdate={onSlideUpdate}
       />
     </div>

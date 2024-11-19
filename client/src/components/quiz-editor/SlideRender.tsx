@@ -71,7 +71,7 @@ export function SlideRender({
         }}
       >
         <div className="w-full h-full flex items-center justify-center p-16">
-          <SlideComponent.Render slide={slide} />
+          <SlideComponent.Render slide={slide as never} />
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 import { ScoreSlide, SlideTypes } from "@/models/Quiz";
 import { SlideOption } from "../SlideOption";
 import { BarChart3Icon } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,21 +51,28 @@ interface MockScore {
   newPoints: number;
 }
 
-interface ScoreToolbarProps extends ToolbarProps {
-  mockScores: MockScore[];
-  addMockScore: () => void
-  updateMockScore: (index: number, updatedScore: Partial<MockScore>) => void;
-  removeMockScore: (index: number) => void;
+type ScoreToolbarProps = ToolbarProps & {
+  slide: ScoreSlide;
 }
 
 export function Toolbar({
   slide,
   onSlideUpdate,
-  mockScores,
-  addMockScore,
-  updateMockScore,
-  removeMockScore,
 }: ScoreToolbarProps) {
+  const [mockScores, setMockScores] = useState<MockScore[]>(slide.mockScores || []);
+
+  const addMockScore = () => {
+    setMockScores([...mockScores, { name: '', points: 0, newPoints: 0 }]);
+  };
+
+  const updateMockScore = (index: number, updatedScore: Partial<MockScore>) => {
+    setMockScores(mockScores.map((score, i) => i === index ? { ...score, ...updatedScore } : score));
+  };
+
+  const removeMockScore = (index: number) => {
+    setMockScores(mockScores.filter((_, i) => i !== index));
+  };
+
   return (
     <>
       <DefaultToolbar slide={slide} onSlideUpdate={onSlideUpdate} />

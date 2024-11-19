@@ -1,4 +1,4 @@
-import { QuestionSlideBase } from "@/models/Quiz";
+import { QuestionSlide } from "@/models/Quiz";
 import { ToolbarProps } from ".";
 import DefaultToolbar from "./toolbar/DefaultToolbar";
 import { SlideTitle } from "../slide-content/SlideTitle";
@@ -21,11 +21,11 @@ export function BaseQuestionToolbar({ slide, onSlideUpdate, children }: BaseQues
 }
 
 // Base render component for questions
-export function BaseQuestionRender({ slide, children }: { slide: QuestionSlideBase, children?: React.ReactNode }) {
+export function BaseQuestionRender({ slide, children }: { slide: QuestionSlide, children?: React.ReactNode }) {
     return (
         <div className="space-y-12 w-full">
             <div className="space-y-8">
-                <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
+                <SlideTitle title={slide.title} />
                 {slide.imageUrl && (
                     <div className="flex justify-center">
                         <div className="relative flex items-center justify-center">
@@ -41,7 +41,7 @@ export function BaseQuestionRender({ slide, children }: { slide: QuestionSlideBa
                         </div>
                     </div>
                 )}
-                <SlideContent content={slide.content} wiggle={slide.contentWiggle} />
+                <SlideContent content={slide.content} />
             </div>
             {children}
         </div>

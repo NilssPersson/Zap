@@ -27,7 +27,7 @@ Option.displayName = "RANK";
 export function Render({ slide }: { slide: RankSlide }) {
   return (
     <div className="space-y-12 w-full">
-      <SlideTitle title={slide.title} wiggle={slide.titleWiggle} />
+      <SlideTitle title={slide.title} />
       <SlideRank ranking={slide.ranking} />
     </div>
   )
