@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { QuizBackground } from "./QuizBackground";
 import { getSlideComponents } from "./slide-master";
 
-interface SlideRenderProps {
+interface SlidePreviewProps {
   slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };
   className?: string;
   thumbnail?: boolean;
@@ -16,13 +16,13 @@ interface SlideRenderProps {
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
 
-export function SlideRender({
+export function SlidePreview({
   slide,
   className,
   backgroundColor = "#000B58",
   primaryColor = "#006a67",
   secondaryColor = "#fff4b7",
-}: SlideRenderProps) {
+}: SlidePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -71,7 +71,7 @@ export function SlideRender({
         }}
       >
         <div className="w-full h-full flex items-center justify-center p-16">
-          <SlideComponent.Render slide={slide as never} />
+          <SlideComponent.Preview slide={slide as never} />
         </div>
       </div>
     </div>

@@ -1,10 +1,10 @@
 import { QuestionType, Slide, SlideType } from "@/models/Quiz";
-import * as Info from "./master-info";
-import * as Score from "./master-score";
-import * as MCQSA from "./master-question-mcq-sa";
-import * as MCQMA from "./master-question-mcq-ma";
-import * as FA from "./master-question-fa";
-import * as Rank from "./master-question-rank";
+import * as Info from "./info";
+import * as Score from "./score";
+import * as MCQSA from "./question/mcqsa";
+import * as MCQMA from "./question/mcqma";
+import * as FA from "./question/fa";
+import * as Rank from "./question/rank";
 
 interface ToolbarProps {
     slide: Slide;

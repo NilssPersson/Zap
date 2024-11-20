@@ -9,7 +9,16 @@ interface Quiz {
   primary_color: string;
   secondary_color: string;
   background_color: string;
+  settings: QuizSettings;
+  isHosted: boolean;
   slides: Slide[];
+}
+
+interface QuizSettings {
+  primaryColor: string;
+  secondaryColor: string;
+  backgroundColor: string;
+  showCorrectAnswerDefault: ShowCorrectAnswerTypes;
 }
 
 interface QuestionCreated {
@@ -69,17 +78,23 @@ export enum answerTypes {
 
 export type answerType = answerTypes;
 
+export enum ShowCorrectAnswerTypes {
+  auto = "auto",
+  manual = "manual",
+  never = "never",
+}
+
 interface QuestionSlideBase extends BaseSlide {
   type: SlideTypes.question;
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
   answerType: answerType;
+  showCorrectAnswer: ShowCorrectAnswerTypes;
 }
 
 export interface RankSlide extends QuestionSlideBase {
-  ranking: { name: string; score: number }[];
+  ranking: string[];
   questionType: QuestionTypes.RANK;
-  timeLimit: number;
   answerType: answerTypes.rank;
 }
 
@@ -112,6 +127,7 @@ export interface FASlide extends QuestionSlideBase {
 export interface OngoingQuiz {
   id: string;
   startedAt: string;
+  isShowingCorrectAnswer: boolean;
   currentSlide: number;
   quiz: Quiz;
   quizId: string;
@@ -120,7 +136,7 @@ export interface OngoingQuiz {
 }
 
 export interface Participant {
-  answer: string;
+  answer: string[][];
   answerTime: string;
   hasAnswered: boolean;
   avatar: string;

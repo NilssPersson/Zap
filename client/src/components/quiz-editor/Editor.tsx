@@ -1,5 +1,5 @@
 import type { Slide } from "@/models/Quiz";
-import { SlideRender } from "./SlideRender";
+import { SlidePreview } from "./SlidePreview";
 
 interface EditorProps {
     slide: Slide | null;
@@ -21,7 +21,7 @@ export function Editor({ slide, backgroundColor, primaryColor, secondaryColor }:
         <div className="p-4 h-full flex flex-col">
             <div className="flex-1 flex items-center justify-center bg-muted/30 rounded-lg p-4">
                 <div className="w-full max-w-4xl">
-                    <SlideRender 
+                    <SlidePreview 
                         slide={slide} 
                         backgroundColor={backgroundColor}
                         primaryColor={primaryColor}
