@@ -1,110 +1,234 @@
 // Skapa och lyssna på pågående quiz answer och uppdatera
 
 import { useState, useEffect } from "react";
-import { ref, off, onValue, runTransaction, update, set, get, DataSnapshot } from "firebase/database";
+import {
+  ref,
+  off,
+  onValue,
+  runTransaction,
+  update,
+  set,
+  get,
+  DataSnapshot,
+} from "firebase/database";
 import { database } from "@/firebase";
-import Participant from "@/models/Participant";
-import Quiz from "@/models/Quiz";
+import Quiz, { QuestionSlide, answerTypes, Participant } from "@/models/Quiz";
+import { LatestScore } from "@/pages/HostLogic";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
-  const [participants, setPaticipants] = useState<Record<string, Participant>>();
+  const [participants, setPaticipants] =
+    useState<Participant[]>();
+    const [totalAnswers, setTotalAnswers] = useState(0);
 
-    useEffect(() => {
-    const participantsRef = ref(database, `ongoingQuizzes/${quizCode}/participants`);
-    
+  useEffect(() => {
+    const participantsRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants`
+    );
+
     const handleQuizChange = (snapshot: DataSnapshot) => {
-    if (snapshot.exists()) {
-      const newParticipants = snapshot.val();
-      setPaticipants(newParticipants);
-    } else {
-      console.error("No participants found");
-      setPaticipants({});
-    }
+      if (snapshot.exists()) {
+        const newParticipants = snapshot.val() as Participant[];
+        setPaticipants(newParticipants);
+        // Count number of answeres
+        const total = newParticipants.filter(
+          (participant) => participant.hasAnswered
+        ).length;
+        setTotalAnswers(total);
+      } else {
+        console.error("No participants found");
+        setPaticipants([]);
+      }
     };
 
     onValue(participantsRef, handleQuizChange);
 
     return () => {
-        off(participantsRef, "value", handleQuizChange);
+      off(participantsRef, "value", handleQuizChange);
     };
-    }, [quizCode]);
+  }, [quizCode]);
 
+  
+
+  const resetHasAnswered = async (quizCode: string) => {
+    // Reference to all participants
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/`
+    );
+
+    // Get all participants to update
+    const participantsSnapshot = await get(participantRef);
+    if (participantsSnapshot.exists()) {
+      const updates: { [key: string]: any } = {};
+      participantsSnapshot.forEach((participant: any) => {
+        updates[
+          `ongoingQuizzes/${quizCode}/participants/${participant.participantId}/hasAnswered`
+        ] = false;
+      });
+      // Apply the updates to all participants
+      await update(ref(database), updates);
+      const newParticipants = await get(participantRef);
+      setPaticipants(newParticipants?.val());
+    } else {
+      console.log("No participants found");
+    }
+  };
 
   // Function to update question number in Firebase
   const incrementSlide = async (quizCode: string) => {
-    const slideOrderRef = ref(database, `ongoingQuizzes/${quizCode}/currentSlide`);
+    const slideOrderRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/currentSlide`
+    );
     try {
       // Increment CurrentSlideOrder by 1
       await runTransaction(slideOrderRef, (currentValue) => {
-        return (currentValue) + 1;
+        return currentValue + 1;
       });
       console.log("CurrentSlideOrder incremented");
 
-      // Reference to all participants
-      const participantRef = ref(
-        database,
-        `ongoingQuizzes/${quizCode}/participants/`
-      );
-
-      // Get all participants to update
-      const participantsSnapshot = (await get(participantRef));
-      if (participantsSnapshot.exists()) {
-        const updates: { [key: string]: any } = {};
-        participantsSnapshot.forEach((participant: any) => {
-          const participantKey = participant.key;
-          updates[
-            `ongoingQuizzes/${quizCode}/participants/${participantKey}/hasAnswered`
-          ] = false;
-          updates[
-            `ongoingQuizzes/${quizCode}/participants/${participantKey}/answer`
-          ] = "";
-        });
-        // Apply the updates to all participants
-        await update(ref(database), updates);
-        console.log("All participants' answers reset successfully");
-      } else {
-        console.log("No participants found");
-      }
-
+      await resetHasAnswered(quizCode);
+      console.log("All participants' answers reset successfully");
     } catch (error) {
       console.error(
         "Error updating CurrentSlideOrder or resetting participants:",
         error
       );
     }
-    const ongoingQuiz = await get(
-      ref(database, `ongoingQuizzes/${quizCode}`)
-    );
+    const ongoingQuiz = await get(ref(database, `ongoingQuizzes/${quizCode}`));
     return ongoingQuiz.val();
   };
 
-  /*
-  const updateScore = async(quizCode: string, questionType: answerTypes, answer: string) => {
-
-    switch (questionType) {
+  const calculateScore = (
+    question: QuestionSlide,
+    participant: Participant,
+    updates: any
+  ) => {
+    const participantAnswer = participant.answer[participant.answer.length - 1];
+    const correctAnswer = question.answer[question.answer.length - 1];
+    switch (question.answerType) {
       case answerTypes.singleString: {
-
-
+        if (participantAnswer[0] === correctAnswer[0]) {
+          const newScore = participant.score + 1000;
+          updates[`${participant.participantId}/score`] = newScore;
+        }
+        return updates;
       }
+      // Todo, handle spelling mistakes etc.
       case answerTypes.freeText: {
-      
-    }
-    
-    case answerTypes.multipleStrings: {
-    
-    }
-    
-    case answerTypes.rank: {
-    
-    }
+        if (participantAnswer[0] === correctAnswer[0]) {
+          const newScore = participant.score + 1000;
+          updates[`${participant.participantId}/score`] = newScore;
+        }
+        return updates;
+      }
+      // The answers should be the same without considering order
+      case answerTypes.multipleStrings: {
+        if (participantAnswer.length !== correctAnswer.length) {
+          return updates;
+        }
+        // Sort both arrays and compare
+        const sortedParticipantAnswers = [...participantAnswer].sort(
+          (a: any, b: any) => a - b
+        );
+        const sortedQuestionAnswers = [...correctAnswer].sort(
+          (a: any, b: any) => a - b
+        );
+
+        const isAnswerCorrect = sortedParticipantAnswers.every(
+          (value, index) => value === sortedQuestionAnswers[index]
+        );
+        if (isAnswerCorrect) {
+          const newScore = participant.score + 1000;
+          return (updates[`${participant.participantId}/score`] = newScore);
+        } else {
+          return updates;
+        }
+      }
+      // The answers should be the same, with regard to order
+      case answerTypes.rank: {
+        if (participantAnswer.length !== correctAnswer.length) {
+          return updates;
+        }
+        for (let i = 0; i < participantAnswer.length; i++) {
+          if (participantAnswer[i] !== correctAnswer[i]) {
+            return updates;
+          }
+        }
+        const newScore = participant.score + 1000;
+        return (updates[`${participant.participantId}/score`] = newScore);
+      }
       default: {
-        break;
+        return updates;
       }
     }
+  };
 
-  }
-  */
+  const updateScore = async (
+    quizCode: string,
+    currentQuestion: QuestionSlide
+  ) => {
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/`
+    );
+    const participantsSnapshot = await get(participantRef);
+    if (participantsSnapshot.exists()) {
+      var updates: { [key: string]: any } = {};
+
+      participantsSnapshot.forEach((participantSnap: any) => {
+        const participant = participantSnap.val() as Participant;
+
+        updates = calculateScore(currentQuestion, participant, updates);
+      });
+      try {
+        await update(
+          ref(database, `ongoingQuizzes/${quizCode}/participants/`),
+          updates
+        );
+
+        console.log("Scores updated and answers reset successfully.");
+      } catch (error) {
+        console.error("Error updating participants score", error);
+      }
+    } else {
+      console.log("No participants found");
+    }
+  };
+
+  const getScore = async (quizCode: string): Promise<LatestScore[]> => {
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/`
+    );
+
+    try {
+      const participantsSnapshot = await get(participantRef);
+
+      if (participantsSnapshot.exists()) {
+        const latestScores: LatestScore[] = [];
+
+        participantsSnapshot.forEach((participantSnap: any) => {
+          const participant = participantSnap.val(); // Get participant data
+
+          latestScores.push({
+            id: participant.participantId,
+            score: participant.score || 0, // Default score to 0 if not set
+          });
+        });
+
+        return latestScores;
+      } else {
+        console.log("No participants found");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error retrieving participants' scores", error);
+      return [];
+    }
+  };
 
   const generateQuizCode = async (): Promise<string> => {
     let quizCode = "";
@@ -115,14 +239,11 @@ export const useOngoingQuiz = () => {
       quizCode = Array.from({ length: 4 }, () =>
         String.fromCharCode(65 + Math.floor(Math.random() * 26))
       ).join("");
-    
-      const quizRef = ref(
-      database,
-      `ongoingQuizzes/${quizCode}`
-    )
+
+      const quizRef = ref(database, `ongoingQuizzes/${quizCode}`);
       const quiz = await get(quizRef);
-      if(await !quiz.exists()){
-        isUnique = true
+      if (await !quiz.exists()) {
+        isUnique = true;
         return quizCode;
       }
     }
@@ -130,12 +251,11 @@ export const useOngoingQuiz = () => {
     return quizCode;
   };
 
-  
   async function createOngoingQuiz(_quiz: Quiz): Promise<any> {
     const db = database;
     const quizCode = await generateQuizCode();
 
-    console.log(_quiz)
+    console.log(_quiz);
 
     const quiz = {
       currentSlide: 0,
@@ -144,20 +264,19 @@ export const useOngoingQuiz = () => {
       quizHost: _quiz.user_id,
       participants: {},
       startedAt: new Date().toISOString().toLocaleString(),
-    }
-    try{
-        await set(ref(db, "ongoingQuizzes/" + quizCode), quiz);
-        return quizCode;
-    }
-    catch(error){
-        console.error("Failed to create ongoing quiz", error);
+    };
+    try {
+      await set(ref(db, "ongoingQuizzes/" + quizCode), quiz);
+      return quizCode;
+    } catch (error) {
+      console.error("Failed to create ongoing quiz", error);
     }
   }
 
   async function getOngoingQuiz(quizCode: string): Promise<any> {
     const quizRef = ref(database, "ongoingQuizzes/" + quizCode);
     try {
-      const ongoingQuiz =  await get(quizRef);
+      const ongoingQuiz = await get(quizRef);
       setQuizCode(quizCode);
       return ongoingQuiz.val();
     } catch (error) {
@@ -165,11 +284,26 @@ export const useOngoingQuiz = () => {
     }
   }
 
+  async function setIsShowingAnswer(
+    quizCode: string,
+    entry: boolean
+  ): Promise<any> {
+    const quizRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/isShowingAnswer/`
+    );
+    await set(quizRef, entry);
+  }
+
   return {
     quizCode,
     participants,
+    totalAnswers,
     createOngoingQuiz,
     incrementSlide,
     getOngoingQuiz,
+    updateScore,
+    getScore,
+    setIsShowingAnswer,
   };
 };
