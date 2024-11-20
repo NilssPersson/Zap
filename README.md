@@ -69,14 +69,27 @@ For more details, visit the [Developer Documentation](#developer-documentation).
 ---
 
 ## Code Structure
+The project is organized into the following directories:
 
-- **src/components**: Contains reusable React components.
-- **src/pages**: Defines application routes.
-- **src/styles**: Global and component-specific styles.
-- **src/utils**: Utility functions and helpers.
-- **src/services**: Backend services and API integration.
+```plaintext
 
-Refer to the inline documentation in each file for details.
+GameShack/
+├── src/
+│   ├── components/
+│   ├── hooks/
+│   ├── models/
+│   ├── pages/
+|   ├── routes/
+│   ├── services/
+
+```
+
+- **components**: Reusable UI components.
+- **hooks**: Custom hooks for state management and side effects.
+- **models**: Data models and interfaces.
+- **pages**: Top-level components for different routes.
+- **routes**: Routing configuration and navigation components.
+- **services**: API services and utilities.
 
 ---
 
