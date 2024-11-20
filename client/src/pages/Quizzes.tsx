@@ -20,7 +20,8 @@ function useQuizzesPage() {
 
         const { error } = await optimisticCreate({
             quiz_name: name,
-            user_id: user.id
+            user_id: user.id,
+            isHosted: false
         });
 
         if (error) {

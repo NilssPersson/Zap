@@ -6,6 +6,7 @@ import { Editor } from '@/components/quiz-editor/Editor';
 import { Toolbar } from '@/components/quiz-editor/Toolbar';
 import { QuizBackground } from '@/components/quiz-editor/QuizBackground';
 import { QuizSettingsToolbar } from '@/components/quiz-editor/QuizSettingsToolbar';
+import { quizDefaults } from '@/components/quiz-editor/utils/quiz-defaults';
 
 function QuizEdit() {
     const { id } = useParams();
@@ -29,6 +30,11 @@ function QuizEdit() {
 
     if (error) return <div>Error: {error}</div>;
     if (!quiz) return <div>Loading...</div>;
+
+    const quizSettings = {
+        ...quizDefaults,
+        ...quiz.settings,
+    }
 
     return (
         <div className="flex-1 flex overflow-hidden">
@@ -54,9 +60,9 @@ function QuizEdit() {
                         onSlideMove={handleSlideMove}
                         onSettingsClick={() => setShowSettings(true)}
                         onSaveClick={handleSave}
-                        backgroundColor={quiz.background_color}
-                        primaryColor={quiz.primary_color}
-                        secondaryColor={quiz.secondary_color}
+                        backgroundColor={quizSettings.backgroundColor}
+                        primaryColor={quizSettings.primaryColor}
+                        secondaryColor={quizSettings.secondaryColor}
                     />
                 </ResizablePanel>
 
@@ -65,9 +71,9 @@ function QuizEdit() {
                 <ResizablePanel defaultSize={60}>
                     <Editor
                         slide={activeSlide}
-                        backgroundColor={quiz.background_color}
-                        primaryColor={quiz.primary_color}
-                        secondaryColor={quiz.secondary_color}
+                        backgroundColor={quizSettings.backgroundColor}
+                        primaryColor={quizSettings.primaryColor}
+                        secondaryColor={quizSettings.secondaryColor}
                     />
                 </ResizablePanel>
 
@@ -76,10 +82,7 @@ function QuizEdit() {
                 <ResizablePanel defaultSize={20} minSize={15}>
                     {showSettings ? (
                         <QuizSettingsToolbar
-                            quizName={quiz.quiz_name}
-                            primaryColor={quiz.primary_color}
-                            secondaryColor={quiz.secondary_color}
-                            backgroundColor={quiz.background_color}
+                            quiz={quiz}
                             onUpdate={handleQuizUpdate}
                         />
                     ) : activeSlide ? (

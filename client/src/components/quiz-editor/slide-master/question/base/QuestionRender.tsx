@@ -1,26 +1,7 @@
 import { QuestionSlide } from "@/models/Quiz";
-import { ToolbarProps } from ".";
-import DefaultToolbar from "./toolbar/DefaultToolbar";
-import { SlideTitle } from "../slide-content/SlideTitle";
-import { SlideContent } from "../slide-content/SlideContent";
+import { SlideTitle } from "../../../slide-content/SlideTitle";
+import { SlideContent } from "../../../slide-content/SlideContent";
 
-interface BaseQuestionToolbarProps extends ToolbarProps {
-    children?: React.ReactNode;
-}
-
-// Base question toolbar that can be extended by specific question types
-export function BaseQuestionToolbar({ slide, onSlideUpdate, children }: BaseQuestionToolbarProps) {
-    if (slide.type !== "question") return null;
-
-    return (
-        <>
-            <DefaultToolbar slide={slide} onSlideUpdate={onSlideUpdate} />
-            {children}
-        </>
-    );
-}
-
-// Base render component for questions
 export function BaseQuestionRender({ slide, children }: { slide: QuestionSlide, children?: React.ReactNode }) {
     return (
         <div className="space-y-12 w-full">
@@ -46,4 +27,4 @@ export function BaseQuestionRender({ slide, children }: { slide: QuestionSlide, 
             {children}
         </div>
     );
-}
+} 

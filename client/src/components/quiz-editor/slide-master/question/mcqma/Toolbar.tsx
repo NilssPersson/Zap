@@ -1,38 +1,13 @@
-import { MCQMASlide, QuestionTypes, SlideTypes } from "@/models/Quiz";
-import { SlideOption } from "../SlideOption";
-import { CheckSquareIcon, MinusIcon, PlusIcon } from "lucide-react";
-import { BaseQuestionRender, BaseQuestionToolbar } from "./master-question";
-import { OptionProps, ToolbarProps } from ".";
-import { QuestionOptions } from "../slide-content/QuestionOptions";
-import { updateOption } from "./master-question-options-helper";
-import { addOption, removeOption } from "./master-question-options-helper";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { MCQMASlide } from "@/models/Quiz";
+import { ToolbarProps } from "../../";
+import { BaseQuestionToolbar } from "../base/QuestionToolbar";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { MinusIcon, PlusIcon } from "lucide-react";
+import { addOption, removeOption, updateOption } from "../helpers/options";
 
-// OPTION: Renders the button to add an MCQMA slide
-export function Option({ handleAddSlide }: OptionProps) {
-    return (
-        <SlideOption
-            label="Multiple Answer MCQ"
-            icon={CheckSquareIcon}
-            onClick={() => {
-                handleAddSlide(SlideTypes.question, QuestionTypes.MCQMA);
-            }}
-        />
-    );
-}
-Option.displayName = "MCQMA";
-
-// RENDER: Renders the MCQMA slide
-export function Render({ slide }: { slide: MCQMASlide }) {
-    return <BaseQuestionRender slide={slide}>
-        <QuestionOptions options={slide.options} type={slide.questionType} />
-    </BaseQuestionRender>
-}
-
-// TOOLBAR: Renders the MCQMA slide toolbar
 type MCQMAToolbarProps = ToolbarProps & {
     slide: MCQMASlide;
     onSlideUpdate: (slide: MCQMASlide) => void;
@@ -76,10 +51,4 @@ export function Toolbar({ slide, onSlideUpdate }: MCQMAToolbarProps) {
             </div>
         </BaseQuestionToolbar>
     )
-}
-
-export const Info = {
-    value: "question:MCQMA",
-    icon: CheckSquareIcon,
-    label: "Multiple Answer MCQ",
-} as const;
+} 

@@ -1,38 +1,13 @@
-import { MCQMASlide, QuestionTypes, SlideTypes } from "@/models/Quiz";
-import { SlideOption } from "../SlideOption";
-import { CircleDotIcon, PlusIcon, MinusIcon } from "lucide-react";
-import { BaseQuestionRender, BaseQuestionToolbar } from "./master-question";
-import { OptionProps, ToolbarProps } from ".";
-import { QuestionOptions } from "../slide-content/QuestionOptions";
-import { addOption } from "./master-question-options-helper";
-import { removeOption, updateOption } from "./master-question-options-helper";
+import { MCQMASlide } from "@/models/Quiz";
+import { ToolbarProps } from "../../";
+import { BaseQuestionToolbar } from "../base/QuestionToolbar";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { MinusIcon, PlusIcon } from "lucide-react";
+import { addOption, removeOption, updateOption } from "../helpers/options";
 
-// OPTION: Renders the button to add an MCQSA slide
-export function Option({ handleAddSlide }: OptionProps) {
-    return (
-        <SlideOption
-            label="Single Answer MCQ"
-            icon={CircleDotIcon}
-            onClick={() => {
-                handleAddSlide(SlideTypes.question, QuestionTypes.MCQSA);
-            }}
-        />
-    );
-}
-Option.displayName = "MCQSA";
-
-// RENDER: Renders the MCQSA slide
-export function Render({ slide }: { slide: MCQMASlide }) {
-    return <BaseQuestionRender slide={slide}>
-        <QuestionOptions options={slide.options} type={slide.questionType} />
-    </BaseQuestionRender>
-}
-
-// TOOLBAR: Renders the MCQSA slide toolbar
 type MCQSAToolbarProps = ToolbarProps & {
     slide: MCQMASlide;
     onSlideUpdate: (slide: MCQMASlide) => void;
@@ -76,10 +51,4 @@ export function Toolbar({ slide, onSlideUpdate }: MCQSAToolbarProps) {
             </div>
         </BaseQuestionToolbar>
     )
-}
-
-export const Info = {
-    value: "question:MCQSA",
-    icon: CircleDotIcon,
-    label: "Single Answer MCQ",
-} as const;
+} 

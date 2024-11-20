@@ -2,7 +2,7 @@ import { PlusIcon } from "lucide-react";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { SlideCreationMenu } from "./SlideCreationMenu";
 import type { Slide } from "@/models/Quiz";
-import { SlideRender } from "./SlideRender";
+import { SlidePreview } from "./SlidePreview";
 import { useEffect } from "react";
 import { CustomTooltip } from "@/components/ui/custom-tooltip";
 import { SidebarHeader } from "./SidebarHeader";
@@ -97,7 +97,7 @@ export function SlideSidebar({
                             }}
                         >
                             <div className="cursor-pointer">
-                                <SlideRender 
+                                <SlidePreview 
                                     slide={slide} 
                                     backgroundColor={backgroundColor}
                                     primaryColor={primaryColor}
