@@ -103,8 +103,22 @@ GameShack/
 - Players can join the game room using a unique code and interact through an intuitive interface.
 
 ### Adding New Features
-- To add a new question type, extend .... [TODO]
-
+- To add a new question type or slide type, add the type declaration to /src/models/Quiz.ts
+- Create a new directory in /src/components/quiz-editor/slide-master/[slide-type]
+- In the new directory create the following files:
+   - Preview.tsx: Renders the slide in the quiz editor.
+   - Participant.tsx: Renders the slide for participants.
+   - Toolbar.tsx: Renders the form for editing the slide in the toolbar.
+   - Option.tsx: Renders an option for adding the slide to the quiz.
+   - Presentation.tsx: Renders the slide in the presentation view.
+   - index.ts: Exports the slide components and metadata.
+- In /src/components/quiz-editor/slide-master/index.ts
+  - Import and export the new slide type
+  - Modify getSlideComponents to return the new slide type
+- In /src/components/quiz-editor/SlideCreationMenu.tsx
+  - Modify optionGroups to include the new slide type in the correct group
+- In /src/hooks/useQuizEditor.ts
+  - Modify handleAddSlide to support the new slide type
 ---
 
 ## Contributors
