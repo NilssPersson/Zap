@@ -112,11 +112,11 @@ GameShack/
    - Presentation.tsx: Renders the slide in the presentation view.
    - index.ts: Exports the slide components and metadata.
       - Define the slide metadata using the SlideInfo type.
-      - `value` should be the same as the directory name.
-      - `icon` should be a LucideIcon component.
-      - `label` should be the same as the directory name.
-      - `slideType` should be the same as the directory name.
-      - `questionType` is only needed for question slides.
+         - `value` should be the same as the directory name.
+         - `icon` should be a LucideIcon component.
+         - `label` should be the same as the directory name.
+         - `slideType` should be the same as the directory name.
+         - `questionType` is only needed for question slides.
 - In /src/components/quiz-editor/slide-master/index.ts
   - Import and export the new slide type
 - In /src/components/quiz-editor/slide-master/utils.tsx
