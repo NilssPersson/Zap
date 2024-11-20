@@ -10,7 +10,7 @@ import {
   checkIfGameExists,
   participantExists,
   getQuizSlides,
-} from "@/services/client";
+} from "@/services/participant";
 import TeamInfo from "./components/teamInfo";
 import CreateParticipant from "./components/CreateParticipant";
 import { LogOut } from "lucide-react";
@@ -38,7 +38,7 @@ export default function ParticipantLogic() {
   const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
 
-  const { hasAnswered, currentSlide, score } = useGameStatus(
+  const { currentSlide, participantData } = useGameStatus(
     quizCode as string,
     participantId as string,
   );
@@ -109,7 +109,7 @@ export default function ParticipantLogic() {
   }
 
   // Check if a participant has been created
-  if (!participantId) {
+  if (!participantId || !participantData) {
     return (
       <CreateParticipant
         name={name}
@@ -123,9 +123,9 @@ export default function ParticipantLogic() {
 
   // TODO: Kan nog skrivas om bättre.
   function QuizView() {
-    if (!questions) return <div>Loading Questions...</div>;
+    if (!questions || !participantData) return <div>Loading Questions...</div>;
     if (currentSlide === 0) return <LobbyView />;
-    if (hasAnswered) return <HasAnsweredView />;
+    if (participantData.hasAnswered) return <HasAnsweredView />;
     if (currentSlide > questions.length) return <QuizEndedView />;
 
     const currentQuestion = questions?.[currentSlide - 1];
@@ -168,6 +168,7 @@ export default function ParticipantLogic() {
     }
 
     // TODO: När en frågetyp inte stöds
+    console.log(currentQuestion);
     return (
       <div>
         <h1>Unsupported question type</h1>
@@ -188,7 +189,11 @@ export default function ParticipantLogic() {
       {/*Middle: Quiz Question*/}
       <QuizView />
       {/*Bottom: Team info */}
-      <TeamInfo name={name} score={score} avatar={avatar} />
+      <TeamInfo
+        name={participantData.name}
+        score={participantData.score}
+        avatar={participantData.avatar}
+      />
     </div>
   );
 }

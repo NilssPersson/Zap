@@ -136,8 +136,11 @@ export interface OngoingQuiz {
   participants: { [id: string]: Participant };
 }
 export interface Participant {
-  answer: string[][];
-  answerTime: string;
+  answers: Array<{
+    slideNumber: number;
+    answer: string[];
+    time: string;
+  }>;
   hasAnswered: boolean;
   avatar: string;
   name: string;

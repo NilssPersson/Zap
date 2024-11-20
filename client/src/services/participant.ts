@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ref, onValue, off,get,set, update, DataSnapshot } from "firebase/database";
 import { database } from "@/firebase";
+import { Participant } from "@/models/Quiz";
 
 export const checkIfGameExists = async (quizCode:string) => {
   const quizRef = ref(database, `ongoingQuizzes/${quizCode}`);
@@ -61,9 +62,8 @@ export const addAnswer = async (quizCode:string, participantId:string, answer:st
 };
 
 export const useGameStatus = (quizCode:string, participantId:string) => {
-  const [hasAnswered, setHasAnswered] = useState<boolean>(false);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const [score, setScore] = useState<number>(0);
+  const [participantData, setParticipantData] = useState<Participant>();
   
   useEffect(() => {
     const slideRef = ref(database, `ongoingQuizzes/${quizCode}/currentSlide`);
@@ -81,8 +81,7 @@ export const useGameStatus = (quizCode:string, participantId:string) => {
     const handleParticipantChange = (snapshot:DataSnapshot) => {
       if (snapshot.exists()) {
         const participantData = snapshot.val();
-        setHasAnswered(participantData.hasAnswered);
-        setScore(participantData.score);
+        setParticipantData(participantData);
       } else {
         console.error("Game not found");
       }
@@ -97,7 +96,7 @@ export const useGameStatus = (quizCode:string, participantId:string) => {
     };
   }, [participantId, quizCode]);
 
-  return { hasAnswered, currentSlide,score };
+  return { currentSlide,participantData };
 };
 
 export const removeParticipant = async (quizCode:string, participantId:string) => {
