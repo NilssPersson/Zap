@@ -1,41 +1,46 @@
 import { Separator } from "@/components/ui/separator";
 import { PopoverContent } from "@/components/ui/popover";
-import type { SlideType, QuestionType } from "@/models/Quiz";
-import { Info, Score, MCQSA, MCQMA, FA, Rank, OptionProps } from "./slide-master";
+import { type SlideType, type QuestionType, SlideTypes } from "@/models/Quiz";
+import * as Slides from "./slide-master";
+import { SlideOption } from "./SlideOption";
+import { SlideInfo } from "./slide-master";
 
 interface SlideCreationMenuProps {
   onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
 }
 
-type Option = React.ComponentType<OptionProps>;
-
-// Add new interface for option groups
-interface OptionGroup {
-  label: string;
-  options: Option[];
-}
-
 // Replace existing slides and questions arrays with optionGroups
-const optionGroups: OptionGroup[] = [
+const optionGroups = [
   {
     label: "Slides",
-    options: [Info.Option, Score.Option]
+    options: Object.values(Slides)
+      .filter((slide) => slide.Info.slideType !== SlideTypes.question)
+      .map((slide) => slide.Info)
   },
   {
     label: "Question Types",
-    options: [MCQSA.Option, MCQMA.Option, FA.Option, Rank.Option]
+    options: Object.values(Slides)
+      .filter((slide) => slide.Info.slideType === SlideTypes.question)
+      .map((slide) => slide.Info)
   }
 ] as const;
 
 interface RenderOptionsProps {
-  options: Option[];
+  options: SlideInfo[];
   onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
 }
 
 function RenderOptions({ options, onAddSlide }: RenderOptionsProps) {
-  return options.map((Option) => {
-    return <Option key={Option.displayName} handleAddSlide={onAddSlide} />
-  })
+  return options.map((option) => {
+    return (
+      <SlideOption
+        key={option.value}
+        label={option.label}
+        icon={option.icon}
+        onClick={() => onAddSlide(option.slideType, option.questionType)}
+      />
+    );
+  });
 }
 
 export function SlideCreationMenu({ onAddSlide }: SlideCreationMenuProps) {

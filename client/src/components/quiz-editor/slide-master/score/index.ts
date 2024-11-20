@@ -1,10 +1,13 @@
-export * from './Option';
 export * from './Preview';
 export * from './Toolbar';
 
+import { SlideTypes } from '@/models/Quiz';
 import { BarChart3Icon } from "lucide-react";
-export const Info = {
+import { SlideInfo } from '..';
+
+export const Info: SlideInfo = {
     value: "score",
     icon: BarChart3Icon,
     label: "Score Slide",
-} as const; 
+    slideType: SlideTypes.score,
+} as const;

@@ -1,4 +1,4 @@
-import { getSlideComponents } from "./slide-master";
+import { getSlideComponents } from "./slide-master/utils";
 import type { Slide } from "@/models/Quiz";
 
 interface ToolbarProps {
