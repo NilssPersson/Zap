@@ -69,16 +69,23 @@ export enum answerTypes {
 
 export type answerType = answerTypes;
 
+export enum showCorrectAnswerTypes{
+    auto = "auto",
+    manual = "manual",
+    never = "never",
+}
+
 interface QuestionSlideBase extends BaseSlide {
   type: SlideTypes.question;
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
   answerType: answerType;
-  answer: string;
+  answer: string[]; //TODO: kolla i options
+  showCorrectAnswer: showCorrectAnswerTypes; // Lägg till knapp för show answer
 }
 
 interface RankSlide extends QuestionSlideBase {
-  ranking: { name: string; score: number }[];
+  ranking: string[];
   questionType: QuestionTypes.RANK;
   timeLimit: number;
   answerType: answerTypes.rank;
@@ -113,15 +120,15 @@ interface FASlide extends QuestionSlideBase {
 interface OngoingQuiz {
   id: string;
   startedAt: string;
+  isShowingAnswer: boolean;
   currentSlide: number;
   quiz: Quiz;
   quizId: string;
   quizHost: string;
   participants: { [id: string]: Participant };
 }
-
-interface Participant {
-  answer: string;
+ interface Participant {
+  answer: string[][];
   answerTime: string;
   hasAnswered: boolean;
   avatar: string;
