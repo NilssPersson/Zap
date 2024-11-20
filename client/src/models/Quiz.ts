@@ -89,10 +89,11 @@ interface QuestionSlideBase extends BaseSlide {
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
   answerType: answerType;
-  showCorrectAnswer: ShowCorrectAnswerTypes;
+  answer: string[]; //TODO: kolla i options
+  showCorrectAnswer: ShowCorrectAnswerTypes; // Lägg till knapp för show answer
 }
 
-export interface RankSlide extends QuestionSlideBase {
+interface RankSlide extends QuestionSlideBase {
   ranking: string[];
   questionType: QuestionTypes.RANK;
   answerType: answerTypes.rank;
@@ -134,7 +135,6 @@ export interface OngoingQuiz {
   quizHost: string;
   participants: { [id: string]: Participant };
 }
-
 export interface Participant {
   answer: string[][];
   answerTime: string;
