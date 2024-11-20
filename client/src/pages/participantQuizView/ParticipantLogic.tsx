@@ -10,7 +10,7 @@ import {
   checkIfGameExists,
   participantExists,
   getQuizSlides,
-} from "@/services/client";
+} from "@/services/participant";
 import TeamInfo from "./components/teamInfo";
 import CreateParticipant from "./components/CreateParticipant";
 import { LogOut } from "lucide-react";
@@ -168,6 +168,7 @@ export default function ParticipantLogic() {
     }
 
     // TODO: När en frågetyp inte stöds
+    console.log(currentQuestion);
     return (
       <div>
         <h1>Unsupported question type</h1>

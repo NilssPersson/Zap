@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { InfoIcon } from "lucide-react";
-import { checkIfGameExists } from "@/services/client";
+import { checkIfGameExists } from "@/services/participant";
 import { useNavigate } from "react-router-dom";
 
 export default function StartScreen() {
