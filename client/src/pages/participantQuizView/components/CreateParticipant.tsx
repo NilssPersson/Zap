@@ -13,17 +13,11 @@ interface CreateParticipantProps {
 }
 
 function createRandomId() {
-  const length = 10;
-  let result = "";
-  const characters =
+  const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
+  return Array.from({ length: 10 }, () =>
+    chars.charAt(Math.random() * chars.length),
+  ).join("");
 }
 
 export default function CreateParticipant({
