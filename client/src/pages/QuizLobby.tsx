@@ -1,14 +1,15 @@
 import { useEffect, useState, useRef } from "react";
-import Participant from "@/models/Participant";
+
 import "tw-elements"; // Import Tailwind Elements JS
 import "tailwindcss/tailwind.css"; // Tailwind CSS
 import Avatar, { genConfig } from "react-nice-avatar";
 import QRCode from "react-qr-code";
+import { Participant } from "@/models/Quiz";
 
 
 interface LobbyProps {
   quizCode: string;
-  participants: Record<string, Participant>;
+  participants: Participant[];
 }
 
 //animations och key frames
