@@ -1,6 +1,6 @@
 import { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
 
-interface Quiz {
+export interface Quiz {
   id: string;
   quiz_name: string;
   user_id: string;
@@ -14,7 +14,7 @@ interface Quiz {
   slides: Slide[];
 }
 
-interface QuizSettings {
+export interface QuizSettings {
   primaryColor: string;
   secondaryColor: string;
   backgroundColor: string;

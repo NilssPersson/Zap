@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { quizService } from '@/services/quizzes';
 import type Quiz from '@/models/Quiz';
-import { type Slide, type SlideType, type QuestionType, SlideTypes, QuestionTypes, answerTypes } from '@/models/Quiz';
+import { type Slide, type SlideType, type QuestionType, SlideTypes, QuestionTypes, answerTypes, QuizSettings } from '@/models/Quiz';
 import { toast } from 'sonner';
+import { quizDefaults } from '@/components/quiz-editor/utils/quiz-defaults';
 
 export function useQuizEditor(quizId: string | undefined) {
     const [quiz, setQuiz] = useState<Quiz | null>(null);
@@ -108,6 +109,7 @@ export function useQuizEditor(quizId: string | undefined) {
                                 isCorrect: i === 0,
                             })),
                             answerType: answerTypes.singleString,
+                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
                         };
                         break;
                     case 'MCQMA':
@@ -122,6 +124,7 @@ export function useQuizEditor(quizId: string | undefined) {
                                 isCorrect: i <= 1,
                             })),
                             answerType: answerTypes.multipleStrings,
+                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
                         };
                         break;
                     case 'FA':
@@ -132,6 +135,7 @@ export function useQuizEditor(quizId: string | undefined) {
                             timeLimit: 0,
                             correctAnswer: '',
                             answerType: answerTypes.freeText,
+                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
                         };
                         break;
                     case 'RANK':
@@ -142,6 +146,7 @@ export function useQuizEditor(quizId: string | undefined) {
                             timeLimit: 0,
                             ranking: [],
                             answerType: answerTypes.rank,
+                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
                         };
                         break;
                     default:
@@ -203,18 +208,18 @@ export function useQuizEditor(quizId: string | undefined) {
 
     const handleQuizUpdate = async (updates: {
         quizName?: string;
-        primaryColor?: string;
-        secondaryColor?: string;
-        backgroundColor?: string;
+        settings?: QuizSettings;
     }) => {
         if (!quiz || !quizId) return;
 
         const updatedQuiz = {
             ...quiz,
             quiz_name: updates.quizName ?? quiz.quiz_name,
-            primary_color: updates.primaryColor ?? quiz.primary_color ?? "#006a67",
-            secondary_color: updates.secondaryColor ?? quiz.secondary_color ?? "#fff4b7",
-            background_color: updates.backgroundColor ?? quiz.background_color ?? "#000B58",
+            settings: {
+                ...quizDefaults,
+                ...quiz.settings,
+                ...updates.settings,
+            },
         };
 
         setQuiz(updatedQuiz);
