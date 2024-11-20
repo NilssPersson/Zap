@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 
-export function makeid(length: number) {
+function makeid(length: number) {
   let result = "";
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -21,12 +22,16 @@ function Profile() {
   const [avatarString, setAvatarString] = useState("");
   const [username, setUsername] = useState("");
 
+  const { user } = useGetAuthenticatedUser();
+
+  console.log(user);
+
   function changeAvatarClick() {
     setAvatarString(makeid(10));
   }
 
-   // Fetch data from the database on component mount
-   useEffect(() => {
+  // Fetch data from the database on component mount
+  useEffect(() => {
     async function loadUserData() {
       try {
         const data = await fetchUserData();
@@ -36,7 +41,7 @@ function Profile() {
         console.error("Failed to load user data:", error);
       }
     }
-    
+
     loadUserData();
   }, []);
 
@@ -54,7 +59,6 @@ function Profile() {
 
   return (
     <div className="flex-1 w-full flex-col flex items-center justify-center overflow-hidden">
-
       <h1 className=" font-display text-6xl mb-5 ">Profile</h1>
       <Card className="mx-5">
         <CardContent className="flex flex-col items-center gap-4 py-6">
