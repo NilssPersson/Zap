@@ -106,7 +106,7 @@ export const useOngoingQuiz = () => {
     participant: Participant,
     updates: any
   ) => {
-    const participantAnswer = participant.answer[participant.answer.length - 1];
+    const participantAnswer = participant.answers[participant.answers.length - 1].answer;
     const correctAnswer = question.answer[question.answer.length - 1];
     switch (question.answerType) {
       case answerTypes.singleString: {
