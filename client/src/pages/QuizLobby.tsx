@@ -6,7 +6,6 @@ import Avatar, { genConfig } from "react-nice-avatar";
 import QRCode from "react-qr-code";
 import { Participant } from "@/models/Quiz";
 
-
 interface LobbyProps {
   quizCode: string;
   participants: Participant[];

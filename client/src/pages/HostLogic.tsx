@@ -8,7 +8,7 @@ import {
   QuestionSlide,
   QuestionTypes,
   SlideTypes,
-  showCorrectAnswerTypes,
+  ShowCorrectAnswerTypes,
 } from "@/models/Quiz";
 
 export interface LatestScore {
@@ -112,7 +112,7 @@ const HostLogic: React.FC = () => {
         >
           Next Slide
         </Button>
-        {questionSlide.showCorrectAnswer === showCorrectAnswerTypes.manual && (
+        {questionSlide.showCorrectAnswer === ShowCorrectAnswerTypes.manual && (
           <Button
             onClick={() => showAnswer(questionSlide)} // Replace with your logic to show the correct answer
             className="m-5"
