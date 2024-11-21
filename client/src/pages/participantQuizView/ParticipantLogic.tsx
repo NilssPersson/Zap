@@ -19,13 +19,8 @@ import { useCookies } from "react-cookie";
 import LobbyView from "@/components/quiz-phone-view/LobbyView";
 import HasAnsweredView from "@/components/quiz-phone-view/HasAnsweredView";
 import QuizEndedView from "@/components/quiz-phone-view/QuizEndedView";
-import McqsaView from "@/components/quiz-phone-view/McqsaView";
-import InfoView from "@/components/quiz-phone-view/InfoView";
-import McqmaView from "@/components/quiz-phone-view/McqmaView";
-import ScoreView from "@/components/quiz-phone-view/ScoreView";
-import RankView from "@/components/quiz-phone-view/RankView";
-import FastAnswerView from "@/components/quiz-phone-view/FastAnswerView";
-import { InfoSlide, Slide } from "@/models/Quiz";
+import { Slide } from "@/models/Quiz";
+import { getSlideComponents } from "@/slides/utils";
 
 export default function ParticipantLogic() {
   const [name, setName] = useState("");
@@ -130,50 +125,12 @@ export default function ParticipantLogic() {
 
     const currentQuestion = questions?.[currentSlide - 1];
 
-    if (currentQuestion.type === "info")
-      return <InfoView slide={currentQuestion as InfoSlide} />;
-    if (currentQuestion.type === "score") return <ScoreView />;
-
-    if (currentQuestion.type === "question") {
-      const questionType = currentQuestion.questionType;
-      if (questionType === "MCQMA") {
-        return (
-          <McqmaView
-            answerQuestion={answerQuestion}
-            question={currentQuestion}
-          />
-        );
-      } else if (questionType === "MCQSA") {
-        return (
-          <McqsaView
-            answerQuestion={answerQuestion}
-            question={currentQuestion}
-          />
-        );
-      } else if (questionType === "FA") {
-        return (
-          <FastAnswerView
-            question={currentQuestion}
-            answerQuestion={answerQuestion}
-          />
-        );
-      } else if (questionType === "RANK") {
-        return (
-          <RankView
-            question={currentQuestion}
-            answerQuestion={answerQuestion}
-          />
-        );
-      }
-    }
-
-    // TODO: När en frågetyp inte stöds
-    console.log(currentQuestion);
+    const SlideComponent = getSlideComponents(currentQuestion);
     return (
-      <div>
-        <h1>Unsupported question type</h1>
-        <p>{JSON.stringify(currentQuestion)}</p>
-      </div>
+      <SlideComponent.Participant
+        slide={currentQuestion as never}
+        answerQuestion={answerQuestion}
+      />
     );
   }
 

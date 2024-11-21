@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { MCQMASlide } from "@/models/Quiz";
 
 interface Options {
@@ -8,14 +8,11 @@ interface Options {
   isCorrect: boolean;
 }
 interface McqmaViewProps {
-  question: MCQMASlide;
+  slide: MCQMASlide;
   answerQuestion: (answer: string[]) => void;
 }
 
-export default function McqmaView({
-  question,
-  answerQuestion,
-}: McqmaViewProps) {
+export function Participant({ slide, answerQuestion }: McqmaViewProps) {
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
 
   const toggleOption = (index: number) => {
@@ -29,16 +26,16 @@ export default function McqmaView({
 
   const handleSubmit = () => {
     const selectedAnswers = selectedIndexes.map(
-      (index) => question.options[index].text,
+      (index) => slide.options[index].text,
     );
     answerQuestion(selectedAnswers); // Submit as string[]
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-full pt-80">
-      <h1 className="text-3xl font-display text-center">{question.title}</h1>
+      <h1 className="text-3xl font-display text-center">{slide.title}</h1>
       <div className="flex flex-col space-y-4">
-        {question.options.map((option: Options, index: number) => (
+        {slide.options.map((option: Options, index: number) => (
           <Button
             key={option.text}
             onClick={() => toggleOption(index)}
