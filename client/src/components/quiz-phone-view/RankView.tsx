@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   useDraggable,
-  useDroppable,
   DndContext,
   MouseSensor,
   TouchSensor,
@@ -10,152 +9,94 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
-import { RankSlide } from "@/models/Quiz";
 
-// Define a type for the ranking items
-type RankItem = {
-  name: string;
-  score: number;
-};
+interface RankViewProps {
+  question: { title: string; ranking: string[] };
+  answerQuestion: (answer: string[]) => void;
+}
 
-// Shuffle function to randomize the order
-const shuffleArray = (array: RankItem[]): RankItem[] => {
-  return array
-    .map((a) => ({ sort: Math.random(), value: a }))
-    .sort((a, b) => a.sort - b.sort)
-    .map((a) => a.value);
-};
-
-// Draggable-Droppable item component
-function DraggableDroppableItem({
-  rank,
-  index,
-  originalIndex,
-}: {
-  rank: RankItem;
-  index: number;
-  originalIndex: number;
-}) {
+// Draggable item component
+function DraggableItem({ text, index }: { text: string; index: number }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `draggable-${index}`, // Unique ID for each item
   });
 
-  const { setNodeRef: droppableRef, isOver } = useDroppable({
-    id: `droppable-${index}`, // Unique ID for each droppable area
-  });
-
-  // Combine the draggable and droppable refs
-  const combinedRef = (node: HTMLElement | null) => {
-    setNodeRef(node);
-    droppableRef(node);
-  };
-
-  // Restrict to vertical movement by setting x to 0 and allowing y to change
   const style = transform
     ? {
-        transform: `translate3d(0px, ${transform.y}px, 0)`, // Only change vertical position
-        zIndex: isOver ? 1000 : undefined, // Bring item to top when it's over a droppable area
+        transform: `translate3d(0, ${transform.y}px, 0)`,
+        zIndex: 1000,
       }
     : {};
 
   return (
-    <div className="flex items-center w-full">
-      {/* Rank number column (fixed outside of the draggable component) */}
-      <div className=" m-4 rounded-full text-4xl font-bold">{`${
-        originalIndex + 1
-      }`}</div>
-
-      {/* Draggable item column (rank name moves) */}
-      <div
-        ref={combinedRef}
-        style={{ ...style, minHeight: "64px" }}
-        {...listeners}
-        {...attributes}
-        className={`font-display flex items-center justify-start p-4 rounded-xl backdrop-blur-md flex-grow shadow-lg ${
-          isOver
-            ? "bg-green-500"
-            : index % 2 === 0
-            ? "bg-component-background"
-            : "bg-gray-300"
-        }`}
-      >
-        <span className="text-3xl font-bold text-textonwbg-grayonw">
-          {rank.name}
-        </span>
-      </div>
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      className="flex items-center w-full p-4 rounded-lg shadow-md bg-gray-100 text-xl font-bold cursor-grab"
+      style={style}
+    >
+      {text}
     </div>
   );
 }
 
-interface RankViewProps {
-  question: RankSlide;
-  answerQuestion: (answer: string) => void;
-}
-
-// Main SlideRank component
+// Main RankView component
 export default function RankView({ question, answerQuestion }: RankViewProps) {
-  const ranking = question.ranking;
-  const [currentRanking, setCurrentRanking] = useState<RankItem[]>(ranking);
+  const [currentRanking, setCurrentRanking] = useState<string[]>([]);
 
-  function handleAnswerQuestion() {
-    const answer = currentRanking.map((item) => item.name).join(",");
-    answerQuestion(answer);
-  }
-
-  // Randomize the ranking on the first render
   useEffect(() => {
-    const randomizedRanking = shuffleArray([...ranking]);
-    setCurrentRanking(randomizedRanking); // Update state with randomized ranking
-  }, [ranking]);
+    // Randomize the ranking on the first render
+    const shuffleArray = (array: string[]): string[] =>
+      array
+        .map((item) => ({ sort: Math.random(), value: item }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((item) => item.value);
 
-  const topRanking = [...currentRanking];
+    setCurrentRanking(shuffleArray([...question.ranking]));
+  }, [question.ranking]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    // Check if the item is dropped over a valid droppable area
-    if (over) {
-      const activeIndex = Number(String(active.id).replace("draggable-", ""));
-      const overIndex = Number(String(over.id).replace("droppable-", ""));
-
-      // Swap the items only if they are dropped in a different index
-      if (activeIndex !== overIndex) {
-        const updatedRanking = [...currentRanking];
-        const [movedItem] = updatedRanking.splice(activeIndex, 1); // Remove the dragged item
-        updatedRanking.splice(overIndex, 0, movedItem); // Insert it at the new position
-
-        setCurrentRanking(updatedRanking); // Update the state to reflect the new order
-      }
-    } else {
-      // If the item is dropped outside a droppable area, log that event
-      console.log("Item dropped outside any droppable area");
+    if (!over) {
+      console.log("Item dropped outside of droppable areas.");
+      return;
     }
+
+    // Convert UniqueIdentifier to string and parse index
+    const activeIndex = parseInt(String(active.id).split("-")[1], 10);
+    const overIndex = parseInt(String(over.id).split("-")[1], 10);
+
+    if (activeIndex !== overIndex) {
+      const updatedRanking = [...currentRanking];
+      const [movedItem] = updatedRanking.splice(activeIndex, 1); // Remove the dragged item
+      updatedRanking.splice(overIndex, 0, movedItem); // Insert at the new position
+      setCurrentRanking(updatedRanking);
+    }
+  };
+
+  const handleAnswerQuestion = () => {
+    answerQuestion(currentRanking); // Submit the current ranking as string[]
   };
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   return (
-    <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-      <div className="flex items-center justify-center h-screen w-full p-4">
-        <div className="flex flex-col items-center space-y-4 w-full max-w-md max-h-[80vh] overflow-y-auto">
-          <h3 className="text-3xl font-display text-center">
-            {question.title}
-          </h3>
-          {topRanking.map((rank, index) => (
-            <DraggableDroppableItem
-              key={index}
-              rank={rank}
-              index={index}
-              originalIndex={currentRanking.indexOf(rank)} // Keep original index for rank number
-            />
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <div className="flex flex-col items-center w-full max-w-md mx-auto space-y-4">
+        <h3 className="text-2xl font-bold text-center">{question.title}</h3>
+        <div className="flex flex-col w-full space-y-2">
+          {currentRanking.map((text, index) => (
+            <DraggableItem key={index} text={text} index={index} />
           ))}
-          <Button
-            onClick={handleAnswerQuestion}
-            className="py-8 px-12 font-display  text-3xl "
-          >
-            Submit Answers
-          </Button>
         </div>
+        <Button
+          onClick={handleAnswerQuestion}
+          className="w-full py-2 text-xl font-bold bg-blue-500 text-white"
+        >
+          Submit Answer
+        </Button>
       </div>
     </DndContext>
   );

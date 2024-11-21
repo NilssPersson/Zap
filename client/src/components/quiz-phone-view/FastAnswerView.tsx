@@ -5,7 +5,7 @@ import { FASlide } from "@/models/Quiz";
 
 interface FastAnswerViewProps {
   question: FASlide;
-  answerQuestion: (answer: string) => void;
+  answerQuestion: (answer: string[]) => void;
 }
 
 export default function FastAnswerView({
@@ -25,7 +25,7 @@ export default function FastAnswerView({
         className="font-display text-3xl text-[#333333] bg-[#F4F3F2]"
       />
 
-      <Button onClick={() => answerQuestion(value)}>Submit Answer</Button>
+      <Button onClick={() => answerQuestion([value])}>Submit Answer</Button>
     </div>
   );
 }
