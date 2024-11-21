@@ -113,7 +113,9 @@ export const useOngoingQuiz = () => {
     }
     const participantAnswer =
       participant.answers[participant.answers.length - 1].answer;
-      const currentScore = participant.score[participant.score.length];
+      const currentScore = participant.score[participant.score.length]
+        ? participant.score[participant.score.length]
+        : 0;
     switch (question.answerType) {
       case answerTypes.singleString: {
         const correctAnswer = question.options
@@ -123,7 +125,8 @@ export const useOngoingQuiz = () => {
         if (participantAnswer[0] === correctAnswer[0]) {
           const newScore = currentScore + 1000;
           updates[`${participant.participantId}/score`] = newScore;
-        }
+          console.log("Correct answer");
+        }else{console.log("wrong answer")}
         return updates;
       }
       // Todo, handle spelling mistakes etc.
@@ -199,6 +202,7 @@ export const useOngoingQuiz = () => {
         updates = calculateScore(currentQuestion, participant, updates);
       });
       try {
+        console.log("Updating scores with", updates)
         await update(
           ref(database, `ongoingQuizzes/${quizCode}/participants/`),
           updates

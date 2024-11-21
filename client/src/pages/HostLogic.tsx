@@ -88,7 +88,6 @@ const HostLogic: React.FC = () => {
   };
 
   const renderQuestionButtons = (questionSlide: QuestionSlide) => {
-    console.log("Time limit:", questionSlide.timeLimit);
     return (
       <div className="flex flex-col">
         {!showAnswer && questionSlide.timeLimit > 0 && (
