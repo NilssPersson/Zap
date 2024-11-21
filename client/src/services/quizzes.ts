@@ -37,9 +37,8 @@ class QuizService extends BaseService<Quiz> {
     try {
       const { data, error } = await super.list(sharedQuizzesRef);
       if (data === null) {
-        return { data: [], error };
+        return { data: null, error };
       }
-      console.log(data);
       return { data: (data as Quiz[]).filter(quiz => quiz.user_id !== userId), error };
     } catch (error) {
       return { data: null, error: error as Error };

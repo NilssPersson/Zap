@@ -4,13 +4,16 @@ import { useQuizzes } from "@/hooks/useQuizzes";
 import { toast } from "sonner";
 import CreateQuizPopover from "@/components/quizzes/CreateQuizPopover";
 import QuizList from "@/components/quizzes/QuizList";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useGetSharedQuizzes } from "@/hooks/useGetSharedQuizzes";
+import { Loader2, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import Quiz from "@/models/Quiz";
 
 function useQuizzesPage() {
     const { user } = useGetAuthenticatedUser();
-    const { resources: quizzes, optimisticCreate, optimisticDelete, optimisticUpdate } = useQuizzes();
-    const { resources: sharedQuizzes } = useGetSharedQuizzes();
+    const { resources: quizzes, isLoading: quizzesLoading, optimisticCreate, optimisticDelete, optimisticUpdate } = useQuizzes();
+    const { resources: sharedQuizzes, isLoading: sharedQuizzesLoading } = useGetSharedQuizzes(user?.id || "")();
 
     const handleCreateQuiz = useCallback(async (name: string) => {
         if (!user) return;
@@ -53,22 +56,35 @@ function useQuizzesPage() {
         toast.success(`Quiz ${shareString} successfully`);
     }, [optimisticUpdate, quizzes]);
 
+    const handleCopyQuiz = useCallback(async (quiz: Quiz) => {
+        toast.success("This feature will be implemented soon!");
+    }, []);
+
     return {
         quizzes,
+        quizzesLoading,
         sharedQuizzes,
+        sharedQuizzesLoading,
         handleCreateQuiz,
         handleDeleteQuiz,
-        handleShareQuiz
+        handleShareQuiz,
+        handleCopyQuiz
     }
 }
 
 function Quizzes() {
     const {
         quizzes,
+        quizzesLoading,
+        sharedQuizzes,
+        sharedQuizzesLoading,
         handleCreateQuiz,
         handleDeleteQuiz,
-        handleShareQuiz
+        handleShareQuiz,
+        handleCopyQuiz
     } = useQuizzesPage();
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 overflow-y-auto">
@@ -80,11 +96,52 @@ function Quizzes() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <QuizList
-                        quizzes={quizzes}
-                        onDeleteQuiz={handleDeleteQuiz}
-                        onShareQuiz={handleShareQuiz}
-                    />
+                    {quizzesLoading ? (
+                        <div className="flex justify-center items-center h-[300px] w-full">
+                            <Loader2 className="animate-spin" />
+                        </div>
+                    ) : (
+                        <QuizList
+                            quizzes={quizzes}
+                            variant="my-quizzes"
+                            onDeleteQuiz={handleDeleteQuiz}
+                            onShareQuiz={handleShareQuiz}
+                        />
+                    )}
+                </CardContent>
+            </Card>
+
+            <Card className="w-full max-w-7xl">
+                <CardHeader>
+                    <CardTitle>
+                        <div className="flex items-center gap-4">
+                            <span className="m-0">Shared Quizzes</span>
+                            <div className="flex items-center gap-2">
+                                <Search className="w-4 h-4 text-muted-foreground" />
+                                <Input
+                                    type="search"
+                                    placeholder="Search shared quizzes..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="max-w-lg"
+                                />
+                            </div>
+                        </div>
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {sharedQuizzesLoading ? (
+                        <div className="flex justify-center items-center h-[300px] w-full">
+                            <Loader2 className="animate-spin" />
+                        </div>
+                    ) : (
+                        <QuizList
+                            quizzes={sharedQuizzes}
+                            variant="shared-quizzes"
+                            onCopyQuiz={handleCopyQuiz}
+                            searchTerm={searchTerm}
+                        />
+                    )}
                 </CardContent>
             </Card>
         </div>
