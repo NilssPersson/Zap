@@ -1,7 +1,7 @@
 import { userService } from "@/services/users";
 import User from "@/models/User";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function useGetAuthenticatedUser() {
   const { user } = useKindeAuth();
@@ -30,7 +30,17 @@ function useGetAuthenticatedUser() {
     fetchUser(id);
   }, [user, dbUser]);
 
-  return { user: dbUser };
+  const updateUser = useCallback(async (user: User) => {
+    const { data, error } = await userService.update(user.id, user);
+    if (error) {
+      console.error("Error updating user:", error);
+    }
+    if (data) {
+      setDbUser(data);
+    }
+  }, []);
+
+  return { user: dbUser, updateUser };
 }
 
 export default useGetAuthenticatedUser;
