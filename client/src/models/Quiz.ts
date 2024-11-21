@@ -93,7 +93,7 @@ interface QuestionSlideBase extends BaseSlide {
   showCorrectAnswer: ShowCorrectAnswerTypes; // Lägg till knapp för show answer
 }
 
-interface RankSlide extends QuestionSlideBase {
+export interface RankSlide extends QuestionSlideBase {
   ranking: string[];
   questionType: QuestionTypes.RANK;
   answerType: answerTypes.rank;

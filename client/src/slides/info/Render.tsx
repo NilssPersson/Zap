@@ -1,6 +1,6 @@
 import { InfoSlide } from "@/models/Quiz";
-import { SlideTitle } from "../../slide-content/SlideTitle";
-import { SlideContent } from "../../slide-content/SlideContent";
+import { SlideTitle } from "@/slides/_components/SlideTitle";
+import { SlideContent } from "@/slides/_components/SlideContent";
 
 export function Render({ slide }: { slide: InfoSlide }) {
     return <div className="space-y-8">

@@ -1,6 +1,6 @@
 import { ShowCorrectAnswerTypes } from "@/models/Quiz";
-import { ToolbarProps } from "../../";
-import DefaultToolbar from "../../toolbar/DefaultToolbar";
+import { ToolbarProps } from "@/slides/";
+import DefaultToolbar from "@/slides/toolbar/DefaultToolbar";
 import { Label } from "@/components/ui/label";
 import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/components/ui/select";
 

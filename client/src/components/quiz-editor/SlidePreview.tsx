@@ -2,7 +2,7 @@ import type { Slide } from "@/models/Quiz";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { QuizBackground } from "./QuizBackground";
-import { getSlideComponents } from "./slide-master/utils";
+import { getSlideComponents } from "@/slides/utils";
 
 interface SlidePreviewProps {
   slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };

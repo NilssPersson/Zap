@@ -1,6 +1,6 @@
 import { QuestionSlide } from "@/models/Quiz";
-import { SlideTitle } from "../../../slide-content/SlideTitle";
-import { SlideContent } from "../../../slide-content/SlideContent";
+import { SlideTitle } from "@/slides/_components/SlideTitle";
+import { SlideContent } from "@/slides/_components/SlideContent";
 
 export function BaseQuestionRender({ slide, children }: { slide: QuestionSlide, children?: React.ReactNode }) {
     return (

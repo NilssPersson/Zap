@@ -1,5 +1,5 @@
 import { ScoreSlide } from "@/models/Quiz";
-import { SlideTitle } from "@/components/quiz-editor/slide-content/SlideTitle";
+import { SlideTitle } from "@/slides/_components/SlideTitle";
 import ScoreBoard from "@/pages/host/Scoreboard";
 
 export function Preview({ slide }: { slide: ScoreSlide }) {

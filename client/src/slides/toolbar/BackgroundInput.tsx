@@ -1,5 +1,4 @@
-import { BackgroundStyle } from "../../QuizBackground";
-
+import { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
 import { SelectItem, SelectTrigger, SelectValue, SelectContent } from "@/components/ui/select";
 
 import { Label } from "@/components/ui/label";

@@ -1,5 +1,5 @@
 import { ToolbarProps } from "../";
-import DefaultToolbar from "../toolbar/DefaultToolbar";
+import DefaultToolbar from "@/slides/toolbar/DefaultToolbar";
 import { InfoIcon } from "lucide-react";
 
 export const Info = {

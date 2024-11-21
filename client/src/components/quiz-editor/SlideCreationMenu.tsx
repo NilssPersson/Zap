@@ -1,9 +1,9 @@
 import { Separator } from "@/components/ui/separator";
 import { PopoverContent } from "@/components/ui/popover";
 import { type SlideType, type QuestionType, SlideTypes } from "@/models/Quiz";
-import * as Slides from "./slide-master";
+import * as Slides from "@/slides";
 import { SlideOption } from "./SlideOption";
-import { SlideInfo } from "./slide-master";
+import { SlideInfo } from "@/slides";
 
 interface SlideCreationMenuProps {
   onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
