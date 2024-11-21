@@ -6,9 +6,10 @@ import { QuizCard, MyQuizButtons } from "./QuizCard";
 interface QuizListProps {
   quizzes: Quiz[];
   onDeleteQuiz: (quizId: string) => Promise<void>;
+  onShareQuiz: (quizId: string) => Promise<void>;
 }
 
-function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
+function QuizList({ quizzes, onDeleteQuiz, onShareQuiz }: QuizListProps) {
   const navigate = useNavigate();
   const { createOngoingQuiz } = useOngoingQuiz();
 
@@ -35,16 +36,15 @@ function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
           return new Date(bDate).getTime() - new Date(aDate).getTime();
         })
         .map((quiz) => (
-          <div className="flex-none w-[300px]">
+          <div key={quiz.id} className="flex-none w-[300px]">
             <QuizCard
-              key={quiz.id}
               quiz={quiz}
               onClick={() => navigate(`/quizzes/${quiz.id}/edit`)}
             >
               <MyQuizButtons 
                 quiz={quiz} 
                 onHost={handleHostGame} 
-                onShare={(quiz) => console.log('Share clicked', quiz)} 
+                onShare={onShareQuiz}
                 onDelete={onDeleteQuiz} 
               />
             </QuizCard>

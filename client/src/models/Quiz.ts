@@ -12,6 +12,7 @@ export interface Quiz {
   background_color: string;
   settings: QuizSettings;
   isHosted: boolean;
+  isShared: boolean;
   slides: Slide[];
 }
 

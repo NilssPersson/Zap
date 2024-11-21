@@ -12,6 +12,7 @@ class QuizService extends BaseService<Quiz> {
     return super.create({
       ...quiz,
       isHosted: false,
+      isShared: false,
       created_at: new Date().toISOString().toLocaleString(),
       settings: {
         ...quizDefaults
@@ -26,6 +27,25 @@ class QuizService extends BaseService<Quiz> {
     });
   }
 
+  async listShared(userId: string): Promise<FirebaseResponse<Quiz[]>> {
+    const sharedQuizzesRef = query(
+      this.getRef(),
+      orderByChild("isShared"),
+      equalTo(true)
+    );
+
+    try {
+      const { data, error } = await super.list(sharedQuizzesRef);
+      if (data === null) {
+        return { data: [], error };
+      }
+      console.log(data);
+      return { data: (data as Quiz[]).filter(quiz => quiz.user_id !== userId), error };
+    } catch (error) {
+      return { data: null, error: error as Error };
+    }
+  }
+
   async getByUserId(userId: string): Promise<FirebaseResponse<Quiz[]>> {
     try {
       const userQuizzesRef = query(
@@ -33,12 +53,12 @@ class QuizService extends BaseService<Quiz> {
         orderByChild("user_id"),
         equalTo(userId)
       );
-      
+
       try {
         const snapshot = await get(userQuizzesRef);
-        return { 
+        return {
           data: this.transformFirebaseResponse(snapshot.val()),
-          error: null 
+          error: null
         };
       } catch (getError) {
         console.error('Error getting snapshot:', getError);

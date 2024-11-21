@@ -13,6 +13,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { ReactNode } from "react";
+import { Share } from "lucide-react";
 
 interface QuizCardProps {
     quiz: Quiz;
@@ -27,12 +28,19 @@ export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
             onClick={onClick}
         >
             <CardHeader>
-                <CardTitle className="text-lg">{quiz.quiz_name}</CardTitle>
+                <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg mr-auto">{quiz.quiz_name}</CardTitle>
+                    {quiz.isShared && (
+                        <div className="bg-primary text-white p-1 rounded flex flex-row">
+                            <Share className="w-4 h-4" />
+                        </div>
+                    )}
+                </div>
             </CardHeader>
             <CardContent>
                 {quiz.slides && quiz.slides.length > 0 ? (
                     <div className="aspect-video w-full rounded overflow-hidden text-white">
-                        <SlidePreview slide={quiz.slides[0]} {...quiz.settings}/>
+                        <SlidePreview slide={quiz.slides[0]} {...quiz.settings} />
                     </div>
                 ) : (
                     <div className="aspect-video w-full">
@@ -52,7 +60,7 @@ export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
 interface MyQuizButtonsProps {
     quiz: Quiz;
     onHost: (quiz: Quiz) => Promise<void>;
-    onShare?: (quiz: Quiz) => void;
+    onShare: (quizId: string) => Promise<void>;
     onDelete: (quizId: string) => Promise<void>;
 }
 
@@ -74,7 +82,7 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
                 size="sm"
                 onClick={(e) => {
                     e.stopPropagation();
-                    onShare?.(quiz);
+                    onShare(quiz.id);
                 }}
             >
                 Share
