@@ -5,12 +5,14 @@ export interface Quiz {
   quiz_name: string;
   user_id: string;
   created_at: string;
+  updated_at?: string;
   played_at?: string;
   primary_color: string;
   secondary_color: string;
   background_color: string;
   settings: QuizSettings;
   isHosted: boolean;
+  isShared: boolean;
   slides: Slide[];
 }
 
@@ -92,7 +94,7 @@ interface QuestionSlideBase extends BaseSlide {
   showCorrectAnswer: ShowCorrectAnswerTypes; // Lägg till knapp för show answer
 }
 
-interface RankSlide extends QuestionSlideBase {
+export interface RankSlide extends QuestionSlideBase {
   ranking: string[];
   questionType: QuestionTypes.RANK;
   answerType: answerTypes.rank;

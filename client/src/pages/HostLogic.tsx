@@ -9,7 +9,7 @@ import {
   SlideTypes,
   ShowCorrectAnswerTypes,
 } from "@/models/Quiz";
-import { getSlideComponents } from "@/components/quiz-editor/slide-master/utils";
+import { getSlideComponents } from "@/slides/utils";
 
 import Countdown from "react-countdown";
 

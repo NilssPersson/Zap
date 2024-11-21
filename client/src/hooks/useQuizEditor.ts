@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { quizService } from '@/services/quizzes';
 import type Quiz from '@/models/Quiz';
-import { type Slide, type SlideType, type QuestionType, SlideTypes, QuestionTypes, answerTypes, QuizSettings } from '@/models/Quiz';
+import { type Slide, type SlideType, type QuestionType, QuizSettings } from '@/models/Quiz';
 import { toast } from 'sonner';
 import { quizDefaults } from '@/components/quiz-editor/utils/quiz-defaults';
+import { getSlideComponentsFromType } from '@/slides/utils';
+
+const DEFAULT_TIME_LIMIT = 0;
 
 export function useQuizEditor(quizId: string | undefined) {
     const [quiz, setQuiz] = useState<Quiz | null>(null);
@@ -70,92 +73,20 @@ export function useQuizEditor(quizId: string | undefined) {
             title: `New ${type} slide`,
             content: '',
             backgroundStyle: 'waves' as const,
+            type,
         };
 
-        let newSlide: Slide;
+        const SlideInfo = getSlideComponentsFromType(type, questionType).Info;
 
-        switch (type) {
-            case 'info':
-                newSlide = {
-                    ...baseSlide,
-                    type: SlideTypes.info,
-                };
-                break;
-            case 'score':
-                newSlide = {
-                    ...baseSlide,
-                    type: SlideTypes.score,
-                    mockScores: [
-                        { name: 'Player 1', points: 100, newPoints: 120 },
-                        { name: 'Player 2', points: 80, newPoints: 121 },
-
-
-                    ],
-                };
-                break;
-            case 'question':
-                if (!questionType) throw new Error('Question type is required');
-
-                switch (questionType) {
-                    case 'MCQSA':
-                        newSlide = {
-                            ...baseSlide,
-                            type: SlideTypes.question,
-                            questionType: QuestionTypes.MCQSA,
-                            timeLimit: 0,
-                            options: Array.from({ length: 4 }, (_, i) => ({
-                                id: crypto.randomUUID(),
-                                text: `Option ${i + 1}`,
-                                isCorrect: i === 0,
-                            })),
-                            answerType: answerTypes.singleString,
-                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
-                        };
-                        break;
-                    case 'MCQMA':
-                        newSlide = {
-                            ...baseSlide,
-                            type: SlideTypes.question,
-                            questionType: QuestionTypes.MCQMA,
-                            timeLimit: 0,
-                            options: Array.from({ length: 4 }, (_, i) => ({
-                                id: crypto.randomUUID(),
-                                text: `Option ${i + 1}`,
-                                isCorrect: i <= 1,
-                            })),
-                            answerType: answerTypes.multipleStrings,
-                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
-                        };
-                        break;
-                    case 'FA':
-                        newSlide = {
-                            ...baseSlide,
-                            type: SlideTypes.question,
-                            questionType: QuestionTypes.FA,
-                            timeLimit: 0,
-                            correctAnswer: '',
-                            answerType: answerTypes.freeText,
-                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
-                        };
-                        break;
-                    case 'RANK':
-                        newSlide = {
-                            ...baseSlide,
-                            type: SlideTypes.question,
-                            questionType: QuestionTypes.RANK,
-                            timeLimit: 0,
-                            ranking: [],
-                            answerType: answerTypes.rank,
-                            showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault,
-                        };
-                        break;
-                    default:
-                        throw new Error('Invalid question type');
-                }
-                break;
-            default:
-                throw new Error('Invalid slide type');
-        }
+        const newSlide = {
+            ...baseSlide,
+            ...SlideInfo.defaults,
+            ...(questionType ? {
+                questionType,
+                timeLimit: DEFAULT_TIME_LIMIT,
+                showCorrectAnswer: quiz?.settings?.showCorrectAnswerDefault ?? quizDefaults.showCorrectAnswerDefault
+            } : {}),
+        } as Slide;
 
         setQuiz(prev => prev ? { ...prev, slides: [...(prev.slides || []), newSlide] } : null);
         setActiveSlideId(newSlide.id);
