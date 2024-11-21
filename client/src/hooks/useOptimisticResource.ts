@@ -52,7 +52,7 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
         ...newResource,
       } as T;
 
-      setResources(prev => [...prev, optimisticResource]);
+      setResources(prev => [optimisticResource, ...prev]);
 
       const { data, error } = await options.api.create(newResource);
 
