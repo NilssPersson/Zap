@@ -1,8 +1,8 @@
 import { quizService } from "@/services/quizzes";
-import useGetAuthenticatedUser from "./useGetAuthenticatedUser";
-import { useResource } from "./useResource";
+import { createResourceHook } from "./useResource";
 
-export function useGetSharedQuizzes() {
-    const { user } = useGetAuthenticatedUser();
-    return useResource(quizService.listShared(user?.id || ""));
-}
+const useGetSharedQuizzes = (userId: string) => createResourceHook({
+    firebasePromise: quizService.listShared(userId)
+});
+
+export { useGetSharedQuizzes };

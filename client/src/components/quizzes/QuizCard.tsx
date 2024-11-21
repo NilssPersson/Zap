@@ -17,14 +17,14 @@ import { Share } from "lucide-react";
 
 interface QuizCardProps {
     quiz: Quiz;
-    onClick: () => void;
+    onClick?: () => void;
     children?: ReactNode;
 }
 
 export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
     return (
         <Card
-            className="cursor-pointer"
+            className={`${onClick ? 'cursor-pointer' : ''}`}
             onClick={onClick}
         >
             <CardHeader>
@@ -131,5 +131,56 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
                 </DialogContent>
             </Dialog>
         </>
+    );
+}
+
+interface SharedQuizButtonsProps {
+    quiz: Quiz;
+    onCopyToMyQuizzes: (quiz: Quiz) => Promise<void>;
+}
+
+export function SharedQuizButtons({ quiz, onCopyToMyQuizzes }: SharedQuizButtonsProps) {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                >
+                    Copy to My Quizzes
+                </Button>
+            </DialogTrigger>
+            <DialogContent onClick={(e) => e.stopPropagation()}>
+                <DialogHeader>
+                    <DialogTitle>Copy Quiz</DialogTitle>
+                    <DialogDescription>
+                        Would you like to copy "{quiz.quiz_name}" to your quizzes? You'll be able to modify it as you wish.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <div className="flex justify-end gap-2 mt-4">
+                        <DialogClose asChild>
+                            <Button variant="outline">
+                                Cancel
+                            </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                            <Button
+                                variant="default"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onCopyToMyQuizzes(quiz);
+                                }}
+                            >
+                                Copy Quiz
+                            </Button>
+                        </DialogClose>
+                    </div>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 } 

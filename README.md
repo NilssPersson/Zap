@@ -109,6 +109,7 @@ GameShack/
 - In the new directory create the following files:
    - Preview.tsx: Renders the slide in the quiz editor.
    - Participant.tsx: Renders the slide for participants.
+   - ParticipantAnswer.tsx: Renders the slide showing the correct answer/answers for participants.
    - Toolbar.tsx: Renders the form for editing the slide in the toolbar.
    - Presentation.tsx: Renders the slide in the presentation view.
    - index.ts: Exports the slide components and metadata.
