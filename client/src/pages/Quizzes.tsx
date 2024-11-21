@@ -57,8 +57,21 @@ function useQuizzesPage() {
     }, [optimisticUpdate, quizzes]);
 
     const handleCopyQuiz = useCallback(async (quiz: Quiz) => {
-        toast.success("This feature will be implemented soon!");
-    }, []);
+        if (!user) return;
+
+        const { error } = await optimisticCreate({
+            ...quiz,
+            quiz_name: `${quiz.quiz_name} (Copy)`,
+            user_id: user.id,
+        });
+
+        if (error) {
+            toast.error("Failed to copy quiz");
+            return;
+        }
+
+        toast.success("Quiz copied successfully");
+    }, [user, optimisticCreate]);
 
     return {
         quizzes,
