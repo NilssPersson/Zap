@@ -9,6 +9,11 @@ const quotes = [
   "Thinking is overrated anyway, right? 😜",
   "That was speedy! But was it... considered? 🕵️",
   "You might have set a record for speed—accuracy, though? We'll see! 🕐",
+  "Sometimes the first thought is the best—sometimes it’s not. 😇",
+  "A quick answer is exciting, but accuracy is thrilling. 🎢",
+  "Let’s hope your guess was as good as your speed. 🎯",
+  "Confidence: 100%. Accuracy: We’ll see. 📊",
+  "You didn’t even let your brain catch up. Respect. Kinda. 😏",
 ];
 
 function getRandomQuote() {
@@ -17,15 +22,28 @@ function getRandomQuote() {
 }
 
 export default function HasAnsweredView() {
-  const [quote, setQuote] = useState("");
+  const [typedText, setTypedText] = useState("");
 
   useEffect(() => {
-    setQuote(getRandomQuote());
+    const fullQuote = getRandomQuote(); // Randomly select the quote
+    setTypedText(fullQuote[0]);
+    let currentIndex = 0;
+
+    const interval = setInterval(() => {
+      if (currentIndex < fullQuote.length - 1) {
+        setTypedText((prev) => prev + fullQuote[currentIndex]);
+        currentIndex++;
+      } else {
+        clearInterval(interval); // Stop the interval when the full quote is typed
+      }
+    }, 60); // Adjust typing speed (milliseconds per character)
+
+    return () => clearInterval(interval); // Cleanup the interval on unmount
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-full pt-80">
-      <h1 className="text-3xl font-display text-center">{quote}</h1>
+      <h1 className="text-3xl font-display text-center">{typedText}</h1>
     </div>
   );
 }
