@@ -81,7 +81,7 @@ GameShack/
 │   ├── pages/
 |   ├── routes/
 │   ├── services/
-
+│   ├── slides/
 ```
 
 - **components**: Reusable UI components.
@@ -90,6 +90,7 @@ GameShack/
 - **pages**: Top-level components for different routes.
 - **routes**: Routing configuration and navigation components.
 - **services**: API services and utilities.
+- **slides**: Slide components and utilities.
 
 ---
 
@@ -104,7 +105,7 @@ GameShack/
 
 ### Adding New Features
 - To add a new question type or slide type, add the type declaration to /src/models/Quiz.ts
-- Create a new directory in /src/components/quiz-editor/slide-master/[slide-type]
+- Create a new directory in /src/slides/[slide-type]
 - In the new directory create the following files:
    - Preview.tsx: Renders the slide in the quiz editor.
    - Participant.tsx: Renders the slide for participants.
@@ -117,9 +118,9 @@ GameShack/
          - `label` should be the same as the directory name.
          - `slideType` should be the same as the directory name.
          - `questionType` is only needed for question slides.
-- In /src/components/quiz-editor/slide-master/index.ts
+- In /src/slides/index.ts
   - Import and export the new slide type
-- In /src/components/quiz-editor/slide-master/utils.tsx
+- In /src/slides/utils.ts
   - Modify getSlideComponents to return the new slide type
 - In /src/hooks/useQuizEditor.ts
   - Modify handleAddSlide to support the new slide type
