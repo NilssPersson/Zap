@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import Quiz from "@/models/Quiz"
 import { useNavigate } from "react-router-dom";
 import { useOngoingQuiz } from "@/services/host";
+import { QuizCard } from "./QuizCard";
 
 interface QuizListProps {
   quizzes: Quiz[];
@@ -10,8 +10,7 @@ interface QuizListProps {
 
 function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
   const navigate = useNavigate();
-  const { createOngoingQuiz } =
-    useOngoingQuiz();
+  const { createOngoingQuiz } = useOngoingQuiz();
 
   const handleHostGame = async (quiz: Quiz) => {
     try {
@@ -20,46 +19,24 @@ function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
       if (quizCode) {
         navigate(`/quizzes/${quizCode}/lobby`);
       } else {
-        console.error(
-          "Failed to create ongoing quiz or quiz_code is missing"
-        );
+        console.error("Failed to create ongoing quiz or quiz_code is missing");
       }
     } catch (err) {
       console.error("Error creating ongoing quiz:", err);
     }
   };
 
-
   return (
-    <div className="mt-4 space-y-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
       {quizzes.map((quiz) => (
-        <div
+        <QuizCard
           key={quiz.id}
-          className="flex items-center gap-2 p-2 border rounded"
-        >
-          <span className="flex-1">{quiz.quiz_name}</span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleHostGame(quiz)}
-          >
-            Host Game
-          </Button>{" "}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(`/quizzes/${quiz.id}/edit`)}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => onDeleteQuiz(quiz.id)}
-          >
-            Delete
-          </Button>
-        </div>
+          quiz={quiz}
+          onHost={handleHostGame}
+          onShare={(quiz) => console.log('Share clicked', quiz)}
+          onDelete={onDeleteQuiz}
+          onClick={() => navigate(`/quizzes/${quiz.id}/edit`)}
+        />
       ))}
     </div>
   );
