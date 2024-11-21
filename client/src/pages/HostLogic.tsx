@@ -9,7 +9,7 @@ import {
   SlideTypes,
   ShowCorrectAnswerTypes,
 } from "@/models/Quiz";
-import { getSlideComponents } from "@/components/quiz-editor/slide-master/utils";
+import { getSlideComponents } from "@/slides/utils";
 
 export interface LatestScore {
   id: string;
