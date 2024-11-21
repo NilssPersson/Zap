@@ -25,6 +25,7 @@ const HostLogic: React.FC = () => {
   const {
     quizCode,
     participants,
+    totalAnswers,
     incrementSlide,
     getOngoingQuiz,
     updateScore,
@@ -45,6 +46,27 @@ const HostLogic: React.FC = () => {
     setupLobby();
   }, [id]);
 
+  useEffect(() => {
+    console.log("Checking has answered");
+    const checkAnsweres = async () => {
+      if ((ongoingQuiz?.currentSlide ? ongoingQuiz?.currentSlide : 0) > 0) {
+        const currentSlide =
+          ongoingQuiz?.quiz.slides[ongoingQuiz.currentSlide - 1];
+          const questionSlide = currentSlide as QuestionSlide;
+          if (
+            !(
+              questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never
+            ) &&
+            (participants?.length ? participants?.length : 0) > 0 &&
+            totalAnswers == participants?.length
+          ) {
+            setShowAnswer(true);
+        }
+      }
+    };
+    checkAnsweres();
+  }, [totalAnswers]);
+
   const nextSlide = async () => {
     setShowAnswer(false);
     console.log("Before nextSlide ", ongoingQuiz);
@@ -60,17 +82,16 @@ const HostLogic: React.FC = () => {
     setOngoingQuiz(startedQuiz);
   };
 
-const Completionist: React.FC<{ }> = ({
-}) => {
-  setShowAnswer(true);
-  return null; // Or return some UI if needed
-};
+  const Completionist: React.FC<{}> = ({}) => {
+    setShowAnswer(true);
+    return null; // Or return some UI if needed
+  };
 
   const renderQuestionButtons = (questionSlide: QuestionSlide) => {
     console.log("Time limit:", questionSlide.timeLimit);
     return (
       <div className="flex flex-col">
-        {!showAnswer && (questionSlide.timeLimit > 0) && (
+        {!showAnswer && questionSlide.timeLimit > 0 && (
           <div>
             <Countdown date={Date.now() + questionSlide.timeLimit * 1000}>
               <Completionist />
@@ -97,45 +118,37 @@ const Completionist: React.FC<{ }> = ({
   if (ongoingQuiz?.currentSlide === 0) {
     return (
       <div>
-          <div className="flex flex-col">
-            <QuizLobby
-              quizCode={quizCode}
-              participants={participants ? participants : []}
-            />
-            <Button onClick={nextSlide} className="m-5">
-              Start Game
-            </Button>
-          </div>
+        <div className="flex flex-col">
+          <QuizLobby
+            quizCode={quizCode}
+            participants={participants ? participants : []}
+          />
+          <Button onClick={nextSlide} className="m-5">
+            Start Game
+          </Button>
+        </div>
       </div>
     );
-  } 
-  else {
+  } else {
     if (ongoingQuiz?.quiz.slides) {
-      const currentSlide = ongoingQuiz?.currentSlide;
+      const currentSlide = ongoingQuiz?.currentSlide - 1;
       if (ongoingQuiz?.quiz.slides[currentSlide].type == SlideTypes.question) {
         const questionSlide = ongoingQuiz?.quiz.slides[
           currentSlide
         ] as QuestionSlide;
-        // Show slide
-        console.log("Render question slide: ", questionSlide);
-        console.log("Show answer:", showAnswer);
         const SlideComponent = getSlideComponents(questionSlide);
         return (
           <div>
             {!showAnswer && (
               <SlideComponent.Preview slide={questionSlide as never} />
             )}
-            {showAnswer && (
-              <h1>Showing answer</h1>
-            )}
+            {showAnswer && <h1>Showing answer</h1>}
             {renderQuestionButtons(questionSlide)}
           </div>
         );
       } else {
         const slide = ongoingQuiz?.quiz.slides[currentSlide];
-        console.log("Render slide: ", slide);
         const SlideComponent = getSlideComponents(slide);
-        console.log("Showing slide component: ", SlideComponent);
         return (
           <div className="flex flex-col">
             <SlideComponent.Preview slide={slide as never} />
