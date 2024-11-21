@@ -1,5 +1,6 @@
 export * from './Preview';
 export * from './Toolbar';
+export * from './Participant';
 
 import { QuestionTypes, SlideTypes, answerTypes } from '@/models/Quiz';
 import { CircleDotIcon } from "lucide-react";

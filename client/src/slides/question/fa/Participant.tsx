@@ -1,22 +1,19 @@
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { FASlide } from "@/models/Quiz";
 
 interface FastAnswerViewProps {
-  question: FASlide;
+  slide: FASlide;
   answerQuestion: (answer: string[]) => void;
 }
 
-export default function FastAnswerView({
-  question,
-  answerQuestion,
-}: FastAnswerViewProps) {
+export function Participant({ slide, answerQuestion }: FastAnswerViewProps) {
   const [value, setValue] = useState("");
   return (
     <div className="flex flex-col items-center justify-center mt-60 bg-white p-8 space-y-5 m-4 rounded-md">
       <h1 className="text-3xl font-display text-center text-[#333333]">
-        {question.title}
+        {slide.title}
       </h1>
       <Input
         placeholder="Enter Answer"
