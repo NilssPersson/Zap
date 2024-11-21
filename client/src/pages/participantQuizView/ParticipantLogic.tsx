@@ -16,9 +16,9 @@ import CreateParticipant from "./components/CreateParticipant";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import LobbyView from "@/components/quiz-phone-view/LobbyView";
-import HasAnsweredView from "@/components/quiz-phone-view/HasAnsweredView";
-import QuizEndedView from "@/components/quiz-phone-view/QuizEndedView";
+import LobbyView from "@/pages/participantQuizView/components/LobbyView";
+import HasAnsweredView from "@/pages/participantQuizView/components/HasAnsweredView";
+import QuizEndedView from "@/pages/participantQuizView/components/QuizEndedView";
 import { Slide } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
 
