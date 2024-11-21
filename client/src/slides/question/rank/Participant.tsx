@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   useDraggable,
+  useDroppable,
   DndContext,
   MouseSensor,
   TouchSensor,
@@ -34,7 +35,7 @@ function DraggableItem({ text, index }: { text: string; index: number }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="flex items-center w-full p-4 rounded-lg shadow-md bg-gray-100 text-xl font-bold cursor-grab"
+      className="flex items-center w-full p-4 rounded-lg shadow-md bg-[#F4F3F2] text-xl font-display cursor-grab text-[#333333]"
       style={style}
     >
       {text}
@@ -42,14 +43,32 @@ function DraggableItem({ text, index }: { text: string; index: number }) {
   );
 }
 
+// Droppable container component
+function DroppableContainer({
+  children,
+  index,
+}: {
+  children: React.ReactNode;
+  index: number;
+}) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: `droppable-${index}`, // Unique ID for each droppable area
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`p-0 rounded-lg w-full ${
+        isOver ? "bg-blue-200" : "bg-gray-100"
+      } shadow-md`}
+    >
+      {children}
+    </div>
+  );
+}
+
 // Main RankView component
 export function Participant({ slide, answerQuestion }: RankViewProps) {
-  return (
-    <>
-      <p>Har breakat allt sry</p>
-    </>
-  );
-
   const [currentRanking, setCurrentRanking] = useState<string[]>([]);
 
   useEffect(() => {
@@ -91,19 +110,31 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="flex flex-col items-center w-full max-w-md mx-auto space-y-4">
-        <h3 className="text-2xl font-bold text-center">{slide.title}</h3>
-        <div className="flex flex-col w-full space-y-2">
-          {currentRanking.map((text, index) => (
-            <DraggableItem key={index} text={text} index={index} />
-          ))}
+      <div className="flex flex-col items-center justify-center h-screen w-full p-4">
+        <div className="flex flex-col items-center w-full max-w-md space-y-4">
+          <h2 className="text-4xl font-display text-center">{slide.title}</h2>
+          <h3 className="text-2xl font-display text-center">{slide.content}</h3>
+          <div className="flex flex-col w-full space-y-3 pb-10">
+            {currentRanking.map((text, index) => (
+              <div key={index} className="flex items-center w-full space-x-4">
+                {/* Display the index with proper alignment */}
+                <h2 className="font-display text-2xl font-bold text-center text-[#F4F3F2] w-10">
+                  {index + 1}
+                </h2>
+                <DroppableContainer index={index}>
+                  <DraggableItem text={text} index={index} />
+                </DroppableContainer>
+              </div>
+            ))}
+          </div>
+
+          <Button
+            onClick={handleAnswerQuestion}
+            className="w-[60%] py-8 text-xl font-display text-white"
+          >
+            Submit Answer
+          </Button>
         </div>
-        <Button
-          onClick={handleAnswerQuestion}
-          className="w-full py-2 text-xl font-bold bg-blue-500 text-white"
-        >
-          Submit Answer
-        </Button>
       </div>
     </DndContext>
   );

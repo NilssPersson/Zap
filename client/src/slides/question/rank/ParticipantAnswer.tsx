@@ -11,7 +11,7 @@ export function ParticipantAnswer({
   return (
     <div>
       <p>
-        Rätt svar: {slide.answer}, du: {participant.name}
+        Rätt svar: {slide.title}, du: {participant.name}
       </p>
     </div>
   );
