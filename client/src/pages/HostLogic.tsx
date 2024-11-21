@@ -11,6 +11,8 @@ import {
 } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
 
+import Countdown from "react-countdown";
+
 export interface LatestScore {
   id: string;
   score: number;
@@ -19,14 +21,14 @@ export interface LatestScore {
 const HostLogic: React.FC = () => {
   const { id } = useParams();
   const [ongoingQuiz, setOngoingQuiz] = useState<OngoingQuiz>();
-
+  const [showAnswer, setShowAnswer] = useState(false);
   const {
     quizCode,
     participants,
+    totalAnswers,
     incrementSlide,
     getOngoingQuiz,
     updateScore,
-    setIsShowingAnswer,
   } = useOngoingQuiz();
 
   useEffect(() => {
@@ -44,7 +46,29 @@ const HostLogic: React.FC = () => {
     setupLobby();
   }, [id]);
 
+  useEffect(() => {
+    console.log("Checking has answered");
+    const checkAnsweres = async () => {
+      if ((ongoingQuiz?.currentSlide ? ongoingQuiz?.currentSlide : 0) > 0) {
+        const currentSlide =
+          ongoingQuiz?.quiz.slides[ongoingQuiz.currentSlide - 1];
+          const questionSlide = currentSlide as QuestionSlide;
+          if (
+            !(
+              questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never
+            ) &&
+            (participants?.length ? participants?.length : 0) > 0 &&
+            totalAnswers == participants?.length
+          ) {
+            setShowAnswer(true);
+        }
+      }
+    };
+    checkAnsweres();
+  }, [totalAnswers]);
+
   const nextSlide = async () => {
+    setShowAnswer(false);
     console.log("Before nextSlide ", ongoingQuiz);
     const currentOngoingQuiz = await incrementSlide(quizCode);
     setOngoingQuiz(currentOngoingQuiz);
@@ -52,78 +76,78 @@ const HostLogic: React.FC = () => {
   };
 
   const nextSlideAfterQuestion = async (question: QuestionSlide) => {
+    setShowAnswer(false);
     await updateScore(quizCode, question);
-    setIsShowingAnswer(id ? id : "", false);
     const startedQuiz = await incrementSlide(quizCode);
     setOngoingQuiz(startedQuiz);
   };
 
-  const showAnswer = async (questionSlide: QuestionSlide) => {
-    setIsShowingAnswer(id ? id : "", true);
-    return (
-      <div>
-        <h1>Visar svaren</h1>
-        <Button
-          onClick={() => nextSlideAfterQuestion(questionSlide)}
-          className="m-5"
-        >
-          Next Slide
-        </Button>
-      </div>
-    );
+  const Completionist: React.FC<{}> = ({}) => {
+    setShowAnswer(true);
+    return null; // Or return some UI if needed
   };
 
   const renderQuestionButtons = (questionSlide: QuestionSlide) => {
     return (
       <div className="flex flex-col">
+        {!showAnswer && questionSlide.timeLimit > 0 && (
+          <div>
+            <Countdown date={Date.now() + questionSlide.timeLimit * 1000}>
+              <Completionist />
+            </Countdown>
+            {questionSlide.showCorrectAnswer ===
+              ShowCorrectAnswerTypes.manual && (
+              <Button onClick={() => setShowAnswer(true)} className="m-5">
+                Show Answer
+              </Button>
+            )}
+          </div>
+        )}
         <Button
           onClick={() => nextSlideAfterQuestion(questionSlide)}
           className="m-5"
         >
           Next Slide
         </Button>
-        {questionSlide.showCorrectAnswer === ShowCorrectAnswerTypes.manual && (
-          <Button onClick={() => showAnswer(questionSlide)} className="m-5">
-            Show Correct Answer
-          </Button>
-        )}
       </div>
     );
   };
-  
+
   // Render QuizLobby when currentSlide is 0
   if (ongoingQuiz?.currentSlide === 0) {
     return (
-      <div className="flex flex-col">
-        <QuizLobby
-          quizCode={quizCode}
-          participants={participants ? participants : []}
-        />
-        <Button onClick={nextSlide} className="m-5">
-          Start Game
-        </Button>
+      <div>
+        <div className="flex flex-col">
+          <QuizLobby
+            quizCode={quizCode}
+            participants={participants ? participants : []}
+          />
+          <Button onClick={nextSlide} className="m-5">
+            Start Game
+          </Button>
+        </div>
       </div>
     );
   } else {
     if (ongoingQuiz?.quiz.slides) {
-      const currentSlide = ongoingQuiz?.currentSlide;
+      const currentSlide = ongoingQuiz?.currentSlide - 1;
       if (ongoingQuiz?.quiz.slides[currentSlide].type == SlideTypes.question) {
         const questionSlide = ongoingQuiz?.quiz.slides[
           currentSlide
         ] as QuestionSlide;
-        console.log("Render question slide: ", questionSlide);
         const SlideComponent = getSlideComponents(questionSlide);
         return (
           <div>
-            <SlideComponent.Preview slide={questionSlide as never} />
+            {!showAnswer && (
+              <SlideComponent.Preview slide={questionSlide as never} />
+            )}
+            {showAnswer && <h1>Showing answer</h1>}
             {renderQuestionButtons(questionSlide)}
           </div>
         );
       } else {
         const slide = ongoingQuiz?.quiz.slides[currentSlide];
-        console.log("Render slide: ", slide);
         const SlideComponent = getSlideComponents(slide);
-        console.log("Showing slide component: ", SlideComponent);
         return (
           <div className="flex flex-col">
             <SlideComponent.Preview slide={slide as never} />
