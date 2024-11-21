@@ -9,7 +9,7 @@ interface Options {
 }
 interface McqmaViewProps {
   question: MCQMASlide;
-  answerQuestion: (answer: string) => void;
+  answerQuestion: (answer: string[]) => void;
 }
 
 export default function McqmaView({
@@ -28,7 +28,10 @@ export default function McqmaView({
   };
 
   const handleSubmit = () => {
-    answerQuestion(JSON.stringify(selectedIndexes)); // Send indexes as a string
+    const selectedAnswers = selectedIndexes.map(
+      (index) => question.options[index].text,
+    );
+    answerQuestion(selectedAnswers); // Submit as string[]
   };
 
   return (
