@@ -110,11 +110,13 @@ export const ParticipantService = {
 // Custom Hook: useGameStatus
 export const useGameStatus = (quizCode: string, participantId: string) => {
   const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [showAnswer,setShowAnswer] = useState<boolean>(false);
   const [participantData, setParticipantData] = useState<Participant | null>(null);
 
   useEffect(() => {
     const slideRef = ref(database, `ongoingQuizzes/${quizCode}/currentSlide`);
     const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+    const showAnswerRef = ref(database, `ongoingQuizzes/${quizCode}/isShowingCorrectAnswer`);
 
     const handleSlideChange = (snapshot: DataSnapshot) => {
       setCurrentSlide(snapshot.exists() ? snapshot.val() : 0);
@@ -124,14 +126,20 @@ export const useGameStatus = (quizCode: string, participantId: string) => {
       setParticipantData(snapshot.exists() ? snapshot.val() : null);
     };
 
+    const handleShowAnswerChange = (snapshot:DataSnapshot) => {
+      setShowAnswer(snapshot.exists() ? snapshot.val() : false)
+    }
+
     onValue(slideRef, handleSlideChange);
     onValue(participantRef, handleParticipantChange);
+    onValue(showAnswerRef, handleShowAnswerChange)
 
     return () => {
       off(slideRef, "value", handleSlideChange);
       off(participantRef, "value", handleParticipantChange);
+      off(showAnswerRef, "value", handleShowAnswerChange)
     };
   }, [quizCode, participantId]);
 
-  return { currentSlide, participantData };
+  return { currentSlide, participantData,showAnswer };
 };

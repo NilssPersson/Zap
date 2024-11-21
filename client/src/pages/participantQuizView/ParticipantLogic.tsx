@@ -17,11 +17,13 @@ function QuizView({
   currentSlide,
   participantData,
   answerQuestion,
+  showAnswer,
 }: {
   questions: Slide[] | undefined;
   currentSlide: number;
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
+  showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
   if (currentSlide === 0) return <LobbyView />;
@@ -30,6 +32,16 @@ function QuizView({
 
   const currentQuestion = questions[currentSlide - 1];
   const SlideComponent = getSlideComponents(currentQuestion);
+
+  // If we are on a question slide render the corresponding answerView
+  if (showAnswer) {
+    return (
+      <SlideComponent.ParticipantAnswer
+        slide={currentQuestion as never}
+        participant={participantData}
+      />
+    );
+  }
 
   return (
     <SlideComponent.Participant
@@ -50,7 +62,7 @@ export default function ParticipantLogic() {
   const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
 
-  const { currentSlide, participantData } = useGameStatus(
+  const { currentSlide, participantData, showAnswer } = useGameStatus(
     quizCode as string,
     participantId as string,
   );
@@ -169,6 +181,7 @@ export default function ParticipantLogic() {
         currentSlide={currentSlide}
         participantData={participantData}
         answerQuestion={answerQuestion}
+        showAnswer={showAnswer}
       />
 
       {/* Bottom: Team info */}

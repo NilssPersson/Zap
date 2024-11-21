@@ -1,6 +1,7 @@
 export * from './Preview';
 export * from './Toolbar';
 export * from './Participant';
+export * from './ParticipantAnswer'
 
 import { QuestionTypes, SlideTypes } from '@/models/Quiz';
 import { CheckSquareIcon } from "lucide-react";
