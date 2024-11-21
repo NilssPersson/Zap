@@ -5,6 +5,9 @@ import "tailwindcss/tailwind.css"; // Tailwind CSS
 import Avatar, { genConfig } from "react-nice-avatar";
 import QRCode from "react-qr-code";
 import { Participant } from "@/models/Quiz";
+import { useAppContext } from "@/contexts/App/context";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface LobbyProps {
   quizCode: string;
@@ -16,6 +19,12 @@ interface LobbyProps {
 export default function QuizLobby({ quizCode, participants }: LobbyProps) {
   const [participantList, setParticipantList] = useState<Participant[]>([]);
   const participantsRef = useRef<HTMLDivElement>(null);
+
+  const { 
+    quizzes: { optimisticUpdate },
+    ongoingQuizzes: { optimisticDelete, resources: ongoingQuizzes }
+  } = useAppContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newParticipants = Object.values(participants); // Convert object to array of participants
@@ -40,8 +49,20 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
     }
   }, [participantList]); 
 
+  const handleEndQuiz = async () => {
+    const onGoingQuiz = ongoingQuizzes.find(quiz => quiz.id === quizCode);
+    if (!onGoingQuiz) return;
+
+    await Promise.all([
+      optimisticDelete(quizCode),
+      optimisticUpdate(onGoingQuiz.quiz.id, { isHosted: false })
+    ]);
+    navigate("/");
+  }
+
   return (
     <div className="lobby-container">
+      <Button onClick={handleEndQuiz}>End Quiz</Button>
       <div className="flex flex-row items-center justify-between p-20 mb-15 mt-20">
         <h1 className="text-5xl font-display ">Join Lobby: {quizCode}</h1>
         <QRCode

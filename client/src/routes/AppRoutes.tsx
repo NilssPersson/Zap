@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import About from "../pages/About";
 import Home from "../pages/Home";
@@ -9,9 +9,22 @@ import QuizEdit from "../pages/QuizEdit";
 import ParticipantLogic from "@/pages/participantQuizView/ParticipantLogic";
 import Profile from "@/pages/User/Profile";
 import HostLogic from "@/pages/HostLogic";
+import { useAppContext } from "@/contexts/App/context";
+import { useEffect } from "react";
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
+
+  const { ongoingQuizzes } = useAppContext();
+  const { resources } = ongoingQuizzes
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (resources.length !== 0) {
+      console.log(resources[0]);
+      navigate(`/quizzes/${resources[0].id}/lobby`);
+    }
+  }, [resources, navigate]);
 
   return (
     <Routes>

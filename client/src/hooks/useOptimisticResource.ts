@@ -12,6 +12,20 @@ interface UseOptimisticResourceOptions<T> {
   userScoped?: boolean; // Whether the resource is scoped to the user
 }
 
+export type OptimisticResponse<T> = Promise<{
+  data: null;
+  error: Error;
+} | {
+  data: T | null;
+  error: null;
+}>
+
+export type OptimisticCreate<T> = (newResource: Partial<T>) => OptimisticResponse<T>
+
+export type OptimisticUpdate<T> = (id: string, updates: Partial<T>) => OptimisticResponse<T>
+
+export type OptimisticDelete = (id: string) => OptimisticResponse<void>
+
 interface UserScopedService<T> extends BaseService<T> {
   getByUserId: (userId: string) => Promise<FirebaseResponse<T[]>>;
 }
@@ -22,23 +36,26 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
     const [resources, setResources] = useState<T[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const fetchResources = useCallback(async () => {
+    const fetchResources = useCallback(() => {
       if (options.userScoped && !user) return;
       
       setIsLoading(true);
-      let response: FirebaseResponse<T[]>;
       
-      if (options.userScoped && user) {
-        response = await (options.api as UserScopedService<T>).getByUserId(user.id);
-      } else {
-        response = await options.api.list();
-      }
+      const promise = options.userScoped && user
+        ? (options.api as UserScopedService<T>).getByUserId(user.id)
+        : options.api.list();
 
-      const { data, error } = response;
-      if (!error && data) {
-        setResources(data);
-      }
-      setIsLoading(false);
+      return promise
+        .then(response => {
+          const { data, error } = response;
+          if (!error && data) {
+            setResources(data);
+          }
+          return response;
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }, [user]);
 
     useEffect(() => {

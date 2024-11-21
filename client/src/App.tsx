@@ -2,6 +2,7 @@ import { KindeProvider } from "@kinde-oss/kinde-auth-react";
 import { Header } from "./components/Header";
 import { AppRoutes } from "./routes/AppRoutes";
 import { Toaster } from "sonner";
+import { AppProvider } from "./contexts/App/provider";
 
 const environment = import.meta.env.VITE_ENVIRONMENT;
 
@@ -20,9 +21,11 @@ function App() {
           redirectUri={uri}
           logoutUri={uri}
         >
-          <Header />
-          <AppRoutes />
-          <Toaster />
+          <AppProvider>
+            <Header />
+            <AppRoutes />
+            <Toaster />
+          </AppProvider>
         </KindeProvider>
       </main>
     </div>

@@ -1,6 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
-import { useQuizzes } from "@/hooks/useQuizzes";
 import { toast } from "sonner";
 import CreateQuizPopover from "@/components/quizzes/CreateQuizPopover";
 import QuizList from "@/components/quizzes/QuizList";
@@ -9,10 +7,20 @@ import { useGetSharedQuizzes } from "@/hooks/useGetSharedQuizzes";
 import { Loader2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Quiz from "@/models/Quiz";
+import { useAppContext } from "@/contexts/App/context";
 
 function useQuizzesPage() {
-    const { user } = useGetAuthenticatedUser();
-    const { resources: quizzes, isLoading: quizzesLoading, optimisticCreate, optimisticDelete, optimisticUpdate } = useQuizzes();
+    const { 
+        quizzes: {
+            resources: quizzes, 
+            isLoading: quizzesLoading, 
+            optimisticCreate, 
+            optimisticDelete, 
+            optimisticUpdate 
+        },
+        user: { user }
+    } = useAppContext();
+
     const { resources: sharedQuizzes, isLoading: sharedQuizzesLoading } = useGetSharedQuizzes(user?.id || "")();
 
     const handleCreateQuiz = useCallback(async (name: string) => {
@@ -59,19 +67,28 @@ function useQuizzesPage() {
     const handleCopyQuiz = useCallback(async (quiz: Quiz) => {
         if (!user) return;
 
-        const { error } = await optimisticCreate({
+        const { data, error } = await optimisticCreate({
             ...quiz,
             quiz_name: `${quiz.quiz_name} (Copy)`,
             user_id: user.id,
+            isShared: false,
+            updated_at: new Date().toLocaleString()
         });
 
-        if (error) {
+        if (error || !data) {
+            toast.error("Failed to copy quiz");
+            return;
+        }
+
+        const { error: updateError } = await optimisticUpdate(data.id, { id: data.id });
+
+        if (updateError) {
             toast.error("Failed to copy quiz");
             return;
         }
 
         toast.success("Quiz copied successfully");
-    }, [user, optimisticCreate]);
+    }, [user, optimisticCreate, optimisticUpdate]);
 
     return {
         quizzes,

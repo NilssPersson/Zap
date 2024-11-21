@@ -2,6 +2,8 @@ import Quiz from "@/models/Quiz"
 import { useNavigate } from "react-router-dom";
 import { useOngoingQuiz } from "@/services/host";
 import { QuizCard, MyQuizButtons, SharedQuizButtons } from "./QuizCard";
+import { quizService } from "@/services/quizzes";
+import { toast } from "sonner";
 
 interface QuizListProps {
     quizzes: Quiz[];
@@ -25,12 +27,21 @@ function QuizList({
 
     const handleHostGame = async (quiz: Quiz) => {
         try {
-            const quizCode = await createOngoingQuiz(quiz)
-            if (quizCode) {
-                navigate(`/quizzes/${quizCode}/lobby`);
+            const [{ error: updateError }, quizCode] = await Promise.all([
+              quizService.update(quiz.id, { isHosted: true }),
+              createOngoingQuiz(quiz),
+            ]);
+
+            if (updateError || !quizCode) {
+                toast.error("Failed to host quiz");
+                return;
             }
+
+            toast.success("Quiz hosted successfully");
+            navigate(`/quizzes/${quizCode}/lobby`);
         } catch (err) {
             console.error("Error creating ongoing quiz:", err);
+            toast.error("Failed to host quiz" + err);
         }
     };
 

@@ -14,17 +14,18 @@ function useGetAuthenticatedUser() {
 
     if (!id) return;
 
-    const fetchUser = async (id: string) => {
-      const { data, error } = await userService.findOrCreate(id, user.email ?? "");
+    const fetchUser = (id: string) => {
+      return userService.findOrCreate(id, user.email ?? "")
+        .then(({ data, error }) => {
+          if (error) {
+            console.error("Error fetching/creating user:", error);
+            return;
+          }
 
-      if (error) {
-        console.error("Error fetching/creating user:", error);
-        return;
-      }
-
-      if (data) {
-        setDbUser(data);
-      }
+          if (data) {
+            setDbUser(data);
+          }
+        });
     };
 
     fetchUser(id);
