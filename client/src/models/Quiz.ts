@@ -89,7 +89,6 @@ interface QuestionSlideBase extends BaseSlide {
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
   answerType: answerType;
-  answer: string[]; //TODO: kolla i options
   showCorrectAnswer: ShowCorrectAnswerTypes; // Lägg till knapp för show answer
 }
 
@@ -145,7 +144,7 @@ export interface Participant {
   avatar: string;
   name: string;
   participantId: string;
-  score: number;
+  score: number[];
 }
 
 export type Slide = InfoSlide | ScoreSlide | QuestionSlide;

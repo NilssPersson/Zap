@@ -17,9 +17,8 @@ import { LatestScore } from "@/pages/HostLogic";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
-  const [participants, setPaticipants] =
-    useState<Participant[]>();
-    const [totalAnswers, setTotalAnswers] = useState(0);
+  const [participants, setPaticipants] = useState<Participant[]>();
+  const [totalAnswers, setTotalAnswers] = useState(0);
 
   useEffect(() => {
     const participantsRef = ref(
@@ -48,8 +47,6 @@ export const useOngoingQuiz = () => {
       off(participantsRef, "value", handleQuizChange);
     };
   }, [quizCode]);
-
-  
 
   const resetHasAnswered = async (quizCode: string) => {
     // Reference to all participants
@@ -106,26 +103,35 @@ export const useOngoingQuiz = () => {
     participant: Participant,
     updates: any
   ) => {
-    const participantAnswer = participant.answer[participant.answer.length - 1];
-    const correctAnswer = question.answer[question.answer.length - 1];
+    const participantAnswer =
+      participant.answers[participant.answers.length - 1].answer;
+      const currentScore = participant.score[participant.score.length];
     switch (question.answerType) {
       case answerTypes.singleString: {
+        const correctAnswer = question.options
+          .filter((option) => option.isCorrect) 
+          .map((option) => option.text);
+
         if (participantAnswer[0] === correctAnswer[0]) {
-          const newScore = participant.score + 1000;
+          const newScore = currentScore + 1000;
           updates[`${participant.participantId}/score`] = newScore;
         }
         return updates;
       }
       // Todo, handle spelling mistakes etc.
       case answerTypes.freeText: {
+        const correctAnswer = question.correctAnswer;
         if (participantAnswer[0] === correctAnswer[0]) {
-          const newScore = participant.score + 1000;
+          const newScore = currentScore + 1000;
           updates[`${participant.participantId}/score`] = newScore;
         }
         return updates;
       }
       // The answers should be the same without considering order
       case answerTypes.multipleStrings: {
+         const correctAnswer = question.options
+           .filter((option) => option.isCorrect)
+           .map((option) => option.text);
         if (participantAnswer.length !== correctAnswer.length) {
           return updates;
         }
@@ -141,7 +147,7 @@ export const useOngoingQuiz = () => {
           (value, index) => value === sortedQuestionAnswers[index]
         );
         if (isAnswerCorrect) {
-          const newScore = participant.score + 1000;
+          const newScore = currentScore + 1000;
           return (updates[`${participant.participantId}/score`] = newScore);
         } else {
           return updates;
@@ -149,6 +155,7 @@ export const useOngoingQuiz = () => {
       }
       // The answers should be the same, with regard to order
       case answerTypes.rank: {
+        const correctAnswer = question.ranking;
         if (participantAnswer.length !== correctAnswer.length) {
           return updates;
         }
@@ -157,7 +164,7 @@ export const useOngoingQuiz = () => {
             return updates;
           }
         }
-        const newScore = participant.score + 1000;
+        const newScore = currentScore + 1000;
         return (updates[`${participant.participantId}/score`] = newScore);
       }
       default: {
