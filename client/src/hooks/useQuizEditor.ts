@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { quizService } from '@/services/quizzes';
 import { type Slide, type SlideType, type QuestionType, QuizSettings } from '@/models/Quiz';
 import { toast } from 'sonner';
@@ -15,12 +15,6 @@ export function useQuizEditor(quizId: string | undefined) {
     const [isSaving, setIsSaving] = useState(false);
     const { quizzes: { optimisticUpdate, resources: quizzes, isLoading } } = useAppContext();
     const quiz = quizzes.find(q => q.id === quizId);
-
-    // Fetch quiz and slides
-    useEffect(() => {
-        if (!quiz) return;
-        setActiveSlideId(quiz.slides?.[0]?.id || null);
-    }, [quiz]);
 
     // Save all slides
     const handleSave = async () => {
