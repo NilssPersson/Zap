@@ -12,13 +12,15 @@ import {
   DataSnapshot,
 } from "firebase/database";
 import { database } from "@/firebase";
-import Quiz, { QuestionSlide, answerTypes, Participant } from "@/models/Quiz";
+import Quiz, { QuestionSlide, answerTypes, Participant, OngoingQuiz } from "@/models/Quiz";
 import { LatestScore } from "@/pages/HostLogic";
+import { useAppContext } from "@/contexts/App/context";
 
 export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
   const [participants, setPaticipants] = useState<Participant[]>();
   const [totalAnswers, setTotalAnswers] = useState(0);
+  const { ongoingQuizzes: { resources: ongoingQuizzes } } = useAppContext();
 
   useEffect(() => {
     if (!quizCode) return;
@@ -293,15 +295,8 @@ export const useOngoingQuiz = () => {
     }
   }
 
-  async function getOngoingQuiz(quizCode: string): Promise<any> {
-    const quizRef = ref(database, "ongoingQuizzes/" + quizCode);
-    try {
-      const ongoingQuiz = await get(quizRef);
-      setQuizCode(quizCode);
-      return ongoingQuiz.val();
-    } catch (error) {
-      console.error("Failed to get ongoing quiz", error);
-    }
+  function getOngoingQuiz(quizCode: string): OngoingQuiz | undefined {
+    return ongoingQuizzes.find(q => q.id === quizCode);
   }
 
   async function setIsShowingAnswer(

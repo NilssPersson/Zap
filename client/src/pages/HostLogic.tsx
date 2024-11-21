@@ -32,9 +32,9 @@ const HostLogic: React.FC = () => {
   } = useOngoingQuiz();
 
   useEffect(() => {
-    const setupLobby = async () => {
+    const setupLobby = () => {
       try {
-        const currentQuiz = await getOngoingQuiz(id || "");
+        const currentQuiz = getOngoingQuiz(id || "");
         if (currentQuiz) {
           setOngoingQuiz(currentQuiz);
         }
@@ -44,7 +44,7 @@ const HostLogic: React.FC = () => {
     };
 
     setupLobby();
-  }, [id]);
+  }, [id, getOngoingQuiz]);
 
   useEffect(() => {
     console.log("Checking has answered");
@@ -65,7 +65,7 @@ const HostLogic: React.FC = () => {
       }
     };
     checkAnsweres();
-  }, [totalAnswers]);
+  }, [totalAnswers, ongoingQuiz, participants]);
 
   const nextSlide = async () => {
     setShowAnswer(false);
@@ -82,7 +82,7 @@ const HostLogic: React.FC = () => {
     setOngoingQuiz(startedQuiz);
   };
 
-  const Completionist: React.FC<{}> = ({}) => {
+  const Completionist: React.FC = () => {
     setShowAnswer(true);
     return null; // Or return some UI if needed
   };
