@@ -21,6 +21,7 @@ export const useOngoingQuiz = () => {
   const [totalAnswers, setTotalAnswers] = useState(0);
 
   useEffect(() => {
+    if (!quizCode) return;
     const participantsRef = ref(
       database,
       `ongoingQuizzes/${quizCode}/participants`
