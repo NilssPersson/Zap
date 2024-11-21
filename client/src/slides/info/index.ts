@@ -12,4 +12,5 @@ export const Info: SlideInfo = {
     icon: InfoIcon,
     label: "Information Slide",
     slideType: SlideTypes.info,
+    defaults: {}
 } as const;

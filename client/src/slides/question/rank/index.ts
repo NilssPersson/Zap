@@ -1,7 +1,7 @@
 export * from './Preview';
 export * from './Toolbar';
 
-import { QuestionTypes, SlideTypes } from '@/models/Quiz';
+import { QuestionTypes, SlideTypes, answerTypes } from '@/models/Quiz';
 import { ListOrdered } from "lucide-react";
 import { SlideInfo } from '../..';
 
@@ -11,4 +11,9 @@ export const Info: SlideInfo = {
     label: "Rank Answers",
     slideType: SlideTypes.question,
     questionType: QuestionTypes.RANK,
+    defaults: {
+        ranking: [],
+        answerType: answerTypes.rank,
+        answer: [],
+    }
 } as const; 

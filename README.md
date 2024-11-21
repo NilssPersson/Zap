@@ -118,12 +118,11 @@ GameShack/
          - `label` should be the same as the directory name.
          - `slideType` should be the same as the directory name.
          - `questionType` is only needed for question slides.
+         - `defaults` should be the default values for the slide when it is created.
 - In /src/slides/index.ts
   - Import and export the new slide type
 - In /src/slides/utils.ts
   - Modify getSlideComponents to return the new slide type
-- In /src/hooks/useQuizEditor.ts
-  - Modify handleAddSlide to support the new slide type
 ---
 
 ## Contributors
