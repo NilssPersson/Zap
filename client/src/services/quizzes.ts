@@ -1,3 +1,4 @@
+import { quizDefaults } from "@/components/quiz-editor/utils/quiz-defaults";
 import { BaseService, FirebaseResponse } from "./base";
 import Quiz from "@/models/Quiz";
 import { query, orderByChild, equalTo, get } from "firebase/database";
@@ -5,6 +6,17 @@ import { query, orderByChild, equalTo, get } from "firebase/database";
 class QuizService extends BaseService<Quiz> {
   constructor() {
     super("quizzes");
+  }
+
+  async create(quiz: Quiz): Promise<FirebaseResponse<Quiz>> {
+    return super.create({
+      ...quiz,
+      isHosted: false,
+      created_at: new Date().toISOString().toLocaleString(),
+      settings: {
+        ...quizDefaults
+      }
+    });
   }
 
   async getByUserId(userId: string): Promise<FirebaseResponse<Quiz[]>> {
