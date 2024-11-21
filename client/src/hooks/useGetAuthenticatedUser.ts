@@ -30,15 +30,16 @@ function useGetAuthenticatedUser() {
     fetchUser(id);
   }, [user, dbUser]);
 
-  const updateUser = useCallback(async (user: User) => {
-    const { data, error } = await userService.update(user.id, user);
+  const updateUser = useCallback(async (user: Partial<User>) => {
+    if (!dbUser) return;
+    const { data, error } = await userService.update(dbUser.id, user);
     if (error) {
       console.error("Error updating user:", error);
     }
     if (data) {
       setDbUser(data);
     }
-  }, []);
+  }, [dbUser]);
 
   return { user: dbUser, updateUser };
 }
