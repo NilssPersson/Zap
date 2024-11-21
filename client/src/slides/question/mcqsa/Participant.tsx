@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { MCQSASlide } from "@/models/Quiz";
 
 interface Options {
@@ -12,30 +11,40 @@ interface McqsaViewProps {
   answerQuestion: (answer: string[]) => void;
 }
 
-export function Participant({ slide, answerQuestion }: McqsaViewProps) {
+const getColor = (index: number): string => {
   const colors = [
-    "bg-[#FF333D] text-white",
-    "bg-[#1AFF12] text-black",
-    "bg-[#ECEC00] text-black",
-    "bg-[#FF33E0] text-white",
+    "rgb(178,0,255)", // Purple
+    "rgb(255,0,195)", // Pink
+    "rgb(0,230,255)", // Light Blue
+    "rgb(255,204,0)", // Yellow
+    "rgb(255,128,0)", // Orange
+    "rgb(0,0,255)", // Blue
+    "rgb(255,0,0)", // Red
+    "rgb(0,255,0)", // Green
   ];
+  return colors[index % colors.length];
+};
+
+export function Participant({ slide, answerQuestion }: McqsaViewProps) {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <div className="text-center space-y-10 h-1/2">
-        <h1 className="text-3xl font-display">{slide.title}</h1>
-        <div className="grid grid-cols-1 gap-6 w-full">
-          {slide.options.map((option: Options, index: number) => (
-            <Button
-              className={`w-full py-3 text-center ${
-                colors[index % colors.length]
-              }`}
-              key={option.text}
-              onClick={() => answerQuestion([option.text])}
-            >
-              {option.text}
-            </Button>
-          ))}
-        </div>
+    <div className="flex flex-col items-center justify-center h-screen p-10">
+      <h1 className="text-5xl font-display font-bold text-center mb-8">
+        {slide.title}
+      </h1>
+      <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
+        {slide.options.map((option: Options, index: number) => (
+          <div
+            key={option.id}
+            onClick={() => answerQuestion([option.text])} // Answer instantly on click
+            style={{
+              backgroundColor: getColor(index),
+              cursor: "pointer",
+            }}
+            className="flex items-center justify-center text-2xl text-white font-display h-24 rounded-lg hover:ring-4 hover:ring-white"
+          >
+            {option.text}
+          </div>
+        ))}
       </div>
     </div>
   );
