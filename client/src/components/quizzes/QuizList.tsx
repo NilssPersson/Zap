@@ -1,7 +1,7 @@
 import Quiz from "@/models/Quiz"
 import { useNavigate } from "react-router-dom";
 import { useOngoingQuiz } from "@/services/host";
-import { QuizCard } from "./QuizCard";
+import { QuizCard, MyQuizButtons } from "./QuizCard";
 
 interface QuizListProps {
   quizzes: Quiz[];
@@ -32,11 +32,15 @@ function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
         <QuizCard
           key={quiz.id}
           quiz={quiz}
-          onHost={handleHostGame}
-          onShare={(quiz) => console.log('Share clicked', quiz)}
-          onDelete={onDeleteQuiz}
           onClick={() => navigate(`/quizzes/${quiz.id}/edit`)}
-        />
+        >
+          <MyQuizButtons 
+            quiz={quiz} 
+            onHost={handleHostGame} 
+            onShare={(quiz) => console.log('Share clicked', quiz)} 
+            onDelete={onDeleteQuiz} 
+          />
+        </QuizCard>
       ))}
     </div>
   );

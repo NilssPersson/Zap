@@ -79,7 +79,7 @@ function Quizzes() {
     } = useQuizzesPage();
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 overflow-y-auto">
             <Card className="w-full max-w-7xl">
                 <CardHeader>
                     <CardTitle>My Rooms</CardTitle>

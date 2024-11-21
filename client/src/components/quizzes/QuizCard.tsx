@@ -12,16 +12,15 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { ReactNode } from "react";
 
 interface QuizCardProps {
     quiz: Quiz;
-    onHost: (quiz: Quiz) => Promise<void>;
-    onShare?: (quiz: Quiz) => void;
-    onDelete: (quizId: string) => Promise<void>;
     onClick: () => void;
+    children?: ReactNode;
 }
 
-export function QuizCard({ quiz, onHost, onShare, onDelete, onClick }: QuizCardProps) {
+export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
     return (
         <Card
             className="transition-transform hover:scale-[101%] cursor-pointer"
@@ -32,8 +31,8 @@ export function QuizCard({ quiz, onHost, onShare, onDelete, onClick }: QuizCardP
             </CardHeader>
             <CardContent>
                 {quiz.slides && quiz.slides.length > 0 ? (
-                    <div className="aspect-video w-full rounded overflow-hidden">
-                        <SlidePreview slide={quiz.slides[0]} />
+                    <div className="aspect-video w-full rounded overflow-hidden text-white">
+                        <SlidePreview slide={quiz.slides[0]} {...quiz.settings}/>
                     </div>
                 ) : (
                     <div className="aspect-video w-full">
@@ -44,70 +43,85 @@ export function QuizCard({ quiz, onHost, onShare, onDelete, onClick }: QuizCardP
                 )}
             </CardContent>
             <CardFooter className="gap-2 flex-wrap">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onHost(quiz);
-                    }}
-                >
-                    Host
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onShare?.(quiz);
-                    }}
-                >
-                    Share
-                </Button>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                            }}
-                        >
-                            Delete
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent onClick={(e) => e.stopPropagation()}>
-                        <DialogHeader>
-                            <DialogTitle>Delete Quiz</DialogTitle>
-                            <DialogDescription>
-                                Are you sure you want to delete "{quiz.quiz_name}"? This action cannot be undone.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                            <div className="flex justify-end gap-2 mt-4">
-                                <DialogClose asChild>
-                                    <Button
-                                        variant="outline"
-                                    >
-                                        Cancel
-                                    </Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                    <Button
-                                        variant="destructive"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onDelete(quiz.id);
-                                        }}
-                                    >
-                                        Delete
-                                    </Button>
-                                </DialogClose>
-                            </div>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                {children}
             </CardFooter>
         </Card>
+    );
+}
+
+interface MyQuizButtonsProps {
+    quiz: Quiz;
+    onHost: (quiz: Quiz) => Promise<void>;
+    onShare?: (quiz: Quiz) => void;
+    onDelete: (quizId: string) => Promise<void>;
+}
+
+export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtonsProps) {
+    return (
+        <>
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onHost(quiz);
+                }}
+            >
+                Host
+            </Button>
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onShare?.(quiz);
+                }}
+            >
+                Share
+            </Button>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        Delete
+                    </Button>
+                </DialogTrigger>
+                <DialogContent onClick={(e) => e.stopPropagation()}>
+                    <DialogHeader>
+                        <DialogTitle>Delete Quiz</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete "{quiz.quiz_name}"? This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <div className="flex justify-end gap-2 mt-4">
+                            <DialogClose asChild>
+                                <Button
+                                    variant="outline"
+                                >
+                                    Cancel
+                                </Button>
+                            </DialogClose>
+                            <DialogClose asChild>
+                                <Button
+                                    variant="destructive"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onDelete(quiz.id);
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            </DialogClose>
+                        </div>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 } 
