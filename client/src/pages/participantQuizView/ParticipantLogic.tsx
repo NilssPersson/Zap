@@ -1,26 +1,55 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  addAnswer,
-  useGameStatus,
-  addParticipant,
-  removeParticipant,
-  getParticipant,
-  checkIfGameExists,
-  participantExists,
-  getQuizSlides,
-} from "@/services/participant";
+import { useParams, useNavigate } from "react-router-dom";
+import { ParticipantService, useGameStatus } from "@/services/participant";
 import TeamInfo from "./components/teamInfo";
 import CreateParticipant from "./components/CreateParticipant";
 import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import LobbyView from "@/components/quiz-phone-view/LobbyView";
-import HasAnsweredView from "@/components/quiz-phone-view/HasAnsweredView";
-import QuizEndedView from "@/components/quiz-phone-view/QuizEndedView";
-import { Slide } from "@/models/Quiz";
+import LobbyView from "@/pages/participantQuizView/components/LobbyView";
+import HasAnsweredView from "@/pages/participantQuizView/components/HasAnsweredView";
+import QuizEndedView from "@/pages/participantQuizView/components/QuizEndedView";
+import { Participant, Slide } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
+
+function QuizView({
+  questions,
+  currentSlide,
+  participantData,
+  answerQuestion,
+  showAnswer,
+}: {
+  questions: Slide[] | undefined;
+  currentSlide: number;
+  participantData: Participant;
+  answerQuestion: (answer: string[]) => Promise<void>;
+  showAnswer: boolean;
+}) {
+  if (!questions || !participantData) return <div>Loading Questions...</div>;
+  if (currentSlide === 0) return <LobbyView />;
+  if (participantData.hasAnswered) return <HasAnsweredView />;
+  if (currentSlide > questions.length) return <QuizEndedView />;
+
+  const currentQuestion = questions[currentSlide - 1];
+  const SlideComponent = getSlideComponents(currentQuestion);
+
+  // If we are on a question slide render the corresponding answerView
+  if (showAnswer) {
+    return (
+      <SlideComponent.ParticipantAnswer
+        slide={currentQuestion as never}
+        participant={participantData}
+      />
+    );
+  }
+
+  return (
+    <SlideComponent.Participant
+      slide={currentQuestion as never}
+      answerQuestion={answerQuestion}
+    />
+  );
+}
 
 export default function ParticipantLogic() {
   const [name, setName] = useState("");
@@ -33,77 +62,97 @@ export default function ParticipantLogic() {
   const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
 
-  const { currentSlide, participantData } = useGameStatus(
+  const { currentSlide, participantData, showAnswer } = useGameStatus(
     quizCode as string,
     participantId as string,
   );
 
+  // Fetch quiz and participant data
   useEffect(() => {
-    const checkQuiz = async () => {
+    const initialize = async () => {
       if (!quizCode) return;
 
       try {
-        const quizExists = await checkIfGameExists(quizCode);
-
+        const quizExists = await ParticipantService.checkIfGameExists(quizCode);
         if (!quizExists) {
           navigate("/play");
           removeCookie("participantId");
-        }
-      } catch (error) {
-        console.error("Error checking quiz existence:", error);
-      }
-    };
-
-    const fetchParticipant = async () => {
-      if (!quizCode || !cookies.participantId) return;
-
-      try {
-        const exists = await participantExists(quizCode, cookies.participantId);
-        // The participant has either been removed or was from another quiz
-        if (!exists) {
-          removeCookie("participantId");
-          setParticipantId(undefined);
           return;
         }
 
-        const data = await getParticipant(quizCode, cookies.participantId);
-        setParticipantId(cookies.participantId);
-        setName(data.name);
-        setAvatar(data.avatar);
-        const questions = await getQuizSlides(quizCode);
-        setQuestions(questions);
+        if (cookies.participantId) {
+          const participant = await ParticipantService.getParticipant(
+            quizCode,
+            cookies.participantId,
+          );
+          if (participant) {
+            setParticipantId(cookies.participantId);
+            setName(participant.name);
+            setAvatar(participant.avatar);
+            const slides = await ParticipantService.getQuizSlides(quizCode);
+            setQuestions(slides);
+          } else {
+            removeCookie("participantId");
+            setParticipantId(undefined);
+          }
+        }
       } catch (error) {
-        console.error("Error fetching participant data:", error);
+        console.error("Error initializing quiz:", error);
       }
     };
 
-    checkQuiz();
-    fetchParticipant();
-  }, [cookies, quizCode, navigate, removeCookie]);
+    initialize();
+  }, [quizCode, cookies, navigate, removeCookie]);
 
-  async function handleRemoveParticipant() {
+  const handleRemoveParticipant = async () => {
     if (!quizCode || !participantId) return;
-    const res = await removeParticipant(quizCode, participantId);
-    if (res) {
-      removeCookie("participantId");
-      navigate("/play");
+    try {
+      const success = await ParticipantService.removeParticipant(
+        quizCode,
+        participantId,
+      );
+      if (success) {
+        removeCookie("participantId");
+        navigate("/play");
+      }
+    } catch (error) {
+      console.error("Error removing participant:", error);
     }
-  }
+  };
 
-  async function handleAddParticipant() {
-    const createdId = await addParticipant(quizCode as string, name, avatar);
-    setCookie("participantId", createdId);
-    setParticipantId(createdId);
-    const questions = await getQuizSlides(quizCode as string);
-    setQuestions(questions);
-  }
+  const handleAddParticipant = async () => {
+    if (!quizCode || !name || !avatar) return;
+    try {
+      const createdId = await ParticipantService.addParticipant(
+        quizCode,
+        name,
+        avatar,
+      );
+      if (createdId) {
+        setCookie("participantId", createdId);
+        setParticipantId(createdId);
+        const slides = await ParticipantService.getQuizSlides(quizCode);
+        setQuestions(slides);
+      }
+    } catch (error) {
+      console.error("Error adding participant:", error);
+    }
+  };
 
-  async function answerQuestion(answer: string[]) {
+  const answerQuestion = async (answer: string[]) => {
     if (!quizCode || !participantId || !answer) return;
-    await addAnswer(quizCode, participantId, answer, currentSlide - 1);
-  }
+    try {
+      await ParticipantService.addAnswer(
+        quizCode,
+        participantId,
+        answer,
+        currentSlide - 1,
+      );
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+    }
+  };
 
-  // Check if a participant has been created
   if (!participantId || !participantData) {
     return (
       <CreateParticipant
@@ -116,41 +165,27 @@ export default function ParticipantLogic() {
     );
   }
 
-  // TODO: Kan nog skrivas om bättre.
-  function QuizView() {
-    if (!questions || !participantData) return <div>Loading Questions...</div>;
-    if (currentSlide === 0) return <LobbyView />;
-    if (participantData.hasAnswered) return <HasAnsweredView />;
-    if (currentSlide > questions.length) return <QuizEndedView />;
-
-    const currentQuestion = questions?.[currentSlide - 1];
-
-    const SlideComponent = getSlideComponents(currentQuestion);
-    return (
-      <SlideComponent.Participant
-        slide={currentQuestion as never}
-        answerQuestion={answerQuestion}
-      />
-    );
-  }
-
   return (
     <div>
-      {/*Top: Leave functionality*/}
+      {/* Top: Leave functionality */}
       <div className="fixed top-2 left-2 bg-[#F4F3F2] text-[#333333] rounded-md">
         <Button variant="ghost" onClick={handleRemoveParticipant}>
           <LogOut />
           Leave
         </Button>
       </div>
-      {/*Middle: Quiz Question*/}
-      <QuizView />
-      {/*Bottom: Team info */}
-      <TeamInfo
-        name={participantData.name}
-        score={participantData.score}
-        avatar={participantData.avatar}
+
+      {/* Middle: Quiz Question */}
+      <QuizView
+        questions={questions}
+        currentSlide={currentSlide}
+        participantData={participantData}
+        answerQuestion={answerQuestion}
+        showAnswer={showAnswer}
       />
+
+      {/* Bottom: Team info */}
+      <TeamInfo participant={participantData} />
     </div>
   );
 }
