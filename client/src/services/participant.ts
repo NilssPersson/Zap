@@ -28,9 +28,8 @@ export const addParticipant = async (quizCode:string, name:string, avatar:string
     await set(teamRef, {
       score: 0,
       hasAnswered: false,
-      answer: "",
+      answers: [],
       name: name,
-      answerTime: "",
       avatar: avatar,
       participantId: participantId,
     });
@@ -40,7 +39,13 @@ export const addParticipant = async (quizCode:string, name:string, avatar:string
   }
 };
 
-export const addAnswer = async (quizCode:string, participantId:string, answer:string) => {
+export const addAnswer = async (
+  quizCode: string,
+  participantId: string,
+  answer: string[],
+  slideNumber: number
+) => {
+  
   const participantInQuiz = await participantExists(quizCode, participantId);
 
   if (!participantInQuiz) {
@@ -48,18 +53,39 @@ export const addAnswer = async (quizCode:string, participantId:string, answer:st
     return;
   }
 
-  const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+  const participantRef = ref(
+    database,
+    `ongoingQuizzes/${quizCode}/participants/${participantId}`
+  );
+  const participantSnap = await get(participantRef);
+
+  if (!participantSnap.exists()) {
+    console.error("Participant data not found");
+    return;
+  }
+
+  const participantData = participantSnap.val();
+  const participantAnswers = participantData.answers || [];
+
+  const newAnswer = {
+    slideNumber,
+    answer,
+    time: new Date().toISOString(),
+  };
+
+  const updatedAnswers = [...participantAnswers, newAnswer];
 
   try {
     await update(participantRef, {
-      answer: answer,
+      answers: updatedAnswers,
       hasAnswered: true,
-      answerTime: new Date().toISOString(),
     });
+    console.log("Answer successfully added and updated.");
   } catch (error) {
-    console.error(error);
+    console.error("Error updating the answer:", error);
   }
 };
+
 
 export const useGameStatus = (quizCode:string, participantId:string) => {
   const [currentSlide, setCurrentSlide] = useState<number>(0);

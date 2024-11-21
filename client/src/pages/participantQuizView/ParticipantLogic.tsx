@@ -103,9 +103,9 @@ export default function ParticipantLogic() {
     setQuestions(questions);
   }
 
-  async function answerQuestion(answer: string) {
+  async function answerQuestion(answer: string[]) {
     if (!quizCode || !participantId || !answer) return;
-    await addAnswer(quizCode, participantId, answer);
+    await addAnswer(quizCode, participantId, answer, currentSlide - 1);
   }
 
   // Check if a participant has been created
