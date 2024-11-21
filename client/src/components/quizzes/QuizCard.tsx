@@ -23,7 +23,7 @@ interface QuizCardProps {
 export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
     return (
         <Card
-            className="transition-transform hover:scale-[101%] cursor-pointer"
+            className="cursor-pointer"
             onClick={onClick}
         >
             <CardHeader>

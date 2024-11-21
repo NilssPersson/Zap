@@ -19,6 +19,13 @@ class QuizService extends BaseService<Quiz> {
     });
   }
 
+  async update(id: string, quiz: Partial<Quiz>): Promise<FirebaseResponse<Quiz>> {
+    return super.update(id, {
+      ...quiz,
+      updated_at: new Date().toISOString().toLocaleString(),
+    });
+  }
+
   async getByUserId(userId: string): Promise<FirebaseResponse<Quiz[]>> {
     try {
       const userQuizzesRef = query(

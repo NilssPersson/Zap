@@ -27,21 +27,29 @@ function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-      {quizzes.map((quiz) => (
-        <QuizCard
-          key={quiz.id}
-          quiz={quiz}
-          onClick={() => navigate(`/quizzes/${quiz.id}/edit`)}
-        >
-          <MyQuizButtons 
-            quiz={quiz} 
-            onHost={handleHostGame} 
-            onShare={(quiz) => console.log('Share clicked', quiz)} 
-            onDelete={onDeleteQuiz} 
-          />
-        </QuizCard>
-      ))}
+    <div className="flex overflow-x-auto overflow-y-visible gap-2 pb-2">
+      {[...quizzes]
+        .sort((a, b) => {
+          const aDate = a.updated_at || a.created_at;
+          const bDate = b.updated_at || b.created_at;
+          return new Date(bDate).getTime() - new Date(aDate).getTime();
+        })
+        .map((quiz) => (
+          <div className="flex-none w-[300px]">
+            <QuizCard
+              key={quiz.id}
+              quiz={quiz}
+              onClick={() => navigate(`/quizzes/${quiz.id}/edit`)}
+            >
+              <MyQuizButtons 
+                quiz={quiz} 
+                onHost={handleHostGame} 
+                onShare={(quiz) => console.log('Share clicked', quiz)} 
+                onDelete={onDeleteQuiz} 
+              />
+            </QuizCard>
+          </div>
+        ))}
     </div>
   );
 }

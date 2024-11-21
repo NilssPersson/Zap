@@ -5,6 +5,7 @@ export interface Quiz {
   quiz_name: string;
   user_id: string;
   created_at: string;
+  updated_at?: string;
   played_at?: string;
   primary_color: string;
   secondary_color: string;
