@@ -9,9 +9,10 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
+import { RankSlide } from "@/models/Quiz";
 
 interface RankViewProps {
-  question: { title: string; ranking: string[] };
+  slide: RankSlide;
   answerQuestion: (answer: string[]) => void;
 }
 
@@ -42,7 +43,13 @@ function DraggableItem({ text, index }: { text: string; index: number }) {
 }
 
 // Main RankView component
-export default function RankView({ question, answerQuestion }: RankViewProps) {
+export function Participant({ slide, answerQuestion }: RankViewProps) {
+  return (
+    <>
+      <p>Har breakat allt sry</p>
+    </>
+  );
+
   const [currentRanking, setCurrentRanking] = useState<string[]>([]);
 
   useEffect(() => {
@@ -53,8 +60,8 @@ export default function RankView({ question, answerQuestion }: RankViewProps) {
         .sort((a, b) => a.sort - b.sort)
         .map((item) => item.value);
 
-    setCurrentRanking(shuffleArray([...question.ranking]));
-  }, [question.ranking]);
+    setCurrentRanking(shuffleArray([...slide.ranking]));
+  }, [slide.ranking]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -85,7 +92,7 @@ export default function RankView({ question, answerQuestion }: RankViewProps) {
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="flex flex-col items-center w-full max-w-md mx-auto space-y-4">
-        <h3 className="text-2xl font-bold text-center">{question.title}</h3>
+        <h3 className="text-2xl font-bold text-center">{slide.title}</h3>
         <div className="flex flex-col w-full space-y-2">
           {currentRanking.map((text, index) => (
             <DraggableItem key={index} text={text} index={index} />

@@ -1,5 +1,6 @@
 export * from './Preview';
 export * from './Toolbar';
+export * from './Participant';
 
 import { QuestionTypes, SlideTypes } from '@/models/Quiz';
 import { ListOrdered } from "lucide-react";
