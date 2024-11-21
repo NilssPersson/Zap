@@ -18,6 +18,7 @@ interface SlideInfo {
     label: string;
     slideType: SlideType;
     questionType?: QuestionType;
+    defaults: Partial<Slide>;
 }
 
 export type { ToolbarProps, SlideInfo };

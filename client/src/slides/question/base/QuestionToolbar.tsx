@@ -3,6 +3,7 @@ import { ToolbarProps } from "@/slides/";
 import DefaultToolbar from "@/slides/toolbar/DefaultToolbar";
 import { Label } from "@/components/ui/label";
 import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 interface BaseQuestionToolbarProps extends ToolbarProps {
     children?: React.ReactNode;
@@ -29,6 +30,11 @@ export function BaseQuestionToolbar({ slide, onSlideUpdate, children }: BaseQues
                         <SelectItem value="never">Never</SelectItem>
                     </SelectContent>
                 </Select>
+            </div>
+
+            <div className="flex items-center space-x-2">
+                <Label>Time Limit</Label>
+                <Input type="number" value={slide.timeLimit} onChange={(e) => onSlideUpdate({ ...slide, timeLimit: parseInt(e.target.value) })} />
             </div>
             {children}
         </>

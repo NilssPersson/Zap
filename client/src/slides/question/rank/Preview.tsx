@@ -8,4 +8,4 @@ export function Preview({ slide }: { slide: RankSlide }) {
             <SlideRank ranking={slide.ranking} />
         </BaseQuestionRender>
     );
-} 
+};

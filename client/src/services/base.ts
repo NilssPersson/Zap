@@ -1,5 +1,5 @@
 import { database } from "@/firebase";
-import { ref, get, set, update, remove, DatabaseReference } from "firebase/database";
+import { ref, get, set, update, remove, DatabaseReference, Query } from "firebase/database";
 
 export type FirebaseResponse<T> = {
   data: T | null;
@@ -54,7 +54,7 @@ export class BaseService<T> {
     }
   }
 
-  protected transformFirebaseResponse(snapshot: { [key: string]: any }): T[] {
+  protected transformFirebaseResponse(snapshot: { [key: string]: T }): T[] {
     if (!snapshot) return [];
     return Object.entries(snapshot).map(([id, value]) => ({
       id,
@@ -62,9 +62,9 @@ export class BaseService<T> {
     })) as T[];
   }
 
-  async list(): Promise<FirebaseResponse<T[]>> {
+  async list(ref?: DatabaseReference | Query): Promise<FirebaseResponse<T[]>> {
     try {
-      const snapshot = await get(this.getRef());
+      const snapshot = await get(ref || this.getRef());
       return { 
         data: this.transformFirebaseResponse(snapshot.val()),
         error: null 
