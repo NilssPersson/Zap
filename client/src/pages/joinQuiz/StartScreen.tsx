@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { InfoIcon } from "lucide-react";
-import { checkIfGameExists } from "@/services/participant";
+import { ParticipantService } from "@/services/participant";
 import { useNavigate } from "react-router-dom";
 
 export default function StartScreen() {
@@ -12,7 +12,7 @@ export default function StartScreen() {
   const navigate = useNavigate();
 
   async function checkCode() {
-    const quizExists = await checkIfGameExists(quizCode);
+    const quizExists = await ParticipantService.checkIfGameExists(quizCode);
     if (quizExists) {
       // Join the game
       navigate(`/play/${quizCode}`);
