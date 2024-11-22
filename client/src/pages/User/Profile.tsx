@@ -92,6 +92,7 @@ function Profile() {
             placeholder="Username"
             className="text-[#333333] text-center border-gray-400 rounded-md font-display text-4xl md:text-4xl py-8 px-12 w-full shadow-lg"
             value={username}
+            maxLength={15}
             onChange={(e) => {
               setUsername(e.target.value);
               setUpdateStatus(null); // Reset the update status whenever the username changes

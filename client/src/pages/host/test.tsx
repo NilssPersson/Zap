@@ -3,13 +3,7 @@ import Avatar, { genConfig } from "react-nice-avatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Participant } from "@/models/Quiz";
 
-function Counter({
-  value,
-  shouldAnimate,
-}: {
-  value: number;
-  shouldAnimate: boolean;
-}) {
+function Counter({ value, shouldAnimate }: { value: number; shouldAnimate: boolean }) {
   const [displayValue, setDisplayValue] = useState(value);
 
   useEffect(() => {
@@ -41,16 +35,10 @@ interface ScoreBoardProps {
 
 function ScoreBoard({ scoreboard }: ScoreBoardProps) {
   const [participants, setParticipants] = useState(
-    Object.values(scoreboard).map((p) => {
-      const totalScore = p.score.reduce((sum, s) => sum + s, 0);
-      const previousTotalScore =
-        totalScore - (p.score[p.score.length - 1] || 0); // Sum minus last score
-      return {
-        ...p,
-        totalScore,
-        previousTotalScore,
-      };
-    })
+    Object.values(scoreboard).map((p) => ({
+      ...p,
+      totalScore: p.score.reduce((sum, s) => sum + s, 0), // Calculate initial total score
+    }))
   );
 
   const [isFirstRender, setIsFirstRender] = useState(true);
@@ -58,11 +46,14 @@ function ScoreBoard({ scoreboard }: ScoreBoardProps) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Update total scores to the actual total
-      const updatedPlayers = participants.map((participant) => ({
-        ...participant,
-        previousTotalScore: participant.totalScore, // Update previousTotalScore to match totalScore
-      }));
+      // Update total scores
+      const updatedPlayers = participants.map((participant) => {
+        const totalScore = participant.score.reduce((sum, s) => sum + s, 0);
+        return {
+          ...participant,
+          totalScore,
+        };
+      });
 
       // Sort by total scores
       updatedPlayers.sort((a, b) => b.totalScore - a.totalScore);
@@ -73,7 +64,7 @@ function ScoreBoard({ scoreboard }: ScoreBoardProps) {
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [participants]);
+  }, [scoreboard, participants]); // Only run when the `scoreboard` prop changes
 
   return (
     <div className="flex-1 w-full flex-col items-center justify-center overflow-hidden p-4">
@@ -89,26 +80,17 @@ function ScoreBoard({ scoreboard }: ScoreBoardProps) {
               transition={{ duration: 2 }}
               className="flex items-center space-x-4 m-3 w-full max-w-md justify-start"
             >
-              <span className=" font-display text-component-background text-6xl  w-8">
+              <span className="text-component-background font-display text-3xl w-8">
                 {index + 1}
               </span>
               <Avatar
-                style={{ width: "4rem", height: "4rem" }}
+                style={{ width: "8rem", height: "8rem" }}
                 {...genConfig(participant.avatar)}
               />
-              <div className="bg-component-background flex items-center justify-between font-display p-4 rounded-lg w-full flex-grow min-w-0">
-                <span className="text-textonwbg-grayonw text-3xl truncate">
-                  {participant.name}
-                </span>
-                <span className="text-textonwbg-grayonw text-3xl">
-                  <Counter
-                    value={
-                      isScoresUpdated
-                        ? participant.totalScore // Final total score
-                        : participant.previousTotalScore // Initial score
-                    }
-                    shouldAnimate={isScoresUpdated}
-                  />
+              <div className="bg-component-background flex items-center justify-between font-display px-2 py-2 rounded-lg w-full">
+                <span className="text-textonwbg-grayonw text-2xl">{participant.name}</span>
+                <span className="text-textonwbg-grayonw text-2xl">
+                  <Counter value={participant.totalScore} shouldAnimate={isScoresUpdated} />
                 </span>
               </div>
             </motion.div>

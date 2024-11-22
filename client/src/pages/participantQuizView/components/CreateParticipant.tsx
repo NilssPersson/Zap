@@ -175,6 +175,7 @@ export default function CreateParticipant({
                 }`}
                 value={guestName}
                 onChange={handleGuestNameChange}
+                maxLength={15}
               />
               {/* Join */}
               {showError && (
@@ -212,6 +213,7 @@ export default function CreateParticipant({
               showError && "border-red-500 animate-shake"
             }`}
             value={name}
+            maxLength={15}
             onChange={handleNameChange}
           />
           {/* Join */}

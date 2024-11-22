@@ -61,14 +61,9 @@ export interface InfoSlide extends BaseSlide {
   type: SlideTypes.info;
 }
 
-export interface ScoreSlideInterface extends BaseSlide {
-  type: SlideTypes.score;
-  mockScores?: { name: string; points: number; newPoints: number }[];
-}
-
 export interface ScoreSlide extends BaseSlide {
   type: SlideTypes.score;
-  mockScores?: { name: string; points: number; newPoints: number }[];
+  participants: { [id: string]: Participant };
 }
 
 export enum answerTypes {
