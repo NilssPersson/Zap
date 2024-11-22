@@ -6,5 +6,5 @@ export function ParticipantAnswer({
 }: {
   participant: Participant;
 }) {
-  <RenderCorrectIncorrect participant={participant} />;
+  return <RenderCorrectIncorrect participant={participant} />;
 }
