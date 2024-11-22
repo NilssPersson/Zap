@@ -82,9 +82,10 @@ export default function CreateParticipant({
   };
 
   const handleGuestSubmit = () => {
-    
+    setName(guestName)
+    setAvatar(guestAvatar)
     if (!name) {
-      console.log("if no name")
+      
       setShowError(true);
       return;
     }
@@ -113,6 +114,13 @@ export default function CreateParticipant({
     setGuestName(e.target.value);
     setShowError(false);
   }
+
+  
+  function handleUpdateGuest() {
+    setName(guestName)
+    setAvatar(guestAvatar)
+  }
+
 
   return (
     <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
@@ -193,6 +201,13 @@ export default function CreateParticipant({
                 className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full shadow-lg"
               >
                 Play
+              </Button>
+
+              <Button
+                onClick={handleUpdateGuest}
+                className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full shadow-lg"
+              >
+                UPPDATERA HÄR FÖSRT LISA
               </Button>
 
               
