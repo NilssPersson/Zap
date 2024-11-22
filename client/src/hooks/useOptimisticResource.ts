@@ -20,7 +20,7 @@ export type OptimisticResponse<T> = Promise<{
   error: null;
 }>
 
-export type OptimisticCreate<T> = (newResource: Partial<T>) => OptimisticResponse<T>
+export type OptimisticCreate<T> = (newResource: Partial<T>, const_id?: string) => OptimisticResponse<T>
 
 export type OptimisticUpdate<T> = (id: string, updates: Partial<T>) => OptimisticResponse<T>
 
@@ -62,7 +62,7 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       fetchResources();
     }, [fetchResources]);
 
-    const optimisticCreate = useCallback(async (newResource: Partial<T>) => {
+    const optimisticCreate = useCallback(async (newResource: Partial<T>, const_id?: string) => {
       const tempId = `temp_${Date.now()}`;
       const optimisticResource = {
         id: tempId,
@@ -71,7 +71,7 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
 
       setResources(prev => [optimisticResource, ...prev]);
 
-      const { data, error } = await options.api.create(newResource);
+      const { data, error } = await options.api.create(newResource, const_id);
 
       if (error) {
         setResources(prev => prev.filter(resource => resource.id !== tempId));

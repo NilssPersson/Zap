@@ -6,7 +6,7 @@ import Avatar, { genConfig } from "react-nice-avatar";
 import QRCode from "react-qr-code";
 import { Participant } from "@/models/Quiz";
 import { useAppContext } from "@/contexts/App/context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 interface LobbyProps {
@@ -25,6 +25,7 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
     ongoingQuizzes: { optimisticDelete, resources: ongoingQuizzes }
   } = useAppContext();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
     const newParticipants = Object.values(participants); // Convert object to array of participants
@@ -50,13 +51,17 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
   }, [participantList]); 
 
   const handleEndQuiz = async () => {
-    const onGoingQuiz = ongoingQuizzes.find(quiz => quiz.id === quizCode);
-    if (!onGoingQuiz) return;
+    const onGoingQuiz = ongoingQuizzes.find(quiz => quiz.id === id);
+    if (!onGoingQuiz) return navigate("/");
+
+    console.log(onGoingQuiz);
 
     await Promise.all([
-      optimisticDelete(quizCode),
+      optimisticDelete(onGoingQuiz.id),
       optimisticUpdate(onGoingQuiz.quiz.id, { isHosted: false })
     ]);
+
+    console.log("Ending quiz, navigating to /");
     navigate("/");
   }
 

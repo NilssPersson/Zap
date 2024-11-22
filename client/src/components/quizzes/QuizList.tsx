@@ -2,8 +2,8 @@ import Quiz from "@/models/Quiz"
 import { useNavigate } from "react-router-dom";
 import { useOngoingQuiz } from "@/services/host";
 import { QuizCard, MyQuizButtons, SharedQuizButtons } from "./QuizCard";
-import { quizService } from "@/services/quizzes";
 import { toast } from "sonner";
+import { useAppContext } from "@/contexts/App/context";
 
 interface QuizListProps {
     quizzes: Quiz[];
@@ -23,16 +23,28 @@ function QuizList({
     searchTerm = ""
 }: QuizListProps) {
     const navigate = useNavigate();
-    const { createOngoingQuiz } = useOngoingQuiz();
+    const { generateQuizCode } = useOngoingQuiz();
+    const { 
+        quizzes: { optimisticUpdate: updateQuiz },
+        ongoingQuizzes: { optimisticCreate: createOngoingQuiz }
+    } = useAppContext();
 
     const handleHostGame = async (quiz: Quiz) => {
         try {
-            const [{ error: updateError }, quizCode] = await Promise.all([
-              quizService.update(quiz.id, { isHosted: true }),
-              createOngoingQuiz(quiz),
+            const quizCode = await generateQuizCode();
+            const [{ error: updateError }, { error: createError }] = await Promise.all([
+              updateQuiz(quiz.id, { isHosted: true }),
+              createOngoingQuiz({
+                currentSlide: 0,
+                quiz: quiz,
+                quizId: quiz.id,
+                quizHost: quiz.user_id,
+                participants: {},
+                startedAt: new Date().toISOString().toLocaleString(),
+              }, quizCode),
             ]);
 
-            if (updateError || !quizCode) {
+            if (updateError || createError || !quizCode) {
                 toast.error("Failed to host quiz");
                 return;
             }

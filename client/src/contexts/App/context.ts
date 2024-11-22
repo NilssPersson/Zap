@@ -10,6 +10,7 @@ interface AppContextType {
     optimisticCreate: OptimisticCreate<OngoingQuiz>;
     optimisticDelete: OptimisticDelete;
     optimisticUpdate: OptimisticUpdate<OngoingQuiz>;
+    endQuiz: (quizCode: string) => Promise<boolean>;
   };
   quizzes: {
     resources: Quiz[];
