@@ -108,10 +108,10 @@ GameShack/
 - Create a new directory in /src/slides/[slide-type]
 - In the new directory create the following files:
    - Preview.tsx: Renders the slide in the quiz editor.
+   - Host.tsx: Renders the slide for the host.
    - Participant.tsx: Renders the slide for participants.
    - ParticipantAnswer.tsx: Renders the slide showing if the participant was correct/incorrect, awarded score etc.
    - Toolbar.tsx: Renders the form for editing the slide in the toolbar.
-   - Presentation.tsx: Renders the slide in the presentation view.
    - index.ts: Exports the slide components and metadata.
       - Define the slide metadata using the SlideInfo type.
          - `value` should be the same as the directory name.
