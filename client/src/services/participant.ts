@@ -27,7 +27,7 @@ export const ParticipantService = {
 
     const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
     const payload = {
-      score: 0,
+      score: [0],
       hasAnswered: false,
       answers: [],
       name,

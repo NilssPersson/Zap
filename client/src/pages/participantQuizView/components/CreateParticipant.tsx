@@ -9,11 +9,7 @@ import { userService } from "@/services/users";
 import { InfoIcon } from "lucide-react";
 
 interface CreateParticipantProps {
-  name: string;
-  avatar: string;
-  setName: (name: string) => void;
-  setAvatar: (avatar: string) => void;
-  handleAddParticipant: () => void;
+  handleAddParticipant: (name: string, avatar: string) => void;
 }
 
 function createRandomId() {
@@ -25,10 +21,7 @@ function createRandomId() {
 }
 
 export default function CreateParticipant({
-  name,
-  avatar,
-  setName,
-  setAvatar,
+  
   handleAddParticipant,
 }: CreateParticipantProps) {
   const [showError, setShowError] = useState(false);
@@ -36,6 +29,8 @@ export default function CreateParticipant({
   const { user } = useGetAuthenticatedUser();
   const [guestAvatar, setGuestAvatar] = useState (createRandomId())
   const [guestName, setGuestName] = useState("")
+  const [name, setName] = useState("")
+  const [avatar, setAvatar] = useState("")
 
 
   useEffect(() => {
@@ -67,7 +62,7 @@ export default function CreateParticipant({
     }
 
     initializeUser();
-  }, [user,setName, setAvatar]);
+  }, [user]);
 
 
   const handleSubmit = () => {
@@ -78,18 +73,17 @@ export default function CreateParticipant({
       return;
     }
 
-    handleAddParticipant();
+    handleAddParticipant(name,avatar);
   };
 
   const handleGuestSubmit = () => {
-    
-    if (!name) {
-      console.log("if no name")
+    if (!guestName) {
+      
       setShowError(true);
       return;
     }
 
-    handleAddParticipant();
+    handleAddParticipant(guestName, guestAvatar);
   };
 
   function changeAvatarClick() {
@@ -98,7 +92,7 @@ export default function CreateParticipant({
     
   }
 
-  function changeTempAvatarClick() {
+  function changeGuestAvatarClick() {
     const randomString = createRandomId();
     setGuestAvatar(randomString)
   }
@@ -107,12 +101,13 @@ export default function CreateParticipant({
     setName(e.target.value);
     setShowError(false);
   }
-
-
   function handleGuestNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setGuestName(e.target.value);
     setShowError(false);
   }
+
+  
+
 
   return (
     <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
@@ -170,7 +165,7 @@ export default function CreateParticipant({
                 style={{ width: "8rem", height: "8rem" }}
                 {...genConfig(guestAvatar)}
               />
-              <Button onClick={changeTempAvatarClick} className="mx-5 bg-blue-400">
+              <Button onClick={changeGuestAvatarClick} className="mx-5 bg-blue-400">
                 Randomize
               </Button>
               <Input
@@ -185,7 +180,7 @@ export default function CreateParticipant({
               {showError && (
                 <div className="flex justify-start items-center w-full text-red-500">
                   <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
-                  <p className="font-display">Please enter a name</p>
+                  <p className="font-display">Please enter a guest name</p>
                 </div>
               )}
               <Button
@@ -194,6 +189,8 @@ export default function CreateParticipant({
               >
                 Play
               </Button>
+
+              
 
               
             </TabsContent>
