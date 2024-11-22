@@ -6,6 +6,7 @@ import Avatar, { genConfig } from "react-nice-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 import { userService } from "@/services/users";
+import { InfoIcon } from "lucide-react";
 
 interface CreateParticipantProps {
   name: string;
@@ -33,8 +34,9 @@ export default function CreateParticipant({
   const [showError, setShowError] = useState(false);
   const [ifUserLoggedIn, setIfUserLoggedIn] = useState(false);
   const { user } = useGetAuthenticatedUser();
-  const [avatarString, setAvatarString] = useState("");
-  const [username, setUsername] = useState("");
+  const [guestAvatar, setGuestAvatar] = useState (createRandomId())
+  const [guestName, setGuestName] = useState("")
+
 
   useEffect(() => {
     async function initializeUser() {
@@ -55,9 +57,9 @@ export default function CreateParticipant({
         }
 
         if (data) {
-          setUsername(data.username || ""); // Set username
-          setAvatarString(data.avatar || ""); // Set avatar string
           setIfUserLoggedIn(true);
+          setName(data.username || "")
+          setAvatar(data.avatar || createRandomId())
         }
       } catch (error) {
         console.error("Failed to initialize user:", error);
@@ -65,9 +67,24 @@ export default function CreateParticipant({
     }
 
     initializeUser();
-  }, [user]);
+  }, [user,setName, setAvatar]);
+
+
   const handleSubmit = () => {
+    
     if (!name) {
+      console.log("if no name")
+      setShowError(true);
+      return;
+    }
+
+    handleAddParticipant();
+  };
+
+  const handleGuestSubmit = () => {
+    
+    if (!name) {
+      console.log("if no name")
       setShowError(true);
       return;
     }
@@ -78,10 +95,22 @@ export default function CreateParticipant({
   function changeAvatarClick() {
     const randomString = createRandomId();
     setAvatar(randomString);
+    
+  }
+
+  function changeTempAvatarClick() {
+    const randomString = createRandomId();
+    setGuestAvatar(randomString)
   }
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setName(e.target.value);
+    setShowError(false);
+  }
+
+
+  function handleGuestNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setGuestName(e.target.value);
     setShowError(false);
   }
 
@@ -114,7 +143,7 @@ export default function CreateParticipant({
             >
               <Avatar
                 style={{ width: "8rem", height: "8rem" }}
-                {...genConfig(avatarString)}
+                {...genConfig(avatar)}
               />
 
               <Input
@@ -122,7 +151,7 @@ export default function CreateParticipant({
                 className={`text-[#333333] text-center font-display md:text-3xl text-3xl py-8 px-12 w-full shadow-lg ${
                   showError && "border-red-500 animate-shake"
                 }`}
-                value={username}
+                value={name}
                 onChange={handleNameChange}
               />
               {/* Join */}
@@ -139,9 +168,9 @@ export default function CreateParticipant({
             >
               <Avatar
                 style={{ width: "8rem", height: "8rem" }}
-                {...genConfig(avatar)}
+                {...genConfig(guestAvatar)}
               />
-              <Button onClick={changeAvatarClick} className="mx-5 bg-blue-400">
+              <Button onClick={changeTempAvatarClick} className="mx-5 bg-blue-400">
                 Randomize
               </Button>
               <Input
@@ -149,16 +178,24 @@ export default function CreateParticipant({
                 className={`text-[#333333] text-center font-display md:text-3xl text-3xl py-8 px-12 w-full shadow-lg ${
                   showError && "border-red-500 animate-shake"
                 }`}
-                value={name}
-                onChange={handleNameChange}
+                value={guestName}
+                onChange={handleGuestNameChange}
               />
               {/* Join */}
+              {showError && (
+                <div className="flex justify-start items-center w-full text-red-500">
+                  <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
+                  <p className="font-display">Please enter a name</p>
+                </div>
+              )}
               <Button
-                onClick={handleSubmit}
+                onClick={handleGuestSubmit}
                 className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full shadow-lg"
               >
                 Play
               </Button>
+
+              
             </TabsContent>
           </div>
         </Tabs>
