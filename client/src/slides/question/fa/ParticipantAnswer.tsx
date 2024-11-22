@@ -1,18 +1,13 @@
-import { FASlide } from "@/models/Quiz";
 import { Participant } from "@/models/Quiz";
 
 export function ParticipantAnswer({
-  slide,
   participant,
 }: {
-  slide: FASlide;
   participant: Participant;
 }) {
   return (
-    <div>
-      <p>
-        Rätt svar: {slide.title}, du: {participant.name}
-      </p>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-3xl font-display text-center">{participant.name}</h1>
     </div>
   );
 }
