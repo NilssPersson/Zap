@@ -16,7 +16,7 @@ import { useAppContext } from "@/contexts/App/context";
 
 export interface LatestScore {
   id: string;
-  score: number;
+  score: number[];
 }
 
 const HostLogic: React.FC = () => {

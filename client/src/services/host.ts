@@ -5,7 +5,6 @@ import {
   ref,
   off,
   onValue,
-  runTransaction,
   update,
   set,
   get,
@@ -62,14 +61,14 @@ export const useOngoingQuiz = () => {
 
     // Get all participants to update
     if (participants) {
-      const updates: { [key: string]: any } = {};
-      participants.forEach((participant: any) => {
+      const updates: { [key: string]: boolean } = {};
+      participants.forEach((participant: Participant) => {
         updates[
           `ongoingQuizzes/${quizCode}/participants/${participant.participantId}/hasAnswered`
         ] = false;
         console.log("Reset answer for participant:", participant.participantId);
       });
-      
+
       // Apply the updates to all participants
       await update(ref(database), updates);
       const snapshot = await get(participantRef);
@@ -93,80 +92,81 @@ export const useOngoingQuiz = () => {
   const calculateScore = (
     question: QuestionSlide,
     participant: Participant,
-    updates: any
   ) => {
-    if(!participant.answers){
-        return updates;
+    if (!participant.answers) {
+      return undefined;
     }
+
+    const [answerLength, scoreLength] = [participant.answers.length, participant.score.length];
+
     const participantAnswer =
-      participant.answers[participant.answers.length - 1].answer;
-      const currentScore = participant.score[participant.score.length]
-        ? participant.score[participant.score.length]
-        : 0;
+      participant.answers[answerLength - 1].answer;
+
+    const currentScore = participant.score[scoreLength]
+      ? participant.score[scoreLength]
+      : 0;
+
     switch (question.answerType) {
       case answerTypes.singleString: {
         const correctAnswer = question.options
-          .filter((option) => option.isCorrect) 
+          .filter((option) => option.isCorrect)
           .map((option) => option.text);
 
         if (participantAnswer[0] === correctAnswer[0]) {
           const newScore = currentScore + 1000;
-          updates[`${participant.participantId}/score`] = newScore;
           console.log("Correct answer");
-        }else{console.log("wrong answer")}
-        return updates;
+          return newScore;
+        } else { console.log("wrong answer") }
+        return undefined;
       }
       // Todo, handle spelling mistakes etc.
       case answerTypes.freeText: {
         const correctAnswer = question.correctAnswer;
         if (participantAnswer[0] === correctAnswer[0]) {
           const newScore = currentScore + 1000;
-          updates[`${participant.participantId}/score`] = newScore;
+          return newScore;
         }
-        return updates;
+        return undefined;
       }
       // The answers should be the same without considering order
       case answerTypes.multipleStrings: {
-         const correctAnswer = question.options
-           .filter((option) => option.isCorrect)
-           .map((option) => option.text);
+        const correctAnswer = question.options
+          .filter((option) => option.isCorrect)
+          .map((option) => option.text);
         if (participantAnswer.length !== correctAnswer.length) {
-          return updates;
+          return undefined;
         }
         // Sort both arrays and compare
-        const sortedParticipantAnswers = [...participantAnswer].sort(
-          (a: any, b: any) => a - b
-        );
-        const sortedQuestionAnswers = [...correctAnswer].sort(
-          (a: any, b: any) => a - b
-        );
+        const sortedParticipantAnswers = [...participantAnswer].sort();
+        const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
           (value, index) => value === sortedQuestionAnswers[index]
         );
+
         if (isAnswerCorrect) {
           const newScore = currentScore + 1000;
-          return (updates[`${participant.participantId}/score`] = newScore);
+          return newScore;
         } else {
-          return updates;
+          return undefined;
         }
       }
       // The answers should be the same, with regard to order
       case answerTypes.rank: {
         const correctAnswer = question.ranking;
         if (participantAnswer.length !== correctAnswer.length) {
-          return updates;
+          return undefined;
         }
         for (let i = 0; i < participantAnswer.length; i++) {
           if (participantAnswer[i] !== correctAnswer[i]) {
-            return updates;
+            return undefined;
           }
         }
         const newScore = currentScore + 1000;
-        return (updates[`${participant.participantId}/score`] = newScore);
+        return newScore;
       }
       default: {
-        return updates;
+        return undefined;
       }
     }
   };
@@ -181,19 +181,21 @@ export const useOngoingQuiz = () => {
     );
     const participantsSnapshot = await get(participantRef);
     if (participantsSnapshot.exists()) {
-      var updates: { [key: string]: any } = {};
+      const updates: { [key: string]: Participant } = {};
 
-      participantsSnapshot.forEach((participantSnap: any) => {
+      participantsSnapshot.forEach((participantSnap: DataSnapshot) => {
         const participant = participantSnap.val() as Participant;
 
-        updates = calculateScore(currentQuestion, participant, updates);
+        const score = calculateScore(currentQuestion, participant);
+
+        if (score) {
+          updates[participant.participantId] = { ...participant, score: [...participant.score, score] };
+        }
       });
+
       try {
         console.log("Updating scores with", updates)
-        await update(
-          ref(database, `ongoingQuizzes/${quizCode}/participants/`),
-          updates
-        );
+        await updateOngoingQuiz(quizCode, { participants: updates });
 
         console.log("Scores updated and answers reset successfully.");
       } catch (error) {
@@ -216,12 +218,12 @@ export const useOngoingQuiz = () => {
       if (participantsSnapshot.exists()) {
         const latestScores: LatestScore[] = [];
 
-        participantsSnapshot.forEach((participantSnap: any) => {
-          const participant = participantSnap.val(); // Get participant data
+        participantsSnapshot.forEach((participantSnap: DataSnapshot) => {
+          const participant = participantSnap.val() as Participant; // Get participant data
 
           latestScores.push({
             id: participant.participantId,
-            score: participant.score || 0, // Default score to 0 if not set
+            score: participant.score || [], // Default score to 0 if not set
           });
         });
 
@@ -257,7 +259,7 @@ export const useOngoingQuiz = () => {
     return quizCode;
   };
 
-  async function createOngoingQuiz(_quiz: Quiz): Promise<any> {
+  async function createOngoingQuiz(_quiz: Quiz): Promise<string | undefined> {
     const db = database;
     const quizCode = await generateQuizCode();
 
@@ -286,7 +288,7 @@ export const useOngoingQuiz = () => {
   async function setIsShowingAnswer(
     quizCode: string,
     entry: boolean
-  ): Promise<any> {
+  ): Promise<void> {
     const quizRef = ref(
       database,
       `ongoingQuizzes/${quizCode}/isShowingAnswer/`
@@ -305,5 +307,6 @@ export const useOngoingQuiz = () => {
     updateScore,
     getScore,
     setIsShowingAnswer,
+    resetHasAnswered,
   };
 };
