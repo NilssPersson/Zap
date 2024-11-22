@@ -315,6 +315,7 @@ export const useOngoingQuiz = () => {
     participants,
     totalAnswers,
     createOngoingQuiz,
+    generateQuizCode,
     incrementSlide,
     getOngoingQuiz,
     updateScore,

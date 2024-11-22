@@ -12,6 +12,7 @@ import {
 import { getSlideComponents } from "@/slides/utils";
 
 import Countdown from "react-countdown";
+import { useAppContext } from "@/contexts/App/context";
 
 export interface LatestScore {
   id: string;
@@ -20,31 +21,18 @@ export interface LatestScore {
 
 const HostLogic: React.FC = () => {
   const { id } = useParams();
-  const [ongoingQuiz, setOngoingQuiz] = useState<OngoingQuiz>();
   const [showAnswer, setShowAnswer] = useState(false);
   const {
     quizCode,
     participants,
     totalAnswers,
     incrementSlide,
-    getOngoingQuiz,
     updateScore,
   } = useOngoingQuiz();
 
-  useEffect(() => {
-    const setupLobby = () => {
-      try {
-        const currentQuiz = getOngoingQuiz(id || "");
-        if (currentQuiz) {
-          setOngoingQuiz(currentQuiz);
-        }
-      } catch (error) {
-        console.error("Error setting up lobby:", error);
-      }
-    };
+  const { ongoingQuizzes: { resources: ongoingQuizzes, endQuiz, optimisticUpdate } } = useAppContext();
 
-    setupLobby();
-  }, [id, getOngoingQuiz]);
+  const ongoingQuiz = ongoingQuizzes.find(quiz => quiz.id === id);
 
   useEffect(() => {
     console.log("Checking has answered");
@@ -70,8 +58,9 @@ const HostLogic: React.FC = () => {
   const nextSlide = async () => {
     setShowAnswer(false);
     console.log("Before nextSlide ", ongoingQuiz);
-    const currentOngoingQuiz = await incrementSlide(quizCode);
-    setOngoingQuiz(currentOngoingQuiz);
+    const currentOngoingQuiz = await incrementSlide(quizCode) as OngoingQuiz;
+    if (!currentOngoingQuiz) return;
+    optimisticUpdate(currentOngoingQuiz.id, currentOngoingQuiz);
     console.log("nextSlide, fetched ongoing quiz: ", currentOngoingQuiz);
   };
 
@@ -79,7 +68,8 @@ const HostLogic: React.FC = () => {
     setShowAnswer(false);
     await updateScore(quizCode, question);
     const startedQuiz = await incrementSlide(quizCode);
-    setOngoingQuiz(startedQuiz);
+    if (!startedQuiz) return;
+    optimisticUpdate(startedQuiz.id, startedQuiz);
   };
 
   const Completionist: React.FC = () => {
@@ -112,6 +102,8 @@ const HostLogic: React.FC = () => {
       </div>
     );
   };
+
+  console.log(ongoingQuiz, id);
 
   // Render QuizLobby when currentSlide is 0
   if (ongoingQuiz?.currentSlide === 0) {
@@ -161,6 +153,7 @@ const HostLogic: React.FC = () => {
       return (
         <h1 className="text-5xl font-display">
           Your Quiz is missing slides :(
+          <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
         </h1>
       );
     }
