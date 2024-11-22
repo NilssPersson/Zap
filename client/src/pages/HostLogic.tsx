@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams /* useNavigate */ } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import QuizLobby from "./QuizLobby";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,39 +23,30 @@ export interface LatestScore {
 const HostLogic: React.FC = () => {
   const { id } = useParams();
   const [showAnswer, setShowAnswer] = useState(false);
-  const navigate = useNavigate();
 
   const {
     ongoingQuizzes: {
       resources: ongoingQuizzes,
       endQuiz,
       optimisticUpdate,
-      isLoading,
     },
   } = useAppContext();
 
-  const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.id === id);
+  const ongoingQuiz = useMemo(() => ongoingQuizzes.find((quiz) => quiz.id === id), [ongoingQuizzes, id]);
 
-  useEffect(() => {
-    // if(isLoading) return;
-    // if(!ongoingQuiz) {
-    //   console.log("Routing back");
-    //   navigate("/");
-    // }
-  }, [isLoading, ongoingQuiz]);
+  const updateParticipants = useCallback((id: string, participants: { [key: string]: Participant }) => {
+      optimisticUpdate(id, {
+        participants,
+      }, true);
+    },
+    [optimisticUpdate]
+  );
 
   usePathOnValue<Participant>(
     `ongoingQuizzes/${id}/participants`,
     (participants) => {
       if (!id) return;
-      optimisticUpdate(
-        id,
-        {
-          ...ongoingQuiz,
-          participants,
-        },
-        true
-      );
+      updateParticipants(id, participants);
     }
   );
 
