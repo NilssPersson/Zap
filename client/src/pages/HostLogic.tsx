@@ -25,21 +25,25 @@ const HostLogic: React.FC = () => {
   const [showAnswer, setShowAnswer] = useState(false);
 
   const {
-    ongoingQuizzes: {
-      resources: ongoingQuizzes,
-      endQuiz,
-      optimisticUpdate,
-    },
+    ongoingQuizzes: { resources: ongoingQuizzes, endQuiz, optimisticUpdate },
   } = useAppContext();
 
-  const ongoingQuiz = useMemo(() => ongoingQuizzes.find((quiz) => quiz.id === id), [ongoingQuizzes, id]);
+  const ongoingQuiz = useMemo(
+    () => ongoingQuizzes.find((quiz) => quiz.id === id),
+    [ongoingQuizzes, id],
+  );
 
-  const updateParticipants = useCallback((id: string, participants: { [key: string]: Participant }) => {
-      optimisticUpdate(id, {
-        participants,
-      }, true);
+  const updateParticipants = useCallback(
+    (id: string, participants: { [key: string]: Participant }) => {
+      optimisticUpdate(
+        id,
+        {
+          participants,
+        },
+        true,
+      );
     },
-    [optimisticUpdate]
+    [optimisticUpdate],
   );
 
   usePathOnValue<Participant>(
@@ -47,7 +51,7 @@ const HostLogic: React.FC = () => {
     (participants) => {
       if (!id) return;
       updateParticipants(id, participants);
-    }
+    },
   );
 
   useEffect(() => {
@@ -57,7 +61,7 @@ const HostLogic: React.FC = () => {
         const participants = Object.values(participantsObj);
 
         const totalAnswers = participants.filter(
-          (participant) => participant.hasAnswered
+          (participant) => participant.hasAnswered,
         ).length;
         // Fetch question slide
         const questionSlide = ongoingQuiz?.quiz.slides[
@@ -76,7 +80,7 @@ const HostLogic: React.FC = () => {
 
   const calculateScore = (
     question: QuestionSlide,
-    participant: Participant
+    participant: Participant,
   ) => {
     if (!participant.answers) {
       return undefined;
@@ -123,7 +127,7 @@ const HostLogic: React.FC = () => {
         const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
-          (value, index) => value === sortedQuestionAnswers[index]
+          (value, index) => value === sortedQuestionAnswers[index],
         );
 
         if (isAnswerCorrect) {
@@ -173,7 +177,7 @@ const HostLogic: React.FC = () => {
       try {
         optimisticUpdate(
           ongoingQuiz?.participants ? ongoingQuiz?.id : "",
-          updates
+          updates,
         );
         console.log("Scores updated and answers reset successfully.");
       } catch (error) {
@@ -275,7 +279,7 @@ const HostLogic: React.FC = () => {
         const SlideComponent = getSlideComponents(slide);
         return (
           <div className="flex flex-col">
-            <SlideComponent.Preview slide={slide as never} />
+            <SlideComponent.Host slide={slide as never} />
             <Button onClick={nextSlide} className="m-5">
               Next slide
             </Button>

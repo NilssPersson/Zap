@@ -3,6 +3,7 @@ export * from './Participant';
 export * from './ParticipantAnswer'
 export * from './Toolbar';
 export * from './Render';
+export * from './Host';
 
 import { SlideTypes } from '@/models/Quiz';
 import { InfoIcon } from "lucide-react";
