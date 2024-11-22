@@ -22,7 +22,7 @@ export type OptimisticResponse<T> = Promise<{
 
 export type OptimisticCreate<T> = (newResource: Partial<T>, const_id?: string) => OptimisticResponse<T>
 
-export type OptimisticUpdate<T> = (id: string, updates: Partial<T>) => OptimisticResponse<T>
+export type OptimisticUpdate<T> = (id: string, updates: Partial<T>, skipDatabase?: boolean) => OptimisticResponse<T>
 
 export type OptimisticDelete = (id: string) => OptimisticResponse<void>
 
@@ -85,10 +85,14 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       return { data, error: null };
     }, []);
 
-    const optimisticUpdate = useCallback(async (id: string, updates: Partial<T>) => {
+    const optimisticUpdate = useCallback(async (id: string, updates: Partial<T>, skipDatabase?: boolean) => {
       setResources(prev => prev.map(resource =>
         resource.id === id ? { ...resource, ...updates } : resource
       ));
+
+      if (skipDatabase) {
+        return { data: resources.find(r => r.id === id) || null, error: null };
+      }
 
       const { data, error } = await options.api.update(id, updates);
 
@@ -98,7 +102,7 @@ export function createOptimisticResourceHook<T extends BaseModel>(options: UseOp
       }
 
       return { data, error: null };
-    }, [fetchResources]);
+    }, [fetchResources, resources]);
 
     const optimisticDelete = useCallback(async (id: string) => {
       const previousResources = [...resources];
