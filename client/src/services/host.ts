@@ -20,7 +20,7 @@ export const useOngoingQuiz = () => {
   const [quizCode, setQuizCode] = useState("");
   const [participants, setPaticipants] = useState<Participant[]>();
   const [totalAnswers, setTotalAnswers] = useState(0);
-  const { ongoingQuizzes: { resources: ongoingQuizzes } } = useAppContext();
+  const { ongoingQuizzes: { resources: ongoingQuizzes, optimisticUpdate: updateOngoingQuiz } } = useAppContext();
 
   useEffect(() => {
     if (!quizCode) return;
@@ -83,27 +83,11 @@ export const useOngoingQuiz = () => {
 
   // Function to update question number in Firebase
   const incrementSlide = async (quizCode: string) => {
-    const slideOrderRef = ref(
-      database,
-      `ongoingQuizzes/${quizCode}/currentSlide`
-    );
-    try {
-      // Increment CurrentSlideOrder by 1
-      await runTransaction(slideOrderRef, (currentValue) => {
-        return currentValue + 1;
-      });
-      console.log("CurrentSlideOrder incremented");
-
-      await resetHasAnswered(quizCode);
-      console.log("All participants' answers reset successfully");
-    } catch (error) {
-      console.error(
-        "Error updating CurrentSlideOrder or resetting participants:",
-        error
-      );
-    }
-    const ongoingQuiz = await get(ref(database, `ongoingQuizzes/${quizCode}`));
-    return ongoingQuiz.val();
+    const ongoingQuiz = getOngoingQuiz(quizCode);
+    if (!ongoingQuiz) return;
+    const newOngoingQuiz = { ...ongoingQuiz, currentSlide: ongoingQuiz.currentSlide + 1 };
+    updateOngoingQuiz(quizCode, newOngoingQuiz);
+    return newOngoingQuiz;
   };
 
   const calculateScore = (
