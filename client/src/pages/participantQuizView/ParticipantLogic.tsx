@@ -126,13 +126,13 @@ export default function ParticipantLogic() {
     }
   };
 
-  const handleAddParticipant = async () => {
-    if (!quizCode || !name || !avatar) return;
+  const handleAddParticipant = async (participantName: string, participantAvatar: string) => {
+    if (!quizCode || !participantName || !participantAvatar) return;
     try {
       const createdId = await ParticipantService.addParticipant(
         quizCode,
-        name,
-        avatar,
+        participantName,
+        participantAvatar,
       );
       if (createdId) {
         setCookie("participantId", createdId);

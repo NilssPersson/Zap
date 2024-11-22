@@ -13,7 +13,7 @@ interface CreateParticipantProps {
   avatar: string;
   setName: (name: string) => void;
   setAvatar: (avatar: string) => void;
-  handleAddParticipant: () => void;
+  handleAddParticipant: (name: string, avatar: string) => void;
 }
 
 function createRandomId() {
@@ -78,19 +78,17 @@ export default function CreateParticipant({
       return;
     }
 
-    handleAddParticipant();
+    handleAddParticipant(name,avatar);
   };
 
   const handleGuestSubmit = () => {
-    setName(guestName)
-    setAvatar(guestAvatar)
     if (!name) {
       
       setShowError(true);
       return;
     }
 
-    handleAddParticipant();
+    handleAddParticipant(guestName, guestAvatar);
   };
 
   function changeAvatarClick() {
@@ -108,18 +106,12 @@ export default function CreateParticipant({
     setName(e.target.value);
     setShowError(false);
   }
-
-
   function handleGuestNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setGuestName(e.target.value);
     setShowError(false);
   }
 
   
-  function handleUpdateGuest() {
-    setName(guestName)
-    setAvatar(guestAvatar)
-  }
 
 
   return (
@@ -203,12 +195,7 @@ export default function CreateParticipant({
                 Play
               </Button>
 
-              <Button
-                onClick={handleUpdateGuest}
-                className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full shadow-lg"
-              >
-                UPPDATERA HÄR FÖSRT LISA
-              </Button>
+              
 
               
             </TabsContent>
