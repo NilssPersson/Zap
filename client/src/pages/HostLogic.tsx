@@ -13,6 +13,7 @@ import { getSlideComponents } from "@/slides/utils";
 
 import Countdown from "react-countdown";
 import { useAppContext } from "@/contexts/App/context";
+import { usePathOnValue } from "@/hooks/usePathOnValue";
 
 export interface LatestScore {
   id: string;
@@ -36,10 +37,27 @@ const HostLogic: React.FC = () => {
   const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.id === id);
 
   useEffect(() => {
-    if (!isLoading && !ongoingQuiz) {
-      navigate("/");
-    }
+    // if(isLoading) return;
+    // if(!ongoingQuiz) {
+    //   console.log("Routing back");
+    //   navigate("/");
+    // }
   }, [isLoading, ongoingQuiz]);
+
+  usePathOnValue<Participant>(
+    `ongoingQuizzes/${id}/participants`,
+    (participants) => {
+      if (!id) return;
+      optimisticUpdate(
+        id,
+        {
+          ...ongoingQuiz,
+          participants,
+        },
+        true
+      );
+    }
+  );
 
   useEffect(() => {
     const checkAnsweres = async () => {
@@ -223,7 +241,10 @@ const HostLogic: React.FC = () => {
   };
 
   // Render QuizLobby when currentSlide is 0
-  if (ongoingQuiz?.currentSlide === 0) {
+  if (ongoingQuiz?.currentSlide == 0) {
+    console.log("ongoing quiz object", ongoingQuiz);
+    console.log("ongoing quiz", Object.values(ongoingQuiz));
+    console.log("Participants:", ongoingQuiz.participants);
     return (
       <div>
         <div className="flex flex-col">
