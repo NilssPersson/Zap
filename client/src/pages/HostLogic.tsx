@@ -35,7 +35,7 @@ const HostLogic: React.FC = () => {
   const ongoingQuiz = ongoingQuizzes.find(quiz => quiz.id === id);
 
   useEffect(() => {
-    console.log("Checking has answered");
+    
     const checkAnsweres = async () => {
       if ((ongoingQuiz?.currentSlide ? ongoingQuiz?.currentSlide : 0) > 0) {
         const currentSlide =
@@ -58,7 +58,7 @@ const HostLogic: React.FC = () => {
   const nextSlide = async () => {
     setShowAnswer(false);
     console.log("Before nextSlide ", ongoingQuiz);
-    const currentOngoingQuiz = await incrementSlide(quizCode) as OngoingQuiz;
+    const currentOngoingQuiz = await incrementSlide(ongoingQuiz?.id? ongoingQuiz?.id : "") as OngoingQuiz;
     if (!currentOngoingQuiz) return;
     optimisticUpdate(currentOngoingQuiz.id, currentOngoingQuiz);
     console.log("nextSlide, fetched ongoing quiz: ", currentOngoingQuiz);
@@ -66,8 +66,10 @@ const HostLogic: React.FC = () => {
 
   const nextSlideAfterQuestion = async (question: QuestionSlide) => {
     setShowAnswer(false);
-    await updateScore(quizCode, question);
-    const startedQuiz = await incrementSlide(quizCode);
+    await updateScore(ongoingQuiz?.id ? ongoingQuiz?.id : "", question);
+    const startedQuiz = await incrementSlide(
+      ongoingQuiz?.id ? ongoingQuiz?.id : ""
+    );
     if (!startedQuiz) return;
     optimisticUpdate(startedQuiz.id, startedQuiz);
   };
@@ -111,7 +113,7 @@ const HostLogic: React.FC = () => {
       <div>
         <div className="flex flex-col">
           <QuizLobby
-            quizCode={quizCode}
+            quizCode={ongoingQuiz?.id ? ongoingQuiz?.id : ""}
             participants={participants ? participants : []}
           />
           <Button onClick={nextSlide} className="m-5">
