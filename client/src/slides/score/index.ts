@@ -2,10 +2,12 @@ export * from './Preview';
 export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer'
+export * from './Host';
 
 import { SlideTypes } from '@/models/Quiz';
 import { BarChart3Icon } from "lucide-react";
 import { SlideInfo } from '..';
+
 
 export const Info: SlideInfo = {
     value: "score",
