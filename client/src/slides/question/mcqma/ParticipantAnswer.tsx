@@ -15,15 +15,13 @@ export function ParticipantAnswer({
     participant.answers.find((a) => a.slideNumber === slideNumber)?.answer ||
     [];
 
-  // Extract all correct answers from the slide
   const correctAnswers = slide.options
     .filter((opt) => opt.isCorrect)
     .map((opt) => opt.text);
 
-  // Check if the participant's answers are correct
   const wasCorrect =
-    answer.length === correctAnswers.length && // Must have the exact number of correct answers
-    correctAnswers.every((ans) => answer.includes(ans)); // All correct answers must be included
+    answer.length === correctAnswers.length &&
+    correctAnswers.every((ans) => answer.includes(ans));
 
   return wasCorrect ? <ParticipantCorrect /> : <ParticipantIncorrect />;
 }
