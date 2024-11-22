@@ -54,8 +54,7 @@ function QuizView({
 }
 
 export default function ParticipantLogic() {
-  const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState("");
+  
   const { quizCode } = useParams();
   const [participantId, setParticipantId] = useState<string | undefined>(
     undefined,
@@ -92,8 +91,7 @@ export default function ParticipantLogic() {
           // Check if the cookie corresponds to a participant in this ongoingQuiz
           if (participant) {
             setParticipantId(cookies.participantId);
-            setName(participant.name);
-            setAvatar(participant.avatar);
+            
             const slides = await ParticipantService.getQuizSlides(quizCode);
             setQuestions(slides);
           } else {
@@ -162,10 +160,7 @@ export default function ParticipantLogic() {
   if (!participantId || !participantData) {
     return (
       <CreateParticipant
-        name={name}
-        avatar={avatar}
-        setName={setName}
-        setAvatar={setAvatar}
+        
         handleAddParticipant={handleAddParticipant}
       />
     );
