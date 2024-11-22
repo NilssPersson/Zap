@@ -89,21 +89,21 @@ export default function CreateParticipant({
     <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
       {ifUserLoggedIn && (
         <Tabs defaultValue="me">
-          <div className="bg-component-background rounded-lg flex flex-col items-center justify-center gap-4 p-6 w-full">
+          <div className="bg-component-background rounded-lg flex flex-col items-center justify-center  p-6 w-full">
             {ifUserLoggedIn && (
-              <div className="flex flex-col items-center justify-center w-full max-w-md space-y-4">
-                <TabsList className="grid w-full grid-cols-2">
+              <div className="flex flex-col items-center justify-center w-full max-w-md  ">
+                <TabsList className="flex-1 space-x-10 w-full grid-cols-2 p-6 rounded-lg">
                   <TabsTrigger
-                    className="font-display md:text-2xl text-2xl"
+                    className=" rounded-lg font-display md:text-2xl text-2xl p-4 "
                     value="me"
                   >
-                    Me
+                    Play as {username}
                   </TabsTrigger>
                   <TabsTrigger
-                    className="font-display md:text-2xl text-2xl "
+                    className="rounded-lg font-display md:text-2xl text-2xl p-4"
                     value="guest"
                   >
-                    Guest
+                    Play as Guest
                   </TabsTrigger>
                 </TabsList>
               </div>
