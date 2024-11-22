@@ -2,14 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner";
 import CreateQuizPopover from "@/components/quizzes/CreateQuizPopover";
 import QuizList from "@/components/quizzes/QuizList";
-import { useCallback, useState } from "react";
-import { useGetSharedQuizzes } from "@/hooks/useGetSharedQuizzes";
+import { useCallback, useEffect, useState } from "react";
 import { Loader2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Quiz from "@/models/Quiz";
 import { useAppContext } from "@/contexts/App/context";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { quizService } from "@/services/quizzes";
 
 function useQuizzesPage() {
     const {
@@ -24,7 +24,18 @@ function useQuizzesPage() {
         ongoingQuizzes: { resources: ongoingQuizzes }
     } = useAppContext();
 
-    const { resources: sharedQuizzes, isLoading: sharedQuizzesLoading } = useGetSharedQuizzes(user?.id || "")();
+    const [sharedQuizzes, setSharedQuizzes] = useState<Quiz[]>([]);
+    const [sharedQuizzesLoading, setSharedQuizzesLoading] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            setSharedQuizzesLoading(true);
+            quizService.listShared(user.id).then(({ data }) => {
+                setSharedQuizzes(data || []);
+                setSharedQuizzesLoading(false);
+            });
+        }
+    }, [user]);
 
     const handleCreateQuiz = useCallback(async (name: string) => {
         if (!user) return;
@@ -135,7 +146,7 @@ function Quizzes() {
                         <CreateQuizPopover onCreateQuiz={handleCreateQuiz} />
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="min-h-[300px]">
                     {quizzesLoading ? (
                         <div className="flex justify-center items-center h-[300px] w-full">
                             <Loader2 className="animate-spin" />
@@ -169,7 +180,7 @@ function Quizzes() {
                         </div>
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="min-h-[300px]">
                     {sharedQuizzesLoading ? (
                         <div className="flex justify-center items-center h-[300px] w-full">
                             <Loader2 className="animate-spin" />
