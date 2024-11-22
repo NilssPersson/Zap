@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PlusIcon, WrenchIcon } from "lucide-react";
+import { PlusIcon, SaveIcon, WrenchIcon } from "lucide-react";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { CustomTooltip } from "@/components/ui/custom-tooltip";
 import { SlideCreationMenu } from "./SlideCreationMenu";
@@ -9,14 +9,25 @@ interface SidebarHeaderProps {
     quizName: string;
     onSettingsClick: () => void;
     onAddSlide: Parameters<typeof SlideCreationMenu>[0]['onAddSlide'];
+    onSaveClick: () => void;
 }
 
-export function SidebarHeader({ quizName, onSettingsClick, onAddSlide }: SidebarHeaderProps) {
+export function SidebarHeader({ quizName, onSettingsClick, onAddSlide, onSaveClick }: SidebarHeaderProps) {
     return (
         <div className="p-3">
             <span className="flex items-center justify-between gap-2">
                 <h2 className="text-xl font-bold text-secondary-foreground">{quizName}</h2>
                 <div className="flex gap-2">
+                    <CustomTooltip content="Save Quiz">
+                        <Button 
+                            size="sm" 
+                            className="aspect-square w-6 h-6"
+                            onClick={onSaveClick}
+                        >
+                            <SaveIcon className="w-4 h-4" />
+                        </Button>
+                    </CustomTooltip>
+
                     <CustomTooltip content="Quiz Settings">
                         <Button 
                             size="sm" 

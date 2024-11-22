@@ -1,8 +1,8 @@
 import { PlusIcon } from "lucide-react";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { SlideCreationMenu } from "./SlideCreationMenu";
-import type { Slide } from "@/types/quiz";
-import { SlideRender } from "./SlideRender";
+import type { Slide } from "@/models/Quiz";
+import { SlidePreview } from "./SlidePreview";
 import { useEffect } from "react";
 import { CustomTooltip } from "@/components/ui/custom-tooltip";
 import { SidebarHeader } from "./SidebarHeader";
@@ -18,6 +18,7 @@ interface SlideSidebarProps {
     onSlideDuplicate: (slideId: string) => void;
     onSlideMove: (slideId: string, direction: 'up' | 'down') => void;
     onSettingsClick: () => void;
+    onSaveClick: () => void;
     backgroundColor: string;
     primaryColor: string;
     secondaryColor: string;
@@ -33,6 +34,7 @@ export function SlideSidebar({
     onSlideDuplicate,
     onSlideMove,
     onSettingsClick,
+    onSaveClick,
     backgroundColor,
     primaryColor,
     secondaryColor
@@ -72,6 +74,7 @@ export function SlideSidebar({
                 quizName={quizName}
                 onSettingsClick={onSettingsClick}
                 onAddSlide={onAddSlide}
+                onSaveClick={onSaveClick}
             />
             
             <div className="flex-1 overflow-y-auto px-3 pt-1 slides-container">
@@ -94,7 +97,7 @@ export function SlideSidebar({
                             }}
                         >
                             <div className="cursor-pointer">
-                                <SlideRender 
+                                <SlidePreview 
                                     slide={slide} 
                                     backgroundColor={backgroundColor}
                                     primaryColor={primaryColor}

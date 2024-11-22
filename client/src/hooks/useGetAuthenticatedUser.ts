@@ -1,7 +1,7 @@
-import { userAPI } from "@/api/users";
+import { userService } from "@/services/users";
 import User from "@/models/User";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function useGetAuthenticatedUser() {
   const { user } = useKindeAuth();
@@ -14,23 +14,35 @@ function useGetAuthenticatedUser() {
 
     if (!id) return;
 
-    const fetchUser = async (id: string) => {
-      const { data, error } = await userAPI.findOrCreate(id, user.email ?? "");
+    const fetchUser = (id: string) => {
+      return userService.findOrCreate(id, user.email ?? "")
+        .then(({ data, error }) => {
+          if (error) {
+            console.error("Error fetching/creating user:", error);
+            return;
+          }
 
-      if (error) {
-        console.error("Error fetching/creating user:", error);
-        return;
-      }
-
-      if (data) {
-        setDbUser(data);
-      }
+          if (data) {
+            setDbUser(data);
+          }
+        });
     };
 
     fetchUser(id);
   }, [user, dbUser]);
 
-  return { user: dbUser };
+  const updateUser = useCallback(async (user: Partial<User>) => {
+    if (!dbUser) return;
+    const { data, error } = await userService.update(dbUser.id, user);
+    if (error) {
+      console.error("Error updating user:", error);
+    }
+    if (data) {
+      setDbUser(data);
+    }
+  }, [dbUser]);
+
+  return { user: dbUser, updateUser };
 }
 
 export default useGetAuthenticatedUser;

@@ -1,84 +1,126 @@
-import { Button } from "@/components/ui/button";
-import Quiz from "@/models/Quiz"
+import Quiz from "@/models/Quiz";
 import { useNavigate } from "react-router-dom";
-import supabase from "@/api/client";
-
+import { QuizCard, MyQuizButtons, SharedQuizButtons } from "./QuizCard";
+import { toast } from "sonner";
+import { useAppContext } from "@/contexts/App/context";
+import { database } from "@/firebase";
+import { ref, get } from "firebase/database";
 
 interface QuizListProps {
-    quizzes: Quiz[];
-    onDeleteQuiz: (quizId: string) => Promise<void>;
+  quizzes: Quiz[];
+  variant: "my-quizzes" | "shared-quizzes";
+  onDeleteQuiz?: (quizId: string) => Promise<void>;
+  onShareQuiz?: (quizId: string) => Promise<void>;
+  onCopyQuiz?: (quiz: Quiz) => Promise<void>;
+  searchTerm?: string;
 }
 
+function QuizList({
+  quizzes,
+  variant,
+  onDeleteQuiz,
+  onShareQuiz,
+  onCopyQuiz,
+  searchTerm = "",
+}: QuizListProps) {
+  const navigate = useNavigate();
+  const {
+    quizzes: { optimisticUpdate: updateQuiz },
+    ongoingQuizzes: { optimisticCreate: createOngoingQuiz },
+  } = useAppContext();
 
+  const generateQuizCode = async (): Promise<string> => {
+    let quizCode = "";
+    let isUnique = false;
 
-function QuizList({ quizzes, onDeleteQuiz }: QuizListProps) {
-    const navigate = useNavigate();
+    while (!isUnique) {
+      // Generate a random 4-letter code
+      quizCode = Array.from({ length: 4 }, () =>
+        String.fromCharCode(65 + Math.floor(Math.random() * 26))
+      ).join("");
 
-    const handleHostGame = async (quizId: string, quizHost: string) => {
-      try {
-        const quizCode = "ABCDEF";
-        const today = new Date().toISOString();
-         // Add quiz to ongoing quizes
-        const { data, error } = await supabase
-          .from("QuizOngoing")
-          .insert([
-            {
-              quiz_code: quizCode,
-              host_user_id: quizHost,
-              created_quiz_id: quizId,
-              started_at: today,
-              question_number: 0,
-            },
-          ]) 
-          .select()
-          .single();
-
-        if (error) {
-          throw error;
-        }
-
-        if (data) {
-          navigate(`/quizzes/${quizId}/lobby`);
-        }
-      } catch (error) {
-        console.error("Failed to start hosting the game:", error);
+      const quizRef = ref(database, `ongoingQuizzes/${quizCode}`);
+      const quiz = await get(quizRef);
+      if (await !quiz.exists()) {
+        isUnique = true;
+        return quizCode;
       }
-    };
+    }
+    return quizCode;
+  };
 
+  const handleHostGame = async (quiz: Quiz) => {
+    try {
+      const quizCode = await generateQuizCode();
+      const [{ error: updateError }, { error: createError }] =
+        await Promise.all([
+          updateQuiz(quiz.id, { isHosted: true }),
+          createOngoingQuiz(
+            {
+              currentSlide: 0,
+              quiz: quiz,
+              quizId: quiz.id,
+              quizHost: quiz.user_id,
+              participants: {},
+              startedAt: new Date().toISOString().toLocaleString(),
+            },
+            quizCode
+          ),
+        ]);
 
-    return (
-      <div className="mt-4 space-y-2">
-        {quizzes.map((quiz) => (
-          <div
-            key={quiz.id}
-            className="flex items-center gap-2 p-2 border rounded"
-          >
-            <span className="flex-1">{quiz.quiz_name}</span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleHostGame(quiz.id, quiz.user_id)}
+      if (updateError || createError || !quizCode) {
+        toast.error("Failed to host quiz");
+        return;
+      }
+
+      toast.success("Quiz hosted successfully");
+      navigate(`/quizzes/${quizCode}/lobby`);
+    } catch (err) {
+      console.error("Error creating ongoing quiz:", err);
+      toast.error("Failed to host quiz" + err);
+    }
+  };
+
+  const filteredQuizzes = searchTerm
+    ? quizzes.filter((quiz) =>
+        quiz.quiz_name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : quizzes;
+
+  return (
+    <div className="flex overflow-x-auto overflow-y-visible gap-2 pb-2">
+      {filteredQuizzes
+        .sort((a, b) => {
+          const aDate = a.updated_at || a.created_at;
+          const bDate = b.updated_at || b.created_at;
+          return new Date(bDate).getTime() - new Date(aDate).getTime();
+        })
+        .map((quiz) => (
+          <div key={quiz.id} className="flex-none w-[300px]">
+            <QuizCard
+              quiz={quiz}
+              onClick={
+                variant === "shared-quizzes"
+                  ? undefined
+                  : () => navigate(`/quizzes/${quiz.id}/edit`)
+              }
             >
-              Host Game
-            </Button>{" "}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate(`/quizzes/${quiz.id}/edit`)}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => onDeleteQuiz(quiz.id)}
-            >
-              Delete
-            </Button>
+              {variant === "my-quizzes" && onDeleteQuiz && onShareQuiz && (
+                <MyQuizButtons
+                  quiz={quiz}
+                  onHost={handleHostGame}
+                  onShare={onShareQuiz}
+                  onDelete={onDeleteQuiz}
+                />
+              )}
+              {variant === "shared-quizzes" && onCopyQuiz && (
+                <SharedQuizButtons quiz={quiz} onCopyToMyQuizzes={onCopyQuiz} />
+              )}
+            </QuizCard>
           </div>
         ))}
-      </div>
-    );
+    </div>
+  );
 }
 
-export default QuizList; 
+export default QuizList;

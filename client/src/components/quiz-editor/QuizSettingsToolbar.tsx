@@ -1,56 +1,43 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { ColorInput } from "./ColorInput";
+import { ShowCorrectAnswerTypes } from "@/models/Quiz";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Quiz, QuizSettings } from "@/models/Quiz";
+import { quizDefaults } from "./utils/quiz-defaults";
 
 interface QuizSettingsToolbarProps {
-    quizName: string;
-    primaryColor: string;
-    secondaryColor: string;
-    backgroundColor: string;
+    quiz: Quiz;
     onUpdate: (updates: { 
         quizName?: string; 
-        primaryColor?: string; 
-        secondaryColor?: string;
-        backgroundColor?: string;
+        settings?: QuizSettings;
     }) => void;
 }
 
 export function QuizSettingsToolbar({ 
-    quizName, 
-    backgroundColor = "#000B58",
-    primaryColor = "#006a67",
-    secondaryColor = "#fff4b7",
+    quiz,
     onUpdate 
 }: QuizSettingsToolbarProps) {
-    const [localColors, setLocalColors] = useState({
-        primary: primaryColor,
-        secondary: secondaryColor,
-        background: backgroundColor
-    });
-
-    // Validate and update colors when hex input changes
-    useEffect(() => {
+    const { quiz_name } = quiz
+    const originalSettings = useMemo(() => ({
+        ...quizDefaults,
+        ...quiz.settings,
+    }), [quiz.settings]);
+    
+    const handleColorChange = (colorKey: string, value: string) => {
         const hexRegex = /^#[0-9A-F]{6}$/i;
-        const colors = [
-            { key: 'primaryColor', value: localColors.primary, original: primaryColor },
-            { key: 'secondaryColor', value: localColors.secondary, original: secondaryColor },
-            { key: 'backgroundColor', value: localColors.background, original: backgroundColor }
-        ];
-
-        colors.forEach(({ key, value, original }) => {
-            if (hexRegex.test(value) && value !== original) {
-                onUpdate({ [key]: value });
-            }
-        });
-    }, [localColors, primaryColor, secondaryColor, backgroundColor, onUpdate]);
+        if (hexRegex.test(value)) {
+            onUpdate({ settings: { ...originalSettings, [colorKey]: value } });
+        }
+    };
 
     return (
         <div className="h-full bg-secondary/90 p-4 flex flex-col gap-4 overflow-y-auto text-black">
             <div className="space-y-2">
                 <Label>Quiz Name</Label>
                 <Input
-                    value={quizName}
+                    value={quiz_name}
                     onChange={(e) => onUpdate({ quizName: e.target.value })}
                     className="text-xl font-bold"
                     placeholder="Quiz Name"
@@ -62,24 +49,41 @@ export function QuizSettingsToolbar({
                 
                 <ColorInput
                     label="Background Color"
-                    value={localColors.background}
-                    onChange={(value) => setLocalColors(prev => ({ ...prev, background: value }))}
+                    value={originalSettings.backgroundColor}
+                    onChange={(value) => handleColorChange('backgroundColor', value)}
                     placeholder="#000B58"
                 />
 
                 <ColorInput
                     label="Primary Color"
-                    value={localColors.primary}
-                    onChange={(value) => setLocalColors(prev => ({ ...prev, primary: value }))}
+                    value={originalSettings.primaryColor}
+                    onChange={(value) => handleColorChange('primaryColor', value)}
                     placeholder="#498e77"
                 />
 
                 <ColorInput
                     label="Secondary Color"
-                    value={localColors.secondary}
-                    onChange={(value) => setLocalColors(prev => ({ ...prev, secondary: value }))}
+                    value={originalSettings.secondaryColor}
+                    onChange={(value) => handleColorChange('secondaryColor', value)}
                     placeholder="#006a67"
                 />
+            </div>
+
+            <div className="space-y-2">
+                <Label>Show Correct Answer</Label>
+                <Select
+                    value={originalSettings.showCorrectAnswerDefault || "auto"}
+                    onValueChange={(value) => onUpdate({ settings: { ...originalSettings, showCorrectAnswerDefault: value as ShowCorrectAnswerTypes } })}
+                >
+                    <SelectTrigger>
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="auto">Auto</SelectItem>
+                        <SelectItem value="manual">Manual</SelectItem>
+                        <SelectItem value="never">Never</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
         </div>
     );

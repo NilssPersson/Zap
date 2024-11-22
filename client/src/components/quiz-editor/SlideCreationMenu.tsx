@@ -1,57 +1,60 @@
 import { Separator } from "@/components/ui/separator";
 import { PopoverContent } from "@/components/ui/popover";
-import { 
-    InfoIcon, 
-    BarChart3Icon, 
-    CircleDotIcon, 
-    CheckSquareIcon, 
-    TypeIcon 
-} from "lucide-react";
-import type { SlideType, QuestionType } from "@/types/quiz";
+import { type SlideType, type QuestionType, SlideTypes } from "@/models/Quiz";
+import * as Slides from "@/slides";
 import { SlideOption } from "./SlideOption";
+import { SlideInfo } from "@/slides";
 
 interface SlideCreationMenuProps {
-    onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
+  onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
+}
+
+// Replace existing slides and questions arrays with optionGroups
+const optionGroups = [
+  {
+    label: "Slides",
+    options: Object.values(Slides)
+      .filter((slide) => slide.Info.slideType !== SlideTypes.question)
+      .map((slide) => slide.Info)
+  },
+  {
+    label: "Question Types",
+    options: Object.values(Slides)
+      .filter((slide) => slide.Info.slideType === SlideTypes.question)
+      .map((slide) => slide.Info)
+  }
+] as const;
+
+interface RenderOptionsProps {
+  options: SlideInfo[];
+  onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
+}
+
+function RenderOptions({ options, onAddSlide }: RenderOptionsProps) {
+  return options.map((option) => {
+    return (
+      <SlideOption
+        key={option.value}
+        label={option.label}
+        icon={option.icon}
+        onClick={() => onAddSlide(option.slideType, option.questionType)}
+      />
+    );
+  });
 }
 
 export function SlideCreationMenu({ onAddSlide }: SlideCreationMenuProps) {
-
-    const handleAddSlide = (type: SlideType, questionType?: QuestionType) => {
-        onAddSlide(type, questionType);
-    };
-
-    return (
-        <PopoverContent className="w-56">
-            <div className="space-y-2">
-                <h4 className="font-medium leading-none mb-3">Add Slide</h4>
-                <SlideOption 
-                    label="Information Slide"
-                    icon={InfoIcon}
-                    onClick={() => handleAddSlide("info")}
-                />
-                <SlideOption 
-                    label="Score Slide"
-                    icon={BarChart3Icon}
-                    onClick={() => handleAddSlide("score")}
-                />
-                <Separator className="my-2" />
-                <h4 className="font-medium leading-none mb-2">Question Types</h4>
-                <SlideOption 
-                    label="Single Answer MCQ"
-                    icon={CircleDotIcon}
-                    onClick={() => handleAddSlide("question", "MCQSA")}
-                />
-                <SlideOption 
-                    label="Multiple Answer MCQ"
-                    icon={CheckSquareIcon}
-                    onClick={() => handleAddSlide("question", "MCQMA")}
-                />
-                <SlideOption 
-                    label="Free Answer"
-                    icon={TypeIcon}
-                    onClick={() => handleAddSlide("question", "FA")}
-                />
-            </div>
-        </PopoverContent>
-    );
-} 
+  return (
+    <PopoverContent className="w-56">
+      <div className="space-y-2">
+        {optionGroups.map((group, index) => (
+          <div key={group.label} className="flex flex-col gap-2">
+            {index > 0 && <Separator className="my-2" />}
+            <h4 className="font-medium leading-none mb-3">{group.label}</h4>
+            <RenderOptions options={group.options} onAddSlide={onAddSlide} />
+          </div>
+        ))}
+      </div>
+    </PopoverContent>
+  );
+}

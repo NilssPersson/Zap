@@ -12,6 +12,10 @@ module.exports = {
     },
     extend: {
       keyframes: {
+        "zoom-in": {
+          "0%": { transform: "scale(0.5)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
         "accordion-down": {
           from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -20,10 +24,26 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        shake: {
+          "10%, 90%": {
+            transform: "translate3d(-0.5px, 0, 0)",
+          },
+          "20%, 80%": {
+            transform: "translate3d(1px, 0, 0)",
+          },
+          "30%, 50%, 70%": {
+            transform: "translate3d(-1.5px, 0, 0)",
+          },
+          "40%, 60%": {
+            transform: "translate3d(1.5px, 0, 0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        shake: "shake 0.6s cubic-bezier(.36,.07,.19,.97) both",
+        "zoom-in": "zoom-in 0.5s ease-in-out",
       },
       colors: {
         primary: "hsl(var(--primary))",
@@ -50,9 +70,13 @@ module.exports = {
         "chart-3": "hsl(var(--chart-3))",
         "chart-4": "hsl(var(--chart-4))",
         "chart-5": "hsl(var(--chart-5))",
-      }
+        component: "hsl(var(--component))",
+        "component-background": "hsl(var(--component-background))",
+        textonwbg: "hsl(var(--textonwbg))",
+        "textonwbg-grayonw": "hsl(var(--textonwbg-grayonw))",
+      },
     },
   },
+  safelist: ["animate-[zoom-in_0.5s_ease-in-out]"],
   plugins: [require("tailwindcss-animate")],
-}
-
+};
