@@ -27,7 +27,6 @@ function QuizView({
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
   if (currentSlide === 0) return <LobbyView />;
-  if (participantData.hasAnswered) return <HasAnsweredView />;
   if (currentSlide > questions.length) return <QuizEndedView />;
 
   const currentQuestion = questions[currentSlide - 1];
@@ -39,9 +38,12 @@ function QuizView({
       <SlideComponent.ParticipantAnswer
         slide={currentQuestion as never}
         participant={participantData}
+        slideNumber={currentSlide - 1}
       />
     );
   }
+
+  if (participantData.hasAnswered) return <HasAnsweredView />;
 
   return (
     <SlideComponent.Participant
@@ -73,6 +75,7 @@ export default function ParticipantLogic() {
       if (!quizCode) return;
 
       try {
+        // Check if the ongoingQuiz exists, if not send the player back to /play
         const quizExists = await ParticipantService.checkIfGameExists(quizCode);
         if (!quizExists) {
           navigate("/play");
@@ -80,11 +83,13 @@ export default function ParticipantLogic() {
           return;
         }
 
+        // Check if a cookie exists
         if (cookies.participantId) {
           const participant = await ParticipantService.getParticipant(
             quizCode,
             cookies.participantId,
           );
+          // Check if the cookie corresponds to a participant in this ongoingQuiz
           if (participant) {
             setParticipantId(cookies.participantId);
             setName(participant.name);
@@ -92,6 +97,7 @@ export default function ParticipantLogic() {
             const slides = await ParticipantService.getQuizSlides(quizCode);
             setQuestions(slides);
           } else {
+            // Cookie corresponds to participant in different quiz, remove it
             removeCookie("participantId");
             setParticipantId(undefined);
           }
