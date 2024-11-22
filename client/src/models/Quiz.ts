@@ -66,14 +66,14 @@ export interface ScoreSlide extends BaseSlide {
   participants: { [id: string]: Participant };
 }
 
-export enum answerTypes {
-  singleString = "singleString", 
+export enum AnswerTypes {
+  singleString = "singleString",
   multipleStrings = "multipleStrings",
   freeText = "freeText",
   rank = "rank",
 }
 
-export type answerType = answerTypes;
+export type answerType = AnswerTypes;
 
 export enum ShowCorrectAnswerTypes {
   auto = "auto",
@@ -92,7 +92,7 @@ interface QuestionSlideBase extends BaseSlide {
 export interface RankSlide extends QuestionSlideBase {
   ranking: string[];
   questionType: QuestionTypes.RANK;
-  answerType: answerTypes.rank;
+  answerType: AnswerTypes.rank;
 }
 
 export interface MCQSASlide extends QuestionSlideBase {
@@ -102,7 +102,7 @@ export interface MCQSASlide extends QuestionSlideBase {
     text: string;
     isCorrect: boolean;
   }>;
-  answerType: answerTypes.singleString;
+  answerType: AnswerTypes.singleString;
 }
 
 export interface MCQMASlide extends QuestionSlideBase {
@@ -112,13 +112,13 @@ export interface MCQMASlide extends QuestionSlideBase {
     text: string;
     isCorrect: boolean;
   }>;
-  answerType: answerTypes.multipleStrings;
+  answerType: AnswerTypes.multipleStrings;
 }
 
 export interface FASlide extends QuestionSlideBase {
   questionType: QuestionTypes.FA;
+  answerType: AnswerTypes.freeText;
   correctAnswer: string;
-  answerType: answerTypes.freeText;
 }
 
 export interface OngoingQuiz {
