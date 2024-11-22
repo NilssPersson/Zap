@@ -38,7 +38,6 @@ function QuizView({
       <SlideComponent.ParticipantAnswer
         slide={currentQuestion as never}
         participant={participantData}
-        slideNumber={currentSlide - 1}
       />
     );
   }
