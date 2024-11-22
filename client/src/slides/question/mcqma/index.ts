@@ -3,7 +3,7 @@ export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer'
 
-import { QuestionTypes, SlideTypes, answerTypes } from '@/models/Quiz';
+import { QuestionTypes, SlideTypes, AnswerTypes } from '@/models/Quiz';
 import { CheckSquareIcon } from "lucide-react";
 import { SlideInfo } from '../..';
 
@@ -19,7 +19,6 @@ export const Info: SlideInfo = {
             text: `Option ${i + 1}`,
             isCorrect: i <= 1,
         })),
-        answerType: answerTypes.multipleStrings,
-        answer: [],
+        answerType: AnswerTypes.multipleStrings,
     }
 } as const; 

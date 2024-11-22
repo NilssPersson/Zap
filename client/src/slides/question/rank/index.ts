@@ -3,7 +3,7 @@ export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer';
 
-import { QuestionTypes, SlideTypes, answerTypes } from '@/models/Quiz';
+import { QuestionTypes, SlideTypes, AnswerTypes } from '@/models/Quiz';
 import { ListOrdered } from "lucide-react";
 import { SlideInfo } from '../..';
 
@@ -15,7 +15,6 @@ export const Info: SlideInfo = {
     questionType: QuestionTypes.RANK,
     defaults: {
         ranking: [],
-        answerType: answerTypes.rank,
-        answer: [],
+        answerType: AnswerTypes.rank,
     }
 } as const; 
