@@ -126,7 +126,7 @@ export default function CreateParticipant({
                     className=" rounded-lg font-display md:text-2xl text-2xl p-4 "
                     value="me"
                   >
-                    Play as {username}
+                    Play as {name}
                   </TabsTrigger>
                   <TabsTrigger
                     className="rounded-lg font-display md:text-2xl text-2xl p-4"
