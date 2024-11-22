@@ -1,18 +1,23 @@
-import { MCQSASlide } from "@/models/Quiz";
+import { RankSlide } from "@/models/Quiz";
 import { Participant } from "@/models/Quiz";
+import ParticipantCorrect from "../base/ParticipantCorrect";
+import ParticipantIncorrect from "../base/ParticipantIncorrect";
 
 export function ParticipantAnswer({
   slide,
   participant,
+  slideNumber,
 }: {
-  slide: MCQSASlide;
+  slide: RankSlide;
   participant: Participant;
+  slideNumber: number;
 }) {
-  return (
-    <div>
-      <p>
-        Rätt svar: {slide.title}, du: {participant.name}
-      </p>
-    </div>
-  );
+  const answer =
+    participant.answers.find((a) => a.slideNumber === slideNumber)?.answer ||
+    [];
+
+  // Check if the participant's ranking matches exactly with the slide's correct ranking
+  const wasCorrect = JSON.stringify(answer) === JSON.stringify(slide.ranking);
+
+  return wasCorrect ? <ParticipantCorrect /> : <ParticipantIncorrect />;
 }
