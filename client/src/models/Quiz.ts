@@ -59,6 +59,7 @@ export interface BaseSlide {
 
 export interface InfoSlide extends BaseSlide {
   type: SlideTypes.info;
+  embedVideoUrl?: string;
 }
 
 export interface ScoreSlideInterface extends BaseSlide {

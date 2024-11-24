@@ -1,6 +1,14 @@
 import { ToolbarProps } from "../";
-import DefaultToolbar from "@/slides/toolbar/DefaultToolbar";
+import TextInput from "../toolbar/TextInput";
+import ImageInput from "../toolbar/ImageInput";
+import BackgroundInput from "../toolbar/BackgroundInput";
 import { InfoIcon } from "lucide-react";
+import EmbedVideoInput from "./EmbedVideoInput";
+import { InfoSlide } from "@/models/Quiz";
+
+export interface EmbedVideoInputProps extends ToolbarProps {
+  slide: InfoSlide;
+}
 
 export const Info = {
     value: "info",
@@ -8,8 +16,27 @@ export const Info = {
     label: "Information Slide",
 } as const;
 
-export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
+export function Toolbar({ slide, onSlideUpdate }: EmbedVideoInputProps) {
     return (
-        <DefaultToolbar slide={slide} onSlideUpdate={onSlideUpdate} />
+        <>
+            <TextInput
+                slide={slide}
+                onSlideUpdate={onSlideUpdate}
+                label="Title"
+                slideKey="title"
+                placeholder="Slide Title"
+            />
+            <TextInput
+                slide={slide}
+                onSlideUpdate={onSlideUpdate}
+                label="Content"
+                slideKey="content"
+                placeholder="Slide Content"
+            />
+            <ImageInput slide={slide} onSlideUpdate={onSlideUpdate} />
+            <EmbedVideoInput slide={slide} onSlideUpdate={onSlideUpdate} />
+            <BackgroundInput slide={slide} onSlideUpdate={onSlideUpdate} />
+        </>
+        
     )
 }
