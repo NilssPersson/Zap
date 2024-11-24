@@ -81,7 +81,7 @@ function EmbedVideoInput({ slide, onSlideUpdate }: EmbedVideoInputProps) {
             className={`font-bold ${error ? "border-red-500" : ""}`}
           />
         )}
-        <div className="flex items-center gap-2 justify-end">
+        <div className="flex items-center ml-2 gap-2 justify-end">
           {!slide.embedVideoUrl && (
             <Button
               variant="outline"
