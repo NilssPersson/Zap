@@ -1,10 +1,10 @@
-import { MCQMASlide } from "@/models/Quiz";
+import { MCQSASlide } from "@/models/Quiz";
 import { BaseQuestionRender } from "@/slides/question/base/QuestionRender";
 import { yesNoColors } from "../base/QuizColors";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function Preview({ slide }: { slide: MCQMASlide }) {
+export function Preview({ slide }: { slide: MCQSASlide }) {
   return (
     <BaseQuestionRender slide={slide}>
       <div className="flex flex-col items-center justify-center h-full p-10">
@@ -18,7 +18,7 @@ export function Preview({ slide }: { slide: MCQMASlide }) {
                   "bg-white/10 backdrop-blur outline outline-white/50":
                     !option.isCorrect, // Blur effect for wrong options
                   "ring-4 ring-white": option.isCorrect, // Green border for correct options
-                }
+                },
               )}
               style={{
                 backgroundColor: option.isCorrect

@@ -3,6 +3,7 @@ export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer'
 export * from './Host';
+export * from './HostAnswer';
 
 import { SlideTypes } from '@/models/Quiz';
 import { BarChart3Icon } from "lucide-react";
