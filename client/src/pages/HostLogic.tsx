@@ -268,7 +268,7 @@ const HostLogic: React.FC = () => {
         return (
           <div>
             {!showAnswer && (
-              <SlideComponent.Preview slide={questionSlide as never} />
+              <SlideComponent.Preview  slide={questionSlide as never} />
             )}
             {showAnswer && <h1>Showing answer</h1>}
             {renderQuestionButtons(questionSlide)}
@@ -279,7 +279,7 @@ const HostLogic: React.FC = () => {
         const SlideComponent = getSlideComponents(slide);
         return (
           <div className="flex flex-col">
-            <SlideComponent.Host slide={slide as never} />
+            <SlideComponent.Host participants={Object.values(ongoingQuiz.participants)} slide={slide as never}  />
             <Button onClick={nextSlide} className="m-5">
               Next slide
             </Button>

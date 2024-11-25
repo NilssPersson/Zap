@@ -1,6 +1,12 @@
-import { ScoreSlide } from "@/models/Quiz";
-import { Preview } from "./Preview";
+import { ScoreSlide, Participant } from "@/models/Quiz";
 
-export function Host({ slide }: { slide: ScoreSlide }) {
-  return <Preview slide={slide} />;
+import ScoreBoard from "@/pages/host/Scoreboard";
+
+
+export function Host({slide, participants }: { slide: ScoreSlide , participants: Participant[]}) {
+  return (
+    <div>
+     <ScoreBoard slide={slide} participants={participants} />
+    </div>
+  );
 }

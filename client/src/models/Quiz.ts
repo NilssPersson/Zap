@@ -63,7 +63,7 @@ export interface InfoSlide extends BaseSlide {
 
 export interface ScoreSlide extends BaseSlide {
   type: SlideTypes.score;
-  participants: { [id: string]: Participant };
+  
 }
 
 export enum AnswerTypes {
