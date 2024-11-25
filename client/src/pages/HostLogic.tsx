@@ -91,7 +91,10 @@ const HostLogic: React.FC = () => {
     participant: Participant
   ) => {
     if (!participant.answers) {
-      return undefined;
+      console.log("Participant", participant);
+      console.log("Length", participant.score.length);
+      console.log("participant score", participant.score);
+      return participant.score[participant.score.length-1];
     }
     const [answerLength, scoreLength] = [
       participant.answers.length,
@@ -99,7 +102,8 @@ const HostLogic: React.FC = () => {
     ];
     const participantAnswer = participant.answers[answerLength - 1].answer;
     const currentScore = participant.score[scoreLength - 1];
-
+    console.log("Participant", participant);
+    console.log("Current score", currentScore);
     switch (question.answerType) {
       case AnswerTypes.singleString: {
         const correctAnswer = question.options
@@ -169,18 +173,19 @@ const HostLogic: React.FC = () => {
     const participantsObj = ongoingQuiz?.participants;
     if (participantsObj) {
       const participants = Object.values(participantsObj);
-
-      const updates: { [key: string]: Participant } = {};
+      console.log("Fetched participants in update Scores", participants);
+      var updates: { [key: string]: Participant } = {};
 
       participants.forEach((participant: Participant) => {
         const score = calculateScore(currentQuestion, participant);
-
-        if (score) {
+        console.log("got score", score);
+        if (score !== undefined && score !== null) {
           updates[participant.participantId] = {
             ...participant,
             score: [...(participant.score || []), score],
             hasAnswered: false,
           };
+          console.log("updated participants", updates);
         }
       });
       try {
@@ -247,9 +252,13 @@ const HostLogic: React.FC = () => {
             </Button>
           )}
 
-        <Button onClick={() => {
-          updateScores(questionSlide);
-          nextSlide();}} className="m-5">
+        <Button
+          onClick={() => {
+            updateScores(questionSlide);
+            nextSlide();
+          }}
+          className="m-5"
+        >
           Next Slide
         </Button>
       </div>
