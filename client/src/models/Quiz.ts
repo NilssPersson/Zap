@@ -131,12 +131,15 @@ export interface OngoingQuiz {
   quizHost: string;
   participants: { [id: string]: Participant };
 }
+
+export interface ParticipantAnswer {
+  slideNumber: number;
+  answer: string[];
+  time: string;
+}
+
 export interface Participant {
-  answers: Array<{
-    slideNumber: number;
-    answer: string[];
-    time: string;
-  }>;
+  answers: Array<ParticipantAnswer>;
   hasAnswered: boolean;
   avatar: string;
   name: string;

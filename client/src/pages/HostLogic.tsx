@@ -8,6 +8,8 @@ import {
   ShowCorrectAnswerTypes,
   Participant,
   AnswerTypes,
+  Slide,
+  ParticipantAnswer,
 } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
 
@@ -32,6 +34,7 @@ const HostLogic: React.FC = () => {
     () => ongoingQuizzes.find((quiz) => quiz.id === id),
     [ongoingQuizzes, id]
   );
+  if (!ongoingQuiz) return <div>Loading Quiz...</div>;
 
   const updateParticipants = useCallback(
     (id: string, participants: { [key: string]: Participant }) => {
@@ -58,24 +61,24 @@ const HostLogic: React.FC = () => {
     var updatedQuiz = ongoingQuiz;
     if (updatedQuiz) {
       updatedQuiz.isShowingCorrectAnswer = showAnswer;
-      optimisticUpdate(ongoingQuiz?.id ? ongoingQuiz?.id : "", updatedQuiz);
+      optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : "", updatedQuiz);
     }
   }, [showAnswer]);
 
   useEffect(() => {
     const checkAnsweres = async () => {
-      const currentSlide = ongoingQuiz?.currentSlide
-        ? ongoingQuiz?.currentSlide
+      const currentSlide = ongoingQuiz.currentSlide
+        ? ongoingQuiz.currentSlide
         : 0;
       if (currentSlide == 0) return;
-      const participantsObj = ongoingQuiz?.participants;
+      const participantsObj = ongoingQuiz.participants;
       if (participantsObj) {
         const participants = Object.values(participantsObj);
         const totalAnswers = participants.filter(
           (participant) => participant.hasAnswered
         ).length;
         // Fetch question slide
-        const questionSlide = ongoingQuiz?.quiz.slides[
+        const questionSlide = ongoingQuiz.quiz.slides[
           currentSlide - 1
         ] as QuestionSlide;
         // If all participants have answered and question slide should show correct answer
@@ -94,22 +97,19 @@ const HostLogic: React.FC = () => {
 
   const calculateScore = (
     question: QuestionSlide,
-    participant: Participant
+    participant: Participant,
+    participantAnswer: ParticipantAnswer
   ) => {
     if (!participant.answers) {
       return 0;
     }
-    const [answerLength] = [
-      participant.answers.length,
-    ];
-    const participantAnswer = participant.answers[answerLength - 1].answer;
     switch (question.answerType) {
       case AnswerTypes.singleString: {
         const correctAnswer = question.options
           .filter((option) => option.isCorrect)
           .map((option) => option.text);
 
-        if (participantAnswer[0] === correctAnswer[0]) {
+        if (participantAnswer.answer[0] === correctAnswer[0]) {
           const newScore = 1000;
           return newScore;
         } else {
@@ -119,7 +119,7 @@ const HostLogic: React.FC = () => {
       // Todo, handle spelling mistakes etc.
       case AnswerTypes.freeText: {
         const correctAnswer = question.correctAnswer;
-        if (participantAnswer[0] === correctAnswer[0]) {
+        if (participantAnswer.answer[0] === correctAnswer[0]) {
           const newScore = 1000;
           return newScore;
         }
@@ -130,11 +130,11 @@ const HostLogic: React.FC = () => {
         const correctAnswer = question.options
           .filter((option) => option.isCorrect)
           .map((option) => option.text);
-        if (participantAnswer.length !== correctAnswer.length) {
+        if (participantAnswer.answer.length !== correctAnswer.length) {
           return 0;
         }
         // Sort both arrays and compare
-        const sortedParticipantAnswers = [...participantAnswer].sort();
+        const sortedParticipantAnswers = [...participantAnswer.answer].sort();
         const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
@@ -151,11 +151,11 @@ const HostLogic: React.FC = () => {
       // The answers should be the same, with regard to order
       case AnswerTypes.rank: {
         const correctAnswer = question.ranking;
-        if (participantAnswer.length !== correctAnswer.length) {
+        if (participantAnswer.answer.length !== correctAnswer.length) {
           return undefined;
         }
-        for (let i = 0; i < participantAnswer.length; i++) {
-          if (participantAnswer[i] !== correctAnswer[i]) {
+        for (let i = 0; i < participantAnswer.answer.length; i++) {
+          if (participantAnswer.answer[i] !== correctAnswer[i]) {
             return 0;
           }
         }
@@ -168,19 +168,39 @@ const HostLogic: React.FC = () => {
     }
   };
 
-  const updateScores = async (currentQuestion: QuestionSlide) => {
-    const participantsObj = ongoingQuiz?.participants;
+  const getAnswer = (participant: Participant) => {
+    if (
+      !participant.answers ||
+      participant.answers[participant.answers.length - 1].slideNumber !=
+        ongoingQuiz.currentSlide - 1
+    ) {
+      const newAnswer: ParticipantAnswer = {
+        slideNumber: ongoingQuiz.currentSlide,
+        answer: [""],
+        time: new Date().toISOString(),
+      };
+      return newAnswer;
+    } else {
+      return participant.answers[participant.answers.length - 1];
+    }
+  };
+
+  const updateScores = async (slide: Slide) => {
+    if (!(slide.type == SlideTypes.question)) return;
+    const participantsObj = ongoingQuiz.participants;
     if (participantsObj) {
       const participants = Object.values(participantsObj);
       var updates: { [key: string]: Participant } = {};
 
-      participants.forEach((participant: Participant) => {
-        const score = calculateScore(currentQuestion, participant);
+      participants.forEach(async (participant: Participant) => {
+        const answer = getAnswer(participant);
+        const score = calculateScore(slide, participant, answer);
         if (score !== undefined && score !== null) {
           updates[participant.participantId] = {
             ...participant,
             score: [...(participant.score || []), score],
             hasAnswered: false,
+            answers: [...(participant.answers || []), answer],
           };
         }
       });
@@ -189,7 +209,7 @@ const HostLogic: React.FC = () => {
         updatedQuiz.participants = updates;
         console.log("New quiz after updates scores:", updatedQuiz);
         optimisticUpdate(
-          ongoingQuiz?.participants ? ongoingQuiz?.id : "",
+          ongoingQuiz.participants ? ongoingQuiz.id : "",
           updatedQuiz
         );
         console.log("Scores updated and answers reset successfully.");
@@ -208,107 +228,92 @@ const HostLogic: React.FC = () => {
     var updatedQuiz = ongoingQuiz;
     updatedQuiz.currentSlide = updatedQuiz?.currentSlide + 1;
 
-    await optimisticUpdate(ongoingQuiz?.id ? ongoingQuiz?.id : "", updatedQuiz);
+    await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : "", updatedQuiz);
     console.log("Next slide: ", ongoingQuiz);
     setShowAnswer(false);
   };
 
-  const renderQuestionButtons = (questionSlide: QuestionSlide) => {
-    console.log(
-      "Render question buttons for slide:",
-      questionSlide,
-      ShowCorrectAnswerTypes.manual
-    );
-    return (
-      <div className="flex flex-col">
-        {!showAnswer && questionSlide.timeLimit > 0 && (
-          <div>
-            <Countdown
-              date={Date.now() + questionSlide.timeLimit * 1000}
-              onComplete={() => {
-                setShowAnswer(true);
-                updateScores(questionSlide);
-              }}
-            ></Countdown>
-          </div>
-        )}
-        {!showAnswer &&
-          questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
-            <Button
-              onClick={() => {
-                setShowAnswer(true);
-                updateScores(questionSlide);
-              }}
-              className="m-5"
-            >
-              Show Answer
-            </Button>
+  const renderButtons = (slide: Slide) => {
+    if (slide.type == SlideTypes.question) {
+      return (
+        <div className="flex flex-col">
+          {!showAnswer && slide.timeLimit > 0 && (
+            <div>
+              <Countdown
+                date={Date.now() + slide.timeLimit * 1000}
+                onComplete={() => {
+                  setShowAnswer(true);
+                  updateScores(slide);
+                }}
+              ></Countdown>
+            </div>
           )}
-
-        <Button
-          onClick={() => {
-            updateScores(questionSlide);
-            nextSlide();
-          }}
-          className="m-5"
-        >
-          Next Slide
+          {!showAnswer &&
+            slide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
+              <Button
+                onClick={() => {
+                  setShowAnswer(true);
+                  updateScores(slide);
+                }}
+                className="m-5"
+              >
+                Show Answer
+              </Button>
+            )}
+          <Button
+            onClick={() => {
+              if (!showAnswer) {
+                updateScores(slide);
+              }
+              nextSlide();
+            }}
+            className="m-5"
+          >
+            Next Slide
+          </Button>
+        </div>
+      );
+    } else {
+      return (
+        <Button onClick={nextSlide} className="m-5">
+          Next slide
         </Button>
-      </div>
-    );
+      );
+    }
   };
 
   // Render QuizLobby when currentSlide is 0
-  if (ongoingQuiz?.currentSlide == 0) {
+  if (ongoingQuiz.currentSlide == 0) {
     return (
-      <div>
-        <div className="flex flex-col">
-          <QuizLobby
-            quizCode={ongoingQuiz?.id ? ongoingQuiz?.id : ""}
-            participants={
-              ongoingQuiz?.participants
-                ? Object.values(ongoingQuiz?.participants)
-                : []
-            }
-          />
-          <Button onClick={nextSlide} className="m-5">
-            Start Game
-          </Button>
-        </div>
-      </div>
+      <QuizLobby
+        quizCode={ongoingQuiz.id ? ongoingQuiz.id : ""}
+        participants={
+          ongoingQuiz.participants
+            ? Object.values(ongoingQuiz.participants)
+            : []
+        }
+        onStartGame={nextSlide}
+      />
     );
   } else {
-    if (ongoingQuiz?.quiz.slides) {
-      const currentSlide = ongoingQuiz?.currentSlide - 1;
-      if (ongoingQuiz?.quiz.slides[currentSlide].type == SlideTypes.question) {
-        const questionSlide = ongoingQuiz?.quiz.slides[
-          currentSlide
-        ] as QuestionSlide;
-        const SlideComponent = getSlideComponents(questionSlide);
-        return (
-          <div>
-            {!showAnswer && (
-              <SlideComponent.Preview slide={questionSlide as never} />
-            )}
-            {showAnswer && <h1>Showing answer </h1>}
-            {renderQuestionButtons(questionSlide)}
-          </div>
-        );
-      } else {
-        const slide = ongoingQuiz?.quiz.slides[currentSlide];
-        const SlideComponent = getSlideComponents(slide);
-        return (
-          <div className="flex flex-col">
+    if (ongoingQuiz.quiz.slides) {
+      const currentSlide = ongoingQuiz.currentSlide - 1;
+      const questionSlide = ongoingQuiz.quiz.slides[
+        currentSlide
+      ] as QuestionSlide;
+      const SlideComponent = getSlideComponents(questionSlide);
+      return (
+        <div>
+          {!showAnswer && (
             <SlideComponent.Host
               participants={Object.values(ongoingQuiz.participants)}
-              slide={slide as never}
+              slide={questionSlide as never}
             />
-            <Button onClick={nextSlide} className="m-5">
-              Next slide
-            </Button>
-          </div>
-        );
-      }
+          )}
+          {showAnswer && <h1>Showing answer </h1>}
+          {renderButtons(questionSlide)}
+        </div>
+      );
     } else {
       return (
         <h1 className="text-5xl font-display">
