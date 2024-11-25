@@ -74,6 +74,10 @@ export function useQuizEditor(quizId: string | undefined) {
         optimisticUpdate(quizId, { slides: quiz.slides.map(slide =>
             slide.id === updatedSlide.id ? updatedSlide : slide
             )
+        }).then((res) => {
+            if (res.error) {
+                toast.error(`Error updating slide: ${res.error.message}`);
+            }
         });
     };
 
