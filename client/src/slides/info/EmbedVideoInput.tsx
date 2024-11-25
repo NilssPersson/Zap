@@ -4,6 +4,7 @@ import { MinusIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { EmbedVideoInputProps } from "./Toolbar";
+import { getYoutubeThumbnailUrl, validateYoutubeUrl } from "./utils";
 
 function EmbedVideoInput({ slide, onSlideUpdate }: EmbedVideoInputProps) {
   const [embedVideoUrl, setEmbedVideoUrl] = React.useState<string>(
@@ -14,18 +15,10 @@ function EmbedVideoInput({ slide, onSlideUpdate }: EmbedVideoInputProps) {
     embedVideoUrl || ""
   );
 
-  const validateUrl = React.useCallback((url: string) => {
-    if (!url) return false;
-    const youtubeRegex =
-      /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?[\w-]{11}$/;
-
-    return youtubeRegex.test(url);
-  }, []);
-
   React.useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(embedVideoUrl);
-      if (embedVideoUrl && !validateUrl(embedVideoUrl)) {
+      if (embedVideoUrl && !validateYoutubeUrl(embedVideoUrl)) {
         setError("Invalid YouTube URL");
       } else {
         setError(null);
@@ -35,24 +28,19 @@ function EmbedVideoInput({ slide, onSlideUpdate }: EmbedVideoInputProps) {
     return () => {
       clearTimeout(handler);
     };
-  }, [embedVideoUrl, validateUrl]);
+  }, [embedVideoUrl]);
 
   React.useEffect(() => {
     setEmbedVideoUrl(slide.embedVideoUrl || "");
   }, [slide.embedVideoUrl]);
 
   const handleEmbedVideoUrl = () => {
-    if (!debouncedValue || !validateUrl(debouncedValue)) return;
+    if (!debouncedValue || !validateYoutubeUrl(debouncedValue)) return;
     if (debouncedValue === slide.embedVideoUrl) return;
     onSlideUpdate({ ...slide, embedVideoUrl: debouncedValue });
   };
 
-  const getYoutubeIdFromUrl = useCallback((url: string) => {
-    const youtubeRegex =
-      /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=)?([\w-]{11})$/;
-    const match = url.match(youtubeRegex);
-    return match ? match[5] : undefined;
-  }, []);
+  
 
   const handleEmbedVideoUrlChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setEmbedVideoUrl(e.target.value);
@@ -68,7 +56,7 @@ function EmbedVideoInput({ slide, onSlideUpdate }: EmbedVideoInputProps) {
       <div className="flex w-full max-w-sm items-center justify-between">
         {slide.embedVideoUrl && (
           <img
-            src={`https://img.youtube.com/vi/${getYoutubeIdFromUrl(slide.embedVideoUrl)}/sddefault.jpg`}
+            src={getYoutubeThumbnailUrl(slide.embedVideoUrl)}
             alt="Youtube Thumbnail"
             className="h-12 w-20"
           />
