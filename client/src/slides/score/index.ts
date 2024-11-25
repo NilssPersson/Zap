@@ -14,10 +14,5 @@ export const Info: SlideInfo = {
     icon: BarChart3Icon,
     label: "Score Slide",
     slideType: SlideTypes.score,
-    defaults: {
-        mockScores: [
-            { name: 'Player 1', points: 100, newPoints: 120 },
-            { name: 'Player 2', points: 80, newPoints: 121 },
-        ],
-    }
+    defaults: {}
 } as const;
