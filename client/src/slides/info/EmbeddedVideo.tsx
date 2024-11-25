@@ -1,10 +1,13 @@
+import { getYoutubeEmbedUrl } from "./utils";
+
 interface EmbeddedVideoProps {
   url: string;
 }
 
 function EmbeddedVideo({ url }: EmbeddedVideoProps) {
-  const youtubeId = url.split("v=")[1];
-  const src = `https://www.youtube.com/embed/${youtubeId}`;
+
+  const src = getYoutubeEmbedUrl(url);
+
   return (
     <div className="aspect-w-16 aspect-h-9 justify-self-center">
       <iframe
