@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import { HousePlug } from "lucide-react";
+import { Zap } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 export function Header() {
@@ -16,8 +16,8 @@ export function Header() {
               to="/"
               className="flex items-center gap-2 text-2xl font-display"
             >
-              <HousePlug size={32} />
-              GameShack
+              <Zap className="text-yellow-400" size={32} />
+              <span className="fancy-wrap">Zap!</span>
             </Link>
             <div className="flex items-center font-display">
               <Link to="/">

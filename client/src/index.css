@@ -20,7 +20,7 @@ body {
     display: inline-block;
     letter-spacing: -0.01ch;
     -webkit-text-stroke: 10px black;
-    text-shadow: 5px 5px 0 black, -5px -5px 0 hsl(var(--primary));
+    text-shadow: 5px 5px 0 black, -5px -5px 0 gold;
   }
 
   :root {
@@ -30,7 +30,7 @@ body {
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 178 100% 21%;
+    --primary: 48 96% 47%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -60,7 +60,7 @@ body {
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 48 96% 53%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;

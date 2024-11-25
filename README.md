@@ -7,7 +7,7 @@
 ## Table of Contents
 
 - [Features](#features)
-  - [Slide Types](#slide-types)
+- [Slide Types](#slide-types)
 - [Technologies](#technologies)
 - [Getting Started](#getting-started)
 - [Code Structure](#code-structure)

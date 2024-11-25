@@ -5,13 +5,13 @@ export function GameShackTitle() {
     
     useEffect(() => {
         // Initial random rotations
-        setRotations(Array.from({ length: "GameShack".length }, () => 
+        setRotations(Array.from({ length: "Zap!".length }, () => 
             (Math.random() - 0.5) * 20 // Random rotation between -10 and 10 degrees
         ));
 
         // Update rotations every 500ms
         const interval = setInterval(() => {
-            setRotations(Array.from({ length: "GameShack".length }, () => 
+            setRotations(Array.from({ length: "Zap!".length }, () => 
                 (Math.random() - 0.5) * 20
             ));
         }, 500);
@@ -21,7 +21,7 @@ export function GameShackTitle() {
 
     return (
         <h1 className="text-7xl font-bold font-display mb-32">
-            {"GameShack".split("").map((char, idx) => (
+            {"Zap!".split("").map((char, idx) => (
                 <span 
                     key={idx} 
                     className="fancy-wrap inline-block transition-transform duration-500"

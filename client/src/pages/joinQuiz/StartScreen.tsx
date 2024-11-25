@@ -38,7 +38,7 @@ export default function StartScreen() {
       <div className="flex flex-col items-center justify-center w-full max-w-md space-y-4 bg-[#fefefe] rounded-2xl p-8 shadow-lg">
         <header className="text-center">
           <h1 className="font-bold font-display text-[#333333] text-5xl sm:text-5xl md:text-5xl lg:text-5xl xl:text-6xl">
-            GameShack
+            Zap!
           </h1>
         </header>
         <Input
