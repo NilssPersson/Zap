@@ -4,6 +4,7 @@ import { useState } from "react";
 import { InfoIcon } from "lucide-react";
 import { ParticipantService } from "@/services/participant";
 import { useNavigate } from "react-router-dom";
+import { GameShackTitle } from "@/components/GameShackTitle";
 
 export default function StartScreen() {
   const [quizCode, setQuizCode] = useState("");
@@ -38,7 +39,7 @@ export default function StartScreen() {
       <div className="flex flex-col items-center justify-center w-full max-w-md space-y-4 bg-[#fefefe] rounded-2xl p-8 shadow-lg">
         <header className="text-center">
           <h1 className="font-bold font-display text-[#333333] text-5xl sm:text-5xl md:text-5xl lg:text-5xl xl:text-6xl">
-            Zap!
+            <GameShackTitle />
           </h1>
         </header>
         <Input
