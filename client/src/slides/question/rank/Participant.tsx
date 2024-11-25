@@ -110,11 +110,11 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="flex flex-col items-center justify-center h-screen w-full p-4">
+      <div className="flex flex-col items-center justify-center  w-full p-4">
         <div className="flex flex-col items-center w-full max-w-md space-y-4">
           <h2 className="text-4xl font-display text-center">{slide.title}</h2>
           <h3 className="text-2xl font-display text-center">{slide.content}</h3>
-          <div className="flex flex-col w-full space-y-3 pb-10">
+          <div className="flex flex-col w-full space-y-3 pb-5">
             {currentRanking.map((text, index) => (
               <div key={index} className="flex items-center w-full space-x-4">
                 {/* Display the index with proper alignment */}

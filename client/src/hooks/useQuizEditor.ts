@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { quizDefaults } from '@/components/quiz-editor/utils/quiz-defaults';
 import { getSlideComponentsFromType } from '@/slides/utils';
 import { useAppContext } from '@/contexts/App/context';
+import {nanoid} from 'nanoid'
 
 const DEFAULT_TIME_LIMIT = 0;
 
@@ -45,7 +46,7 @@ export function useQuizEditor(quizId: string | undefined) {
     const handleAddSlide = (type: SlideType, questionType?: QuestionType) => {
         if (!quizId || !quiz) return;
         const baseSlide = {
-            id: crypto.randomUUID(),
+            id: nanoid(),
             title: `New ${type} slide`,
             content: '',
             backgroundStyle: 'waves' as const,
@@ -73,6 +74,10 @@ export function useQuizEditor(quizId: string | undefined) {
         optimisticUpdate(quizId, { slides: quiz.slides.map(slide =>
             slide.id === updatedSlide.id ? updatedSlide : slide
             )
+        }).then((res) => {
+            if (res.error) {
+                toast.error(`Error updating slide: ${res.error.message}`);
+            }
         });
     };
 
@@ -93,7 +98,7 @@ export function useQuizEditor(quizId: string | undefined) {
 
         const newSlide = {
             ...slideToClone,
-            id: crypto.randomUUID(),
+            id: nanoid(),
             title: `${slideToClone.title} (Copy)`,
             backgroundStyle: slideToClone.backgroundStyle || 'waves',
         };

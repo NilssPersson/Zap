@@ -39,7 +39,7 @@ export default function ImageInput({ slide, onSlideUpdate }: ToolbarProps) {
                         <Button
                             variant="destructive"
                             size="icon"
-                            onClick={() => onSlideUpdate({ ...slide, imageUrl: undefined })}
+                            onClick={() => onSlideUpdate({ ...slide, imageUrl: '' })}
                         >
                             <MinusIcon className="h-4 w-4" />
                         </Button>
