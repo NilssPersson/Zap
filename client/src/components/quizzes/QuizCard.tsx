@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { ReactNode } from "react";
-import { Share, Trash, Zap, MoreHorizontal } from "lucide-react";
+import { Share, Trash, Zap, MoreHorizontal, Copy } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -192,6 +192,7 @@ export function SharedQuizButtons({ quiz, onCopyToMyQuizzes }: SharedQuizButtons
           }}
         >
           Copy to My Quizzes
+          <Copy className="w-4 h-4" />
         </Button>
       </DialogTrigger>
       <DialogContent onClick={(e) => e.stopPropagation()}>
