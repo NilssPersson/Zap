@@ -16,7 +16,7 @@ function createRandomId() {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from({ length: 10 }, () =>
-    chars.charAt(Math.random() * chars.length)
+    chars.charAt(Math.random() * chars.length),
   ).join("");
 }
 
@@ -41,7 +41,7 @@ export default function CreateParticipant({
         // Call findOrCreate to fetch or create the user
         const { data, error } = await userService.findOrCreate(
           user.id,
-          user.email
+          user.email,
         );
 
         if (error) {
@@ -199,8 +199,11 @@ export default function CreateParticipant({
             Randomize
           </Button>
           <Input
+
             placeholder="Guest Name"
             className={`text-[#333333] text-center font-display md:text-lg text-md shadow-lg w-1/2 ${
+
+
               showError && "border-red-500 animate-shake"
             }`}
             value={guestName}
