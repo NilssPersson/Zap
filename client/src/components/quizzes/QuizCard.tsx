@@ -92,12 +92,14 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={(e) => {
-            e.stopPropagation();
-            onShare(quiz.id);
-          }}>
-            <Share className="w-4 h-4" />
-            Share
+          <DropdownMenuItem 
+            onClick={(e) => {
+              e.stopPropagation();
+              onShare(quiz.id);
+            }}
+          >
+            <Share className="w-4 h-4 cursor-pointer" />
+            <span className="cursor-pointer">Share</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem 
@@ -111,7 +113,7 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
             }}
           >
             <Dialog>
-              <DialogTrigger className="flex w-full items-center gap-2">
+              <DialogTrigger className="flex w-full items-center gap-2 hover:text-red-800">
                 <Trash className="w-4 h-4" />
                 Delete
               </DialogTrigger>
