@@ -12,17 +12,22 @@ import { Button } from "@/components/ui/button";
 interface LobbyProps {
   quizCode: string;
   participants: Participant[];
+  onStartGame: () => void;
 }
 
 //animations och key frames
 
-export default function QuizLobby({ quizCode, participants }: LobbyProps) {
+export default function QuizLobby({
+  quizCode,
+  participants,
+  onStartGame,
+}: LobbyProps) {
   const [participantList, setParticipantList] = useState<Participant[]>([]);
   const participantsRef = useRef<HTMLDivElement>(null);
 
-  const { 
+  const {
     quizzes: { optimisticUpdate },
-    ongoingQuizzes: { optimisticDelete, resources: ongoingQuizzes }
+    ongoingQuizzes: { optimisticDelete, resources: ongoingQuizzes },
   } = useAppContext();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -48,27 +53,26 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
           participantsRef.current!.scrollHeight;
       }, 0);
     }
-  }, [participantList]); 
+  }, [participantList]);
 
   const handleEndQuiz = async () => {
-    const onGoingQuiz = ongoingQuizzes.find(quiz => quiz.id === id);
+    const onGoingQuiz = ongoingQuizzes.find((quiz) => quiz.id === id);
     if (!onGoingQuiz) return navigate("/");
 
     console.log(onGoingQuiz);
 
     await Promise.all([
       optimisticDelete(onGoingQuiz.id),
-      optimisticUpdate(onGoingQuiz.quiz.id, { isHosted: false })
+      optimisticUpdate(onGoingQuiz.quiz.id, { isHosted: false }),
     ]);
 
     console.log("Ending quiz, navigating to /");
     navigate("/");
-  }
+  };
 
   return (
-    <div className="lobby-container">
-      <Button onClick={handleEndQuiz}>End Quiz</Button>
-      <div className="flex flex-row items-center justify-between p-20 mb-15 mt-20">
+    <div className="flex-1 flex flex-col justify-between p-10">
+      <div className="flex flex-row items-center justify-between">
         <h1 className="text-5xl font-display ">Join Lobby: {quizCode}</h1>
         <QRCode
           style={{ height: "auto", width: "20%", margin: "3" }}
@@ -92,6 +96,11 @@ export default function QuizLobby({ quizCode, participants }: LobbyProps) {
             <span className="text-2xl font-display">{participant.name}</span>
           </div>
         ))}
+      </div>
+
+      <div className="flex justify-around">
+        <Button onClick={handleEndQuiz}>End Quiz</Button>
+        <Button onClick={onStartGame}>Start Game</Button>
       </div>
     </div>
   );
