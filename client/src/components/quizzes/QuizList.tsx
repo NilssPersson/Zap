@@ -99,6 +99,7 @@ function QuizList({
           <div key={quiz.id} className="flex-none w-[300px]">
             <QuizCard
               quiz={quiz}
+              variant={variant}
               onClick={
                 variant === "shared-quizzes"
                   ? undefined

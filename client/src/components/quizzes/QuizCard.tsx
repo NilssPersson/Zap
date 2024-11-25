@@ -20,14 +20,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAppContext } from "@/contexts/App/context";
+import ReactNiceAvatar, { genConfig } from "react-nice-avatar";
 
 interface QuizCardProps {
   quiz: Quiz;
   onClick?: () => void;
   children?: ReactNode;
+  variant?: "my-quizzes" | "shared-quizzes";
 }
 
-export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
+export function QuizCard({
+  quiz,
+  onClick,
+  children,
+  variant
+}: QuizCardProps) {
+  const { users: { resources: users } } = useAppContext();
+  const quizHost = users.find((user) => user.id === quiz.user_id);
+
   return (
     <Card
       className={`${onClick ? 'cursor-pointer' : ''}`}
@@ -45,8 +56,21 @@ export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
       </CardHeader>
       <CardContent>
         {quiz.slides && quiz.slides.length > 0 ? (
-          <div className="aspect-video w-full rounded overflow-hidden text-white">
+          <div className="aspect-video w-full rounded overflow text-white relative">
             <SlidePreview slide={quiz.slides[0]} {...quiz.settings} />
+            {variant === "shared-quizzes" && quizHost && (
+              <div className="absolute bottom-[-10px] left-[-10px] z-50 bg-primary p-1 px-2 rounded text-white flex flex-row items-center gap-2">
+                <span className="text-sm font-bold">By:</span>
+                <ReactNiceAvatar
+                  style={{
+                    width: "28px",
+                    height: "28px"
+                  }}
+                  {...genConfig(quizHost.avatar)}
+                />
+                <span className="text-sm rounded p-1 bg-primary-foreground">{quizHost.username}</span>
+              </div>
+            )}
           </div>
         ) : (
           <div className="aspect-video w-full">
