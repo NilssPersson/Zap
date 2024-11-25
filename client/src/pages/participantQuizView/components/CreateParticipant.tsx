@@ -16,22 +16,20 @@ function createRandomId() {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from({ length: 10 }, () =>
-    chars.charAt(Math.random() * chars.length)
+    chars.charAt(Math.random() * chars.length),
   ).join("");
 }
 
 export default function CreateParticipant({
-  
   handleAddParticipant,
 }: CreateParticipantProps) {
   const [showError, setShowError] = useState(false);
   const [ifUserLoggedIn, setIfUserLoggedIn] = useState(false);
   const { user } = useGetAuthenticatedUser();
-  const [guestAvatar, setGuestAvatar] = useState (createRandomId())
-  const [guestName, setGuestName] = useState("")
-  const [name, setName] = useState("")
-  const [avatar, setAvatar] = useState("")
-
+  const [guestAvatar, setGuestAvatar] = useState(createRandomId());
+  const [guestName, setGuestName] = useState("");
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     async function initializeUser() {
@@ -43,7 +41,7 @@ export default function CreateParticipant({
         // Call findOrCreate to fetch or create the user
         const { data, error } = await userService.findOrCreate(
           user.id,
-          user.email
+          user.email,
         );
 
         if (error) {
@@ -53,8 +51,8 @@ export default function CreateParticipant({
 
         if (data) {
           setIfUserLoggedIn(true);
-          setName(data.username || "")
-          setAvatar(data.avatar || createRandomId())
+          setName(data.username || "");
+          setAvatar(data.avatar || createRandomId());
         }
       } catch (error) {
         console.error("Failed to initialize user:", error);
@@ -64,21 +62,18 @@ export default function CreateParticipant({
     initializeUser();
   }, [user]);
 
-
   const handleSubmit = () => {
-    
     if (!name) {
-      console.log("if no name")
+      console.log("if no name");
       setShowError(true);
       return;
     }
 
-    handleAddParticipant(name,avatar);
+    handleAddParticipant(name, avatar);
   };
 
   const handleGuestSubmit = () => {
     if (!guestName) {
-      
       setShowError(true);
       return;
     }
@@ -89,12 +84,11 @@ export default function CreateParticipant({
   function changeAvatarClick() {
     const randomString = createRandomId();
     setAvatar(randomString);
-    
   }
 
   function changeGuestAvatarClick() {
     const randomString = createRandomId();
-    setGuestAvatar(randomString)
+    setGuestAvatar(randomString);
   }
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -105,9 +99,6 @@ export default function CreateParticipant({
     setGuestName(e.target.value);
     setShowError(false);
   }
-
-  
-
 
   return (
     <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
@@ -165,7 +156,10 @@ export default function CreateParticipant({
                 style={{ width: "8rem", height: "8rem" }}
                 {...genConfig(guestAvatar)}
               />
-              <Button onClick={changeGuestAvatarClick} className="mx-5 bg-blue-400">
+              <Button
+                onClick={changeGuestAvatarClick}
+                className="mx-5 bg-blue-400"
+              >
                 Randomize
               </Button>
               <Input
@@ -189,10 +183,6 @@ export default function CreateParticipant({
               >
                 Play
               </Button>
-
-              
-
-              
             </TabsContent>
           </div>
         </Tabs>
@@ -207,7 +197,7 @@ export default function CreateParticipant({
             Randomize
           </Button>
           <Input
-            placeholder="Enter Guest Name"
+            placeholder="Enter Name"
             className={`text-[#333333] text-center font-display md:text-3xl text-3xl py-8 px-12 w-full shadow-lg ${
               showError && "border-red-500 animate-shake"
             }`}

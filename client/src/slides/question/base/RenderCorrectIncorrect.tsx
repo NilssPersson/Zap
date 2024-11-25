@@ -40,7 +40,7 @@ export default function ParticipantCorrect({
     }
 
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-red-500">
+      <div className="flex flex-col items-center justify-center bg-red-500 h-full">
         <h1 className="text-3xl font-display text-center">Wrong!</h1>
         <X width={70} height={70} />
         <p className="text-xl mt-0 font-display">
@@ -61,7 +61,7 @@ export default function ParticipantCorrect({
 
   // Latest question was answered correctly
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-green-500">
+    <div className="flex flex-col items-center justify-center h-full bg-green-500">
       <h1 className="text-3xl font-display text-center">Correct!</h1>
       <Check width={70} height={70} />
       <p className="text-xl mt-0 font-display">Answer Streak: {answerStreak}</p>

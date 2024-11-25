@@ -1,5 +1,6 @@
 import { database } from "@/firebase";
 import { ref, get, set, update, remove, DatabaseReference, Query } from "firebase/database";
+import { nanoid } from 'nanoid'
 
 export type FirebaseResponse<T> = {
   data: T | null;
@@ -27,7 +28,7 @@ export class BaseService<T> {
   }
 
   async create(payload: Partial<T>, const_id?: string): Promise<FirebaseResponse<T>> {
-    const id = const_id || crypto.randomUUID();
+    const id = const_id || nanoid();
     try {
       await set(this.getRef(`${this.path}/${id}`), payload);
       return { data: { ...payload, id } as T, error: null };
