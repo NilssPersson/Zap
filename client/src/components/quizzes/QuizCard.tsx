@@ -113,7 +113,7 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
             }}
           >
             <Dialog>
-              <DialogTrigger className="flex w-full items-center gap-2 hover:text-red-800">
+              <DialogTrigger className="flex w-full items-center gap-2">
                 <Trash className="w-4 h-4" />
                 Delete
               </DialogTrigger>
