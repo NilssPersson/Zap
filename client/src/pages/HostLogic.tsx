@@ -99,19 +99,12 @@ const HostLogic: React.FC = () => {
     participant: Participant
   ) => {
     if (!participant.answers) {
-      console.log("Participant", participant);
-      console.log("Length", participant.score.length);
-      console.log("participant score", participant.score);
-      return participant.score[participant.score.length - 1];
+      return 0;
     }
-    const [answerLength, scoreLength] = [
+    const [answerLength] = [
       participant.answers.length,
-      participant.score.length,
     ];
     const participantAnswer = participant.answers[answerLength - 1].answer;
-    const currentScore = participant.score[scoreLength - 1];
-    console.log("Participant", participant);
-    console.log("Current score", currentScore);
     switch (question.answerType) {
       case AnswerTypes.singleString: {
         const correctAnswer = question.options
@@ -119,20 +112,20 @@ const HostLogic: React.FC = () => {
           .map((option) => option.text);
 
         if (participantAnswer[0] === correctAnswer[0]) {
-          const newScore = currentScore + 1000;
+          const newScore = 1000;
           return newScore;
         } else {
-          return currentScore;
+          return 0;
         }
       }
       // Todo, handle spelling mistakes etc.
       case AnswerTypes.freeText: {
         const correctAnswer = question.correctAnswer;
         if (participantAnswer[0] === correctAnswer[0]) {
-          const newScore = currentScore + 1000;
+          const newScore = 1000;
           return newScore;
         }
-        return currentScore;
+        return 0;
       }
       // The answers should be the same without considering order
       case AnswerTypes.multipleStrings: {
@@ -140,7 +133,7 @@ const HostLogic: React.FC = () => {
           .filter((option) => option.isCorrect)
           .map((option) => option.text);
         if (participantAnswer.length !== correctAnswer.length) {
-          return undefined;
+          return 0;
         }
         // Sort both arrays and compare
         const sortedParticipantAnswers = [...participantAnswer].sort();
@@ -151,10 +144,10 @@ const HostLogic: React.FC = () => {
         );
 
         if (isAnswerCorrect) {
-          const newScore = currentScore + 1000;
+          const newScore = 1000;
           return newScore;
         } else {
-          return currentScore;
+          return 0;
         }
       }
       // The answers should be the same, with regard to order
@@ -165,14 +158,14 @@ const HostLogic: React.FC = () => {
         }
         for (let i = 0; i < participantAnswer.length; i++) {
           if (participantAnswer[i] !== correctAnswer[i]) {
-            return currentScore;
+            return 0;
           }
         }
-        const newScore = currentScore + 1000;
+        const newScore = 1000;
         return newScore;
       }
       default: {
-        return currentScore;
+        return 0;
       }
     }
   };
