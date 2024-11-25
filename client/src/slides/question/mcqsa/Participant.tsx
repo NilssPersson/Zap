@@ -27,7 +27,7 @@ const getColor = (index: number): string => {
 
 export function Participant({ slide, answerQuestion }: McqsaViewProps) {
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-10">
+    <div className="flex flex-col items-center justify-center h-full p-10">
       <h1 className="text-5xl font-display font-bold text-center mb-8">
         {slide.title}
       </h1>

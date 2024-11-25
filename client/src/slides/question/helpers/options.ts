@@ -1,4 +1,5 @@
 import { MCQMASlide, MCQSASlide } from "@/models/Quiz";
+import { nanoid } from 'nanoid'
 
 type OptionSlide = MCQMASlide | MCQSASlide;
 
@@ -9,7 +10,7 @@ export function addOption(slide: OptionSlide, onSlideUpdate: (slide: OptionSlide
         ...slide,
         options: [
             ...slide.options,
-            { id: crypto.randomUUID(), text: "", isCorrect: false },
+            { id: nanoid(), text: "", isCorrect: false },
         ],
     });
 }

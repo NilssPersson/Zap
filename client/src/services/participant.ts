@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ref, onValue, off, get, set, update, DataSnapshot } from "firebase/database";
 import { database } from "@/firebase";
 import { Participant, Slide } from "@/models/Quiz";
+import { nanoid } from 'nanoid'
 
 export const ParticipantService = {
   async checkIfGameExists(quizCode: string): Promise<boolean> {
@@ -17,7 +18,7 @@ export const ParticipantService = {
   },
 
   async addParticipant(quizCode: string, name: string, avatar: string): Promise<string | null> {
-    const participantId = crypto.randomUUID();
+    const participantId = nanoid();
     const quizExists = await this.checkIfGameExists(quizCode);
 
     if (!quizExists) {

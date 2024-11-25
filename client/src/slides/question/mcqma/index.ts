@@ -7,6 +7,7 @@ export * from './Host';
 import { QuestionTypes, SlideTypes, AnswerTypes } from '@/models/Quiz';
 import { CheckSquareIcon } from "lucide-react";
 import { SlideInfo } from '../..';
+import { nanoid } from 'nanoid'
 
 export const Info: SlideInfo = {
     value: "question:MCQMA",
@@ -16,7 +17,7 @@ export const Info: SlideInfo = {
     questionType: QuestionTypes.MCQMA,
     defaults: {
         options: Array.from({ length: 4 }, (_, i) => ({
-            id: crypto.randomUUID(),
+            id: nanoid(),
             text: `Option ${i + 1}`,
             isCorrect: i <= 1,
         })),
