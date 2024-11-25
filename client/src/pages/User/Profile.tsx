@@ -85,13 +85,14 @@ function Profile() {
 
   return (
     <div className="flex-1 w-full flex-col flex items-center justify-center overflow-hidden">
-      <h1 className="font-display text-6xl mb-5">Profile</h1>
-      <Card className="mx-5">
+      <h1 className="mt-5 font-display text-3xl mb-5">Profile</h1>
+      <Card className="mb-10">
         <CardContent className="flex flex-col items-center gap-4 py-6">
           <Input
             placeholder="Username"
-            className="text-[#333333] text-center border-gray-400 rounded-md font-display text-4xl md:text-4xl py-8 px-12 w-full shadow-lg"
+            className="text-[#333333] text-center border-gray-400 rounded-md font-display text-lg md:text-lg py-8 px-12 w-full shadow-lg"
             value={username}
+            maxLength={15}
             onChange={(e) => {
               setUsername(e.target.value);
               setUpdateStatus(null); // Reset the update status whenever the username changes

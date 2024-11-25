@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import Avatar, { genConfig } from "react-nice-avatar";
 import { motion, AnimatePresence } from "framer-motion";
+import { Participant, ScoreSlide } from "@/models/Quiz";
 
-
-
-function Counter({ value, shouldAnimate }: { value: number; shouldAnimate: boolean }) {
-  const [displayValue, setDisplayValue] = useState(value); // Initialize with the final value
+function Counter({
+  value,
+  shouldAnimate,
+}: {
+  value: number;
+  shouldAnimate: boolean;
+}) {
+  const [displayValue, setDisplayValue] = useState(value);
 
   useEffect(() => {
-    if (!shouldAnimate) return; // Skip animation if it shouldn't animate
+    if (!shouldAnimate) return;
 
     const gap = Math.abs(value - displayValue);
     const speed = Math.max(2.5, 500 / gap);
@@ -30,66 +35,85 @@ function Counter({ value, shouldAnimate }: { value: number; shouldAnimate: boole
   return <span>{displayValue}</span>;
 }
 
-
 interface ScoreBoardProps {
-  scoreboard: Player[];
+  slide:ScoreSlide;
+  participants: Participant[]
+  
 }
 
-interface Player {
-  name: string;
-  points: number;
-  newPoints: number;
-}
 
-function ScoreBoard({ scoreboard }: ScoreBoardProps) {
-  const [players, setPlayers] = useState(
-    scoreboard.map((player) => ({ ...player, avatar: genConfig() }))
+function ScoreBoard({ participants }: ScoreBoardProps) {
+  const [processedParticipants, setProcessedParticipants] = useState(
+    participants.map((p) => {
+      const totalScore = p.score.reduce((sum, s) => sum + s, 0);
+      const previousTotalScore =
+        totalScore - (p.score[p.score.length - 1] || 0); // Sum minus last score
+      return {
+        ...p,
+        totalScore,
+        previousTotalScore,
+      };
+    })
   );
-  const [isFirstRender, setIsFirstRender] = useState(true); // Track initial render
-  const [isScoresUpdated, setIsScoresUpdated] = useState(false); // Track score updates
+
+  const [isFirstRender, setIsFirstRender] = useState(true);
+  const [isScoresUpdated, setIsScoresUpdated] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const updatedPlayers = players.map((player) => ({
-        ...player,
-        points: player.newPoints,
+      // Compute and update total scores
+      const updatedParticipants = processedParticipants.map((p) => ({
+        ...p,
+        previousTotalScore: p.totalScore, // Update previousTotalScore to match totalScore
+        totalScore: p.score.reduce((sum, s) => sum + s, 0), // Recompute total score
       }));
-      updatedPlayers.sort((a, b) => b.points - a.points);
-      setPlayers(updatedPlayers);
-      setIsFirstRender(false); // Allow animations after scores are updated
-      setIsScoresUpdated(true); // Enable Counter animation
-    }, 1500); // Delay of 2 seconds
 
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
-  }, [players]);
+      // Sort participants by total score
+      updatedParticipants.sort((a, b) => b.totalScore - a.totalScore);
+
+      setProcessedParticipants(updatedParticipants); // Update state
+      setIsFirstRender(false); // Allow animations
+      setIsScoresUpdated(true); // Enable Counter animation
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [participants, processedParticipants]); // Re-run when participants prop changes
+
 
   return (
     <div className="flex-1 w-full flex-col items-center justify-center overflow-hidden p-4">
       <div className="flex w-full flex-col items-center justify-center overflow-hidden p-4">
         <AnimatePresence>
-          {players.map((player, index) => (
+          {processedParticipants.map((participant, index) => (
             <motion.div
-              key={player.name}
+              key={participant.name}
               layout
-              initial={isFirstRender ? false : { opacity: 0, y: -20 }} // Disable animation on first render
+              initial={isFirstRender ? false : { opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 2 }}
               className="flex items-center space-x-4 m-3 w-full max-w-md justify-start"
             >
-              <span className="text-component-background font-display text-3xl w-8">
+              <span className=" w-[20px] font-display text-component-background text-6xl mr-2  ">
                 {index + 1}
               </span>
               <Avatar
-                style={{ width: "4rem", height: "3rem" }}
-                {...player.avatar}
+                style={{ width: "4rem", height: "4rem" }}
+                {...genConfig(participant.avatar)}
               />
-              <div className="bg-component-background flex items-center justify-between font-display px-2 py-2 rounded-lg w-full">
-                <span className="text-textonwbg-grayonw text-2xl">
-                  {player.name}
+              <div className="bg-component-background flex items-center justify-between font-display p-4 rounded-lg w-full flex-grow min-w-0">
+                <span className="text-textonwbg-grayonw text-3xl truncate">
+                  {participant.name}
                 </span>
-                <span className="text-textonwbg-grayonw text-2xl">
-                  <Counter value={player.points} shouldAnimate={isScoresUpdated} />
+                <span className="text-textonwbg-grayonw text-3xl">
+                  <Counter
+                    value={
+                      isScoresUpdated
+                        ? participant.totalScore // Render the updated total score
+                        : participant.previousTotalScore // Render the previous score initially
+                    }
+                    shouldAnimate={isScoresUpdated}
+                  />
                 </span>
               </div>
             </motion.div>
