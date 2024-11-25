@@ -30,7 +30,7 @@ const HostLogic: React.FC = () => {
 
   const ongoingQuiz = useMemo(
     () => ongoingQuizzes.find((quiz) => quiz.id === id),
-    [ongoingQuizzes, id],
+    [ongoingQuizzes, id]
   );
 
   const updateParticipants = useCallback(
@@ -40,10 +40,10 @@ const HostLogic: React.FC = () => {
         {
           participants,
         },
-        true,
+        true
       );
     },
-    [optimisticUpdate],
+    [optimisticUpdate]
   );
 
   usePathOnValue<Participant>(
@@ -51,28 +51,36 @@ const HostLogic: React.FC = () => {
     (participants) => {
       if (!id) return;
       updateParticipants(id, participants);
-    },
+    }
   );
 
   useEffect(() => {
+    console.log("In use effect");
     const checkAnsweres = async () => {
+      const currentSlide = ongoingQuiz?.currentSlide
+        ? ongoingQuiz?.currentSlide
+        : 0;
+      if (currentSlide == 0) return;
       const participantsObj = ongoingQuiz?.participants;
       if (participantsObj) {
         const participants = Object.values(participantsObj);
-
         const totalAnswers = participants.filter(
-          (participant) => participant.hasAnswered,
+          (participant) => participant.hasAnswered
         ).length;
         // Fetch question slide
         const questionSlide = ongoingQuiz?.quiz.slides[
-          (ongoingQuiz?.currentSlide ? ongoingQuiz?.currentSlide : 1) - 1
+          currentSlide - 1
         ] as QuestionSlide;
         // If all participants have answered and question slide should show correct answer
         if (
+          !showAnswer &&
           totalAnswers == participants?.length &&
           !(questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never)
-        )
+        ) {
+          console.log("Button show answerr set true");
           setShowAnswer(true);
+          updateScores(questionSlide);
+        }
       }
     };
     checkAnsweres();
@@ -80,7 +88,7 @@ const HostLogic: React.FC = () => {
 
   const calculateScore = (
     question: QuestionSlide,
-    participant: Participant,
+    participant: Participant
   ) => {
     if (!participant.answers) {
       return undefined;
@@ -127,7 +135,7 @@ const HostLogic: React.FC = () => {
         const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
-          (value, index) => value === sortedQuestionAnswers[index],
+          (value, index) => value === sortedQuestionAnswers[index]
         );
 
         if (isAnswerCorrect) {
@@ -171,13 +179,17 @@ const HostLogic: React.FC = () => {
           updates[participant.participantId] = {
             ...participant,
             score: [...(participant.score || []), score],
+            hasAnswered: false,
           };
         }
       });
       try {
+        var updatedQuiz = ongoingQuiz;
+        updatedQuiz.participants = updates;
+        console.log("New quiz after updates scores:", updatedQuiz);
         optimisticUpdate(
           ongoingQuiz?.participants ? ongoingQuiz?.id : "",
-          updates,
+          updatedQuiz
         );
         console.log("Scores updated and answers reset successfully.");
       } catch (error) {
@@ -188,47 +200,56 @@ const HostLogic: React.FC = () => {
     }
   };
 
-  const nextSlideAfterQuestion = async (question: QuestionSlide) => {
-    await updateScores(question);
-    await nextSlide();
-  };
-
   const nextSlide = async () => {
     if (!ongoingQuiz) {
       return <h1>No ongoing quiz</h1>;
     }
     var updatedQuiz = ongoingQuiz;
     updatedQuiz.currentSlide = updatedQuiz?.currentSlide + 1;
+
     await optimisticUpdate(ongoingQuiz?.id ? ongoingQuiz?.id : "", updatedQuiz);
+    console.log("Next slide: ", ongoingQuiz);
     setShowAnswer(false);
   };
 
-  const Completionist: React.FC = () => {
-    setShowAnswer(true);
-    return null; // Or return some UI if needed
-  };
-
   const renderQuestionButtons = (questionSlide: QuestionSlide) => {
-    console.log("Render question buttons for slide:", questionSlide);
+    console.log(
+      "Render question buttons for slide:",
+      questionSlide,
+      ShowCorrectAnswerTypes.manual
+    );
+    console.log("in render question buttons");
     return (
       <div className="flex flex-col">
         {!showAnswer && questionSlide.timeLimit > 0 && (
           <div>
-            <Countdown date={Date.now() + questionSlide.timeLimit * 1000}>
-              <Completionist />
-            </Countdown>
-            {questionSlide.showCorrectAnswer ===
-              ShowCorrectAnswerTypes.manual && (
-              <Button onClick={() => setShowAnswer(true)} className="m-5">
-                Show Answer
-              </Button>
-            )}
+            <Countdown
+              date={Date.now() + questionSlide.timeLimit * 1000}
+              onComplete={() => {
+                console.log("Countdown set true");
+                setShowAnswer(true);
+                updateScores(questionSlide);
+              }}
+            ></Countdown>
           </div>
         )}
-        <Button
-          onClick={() => nextSlideAfterQuestion(questionSlide)}
-          className="m-5"
-        >
+        {!showAnswer &&
+          questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
+            <Button
+              onClick={() => {
+                console.log("Button'show answer' set true");
+                setShowAnswer(true);
+                updateScores(questionSlide);
+              }}
+              className="m-5"
+            >
+              Show Answer
+            </Button>
+          )}
+
+        <Button onClick={() => {
+          updateScores(questionSlide);
+          nextSlide();}} className="m-5">
           Next Slide
         </Button>
       </div>
@@ -238,8 +259,6 @@ const HostLogic: React.FC = () => {
   // Render QuizLobby when currentSlide is 0
   if (ongoingQuiz?.currentSlide == 0) {
     console.log("ongoing quiz object", ongoingQuiz);
-    console.log("ongoing quiz", Object.values(ongoingQuiz));
-    console.log("Participants:", ongoingQuiz.participants);
     return (
       <div>
         <div className="flex flex-col">
@@ -270,7 +289,7 @@ const HostLogic: React.FC = () => {
             {!showAnswer && (
               <SlideComponent.Preview slide={questionSlide as never} />
             )}
-            {showAnswer && <h1>Showing answer</h1>}
+            {showAnswer && <h1>Showing answer </h1>}
             {renderQuestionButtons(questionSlide)}
           </div>
         );
