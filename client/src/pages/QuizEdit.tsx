@@ -11,6 +11,8 @@ import { Toolbar } from "@/components/quiz-editor/Toolbar";
 import { QuizBackground } from "@/components/quiz-editor/QuizBackground";
 import { QuizSettingsToolbar } from "@/components/quiz-editor/QuizSettingsToolbar";
 import { quizDefaults } from "@/components/quiz-editor/utils/quiz-defaults";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 function QuizEdit() {
   const { id } = useParams();
@@ -31,6 +33,7 @@ function QuizEdit() {
     setActiveSlideId,
     setShowSettings,
   } = useQuizEditor(id);
+  const [whichPreview, setWhichPreview] = useState("Host");
 
   if (error) return <div>Error: {error}</div>;
   if (!quiz) return <div>Loading...</div>;
@@ -73,11 +76,19 @@ function QuizEdit() {
         <ResizableHandle withHandle />
 
         <ResizablePanel defaultSize={60}>
+          <div className="flex items-center justify-center space-x-4">
+            <Button onClick={() => setWhichPreview("Preview")}>Preview</Button>
+            <Button onClick={() => setWhichPreview("Host")}> Host </Button>
+            <Button onClick={() => setWhichPreview("Participant")}>
+              Participant
+            </Button>
+          </div>
           <Editor
             slide={activeSlide}
             backgroundColor={quizSettings.backgroundColor}
             primaryColor={quizSettings.primaryColor}
             secondaryColor={quizSettings.secondaryColor}
+            whichPreview={whichPreview}
           />
         </ResizablePanel>
 
