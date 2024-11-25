@@ -30,7 +30,7 @@ export function Editor({
     <div className="p-4 h-full flex flex-col">
       <div className="flex items-center justify-center space-x-4">
         <Tabs defaultValue="preview" className="pb-2">
-          <TabsList className="grid w-full grid-cols-3 text-2xl">
+          <TabsList className="grid w-full grid-cols-4 text-2xl">
             <TabsTrigger
               value="preview"
               onClick={() => setWhichPreview("Preview")}
@@ -45,6 +45,12 @@ export function Editor({
               onClick={() => setWhichPreview("Participant")}
             >
               Participant
+            </TabsTrigger>
+            <TabsTrigger
+              value="hostanswer"
+              onClick={() => setWhichPreview("HostAnswer")}
+            >
+              HostAnswerView
             </TabsTrigger>
           </TabsList>
         </Tabs>
