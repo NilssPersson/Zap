@@ -63,7 +63,6 @@ const HostLogic: React.FC = () => {
   }, [showAnswer]);
 
   useEffect(() => {
-    console.log("In use effect");
     const checkAnsweres = async () => {
       const currentSlide = ongoingQuiz?.currentSlide
         ? ongoingQuiz?.currentSlide
@@ -85,7 +84,6 @@ const HostLogic: React.FC = () => {
           totalAnswers == participants?.length &&
           !(questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never)
         ) {
-          console.log("Button show answerr set true");
           setShowAnswer(true);
           updateScores(questionSlide);
         }
@@ -174,19 +172,16 @@ const HostLogic: React.FC = () => {
     const participantsObj = ongoingQuiz?.participants;
     if (participantsObj) {
       const participants = Object.values(participantsObj);
-      console.log("Fetched participants in update Scores", participants);
       var updates: { [key: string]: Participant } = {};
 
       participants.forEach((participant: Participant) => {
         const score = calculateScore(currentQuestion, participant);
-        console.log("got score", score);
         if (score !== undefined && score !== null) {
           updates[participant.participantId] = {
             ...participant,
             score: [...(participant.score || []), score],
             hasAnswered: false,
           };
-          console.log("updated participants", updates);
         }
       });
       try {
@@ -224,7 +219,6 @@ const HostLogic: React.FC = () => {
       questionSlide,
       ShowCorrectAnswerTypes.manual
     );
-    console.log("in render question buttons");
     return (
       <div className="flex flex-col">
         {!showAnswer && questionSlide.timeLimit > 0 && (
@@ -232,7 +226,6 @@ const HostLogic: React.FC = () => {
             <Countdown
               date={Date.now() + questionSlide.timeLimit * 1000}
               onComplete={() => {
-                console.log("Countdown set true");
                 setShowAnswer(true);
                 updateScores(questionSlide);
               }}
@@ -243,7 +236,6 @@ const HostLogic: React.FC = () => {
           questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
             <Button
               onClick={() => {
-                console.log("Button'show answer' set true");
                 setShowAnswer(true);
                 updateScores(questionSlide);
               }}
@@ -268,7 +260,6 @@ const HostLogic: React.FC = () => {
 
   // Render QuizLobby when currentSlide is 0
   if (ongoingQuiz?.currentSlide == 0) {
-    console.log("ongoing quiz object", ongoingQuiz);
     return (
       <div>
         <div className="flex flex-col">
