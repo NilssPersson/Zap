@@ -55,6 +55,14 @@ const HostLogic: React.FC = () => {
   );
 
   useEffect(() => {
+    var updatedQuiz = ongoingQuiz;
+    if (updatedQuiz) {
+      updatedQuiz.isShowingCorrectAnswer = showAnswer;
+      optimisticUpdate(ongoingQuiz?.id ? ongoingQuiz?.id : "", updatedQuiz);
+    }
+  }, [showAnswer]);
+
+  useEffect(() => {
     console.log("In use effect");
     const checkAnsweres = async () => {
       const currentSlide = ongoingQuiz?.currentSlide
@@ -94,7 +102,7 @@ const HostLogic: React.FC = () => {
       console.log("Participant", participant);
       console.log("Length", participant.score.length);
       console.log("participant score", participant.score);
-      return participant.score[participant.score.length-1];
+      return participant.score[participant.score.length - 1];
     }
     const [answerLength, scoreLength] = [
       participant.answers.length,
@@ -296,7 +304,7 @@ const HostLogic: React.FC = () => {
         return (
           <div>
             {!showAnswer && (
-              <SlideComponent.Preview  slide={questionSlide as never} />
+              <SlideComponent.Preview slide={questionSlide as never} />
             )}
             {showAnswer && <h1>Showing answer </h1>}
             {renderQuestionButtons(questionSlide)}
@@ -307,7 +315,10 @@ const HostLogic: React.FC = () => {
         const SlideComponent = getSlideComponents(slide);
         return (
           <div className="flex flex-col">
-            <SlideComponent.Host participants={Object.values(ongoingQuiz.participants)} slide={slide as never}  />
+            <SlideComponent.Host
+              participants={Object.values(ongoingQuiz.participants)}
+              slide={slide as never}
+            />
             <Button onClick={nextSlide} className="m-5">
               Next slide
             </Button>
