@@ -318,6 +318,7 @@ const HostLogic: React.FC = () => {
           slide={slide as never}
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
+          isPreview={false}
         />
       )}
       {renderButtons(slide)}
