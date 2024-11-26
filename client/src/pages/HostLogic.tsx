@@ -323,6 +323,37 @@ const HostLogic: React.FC = () => {
       );
     }
   }
+
+  const currentSlide = ongoingQuiz.currentSlide - 1;
+  const questionSlide = ongoingQuiz.quiz.slides[currentSlide] as QuestionSlide;
+
+  if (!questionSlide) {
+    return (
+      <h1 className="text-5xl font-display">
+        Your Quiz is missing slides :(
+        <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
+      </h1>
+    );
+  }
+
+  const SlideComponent = getSlideComponents(questionSlide);
+
+  return (
+    <div>
+      {!showAnswer && (
+        <SlideComponent.Host
+          participants={Object.values(ongoingQuiz.participants)}
+          slide={questionSlide as never}
+        />
+      )}
+      {showAnswer && (
+        <SlideComponent.HostAnswer
+          slide={questionSlide as never}
+        />
+      )}
+      {renderButtons(questionSlide)}
+    </div>
+  );
 };
 
 export default HostLogic;
