@@ -12,5 +12,6 @@ export const Info: SlideInfo = {
   icon: Star,
   label: "Lobby Slide",
   slideType: SlideTypes.lobby,
+  uneditable: true,
   defaults: {},
 } as const;

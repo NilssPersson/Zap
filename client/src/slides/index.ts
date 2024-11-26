@@ -20,6 +20,7 @@ interface SlideInfo {
   slideType: SlideType;
   questionType?: QuestionType;
   defaults: Partial<Slide>;
+  uneditable?: boolean;
 }
 
 export type { ToolbarProps, SlideInfo };

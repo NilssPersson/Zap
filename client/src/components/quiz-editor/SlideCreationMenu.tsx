@@ -16,13 +16,13 @@ const optionGroups = [
   {
     label: "Slides",
     options: Object.values(Slides)
-      .filter((slide) => slide.Info.slideType !== SlideTypes.question)
+      .filter((slide) => slide.Info.slideType !== SlideTypes.question && !slide.Info.uneditable)
       .map((slide) => slide.Info)
   },
   {
     label: "Question Types",
     options: Object.values(Slides)
-      .filter((slide) => slide.Info.slideType === SlideTypes.question)
+      .filter((slide) => slide.Info.slideType === SlideTypes.question && !slide.Info.uneditable)
       .map((slide) => slide.Info)
   }
 ] as const;
