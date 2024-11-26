@@ -5,6 +5,7 @@ import { InfoIcon } from "lucide-react";
 import { ParticipantService } from "@/services/participant";
 import { useNavigate } from "react-router-dom";
 import { GameShackTitle } from "@/components/GameShackTitle";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function StartScreen() {
   const [quizCode, setQuizCode] = useState("");
@@ -34,40 +35,37 @@ export default function StartScreen() {
   };
 
   return (
-    <div className="h-dvh flex-1 w-full flex items-center justify-center overflow-hidden p-8">
+    <div className="flex-1 flex flex-col gap-8 items-center justify-center overflow-hidden p-8">
       {/* Centered Content */}
-      <div className="flex flex-col items-center justify-center w-full max-w-md space-y-4 bg-[#fefefe] rounded-2xl p-8 shadow-lg">
-        <header className="text-center">
-          <h1 className="font-bold font-display text-[#333333] text-5xl sm:text-5xl md:text-5xl lg:text-5xl xl:text-6xl">
-            <GameShackTitle />
-          </h1>
-        </header>
-        <Input
-          placeholder="Quiz Code"
-          onBlur={() =>
-            setTimeout(() => {
-              window.scrollTo({ top: -1, behavior: "smooth" });
-            }, 1)
-          }
-          className={`text-[#333333] text-center font-display text-3xl py-8 w-full ${
-            showError && "border-red-500 animate-shake"
-          }`}
-          value={quizCode}
-          onChange={handleInputChange}
-        />
-        {showError && (
-          <div className="flex justify-start items-center w-full text-red-500">
-            <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
-            <p className="font-display">Invalid Code</p>
-          </div>
-        )}
-        <Button
-          onClick={checkCode}
-          className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full"
-        >
-          Join Game
-        </Button>
-      </div>
+      <GameShackTitle />
+      <Card className="pt-8 z-50">
+        <CardContent className="flex flex-col gap-4">
+          <Input
+            placeholder="Quiz Code"
+            onBlur={() =>
+              setTimeout(() => {
+                window.scrollTo({ top: -1, behavior: "smooth" });
+              }, 1)
+            }
+            className={`text-[#333333] text-center font-display text-3xl py-8 w-full ${showError && "border-red-500 animate-shake"
+              }`}
+            value={quizCode}
+            onChange={handleInputChange}
+          />
+          {showError && (
+            <div className="flex justify-start items-center w-full text-red-500">
+              <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
+              <p className="font-display">Invalid Code</p>
+            </div>
+          )}
+          <Button
+            onClick={checkCode}
+            className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full"
+          >
+            Join Game
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

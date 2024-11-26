@@ -28,7 +28,10 @@ export function GameShackTitle() {
         <span
           key={idx}
           className="fancy-wrap inline-block transition-transform duration-500"
-          style={{ transform: `rotate(${rotations[idx]}deg)` }}
+          style={{
+            transform: `rotate(${rotations[idx]}deg)`,
+            zIndex: 100 - idx,
+          }}
         >
           {char}
         </span>
