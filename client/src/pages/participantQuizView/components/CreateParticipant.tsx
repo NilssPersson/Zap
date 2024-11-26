@@ -6,7 +6,7 @@ import Avatar, { genConfig } from "react-nice-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 import { userService } from "@/services/users";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, Dices } from "lucide-react";
 
 interface CreateParticipantProps {
   handleAddParticipant: (name: string, avatar: string) => void;
@@ -16,7 +16,7 @@ function createRandomId() {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from({ length: 10 }, () =>
-    chars.charAt(Math.random() * chars.length),
+    chars.charAt(Math.random() * chars.length)
   ).join("");
 }
 
@@ -41,7 +41,7 @@ export default function CreateParticipant({
         // Call findOrCreate to fetch or create the user
         const { data, error } = await userService.findOrCreate(
           user.id,
-          user.email,
+          user.email
         );
 
         if (error) {
@@ -163,7 +163,7 @@ export default function CreateParticipant({
                 Randomize
               </Button>
               <Input
-                placeholder="Enter Guest Name"
+                placeholder="Guest Name"
                 className={`text-[#333333] text-center font-display md:text-lg text-lg py-8 px-12 w-full shadow-lg ${
                   showError && "border-red-500 animate-shake"
                 }`}
@@ -189,41 +189,48 @@ export default function CreateParticipant({
         </Tabs>
       )}
       {!ifUserLoggedIn && (
-       
-        <div className="md:w-4/12 bg-component-background w-5/6 mx-auto rounded-lg flex flex-col items-center justify-center space-y-4 p-6 shadow-lg">
-          <Avatar
-            style={{ width: "4rem", height: "4rem" }}
-            {...genConfig(avatar)}
-          />
-          <Button onClick={changeAvatarClick} className="mx-5 bg-blue-400">
-            Randomize
-          </Button>
-          <Input
-
-            placeholder="Guest Name"
-            className={`text-[#333333] text-center font-display md:text-lg text-md shadow-lg w-1/2 ${
-
-
-              showError && "border-red-500 animate-shake"
-            }`}
-            value={guestName}
-            maxLength={15}
-            onChange={handleGuestNameChange}
-          />
-          {showError && (
-            <div className="flex justify-start items-center  text-red-500">
-              <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
-              <p className="font-display">Please enter a guest name</p>
+        <div className="bg-component-background w-3/4 mx-auto rounded-lg flex flex-col items-center justify-center p-6">
+          <div className="flex flex-col items-center justify-center w-full max-w-md">
+            {/* Avatar and Shuffle Icon */}
+            <div className="flex items-center space-x-4 mb-4">
+              <Avatar
+                style={{ width: "4rem", height: "4rem" }}
+                {...genConfig(avatar)}
+              />
+              <Button
+                onClick={changeAvatarClick}
+                className="rounded-full"
+                title="Randomize Avatar"
+              >
+                <Dices className=" text-gray " />
+              </Button>
             </div>
-          )}
-          <Button
-            onClick={handleGuestSubmit}
-            className="bg-[#333333] text-lg text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-1/2 shadow-lg"
-          >
-            Play
-          </Button>
+            {/* Input Field */}
+            <Input
+              placeholder="Guest Name"
+              className={`text-[#333333] text-center font-display md:text-lg text-md shadow-lg w-2/3 mb-4 ${
+                showError && "border-red-500 animate-shake"
+              }`}
+              value={guestName}
+              maxLength={15}
+              onChange={handleGuestNameChange}
+            />
+            {/* Error Message */}
+            {showError && (
+              <div className="flex justify-start items-center text-red-500 mb-4">
+                <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
+                <p className="font-display">Please enter a guest name</p>
+              </div>
+            )}
+            {/* Play Button */}
+            <Button
+              onClick={handleGuestSubmit}
+              className="text-[#333333] text-center font-display md:text-lg text-md shadow-lg w-2/3"
+            >
+              Play
+            </Button>
+          </div>
         </div>
-       
       )}
     </div>
   );
