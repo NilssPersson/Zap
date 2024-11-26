@@ -34,7 +34,6 @@ const HostLogic: React.FC = () => {
     () => ongoingQuizzes.find((quiz) => quiz.id === id),
     [ongoingQuizzes, id]
   );
-  if (!ongoingQuiz) return <div>Loading Quiz...</div>;
 
   const updateParticipants = useCallback(
     (id: string, participants: { [key: string]: Participant }) => {
@@ -58,7 +57,7 @@ const HostLogic: React.FC = () => {
   );
 
   useEffect(() => {
-    var updatedQuiz = ongoingQuiz;
+    const updatedQuiz = ongoingQuiz;
     if (updatedQuiz) {
       updatedQuiz.isShowingCorrectAnswer = showAnswer;
       optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : "", updatedQuiz);
@@ -67,11 +66,11 @@ const HostLogic: React.FC = () => {
 
   useEffect(() => {
     const checkAnsweres = async () => {
-      const currentSlide = ongoingQuiz.currentSlide
+      const currentSlide = ongoingQuiz?.currentSlide
         ? ongoingQuiz.currentSlide
         : 0;
       if (currentSlide == 0) return;
-      const participantsObj = ongoingQuiz.participants;
+      const participantsObj = ongoingQuiz?.participants;
       if (participantsObj) {
         const participants = Object.values(participantsObj);
         const totalAnswers = participants.filter(
@@ -172,10 +171,10 @@ const HostLogic: React.FC = () => {
     if (
       !participant.answers ||
       participant.answers[participant.answers.length - 1].slideNumber !=
-        ongoingQuiz.currentSlide - 1
+        (ongoingQuiz?.currentSlide || 0) - 1
     ) {
       const newAnswer: ParticipantAnswer = {
-        slideNumber: ongoingQuiz.currentSlide,
+        slideNumber: ongoingQuiz?.currentSlide || 0,
         answer: [""],
         time: new Date().toISOString(),
       };
@@ -187,10 +186,10 @@ const HostLogic: React.FC = () => {
 
   const updateScores = async (slide: Slide) => {
     if (!(slide.type == SlideTypes.question)) return;
-    const participantsObj = ongoingQuiz.participants;
+    const participantsObj = ongoingQuiz?.participants;
     if (participantsObj) {
       const participants = Object.values(participantsObj);
-      var updates: { [key: string]: Participant } = {};
+      const updates: { [key: string]: Participant } = {};
 
       participants.forEach(async (participant: Participant) => {
         const answer = getAnswer(participant);
@@ -205,7 +204,7 @@ const HostLogic: React.FC = () => {
         }
       });
       try {
-        var updatedQuiz = ongoingQuiz;
+        const updatedQuiz = ongoingQuiz;
         updatedQuiz.participants = updates;
         console.log("New quiz after updates scores:", updatedQuiz);
         optimisticUpdate(
@@ -225,7 +224,7 @@ const HostLogic: React.FC = () => {
     if (!ongoingQuiz) {
       return <h1>No ongoing quiz</h1>;
     }
-    var updatedQuiz = ongoingQuiz;
+    const updatedQuiz = ongoingQuiz;
     updatedQuiz.currentSlide = updatedQuiz?.currentSlide + 1;
 
     await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : "", updatedQuiz);
@@ -282,47 +281,43 @@ const HostLogic: React.FC = () => {
     }
   };
 
-  // Render QuizLobby when currentSlide is 0
-  if (ongoingQuiz.currentSlide == 0) {
+  if (!ongoingQuiz) return <div>Loading Quiz...</div>;
+
+  if (!ongoingQuiz.quiz.slides) {
+    return (
+      <h1 className="text-5xl font-display">
+        Your Quiz is missing slides :(
+        <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
+      </h1>
+    );
+  }
+
+  if (ongoingQuiz.currentSlide === 0) {
     return (
       <QuizLobby
-        quizCode={ongoingQuiz.id ? ongoingQuiz.id : ""}
-        participants={
-          ongoingQuiz.participants
-            ? Object.values(ongoingQuiz.participants)
-            : []
-        }
+        quizCode={ongoingQuiz.id || ""}
+        participants={Object.values(ongoingQuiz.participants || {})}
         onStartGame={nextSlide}
       />
     );
-  } else {
-    if (ongoingQuiz.quiz.slides) {
-      const currentSlide = ongoingQuiz.currentSlide - 1;
-      const questionSlide = ongoingQuiz.quiz.slides[
-        currentSlide
-      ] as QuestionSlide;
-      const SlideComponent = getSlideComponents(questionSlide);
-      return (
-        <div>
-          {!showAnswer && (
-            <SlideComponent.Host
-              participants={Object.values(ongoingQuiz.participants)}
-              slide={questionSlide as never}
-            />
-          )}
-          {showAnswer && <h1>Showing answer </h1>}
-          {renderButtons(questionSlide)}
-        </div>
-      );
-    } else {
-      return (
-        <h1 className="text-5xl font-display">
-          Your Quiz is missing slides :(
-          <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
-        </h1>
-      );
-    }
   }
+
+  const currentSlide = ongoingQuiz.currentSlide - 1;
+  const questionSlide = ongoingQuiz.quiz.slides[currentSlide] as QuestionSlide;
+  const SlideComponent = getSlideComponents(questionSlide);
+
+  return (
+    <div>
+      {!showAnswer && (
+        <SlideComponent.Host
+          participants={Object.values(ongoingQuiz.participants)}
+          slide={questionSlide as never}
+        />
+      )}
+      {showAnswer && <h1>Showing answer </h1>}
+      {renderButtons(questionSlide)}
+    </div>
+  );
 };
 
 export default HostLogic;
