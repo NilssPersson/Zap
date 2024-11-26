@@ -10,14 +10,14 @@ export function HostAnswer({
   onNextSlide: () => void;
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex-1 flex flex-col">
       <Preview slide={slide} />
       <h1>Showing answer...</h1>
       <Button
         onClick={() => {
           onNextSlide();
         }}
-        className="m-5"
+        className="absolute bottom-5 right-5"
       >
         Next Slide
       </Button>
