@@ -6,6 +6,7 @@ import { ShowCorrectAnswerTypes } from "@/models/Quiz";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Quiz, QuizSettings } from "@/models/Quiz";
 import { quizDefaults } from "./utils/quiz-defaults";
+import { BackgroundStyle } from "./QuizBackground";
 
 interface QuizSettingsToolbarProps {
     quiz: Quiz;
@@ -70,7 +71,7 @@ export function QuizSettingsToolbar({
             </div>
 
             <div className="space-y-2">
-                <Label>Show Correct Answer</Label>
+                <Label>Show Correct Answer (Default)</Label>
                 <Select
                     value={originalSettings.showCorrectAnswerDefault || "auto"}
                     onValueChange={(value) => onUpdate({ settings: { ...originalSettings, showCorrectAnswerDefault: value as ShowCorrectAnswerTypes } })}
@@ -82,6 +83,25 @@ export function QuizSettingsToolbar({
                         <SelectItem value="auto">Auto</SelectItem>
                         <SelectItem value="manual">Manual</SelectItem>
                         <SelectItem value="never">Never</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
+            <div className="space-y-2">
+                <Label>Background Style (Default)</Label>
+                <Select
+                    value={originalSettings.backgroundStyleDefault || "blobInverted"}
+                    onValueChange={(value) => onUpdate({ settings: { ...originalSettings, backgroundStyleDefault: value as BackgroundStyle } })}
+                >
+                    <SelectTrigger>
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="waves">Waves</SelectItem>
+                        <SelectItem value="blob">Blob</SelectItem>
+                        <SelectItem value="blobInverted">Blob Inverted</SelectItem>
+                        <SelectItem value="circle">Circle</SelectItem>
+                        <SelectItem value="solid">Solid</SelectItem>
                     </SelectContent>
                 </Select>
             </div>

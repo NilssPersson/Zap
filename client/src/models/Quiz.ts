@@ -21,6 +21,7 @@ export interface QuizSettings {
   secondaryColor: string;
   backgroundColor: string;
   showCorrectAnswerDefault: ShowCorrectAnswerTypes;
+  backgroundStyleDefault: BackgroundStyle;
 }
 
 interface QuestionCreated {
