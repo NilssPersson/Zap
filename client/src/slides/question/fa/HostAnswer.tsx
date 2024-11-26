@@ -10,8 +10,9 @@ export function HostAnswer({
   onNextSlide: () => void;
 }) {
   return (
-    <div>
-      <Preview slide={slide} />;
+    <div className="flex flex-col">
+      <Preview slide={slide} />
+      <h1>Showing answer...</h1>
       <Button
         onClick={() => {
           onNextSlide();

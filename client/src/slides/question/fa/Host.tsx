@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export function Host({ slide, onNextSlide }: { slide: FASlide; onNextSlide: () => void }) {
   return (
-    <div>
+    <div className="flex flex-col">
       <Preview slide={slide} />
       <Button
         onClick={() => {
