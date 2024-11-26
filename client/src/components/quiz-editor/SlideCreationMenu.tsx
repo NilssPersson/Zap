@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { PopoverContent } from "@/components/ui/popover";
 import { type SlideType, type QuestionType, SlideTypes } from "@/models/Quiz";
@@ -7,6 +8,7 @@ import { SlideInfo } from "@/slides";
 
 interface SlideCreationMenuProps {
   onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
+  onCloseMenu?: () => void;
 }
 
 // Replace existing slides and questions arrays with optionGroups
@@ -28,30 +30,70 @@ const optionGroups = [
 interface RenderOptionsProps {
   options: SlideInfo[];
   onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
+  onCloseMenu?: () => void;
 }
 
-function RenderOptions({ options, onAddSlide }: RenderOptionsProps) {
+function RenderOptions({ options, onAddSlide, onCloseMenu }: RenderOptionsProps) {
   return options.map((option) => {
     return (
       <SlideOption
         key={option.value}
         label={option.label}
         icon={option.icon}
-        onClick={() => onAddSlide(option.slideType, option.questionType)}
+        onClick={() => {
+          onAddSlide(option.slideType, option.questionType);
+          onCloseMenu?.();
+        }}
       />
     );
   });
 }
 
-export function SlideCreationMenu({ onAddSlide }: SlideCreationMenuProps) {
+export function SlideCreationMenu({ onAddSlide, onCloseMenu }: SlideCreationMenuProps) {
+  const [closeTimeout, setCloseTimeout] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseLeave = () => {
+    const timeoutId = window.setTimeout(() => {
+      onCloseMenu?.();
+    }, 300); // 300ms delay before closing
+    setCloseTimeout(timeoutId);
+  };
+
+  const handleMouseEnter = () => {
+    if (closeTimeout) {
+      clearTimeout(closeTimeout);
+      setCloseTimeout(null);
+    }
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+      }
+    };
+  }, [closeTimeout]);
+
   return (
-    <PopoverContent className="w-56">
+    <PopoverContent 
+      side="right" 
+      className="w-56"
+      ref={containerRef}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+    >
       <div className="space-y-2">
         {optionGroups.map((group, index) => (
           <div key={group.label} className="flex flex-col gap-2">
             {index > 0 && <Separator className="my-2" />}
             <h4 className="font-medium leading-none mb-3">{group.label}</h4>
-            <RenderOptions options={group.options} onAddSlide={onAddSlide} />
+            <RenderOptions 
+              options={group.options} 
+              onAddSlide={onAddSlide} 
+              onCloseMenu={onCloseMenu} 
+            />
           </div>
         ))}
       </div>
