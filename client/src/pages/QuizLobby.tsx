@@ -3,11 +3,12 @@ import { useEffect, useState, useRef } from "react";
 import "tw-elements"; // Import Tailwind Elements JS
 import "tailwindcss/tailwind.css"; // Tailwind CSS
 import Avatar, { genConfig } from "react-nice-avatar";
-import QRCode from "react-qr-code";
+
 import { Participant } from "@/models/Quiz";
 import { useAppContext } from "@/contexts/App/context";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import QRCode from "react-qr-code";
 
 interface LobbyProps {
   quizCode: string;
@@ -76,7 +77,7 @@ export default function QuizLobby({
         <h1 className="text-5xl font-display ">Join Lobby: {quizCode}</h1>
         <QRCode
           style={{ height: "auto", width: "20%", margin: "3" }}
-          value={"https://game-shack-iota.vercel.app/play/" + { quizCode }}
+          value={`${import.meta.env.VITE_QR_BASE_URL}${quizCode}`}
           viewBox={`0 0 256 256`}
         />
       </div>

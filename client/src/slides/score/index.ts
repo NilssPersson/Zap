@@ -3,6 +3,7 @@ export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer'
 export * from './Host';
+export * from './HostAnswer';
 
 import { SlideTypes } from '@/models/Quiz';
 import { BarChart3Icon } from "lucide-react";
@@ -14,10 +15,5 @@ export const Info: SlideInfo = {
     icon: BarChart3Icon,
     label: "Score Slide",
     slideType: SlideTypes.score,
-    defaults: {
-        mockScores: [
-            { name: 'Player 1', points: 100, newPoints: 120 },
-            { name: 'Player 2', points: 80, newPoints: 121 },
-        ],
-    }
+    defaults: {}
 } as const;

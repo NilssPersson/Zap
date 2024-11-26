@@ -3,9 +3,8 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
-import { userService } from "@/services/users";
 import { Check, CircleX } from "lucide-react";
+import { useAppContext } from "@/contexts/App/context";
 
 function makeid(length: number) {
   let result = "";
@@ -19,42 +18,20 @@ function makeid(length: number) {
 }
 
 function Profile() {
-  const { user, updateUser } = useGetAuthenticatedUser();
-  const [avatarString, setAvatarString] = useState("");
-  const [username, setUsername] = useState("");
+  const { user: { user, updateUser } } = useAppContext();
+
+  const [avatarString, setAvatarString] = useState(user?.avatar || "");
+  const [username, setUsername] = useState(user?.username || "");
   const [updateStatus, setUpdateStatus] = useState<"success" | "error" | null>(
     null
   ); // Track the update status
   const [statusMessage, setStatusMessage] = useState(""); // Store the status message
 
   useEffect(() => {
-    async function initializeUser() {
-      if (!user || !user.id || !user.email) {
-        return;
-      }
+    if (!user) return;
 
-      try {
-        // Call findOrCreate to fetch or create the user
-        const { data, error } = await userService.findOrCreate(
-          user.id,
-          user.email
-        );
-
-        if (error) {
-          console.error("Error in findOrCreate:", error);
-          return;
-        }
-
-        if (data) {
-          setUsername(data.username || ""); // Set username
-          setAvatarString(data.avatar || ""); // Set avatar string
-        }
-      } catch (error) {
-        console.error("Failed to initialize user:", error);
-      }
-    }
-
-    initializeUser();
+    setAvatarString(user.avatar || "");
+    setUsername(user.username || "");
   }, [user]);
 
   const changeAvatarClick = () => {

@@ -19,7 +19,7 @@ export function Header() {
               <Zap className="text-yellow-400" size={32} />
               <span className="fancy-wrap">Zap!</span>
             </Link>
-            <div className="flex items-center font-display">
+            <div className="flex items-center font-display gap-1">
               <Link to="/">
                 <Button
                   variant={location.pathname === "/" ? "default" : "ghost"}

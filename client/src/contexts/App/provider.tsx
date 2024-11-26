@@ -4,6 +4,7 @@ import { useOngoingQuizzes } from "@/hooks/useOngoingQuizzes";
 import { AppContext } from "./context";
 import { useQuizzes } from "@/hooks/useQuizzes";
 import { useCallback } from "react";
+import { useUsers } from "@/hooks/useUsers";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
@@ -24,6 +25,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     optimisticDelete: deleteQuiz,
     optimisticUpdate: updateQuiz
   } = useQuizzes();
+
+  const { resources: users, isLoading: usersLoading } = useUsers();
 
   const endQuiz = useCallback(async (quizCode: string) => {
     const onGoingQuiz = ongoingQuizzes.find(quiz => quiz.id === quizCode);
@@ -61,6 +64,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     user: {
       user,
       updateUser
+    },
+    users: {
+      resources: users,
+      isLoading: usersLoading
     }
   }}>{children}</AppContext.Provider>;
 };

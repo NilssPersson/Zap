@@ -11,6 +11,7 @@ interface SlidePreviewProps {
   backgroundColor?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  whichPreview?: string;
 }
 
 const SLIDE_WIDTH = 1920;
@@ -22,6 +23,7 @@ export function SlidePreview({
   backgroundColor = "#000B58",
   primaryColor = "#006a67",
   secondaryColor = "#fff4b7",
+  whichPreview = "Preview",
 }: SlidePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -45,6 +47,22 @@ export function SlidePreview({
 
   const SlideComponent = getSlideComponents(slide);
 
+  const WhichPreview = () => {
+    if (whichPreview === "Preview")
+      return <SlideComponent.Preview slide={slide as never} />;
+    if (whichPreview === "Host")
+      return <SlideComponent.Host slide={slide as never} participants={[]} />;
+    if (whichPreview === "HostAnswer")
+      return <SlideComponent.HostAnswer slide={slide as never} />;
+    if (whichPreview === "Participant")
+      return (
+        <SlideComponent.Participant
+          slide={slide as never}
+          answerQuestion={() => null}
+        />
+      );
+  };
+
   return (
     <div
       ref={containerRef}
@@ -52,7 +70,7 @@ export function SlidePreview({
         "relative",
         "aspect-video w-full",
         "overflow-hidden",
-        className
+        className,
       )}
     >
       <QuizBackground
@@ -71,7 +89,7 @@ export function SlidePreview({
         }}
       >
         <div className="w-full h-full flex items-center justify-center p-16">
-          <SlideComponent.Preview slide={slide as never} />
+          <WhichPreview />
         </div>
       </div>
     </div>

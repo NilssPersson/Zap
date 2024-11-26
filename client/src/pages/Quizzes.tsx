@@ -137,7 +137,7 @@ function Quizzes() {
     const [searchTerm, setSearchTerm] = useState("");
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center gap-4 overflow-y-auto">
+        <div className="flex-1 flex flex-col items-center justify-around gap-4 overflow-y-auto p-4">
             <Card className="w-full max-w-7xl">
                 <CardHeader>
                     <CardTitle className="flex justify-between items-center">

@@ -2,7 +2,8 @@ export * from './Preview';
 export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer';
-export * from './Host'
+export * from './Host';
+export * from './HostAnswer';
 
 import { QuestionTypes, SlideTypes, AnswerTypes } from '@/models/Quiz';
 import { ListOrdered } from "lucide-react";
