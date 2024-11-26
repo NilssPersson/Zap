@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 
 export function Host({ slide, onNextSlide }: { slide: FASlide; onNextSlide: () => void }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex-1 flex flex-col">
       <Preview slide={slide} />
       <Button
         onClick={() => {
           onNextSlide();
         }}
-        className="m-5"
+        className="absolute bottom-5 right-5"
       >
         Next Slide
       </Button>
