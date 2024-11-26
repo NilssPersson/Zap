@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export function HostAnswer({
   slide,
-  participants,
+  participants = [],
   isPreview = false, // Default to false
   onNextSlide,
 }: {
@@ -15,8 +15,6 @@ export function HostAnswer({
   isPreview?: boolean;
   onNextSlide: () => void;
 }) {
-  console.log(participants);
-
   const AnswerCount = () => {
     const calculateAnswerCounts = () => {
       return slide.options.map((option) => {

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export function HostAnswer({
   slide,
-  participants,
+  participants = [],
   isPreview = false, // Default to false
   onNextSlide,
 }: {
