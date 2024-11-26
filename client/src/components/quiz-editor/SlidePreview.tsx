@@ -51,13 +51,22 @@ export function SlidePreview({
     if (whichPreview === "Preview")
       return <SlideComponent.Preview slide={slide as never} />;
     if (whichPreview === "Host")
-      return <SlideComponent.Host slide={slide as never} participants={[]} />;
+      return (
+        <SlideComponent.Host
+          slide={slide as never}
+          participants={[]}
+          onNextSlide={() => null}
+          quizCode=""
+        />
+      );
     if (whichPreview === "HostAnswer")
       return (
         <SlideComponent.HostAnswer
           slide={slide as never}
           participants={[]}
           isPreview={true}
+          onNextSlide={() => null}
+          quizCode={""}
         />
       );
     if (whichPreview === "Participant")

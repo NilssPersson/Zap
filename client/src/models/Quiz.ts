@@ -21,6 +21,7 @@ export interface QuizSettings {
   secondaryColor: string;
   backgroundColor: string;
   showCorrectAnswerDefault: ShowCorrectAnswerTypes;
+  backgroundStyleDefault: BackgroundStyle;
 }
 
 interface QuestionCreated {
@@ -36,7 +37,9 @@ export enum SlideTypes {
   info = "info",
   score = "score",
   question = "question",
+  lobby = "lobby"
 }
+
 export type SlideType = SlideTypes;
 
 export enum QuestionTypes {
@@ -60,6 +63,11 @@ export interface BaseSlide {
 export interface InfoSlide extends BaseSlide {
   type: SlideTypes.info;
   embedVideoUrl?: string;
+}
+
+export interface LobbySlide extends BaseSlide {
+  type: SlideTypes.lobby;
+  quizCode: string;
 }
 
 export interface ScoreSlide extends BaseSlide {
@@ -147,6 +155,6 @@ export interface Participant {
   score: number[];
 }
 
-export type Slide = InfoSlide | ScoreSlide | QuestionSlide;
+export type Slide = InfoSlide | ScoreSlide | QuestionSlide | LobbySlide;
 
 export type QuestionSlide = MCQSASlide | MCQMASlide | FASlide | RankSlide;

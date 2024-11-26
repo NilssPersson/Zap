@@ -2,15 +2,18 @@ import { MCQMASlide, Participant } from "@/models/Quiz";
 import { CheckCircle2, CircleX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getColor } from "../base/QuizColors";
+import { Button } from "@/components/ui/button";
 
 export function HostAnswer({
   slide,
   participants,
   isPreview = false, // Default to false
+  onNextSlide,
 }: {
   slide: MCQMASlide;
   participants: Participant[];
   isPreview?: boolean;
+  onNextSlide: () => void;
 }) {
   console.log(participants);
 
@@ -37,7 +40,7 @@ export function HostAnswer({
     const maxVotes = Math.max(...answerCounts);
 
     return (
-      <div className="items-end justify-center flex gap-10 w-full pb-40">
+      <div className="items-end justify-center flex gap-10 w-full pb-20">
         {slide.options.map((option, index) => {
           const height =
             maxVotes > 0 ? (answerCounts[index] / maxVotes) * 200 : 0;
@@ -73,7 +76,7 @@ export function HostAnswer({
     return (
       <div
         className={cn(
-          "grid gap-6 w-full mt-6",
+          "grid gap-6 w-full",
           `grid-cols-${Math.ceil(slide.options.length / 2)}`, // Dynamic columns for answers
         )}
         style={{ gridAutoRows: "1fr" }}
@@ -96,9 +99,9 @@ export function HostAnswer({
           >
             <span className="text-center">{option.text}</span>
             {option.isCorrect ? (
-              <CheckCircle2 className="w-12 h-12 text-white br-40 ml-4" />
+              <CheckCircle2 className="w-12 h-12 text-white ml-4" />
             ) : (
-              <CircleX className="w-12 h-12 text-white br-40 ml-4" />
+              <CircleX className="w-12 h-12 text-white ml-4" />
             )}
           </div>
         ))}
@@ -108,12 +111,19 @@ export function HostAnswer({
 
   return (
     <div className="flex flex-col items-center h-full p-10 w-full">
-      <div className="bg-white rounded p-6 mb-20">
+      <div className="bg-white rounded p-6 mb-40">
         <h1 className="text-4xl text-black font-display">{slide.title}</h1>
       </div>
-
       <AnswerCount />
       <CorrectAnswers />
+      <Button
+        onClick={() => {
+          onNextSlide();
+        }}
+        className="ml-auto mt-10 "
+      >
+        Next Slide
+      </Button>
     </div>
   );
 }

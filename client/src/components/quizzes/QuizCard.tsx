@@ -103,9 +103,9 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
           e.stopPropagation();
           onHost(quiz);
         }}
-        className="gap-1 mr-auto"
+        className="gap-1 mr-auto flex items-center"
       >
-        Start Quiz
+        <span className="leading-none">Start Quiz</span>
         <Zap className="w-4 h-4" />
       </Button>
 

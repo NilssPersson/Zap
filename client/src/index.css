@@ -18,20 +18,20 @@ body {
   .fancy-wrap {
     paint-order: stroke fill;
     display: inline-block;
-    letter-spacing: -0.01ch;
+    letter-spacing: 1px;
     -webkit-text-stroke: 10px black;
-    text-shadow: 5px 5px 0 black, -5px -5px 0 gold;
+    text-shadow: 5px 5px 0 black, -5px -5px 0 hsl(var(--primary));
   }
 
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
+    --background: 206 100% 6%;
+    --foreground: 222.2 84% 100%;
+    --card: 36 66% 97%;
     --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
+    --popover: 36 66% 97%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 48 96% 47%;
-    --primary-foreground: 210 40% 2%;
+    --primary: 36 96% 61%;
+    --primary-foreground: 206 100% 6%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;

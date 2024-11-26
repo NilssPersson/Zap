@@ -49,7 +49,7 @@ export function useQuizEditor(quizId: string | undefined) {
             id: nanoid(),
             title: `New ${type} slide`,
             content: '',
-            backgroundStyle: 'waves' as const,
+            backgroundStyle: quiz.settings?.backgroundStyleDefault ?? quizDefaults.backgroundStyleDefault,
             type,
         };
 
@@ -100,7 +100,7 @@ export function useQuizEditor(quizId: string | undefined) {
             ...slideToClone,
             id: nanoid(),
             title: `${slideToClone.title} (Copy)`,
-            backgroundStyle: slideToClone.backgroundStyle || 'waves',
+            backgroundStyle: slideToClone.backgroundStyle || quiz.settings?.backgroundStyleDefault || quizDefaults.backgroundStyleDefault,
         };
 
         const newSlides = [...quiz?.slides || []];

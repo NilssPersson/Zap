@@ -26,7 +26,6 @@ export function AppRoutes() {
       <Route path="/play/:quizCode/" element={<ParticipantLogic />} />
       <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
       <Route path="/profile" element={<Profile />} /> 
-      
     </Routes>
   );
 }

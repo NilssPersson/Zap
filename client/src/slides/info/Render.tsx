@@ -1,7 +1,7 @@
 import { InfoSlide } from "@/models/Quiz";
 import { SlideTitle } from "@/slides/_components/SlideTitle";
 import { SlideContent } from "@/slides/_components/SlideContent";
-import EmbeddedVideo from "../_components/EmbeddedVideo";
+import EmbeddedVideo from "./EmbeddedVideo";
 
 export function Render({ slide }: { slide: InfoSlide }) {
     return <div className="space-y-8">

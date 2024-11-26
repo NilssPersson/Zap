@@ -1,10 +1,13 @@
+import { getYoutubeEmbedUrl } from "./utils";
+
 interface EmbeddedVideoProps {
   url: string;
 }
 
 function EmbeddedVideo({ url }: EmbeddedVideoProps) {
-  const youtubeId = url.split("v=")[1];
-  const src = `https://www.youtube.com/embed/${youtubeId}`;
+
+  const src = getYoutubeEmbedUrl(url);
+
   return (
     <div className="aspect-w-16 aspect-h-9 justify-self-center">
       <iframe
@@ -12,7 +15,7 @@ function EmbeddedVideo({ url }: EmbeddedVideoProps) {
         height="315"
         src={src}
         title="YouTube video player"
-        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
         referrerPolicy="strict-origin-when-cross-origin"
       />
     </div>

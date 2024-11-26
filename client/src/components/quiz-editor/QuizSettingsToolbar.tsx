@@ -3,9 +3,21 @@ import { Input } from "@/components/ui/input";
 import { useMemo } from "react";
 import { ColorInput } from "./ColorInput";
 import { ShowCorrectAnswerTypes } from "@/models/Quiz";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { SimpleSelect } from "../ui/SimpleSelect";
 import { Quiz, QuizSettings } from "@/models/Quiz";
 import { quizDefaults } from "./utils/quiz-defaults";
+import { BackgroundStyle } from "./QuizBackground";
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
 
 interface QuizSettingsToolbarProps {
     quiz: Quiz;
@@ -69,22 +81,68 @@ export function QuizSettingsToolbar({
                 />
             </div>
 
-            <div className="space-y-2">
-                <Label>Show Correct Answer</Label>
-                <Select
-                    value={originalSettings.showCorrectAnswerDefault || "auto"}
-                    onValueChange={(value) => onUpdate({ settings: { ...originalSettings, showCorrectAnswerDefault: value as ShowCorrectAnswerTypes } })}
-                >
-                    <SelectTrigger>
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="auto">Auto</SelectItem>
-                        <SelectItem value="manual">Manual</SelectItem>
-                        <SelectItem value="never">Never</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
+            <SimpleSelect
+                label="Show Correct Answer (Default)"
+                value={originalSettings.showCorrectAnswerDefault || "auto"}
+                onValueChange={(value) => onUpdate({ 
+                    settings: { 
+                        ...originalSettings, 
+                        showCorrectAnswerDefault: value as ShowCorrectAnswerTypes 
+                    } 
+                })}
+                options={[
+                    { value: "auto", label: "Auto" },
+                    { value: "manual", label: "Manual" },
+                    { value: "never", label: "Never" },
+                ]}
+            />
+
+            <SimpleSelect
+                label="Background Style (Default)"
+                value={originalSettings.backgroundStyleDefault || "blobInverted"}
+                onValueChange={(value) => onUpdate({ 
+                    settings: { 
+                        ...originalSettings, 
+                        backgroundStyleDefault: value as BackgroundStyle 
+                    } 
+                })}
+                options={[
+                    { value: "waves", label: "Waves" },
+                    { value: "blob", label: "Blob" },
+                    { value: "blobInverted", label: "Blob Inverted" },
+                    { value: "circle", label: "Circle" },
+                    { value: "solid", label: "Solid" },
+                ]}
+            />
+
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="outline" className="mt-4">
+                        Reset Settings
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Reset Quiz Settings</DialogTitle>
+                        <DialogDescription>
+                            This will reset all quiz settings to their default values. This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                            <Button 
+                                variant="destructive"
+                                onClick={() => onUpdate({ settings: quizDefaults })}
+                            >
+                                Reset Settings
+                            </Button>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 } 
