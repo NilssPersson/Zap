@@ -8,7 +8,7 @@ export function Header() {
   const { isAuthenticated, logout } = useKindeAuth();
 
   return (
-    <header className="bg-black/20 hidden md:block">
+    <header className="bg-black/40A hidden md:block">
       <div className="container flex h-16 items-center px-4">
         <div className="mr-4 hidden md:flex w-full">
           <nav className="flex items-center space-x-6 font-medium w-full justify-between">
