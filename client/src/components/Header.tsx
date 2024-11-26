@@ -37,14 +37,16 @@ export function Header() {
     };
   }, [location.pathname, timeoutId]);
 
-  if (location.pathname.endsWith("/lobby") && !showHeader) {
+  const inLobby = location.pathname.endsWith("/lobby");
+
+  if (inLobby && !showHeader) {
     return null;
   }
 
   return (
     <header className={cn(
       "bg-black/40 hidden md:block transition-opacity duration-200 border-b-2 border-b-primary shadow shadow-black/20 z-50",
-      location.pathname.endsWith("/lobby") && "absolute top-0 left-0 right-0"
+      inLobby && "absolute top-0 left-0 right-0"
     )}>
       <div className="container flex h-16 items-center px-4">
         <div className="mr-4 hidden md:flex w-full">
