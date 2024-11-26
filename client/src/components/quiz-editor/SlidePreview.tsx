@@ -17,7 +17,6 @@ interface SlidePreviewProps {
 const DESKTOP_WIDTH = 1920;
 const DESKTOP_HEIGHT = 1080;
 
-
 const PHONE_WIDTH = 375;
 const PHONE_HEIGHT = 812;
 
@@ -38,7 +37,8 @@ export function SlidePreview({
     const updateScale = () => {
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.offsetWidth;
-      const newScale = containerWidth / (isPhoneView ? PHONE_WIDTH : DESKTOP_WIDTH);
+      const newScale =
+        containerWidth / (isPhoneView ? PHONE_WIDTH : DESKTOP_WIDTH);
       setScale(newScale);
     };
 
@@ -53,9 +53,12 @@ export function SlidePreview({
 
   const SlideComponent = getSlideComponents(slide);
 
-  const Slide = whichPreview in SlideComponent
-    ? SlideComponent[whichPreview as keyof typeof SlideComponent] as React.ElementType<{ slide: Slide }>
-    : null;
+  const Slide =
+    whichPreview in SlideComponent
+      ? (SlideComponent[
+          whichPreview as keyof typeof SlideComponent
+        ] as React.ElementType<{ slide: Slide }>)
+      : null;
 
   return (
     <div

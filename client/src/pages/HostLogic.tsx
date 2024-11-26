@@ -32,7 +32,7 @@ const HostLogic: React.FC = () => {
 
   const ongoingQuiz = useMemo(
     () => ongoingQuizzes.find((quiz) => quiz.id === id),
-    [ongoingQuizzes, id]
+    [ongoingQuizzes, id],
   );
 
   const updateParticipants = useCallback(
@@ -42,10 +42,10 @@ const HostLogic: React.FC = () => {
         {
           participants,
         },
-        true
+        true,
       );
     },
-    [optimisticUpdate]
+    [optimisticUpdate],
   );
 
   usePathOnValue<Participant>(
@@ -53,7 +53,7 @@ const HostLogic: React.FC = () => {
     (participants) => {
       if (!id) return;
       updateParticipants(id, participants);
-    }
+    },
   );
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const HostLogic: React.FC = () => {
       if (participantsObj) {
         const participants = Object.values(participantsObj);
         const totalAnswers = participants.filter(
-          (participant) => participant.hasAnswered
+          (participant) => participant.hasAnswered,
         ).length;
         // Fetch question slide
         const questionSlide = ongoingQuiz.quiz.slides[
@@ -97,7 +97,7 @@ const HostLogic: React.FC = () => {
   const calculateScore = (
     question: QuestionSlide,
     participant: Participant,
-    participantAnswer: ParticipantAnswer
+    participantAnswer: ParticipantAnswer,
   ) => {
     if (!participant.answers) {
       return 0;
@@ -137,7 +137,7 @@ const HostLogic: React.FC = () => {
         const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
-          (value, index) => value === sortedQuestionAnswers[index]
+          (value, index) => value === sortedQuestionAnswers[index],
         );
 
         if (isAnswerCorrect) {
@@ -209,7 +209,7 @@ const HostLogic: React.FC = () => {
         console.log("New quiz after updates scores:", updatedQuiz);
         optimisticUpdate(
           ongoingQuiz.participants ? ongoingQuiz.id : "",
-          updatedQuiz
+          updatedQuiz,
         );
         console.log("Scores updated and answers reset successfully.");
       } catch (error) {
@@ -318,6 +318,7 @@ const HostLogic: React.FC = () => {
           slide={slide as never}
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
+          isPreview={false}
         />
       )}
       {renderButtons(slide)}
