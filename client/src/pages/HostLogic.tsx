@@ -222,7 +222,7 @@ const HostLogic: React.FC = () => {
 
   const nextSlide = async () => {
     if (!ongoingQuiz) {
-      return <h1>No ongoing quiz</h1>;
+      return;
     }
     if (!showAnswer) {
       updateScores(slide);
@@ -265,14 +265,6 @@ const HostLogic: React.FC = () => {
               Show Answer
             </Button>
           )}
-        <Button
-          onClick={() => {
-            nextSlide();
-          }}
-          className="m-5"
-        >
-          Next Slide
-        </Button>
       </div>
     );
   };
