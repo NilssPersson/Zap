@@ -53,7 +53,13 @@ export function SlidePreview({
     if (whichPreview === "Host")
       return <SlideComponent.Host slide={slide as never} participants={[]} />;
     if (whichPreview === "HostAnswer")
-      return <SlideComponent.HostAnswer slide={slide as never} />;
+      return (
+        <SlideComponent.HostAnswer
+          slide={slide as never}
+          participants={[]}
+          isPreview={true}
+        />
+      );
     if (whichPreview === "Participant")
       return (
         <SlideComponent.Participant
