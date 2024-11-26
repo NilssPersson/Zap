@@ -31,7 +31,7 @@ export function HostAnswer({
                   : null;
 
               // Check if the latestAnswer contains the current option.id
-              return latestAnswer?.answer.some((ans) => ans === option.id);
+              return latestAnswer?.answer.some((ans) => ans === option.text);
             }).length;
       });
     };
