@@ -56,9 +56,11 @@ const mockParticipants: Participant[] = [
 
 export function Preview({ slide }: { slide: ScoreSlide }) {
   return (
-    <div className="space-y-12 w-full">
-      <SlideTitle title={slide.title} />
-      <ScoreBoard slide={slide} participants={mockParticipants} />
-    </div>
+    <>
+      <div className="space-y-12 w-full">
+        <SlideTitle title={slide.title} />
+        <ScoreBoard slide={slide} participants={mockParticipants} />
+      </div>
+    </>
   );
 }

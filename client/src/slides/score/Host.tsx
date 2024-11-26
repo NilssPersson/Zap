@@ -1,3 +1,4 @@
+import { Confetti } from "@/components/particles/Confetti";
 import { Button } from "@/components/ui/button";
 import { ScoreSlide, Participant } from "@/models/Quiz";
 
@@ -14,6 +15,7 @@ export function Host({
 }) {
   return (
     <div>
+      <Confetti />
       <ScoreBoard slide={slide} participants={participants} />
       <Button
         onClick={() => {
