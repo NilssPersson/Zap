@@ -13,6 +13,9 @@ import HostLogic from "@/pages/HostLogic";
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
 
+
+  
+
   return (
     <Routes>
       <Route path="/" element={isAuthenticated ? <Quizzes /> : <Home />} />

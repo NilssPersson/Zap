@@ -1,6 +1,7 @@
 import { InfoSlide } from "@/models/Quiz";
 import { SlideTitle } from "@/slides/_components/SlideTitle";
 import { SlideContent } from "@/slides/_components/SlideContent";
+import EmbeddedVideo from "./EmbeddedVideo";
 
 export function Render({ slide }: { slide: InfoSlide }) {
     return <div className="space-y-8">
@@ -23,5 +24,8 @@ export function Render({ slide }: { slide: InfoSlide }) {
         <SlideContent
             content={slide.content}
         />
+        {slide.embedVideoUrl && (
+            <EmbeddedVideo url={slide.embedVideoUrl} />
+        )}
     </div>
 } 

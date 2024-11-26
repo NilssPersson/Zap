@@ -21,6 +21,7 @@ export interface QuizSettings {
   secondaryColor: string;
   backgroundColor: string;
   showCorrectAnswerDefault: ShowCorrectAnswerTypes;
+  backgroundStyleDefault: BackgroundStyle;
 }
 
 interface QuestionCreated {
@@ -36,7 +37,9 @@ export enum SlideTypes {
   info = "info",
   score = "score",
   question = "question",
+  lobby = "lobby"
 }
+
 export type SlideType = SlideTypes;
 
 export enum QuestionTypes {
@@ -59,16 +62,16 @@ export interface BaseSlide {
 
 export interface InfoSlide extends BaseSlide {
   type: SlideTypes.info;
+  embedVideoUrl?: string;
 }
 
-export interface ScoreSlideInterface extends BaseSlide {
-  type: SlideTypes.score;
-  mockScores?: { name: string; points: number; newPoints: number }[];
+export interface LobbySlide extends BaseSlide {
+  type: SlideTypes.lobby;
+  quizCode: string;
 }
 
 export interface ScoreSlide extends BaseSlide {
   type: SlideTypes.score;
-  mockScores?: { name: string; points: number; newPoints: number }[];
 }
 
 export enum AnswerTypes {
@@ -136,12 +139,15 @@ export interface OngoingQuiz {
   quizHost: string;
   participants: { [id: string]: Participant };
 }
+
+export interface ParticipantAnswer {
+  slideNumber: number;
+  answer: string[];
+  time: string;
+}
+
 export interface Participant {
-  answers: Array<{
-    slideNumber: number;
-    answer: string[];
-    time: string;
-  }>;
+  answers: Array<ParticipantAnswer>;
   hasAnswered: boolean;
   avatar: string;
   name: string;
@@ -149,6 +155,6 @@ export interface Participant {
   score: number[];
 }
 
-export type Slide = InfoSlide | ScoreSlide | QuestionSlide;
+export type Slide = InfoSlide | ScoreSlide | QuestionSlide | LobbySlide;
 
 export type QuestionSlide = MCQSASlide | MCQMASlide | FASlide | RankSlide;

@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ParticipantService, useGameStatus } from "@/services/participant";
-import TeamInfo from "./components/teamInfo";
+import TeamInfo from "./components/ParticipantInfo";
 import CreateParticipant from "./components/CreateParticipant";
-import { LogOut } from "lucide-react";
+import { LogOut, Zap } from "lucide-react";
 import { useCookies } from "react-cookie";
 import LobbyView from "@/pages/participantQuizView/components/LobbyView";
 import HasAnsweredView from "@/pages/participantQuizView/components/HasAnsweredView";
@@ -163,23 +163,36 @@ export default function ParticipantLogic() {
   }
 
   return (
-    <div>
+    <div className="h-dvh flex flex-col w-full font-display">
       {/* Top: Leave functionality */}
-      <div className="fixed top-2 left-2 bg-[#F4F3F2] text-[#333333] rounded-md">
-        <Button variant="ghost" onClick={handleRemoveParticipant}>
-          <LogOut />
-          Leave
-        </Button>
+      <div className="flex p-2 w-full bg-[#F4F3F2] text-[#333333]">
+        <div className="flex-1 flex items-center justify-start">
+          <Button variant="outline" onClick={handleRemoveParticipant}>
+            <LogOut />
+            Leave
+          </Button>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center text-xl">
+          <Zap className="w-6 h-6 mr-1 text-primary" />
+          Zap!
+        </div>
+
+        <div className="flex-1 flex items-center justify-end text-xl">
+          {currentSlide}/{questions?.length}
+        </div>
       </div>
 
       {/* Middle: Quiz Question */}
-      <QuizView
-        questions={questions}
-        currentSlide={currentSlide}
-        participantData={participantData}
-        answerQuestion={answerQuestion}
-        showAnswer={showAnswer}
-      />
+      <div className="flex-grow flex flex-col w-full overflow-auto">
+        <QuizView
+          questions={questions}
+          currentSlide={currentSlide}
+          participantData={participantData}
+          answerQuestion={answerQuestion}
+          showAnswer={showAnswer}
+        />
+      </div>
 
       {/* Bottom: Team info */}
       <TeamInfo participant={participantData} />

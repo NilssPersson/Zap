@@ -11,10 +11,14 @@ interface SlidePreviewProps {
   backgroundColor?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  whichPreview?: string;
 }
 
-const SLIDE_WIDTH = 1920;
-const SLIDE_HEIGHT = 1080;
+const DESKTOP_WIDTH = 1920;
+const DESKTOP_HEIGHT = 1080;
+
+const PHONE_WIDTH = 375;
+const PHONE_HEIGHT = 812;
 
 export function SlidePreview({
   slide,
@@ -22,15 +26,19 @@ export function SlidePreview({
   backgroundColor = "#000B58",
   primaryColor = "#006a67",
   secondaryColor = "#fff4b7",
+  whichPreview = "Preview",
 }: SlidePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+
+  const isPhoneView = whichPreview === "Participant";
 
   useEffect(() => {
     const updateScale = () => {
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.offsetWidth;
-      const newScale = containerWidth / SLIDE_WIDTH;
+      const newScale =
+        containerWidth / (isPhoneView ? PHONE_WIDTH : DESKTOP_WIDTH);
       setScale(newScale);
     };
 
@@ -41,18 +49,25 @@ export function SlidePreview({
     }
 
     return () => resizeObserver.disconnect();
-  }, []);
+  }, [isPhoneView]);
 
   const SlideComponent = getSlideComponents(slide);
+
+  const Slide =
+    whichPreview in SlideComponent
+      ? (SlideComponent[
+          whichPreview as keyof typeof SlideComponent
+        ] as React.ElementType<{ slide: Slide }>)
+      : null;
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        "relative",
-        "aspect-video w-full",
+        "relative w-full pointer-events-none",
+        isPhoneView ? "aspect-[9/16]" : "aspect-video",
         "overflow-hidden",
-        className
+        className,
       )}
     >
       <QuizBackground
@@ -65,13 +80,13 @@ export function SlidePreview({
       <div
         className="origin-top-left relative"
         style={{
-          width: SLIDE_WIDTH,
-          height: SLIDE_HEIGHT,
+          width: isPhoneView ? PHONE_WIDTH : DESKTOP_WIDTH,
+          height: isPhoneView ? PHONE_HEIGHT : DESKTOP_HEIGHT,
           transform: `scale(${scale})`,
         }}
       >
         <div className="w-full h-full flex items-center justify-center p-16">
-          <SlideComponent.Preview slide={slide as never} />
+          {Slide && <Slide slide={slide} />}
         </div>
       </div>
     </div>

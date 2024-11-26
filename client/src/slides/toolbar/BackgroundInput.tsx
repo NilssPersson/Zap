@@ -7,17 +7,17 @@ import { ToolbarProps } from "..";
 
 export default function BackgroundInput({ slide, onSlideUpdate }: ToolbarProps) {
     const backgroundStyles: { value: BackgroundStyle; label: string }[] = [
-        { value: "waves", label: "Waves" },
-        { value: "blob", label: "Blob" },
-        { value: "blobInverted", label: "Inverted Blob" },
-        { value: "circle", label: "Circles" },
+        { value: BackgroundStyle.Waves, label: "Waves" },
+        { value: BackgroundStyle.Blob, label: "Blob" },
+        { value: BackgroundStyle.BlobInverted, label: "Inverted Blob" },
+        { value: BackgroundStyle.Circle, label: "Circles" },
     ];
 
     return (
         <div className="space-y-2">
             <Label>Background Style</Label>
             <Select
-                value={slide.backgroundStyle || "waves"}
+                value={slide.backgroundStyle || BackgroundStyle.Waves}
                 onValueChange={(value: BackgroundStyle) =>
                     onSlideUpdate({ ...slide, backgroundStyle: value })
                 }

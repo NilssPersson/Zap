@@ -8,7 +8,7 @@ function Home() {
     return (
         <div className="flex-1 flex flex-col items-center justify-center">
             <WiggleText 
-                text="GameShack" 
+                text="Zap!" 
                 className="text-7xl font-bold font-display mb-16 fancy-wrap"
             />
             <div className="flex flex-col gap-4">

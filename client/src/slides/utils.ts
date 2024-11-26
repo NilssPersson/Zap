@@ -1,7 +1,7 @@
 import { QuestionType, Slide, SlideType } from '@/models/Quiz';
-import { Info, Score, MCQSA, MCQMA, FA, Rank } from './';
+import { Info, Score, Lobby, MCQSA, MCQMA, FA, Rank } from './';
 
-export function getSlideComponents(slide: Slide) {
+export function getSlideComponents(slide: Slide,) {
     if ("questionType" in slide) {
         return getSlideComponentsFromType(slide.type, slide.questionType);
     }
@@ -14,6 +14,8 @@ export function getSlideComponentsFromType(type: SlideType, questionType?: Quest
             return Info;
         case "score":
             return Score;
+        case "lobby":
+            return Lobby;
         case "question":
             switch (questionType) {
                 case "MCQSA":

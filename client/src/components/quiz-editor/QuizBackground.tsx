@@ -1,6 +1,12 @@
 import { useMemo } from "react";
 
-export type BackgroundStyle = 'waves' | 'blob' | 'blobInverted' | 'circle';
+export enum BackgroundStyle {
+    Waves = 'waves',
+    Blob = 'blob',
+    BlobInverted = 'blobInverted',
+    Circle = 'circle',
+    Solid = 'solid'
+}
 
 interface QuizBackgroundProps {
     primaryColor: string;
@@ -15,7 +21,7 @@ export function QuizBackground({
     secondaryColor = "#498e77", 
     backgroundColor = "#000B58", 
     className,
-    style = 'waves'
+    style = BackgroundStyle.BlobInverted
 }: QuizBackgroundProps) {
     const svgContent = useMemo(() => {
         const getWavesSvg = () => {
@@ -52,15 +58,7 @@ export function QuizBackground({
                 `;
             case 'blobInverted':
                 return `
-                    <svg id="visual" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                        <rect x="0" y="0" width="960" height="540" fill="${backgroundColor}"></rect>
-                        <g transform="translate(960, 0)">
-                            <path d="M0 486C-51.2 452.2 -102.4 418.4 -166.1 401C-229.8 383.5 -306.1 382.5 -343.7 343.7C-381.2 304.8 -380 228.1 -397.3 164.6C-414.5 101 -450.3 50.5 -486 0L0 0Z" fill="${primaryColor}"></path>
-                        </g>
-                        <g transform="translate(0, 540)">
-                            <path d="M0 -486C54.3 -462.1 108.7 -438.2 174.1 -420.4C239.6 -402.5 316.2 -390.7 343.7 -343.7C371.1 -296.6 349.4 -214.3 364.9 -151.2C380.5 -88 433.2 -44 486 0L0 0Z" fill="${primaryColor}"></path>
-                        </g>
-                    </svg>
+                    <svg id="visual" viewBox="0 0 1920 1080" width="1920" height="1080" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><rect x="0" y="0" width="1920" height="1080" fill="#001220"></rect><defs><linearGradient id="grad1_0" x1="43.8%" y1="0%" x2="100%" y2="100%"><stop offset="14.444444444444446%" stop-color="#001220" stop-opacity="1"></stop><stop offset="85.55555555555554%" stop-color="#001220" stop-opacity="1"></stop></linearGradient></defs><defs><linearGradient id="grad2_0" x1="0%" y1="0%" x2="56.3%" y2="100%"><stop offset="14.444444444444446%" stop-color="#001220" stop-opacity="1"></stop><stop offset="85.55555555555554%" stop-color="#001220" stop-opacity="1"></stop></linearGradient></defs><g transform="translate(1920, 0)"><path d="M0 378C-66.4 368.3 -132.7 358.5 -189 327.4C-245.3 296.2 -291.5 243.6 -321.3 185.5C-351.1 127.4 -364.6 63.7 -378 0L0 0Z" fill="#FBAE3C"></path></g><g transform="translate(0, 1080)"><path d="M0 -378C33 -311.4 66 -244.9 128 -221.7C190 -198.5 280.9 -218.7 327.4 -189C373.8 -159.3 375.9 -79.6 378 0L0 0Z" fill="#FBAE3C"></path></g></svg>
                 `;
             case 'circle':
                 return `
@@ -79,7 +77,7 @@ export function QuizBackground({
     }, [primaryColor, secondaryColor, backgroundColor, style]);
 
     const dataUrl = useMemo(() => {
-        return `data:image/svg+xml;base64,${btoa(svgContent)}`;
+        return `data:image/svg+xml;base64,${btoa(svgContent || '')}`;
     }, [svgContent]);
 
     return (

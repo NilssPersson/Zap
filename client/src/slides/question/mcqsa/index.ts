@@ -3,10 +3,12 @@ export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer';
 export * from './Host';
+export * from './HostAnswer';
 
 import { QuestionTypes, SlideTypes, AnswerTypes } from '@/models/Quiz';
 import { CircleDotIcon } from "lucide-react";
 import { SlideInfo } from '../..';
+import { nanoid } from 'nanoid'
 
 export const Info: SlideInfo = {
     value: "question:MCQSA",
@@ -16,7 +18,7 @@ export const Info: SlideInfo = {
     questionType: QuestionTypes.MCQSA,
     defaults: {
         options: Array.from({ length: 4 }, (_, i) => ({
-            id: crypto.randomUUID(),
+            id: nanoid(),
             text: `Option ${i + 1}`,
             isCorrect: i === 0,
         })),

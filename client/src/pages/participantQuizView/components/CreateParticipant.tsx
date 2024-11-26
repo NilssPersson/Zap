@@ -6,7 +6,7 @@ import Avatar, { genConfig } from "react-nice-avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetAuthenticatedUser from "@/hooks/useGetAuthenticatedUser";
 import { userService } from "@/services/users";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, Dices } from "lucide-react";
 
 interface CreateParticipantProps {
   handleAddParticipant: (name: string, avatar: string) => void;
@@ -21,17 +21,15 @@ function createRandomId() {
 }
 
 export default function CreateParticipant({
-  
   handleAddParticipant,
 }: CreateParticipantProps) {
   const [showError, setShowError] = useState(false);
   const [ifUserLoggedIn, setIfUserLoggedIn] = useState(false);
   const { user } = useGetAuthenticatedUser();
-  const [guestAvatar, setGuestAvatar] = useState (createRandomId())
-  const [guestName, setGuestName] = useState("")
-  const [name, setName] = useState("")
-  const [avatar, setAvatar] = useState("")
-
+  const [guestAvatar, setGuestAvatar] = useState(createRandomId());
+  const [guestName, setGuestName] = useState("");
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     async function initializeUser() {
@@ -53,8 +51,8 @@ export default function CreateParticipant({
 
         if (data) {
           setIfUserLoggedIn(true);
-          setName(data.username || "")
-          setAvatar(data.avatar || createRandomId())
+          setName(data.username || "");
+          setAvatar(data.avatar || createRandomId());
         }
       } catch (error) {
         console.error("Failed to initialize user:", error);
@@ -64,21 +62,18 @@ export default function CreateParticipant({
     initializeUser();
   }, [user]);
 
-
   const handleSubmit = () => {
-    
     if (!name) {
-      console.log("if no name")
+      console.log("if no name");
       setShowError(true);
       return;
     }
 
-    handleAddParticipant(name,avatar);
+    handleAddParticipant(name, avatar);
   };
 
   const handleGuestSubmit = () => {
     if (!guestName) {
-      
       setShowError(true);
       return;
     }
@@ -89,12 +84,11 @@ export default function CreateParticipant({
   function changeAvatarClick() {
     const randomString = createRandomId();
     setAvatar(randomString);
-    
   }
 
   function changeGuestAvatarClick() {
     const randomString = createRandomId();
-    setGuestAvatar(randomString)
+    setGuestAvatar(randomString);
   }
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -106,25 +100,22 @@ export default function CreateParticipant({
     setShowError(false);
   }
 
-  
-
-
   return (
     <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
       {ifUserLoggedIn && (
         <Tabs defaultValue="me">
-          <div className="bg-component-background rounded-lg flex flex-col items-center justify-center  p-6 w-full">
+          <div className="bg-component-background  w-3/4 mx-auto rounded-lg flex flex-col items-center justify-center  p-6 ">
             {ifUserLoggedIn && (
               <div className="flex flex-col items-center justify-center w-full max-w-md  ">
-                <TabsList className="flex-1 space-x-10 w-full grid-cols-2 p-6 rounded-lg">
+                <TabsList className="flex-1  w-full grid-cols-2 p-8 rounded-lg">
                   <TabsTrigger
-                    className=" rounded-lg font-display md:text-2xl text-2xl p-4 "
+                    className=" rounded-lg font-display md:text-lg text-lg  "
                     value="me"
                   >
                     Play as {name}
                   </TabsTrigger>
                   <TabsTrigger
-                    className="rounded-lg font-display md:text-2xl text-2xl p-4"
+                    className="rounded-lg font-display md:text-lg text-lg "
                     value="guest"
                   >
                     Play as Guest
@@ -137,13 +128,13 @@ export default function CreateParticipant({
               className="flex flex-col items-center justify-center space-y-4"
             >
               <Avatar
-                style={{ width: "8rem", height: "8rem" }}
+                style={{ width: "6rem", height: "6rem" }}
                 {...genConfig(avatar)}
               />
 
               <Input
                 disabled={true}
-                className={`text-[#333333] text-center font-display md:text-3xl text-3xl py-8 px-12 w-full shadow-lg ${
+                className={`text-[#333333] text-center font-display md:text-lg text-lg py-8 px-12 w-full shadow-lg ${
                   showError && "border-red-500 animate-shake"
                 }`}
                 value={name}
@@ -162,19 +153,23 @@ export default function CreateParticipant({
               className="flex flex-col items-center justify-center space-y-4"
             >
               <Avatar
-                style={{ width: "8rem", height: "8rem" }}
+                style={{ width: "6rem", height: "6rem" }}
                 {...genConfig(guestAvatar)}
               />
-              <Button onClick={changeGuestAvatarClick} className="mx-5 bg-blue-400">
+              <Button
+                onClick={changeGuestAvatarClick}
+                className="mx-5 bg-blue-400"
+              >
                 Randomize
               </Button>
               <Input
-                placeholder="Enter Guest Name"
-                className={`text-[#333333] text-center font-display md:text-3xl text-3xl py-8 px-12 w-full shadow-lg ${
+                placeholder="Guest Name"
+                className={`text-[#333333] text-center font-display md:text-lg text-lg py-8 px-12 w-full shadow-lg ${
                   showError && "border-red-500 animate-shake"
                 }`}
                 value={guestName}
                 onChange={handleGuestNameChange}
+                maxLength={15}
               />
               {/* Join */}
               {showError && (
@@ -189,38 +184,52 @@ export default function CreateParticipant({
               >
                 Play
               </Button>
-
-              
-
-              
             </TabsContent>
           </div>
         </Tabs>
       )}
       {!ifUserLoggedIn && (
-        <div className=" bg-component-background rounded-lg flex flex-col items-center justify-center gap-4 p-6 ">
-          <Avatar
-            style={{ width: "8rem", height: "8rem" }}
-            {...genConfig(avatar)}
-          />
-          <Button onClick={changeAvatarClick} className="mx-5 bg-blue-400">
-            Randomize
-          </Button>
-          <Input
-            placeholder="Enter Guest Name"
-            className={`text-[#333333] text-center font-display md:text-3xl text-3xl py-8 px-12 w-full shadow-lg ${
-              showError && "border-red-500 animate-shake"
-            }`}
-            value={name}
-            onChange={handleNameChange}
-          />
-          {/* Join */}
-          <Button
-            onClick={handleSubmit}
-            className="bg-[#333333] text-3xl text-[#fefefe] hover:bg-[#86D293] py-8 px-12 font-display w-full shadow-lg"
-          >
-            Play
-          </Button>
+        <div className="bg-component-background w-3/4 mx-auto rounded-lg flex flex-col items-center justify-center p-6">
+          <div className="flex flex-col items-center justify-center w-full max-w-md">
+            {/* Avatar and Shuffle Icon */}
+            <div className="flex items-center space-x-4 mb-4">
+              <Avatar
+                style={{ width: "4rem", height: "4rem" }}
+                {...genConfig(avatar)}
+              />
+              <Button
+                onClick={changeAvatarClick}
+                className="rounded-full"
+                title="Randomize Avatar"
+              >
+                <Dices className=" text-gray " />
+              </Button>
+            </div>
+            {/* Input Field */}
+            <Input
+              placeholder="Guest Name"
+              className={`text-[#333333] text-center font-display md:text-lg text-md shadow-lg w-2/3 mb-4 ${
+                showError && "border-red-500 animate-shake"
+              }`}
+              value={guestName}
+              maxLength={15}
+              onChange={handleGuestNameChange}
+            />
+            {/* Error Message */}
+            {showError && (
+              <div className="flex justify-start items-center text-red-500 mb-4">
+                <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
+                <p className="font-display">Please enter a guest name</p>
+              </div>
+            )}
+            {/* Play Button */}
+            <Button
+              onClick={handleGuestSubmit}
+              className="text-[#333333] text-center font-display md:text-lg text-md shadow-lg w-2/3"
+            >
+              Play
+            </Button>
+          </div>
         </div>
       )}
     </div>

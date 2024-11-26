@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
-import { ref, onValue, off, get, set, update, DataSnapshot } from "firebase/database";
+import {
+  ref,
+  onValue,
+  off,
+  get,
+  set,
+  update,
+  DataSnapshot,
+} from "firebase/database";
 import { database } from "@/firebase";
 import { Participant, Slide } from "@/models/Quiz";
+import { nanoid } from "nanoid";
 
 export const ParticipantService = {
   async checkIfGameExists(quizCode: string): Promise<boolean> {
@@ -10,14 +19,24 @@ export const ParticipantService = {
     return quizSnap.exists();
   },
 
-  async participantExists(quizCode: string, participantId: string): Promise<boolean> {
-    const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+  async participantExists(
+    quizCode: string,
+    participantId: string
+  ): Promise<boolean> {
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/${participantId}`
+    );
     const participantSnap = await get(participantRef);
     return participantSnap.exists();
   },
 
-  async addParticipant(quizCode: string, name: string, avatar: string): Promise<string | null> {
-    const participantId = crypto.randomUUID();
+  async addParticipant(
+    quizCode: string,
+    name: string,
+    avatar: string
+  ): Promise<string | null> {
+    const participantId = nanoid();
     const quizExists = await this.checkIfGameExists(quizCode);
 
     if (!quizExists) {
@@ -25,7 +44,10 @@ export const ParticipantService = {
       return null;
     }
 
-    const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/${participantId}`
+    );
     const payload = {
       score: [0],
       hasAnswered: false,
@@ -50,21 +72,26 @@ export const ParticipantService = {
     answer: string[],
     slideNumber: number
   ): Promise<boolean> {
-    const participantExists = await this.participantExists(quizCode, participantId);
+    const participantExists = await this.participantExists(
+      quizCode,
+      participantId
+    );
 
     if (!participantExists) {
       console.error("Participant does not exist in quiz");
       return false;
     }
 
-    const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/${participantId}`
+    );
     const participantSnap = await get(participantRef);
 
     if (!participantSnap.exists()) {
       console.error("Participant data not found");
       return false;
     }
-
     const participantData = participantSnap.val();
     const updatedAnswers = [
       ...(participantData.answers || []),
@@ -83,8 +110,14 @@ export const ParticipantService = {
     }
   },
 
-  async removeParticipant(quizCode: string, participantId: string): Promise<boolean> {
-    const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+  async removeParticipant(
+    quizCode: string,
+    participantId: string
+  ): Promise<boolean> {
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/${participantId}`
+    );
     try {
       await set(participantRef, null);
       return true;
@@ -94,8 +127,14 @@ export const ParticipantService = {
     }
   },
 
-  async getParticipant(quizCode: string, participantId: string): Promise<Participant | null> {
-    const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
+  async getParticipant(
+    quizCode: string,
+    participantId: string
+  ): Promise<Participant | null> {
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/${participantId}`
+    );
     const participantSnap = await get(participantRef);
     return participantSnap.exists() ? participantSnap.val() : null;
   },
@@ -110,13 +149,21 @@ export const ParticipantService = {
 // Custom Hook: useGameStatus
 export const useGameStatus = (quizCode: string, participantId: string) => {
   const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const [showAnswer,setShowAnswer] = useState<boolean>(false);
-  const [participantData, setParticipantData] = useState<Participant | null>(null);
+  const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  const [participantData, setParticipantData] = useState<Participant | null>(
+    null
+  );
 
   useEffect(() => {
     const slideRef = ref(database, `ongoingQuizzes/${quizCode}/currentSlide`);
-    const participantRef = ref(database, `ongoingQuizzes/${quizCode}/participants/${participantId}`);
-    const showAnswerRef = ref(database, `ongoingQuizzes/${quizCode}/isShowingCorrectAnswer`);
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/${participantId}`
+    );
+    const showAnswerRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/isShowingCorrectAnswer`
+    );
 
     const handleSlideChange = (snapshot: DataSnapshot) => {
       setCurrentSlide(snapshot.exists() ? snapshot.val() : 0);
@@ -126,20 +173,20 @@ export const useGameStatus = (quizCode: string, participantId: string) => {
       setParticipantData(snapshot.exists() ? snapshot.val() : null);
     };
 
-    const handleShowAnswerChange = (snapshot:DataSnapshot) => {
-      setShowAnswer(snapshot.exists() ? snapshot.val() : false)
-    }
+    const handleShowAnswerChange = (snapshot: DataSnapshot) => {
+      setShowAnswer(snapshot.exists() ? snapshot.val() : false);
+    };
 
     onValue(slideRef, handleSlideChange);
     onValue(participantRef, handleParticipantChange);
-    onValue(showAnswerRef, handleShowAnswerChange)
+    onValue(showAnswerRef, handleShowAnswerChange);
 
     return () => {
       off(slideRef, "value", handleSlideChange);
       off(participantRef, "value", handleParticipantChange);
-      off(showAnswerRef, "value", handleShowAnswerChange)
+      off(showAnswerRef, "value", handleShowAnswerChange);
     };
   }, [quizCode, participantId]);
 
-  return { currentSlide, participantData,showAnswer };
+  return { currentSlide, participantData, showAnswer };
 };
