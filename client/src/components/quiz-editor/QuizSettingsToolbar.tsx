@@ -7,6 +7,17 @@ import { SimpleSelect } from "../ui/SimpleSelect";
 import { Quiz, QuizSettings } from "@/models/Quiz";
 import { quizDefaults } from "./utils/quiz-defaults";
 import { BackgroundStyle } from "./QuizBackground";
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
 
 interface QuizSettingsToolbarProps {
     quiz: Quiz;
@@ -103,6 +114,35 @@ export function QuizSettingsToolbar({
                     { value: "solid", label: "Solid" },
                 ]}
             />
+
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="outline" className="mt-4">
+                        Reset Settings
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Reset Quiz Settings</DialogTitle>
+                        <DialogDescription>
+                            This will reset all quiz settings to their default values. This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                            <Button 
+                                variant="destructive"
+                                onClick={() => onUpdate({ settings: quizDefaults })}
+                            >
+                                Reset Settings
+                            </Button>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 } 
