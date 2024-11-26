@@ -1,8 +1,9 @@
 import { MCQSASlide } from "@/models/Quiz";
 import { BaseQuestionRender } from "../base/QuestionRender";
 import { getColor } from "../base/QuizColors";
+import { Button } from "@/components/ui/button";
 
-export function Host({ slide }: { slide: MCQSASlide }) {
+export function Host({ slide, onNextSlide }: { slide: MCQSASlide; onNextSlide: () => void }) {
   return (
     <BaseQuestionRender slide={slide}>
       <div className="flex flex-col items-center justify-center h-full p-10">
@@ -20,6 +21,14 @@ export function Host({ slide }: { slide: MCQSASlide }) {
             </div>
           ))}
         </div>
+        <Button
+          onClick={() => {
+            onNextSlide();
+          }}
+          className="m-5"
+        >
+          Next Slide
+        </Button>
       </div>
     </BaseQuestionRender>
   );

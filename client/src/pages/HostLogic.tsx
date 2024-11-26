@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import QuizLobby from "./QuizLobby";
 import { Button } from "@/components/ui/button";
 import {
   QuestionSlide,
@@ -10,6 +9,7 @@ import {
   AnswerTypes,
   Slide,
   ParticipantAnswer,
+  LobbySlide,
 } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
 
@@ -222,8 +222,12 @@ const HostLogic: React.FC = () => {
 
   const nextSlide = async () => {
     if (!ongoingQuiz) {
-      return <h1>No ongoing quiz</h1>;
+      return;
     }
+    if (!showAnswer) {
+      updateScores(slide);
+    }
+
     const updatedQuiz = ongoingQuiz;
     updatedQuiz.currentSlide = updatedQuiz?.currentSlide + 1;
 
@@ -233,10 +237,11 @@ const HostLogic: React.FC = () => {
   };
 
   const renderButtons = (slide: Slide) => {
-    if (slide.type == SlideTypes.question) {
-      return (
-        <div className="flex flex-col">
-          {!showAnswer && slide.timeLimit > 0 && (
+    return (
+      <div className="flex flex-col">
+        {slide.type == SlideTypes.question &&
+          !showAnswer &&
+          slide.timeLimit > 0 && (
             <div>
               <Countdown
                 date={Date.now() + slide.timeLimit * 1000}
@@ -247,38 +252,21 @@ const HostLogic: React.FC = () => {
               ></Countdown>
             </div>
           )}
-          {!showAnswer &&
-            slide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
-              <Button
-                onClick={() => {
-                  setShowAnswer(true);
-                  updateScores(slide);
-                }}
-                className="m-5"
-              >
-                Show Answer
-              </Button>
-            )}
-          <Button
-            onClick={() => {
-              if (!showAnswer) {
+        {slide.type == SlideTypes.question &&
+          !showAnswer &&
+          slide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
+            <Button
+              onClick={() => {
+                setShowAnswer(true);
                 updateScores(slide);
-              }
-              nextSlide();
-            }}
-            className="m-5"
-          >
-            Next Slide
-          </Button>
-        </div>
-      );
-    } else {
-      return (
-        <Button onClick={nextSlide} className="m-5">
-          Next slide
-        </Button>
-      );
-    }
+              }}
+              className="m-5"
+            >
+              Show Answer
+            </Button>
+          )}
+      </div>
+    );
   };
 
   if (!ongoingQuiz) return <div>Loading Quiz...</div>;
@@ -292,20 +280,18 @@ const HostLogic: React.FC = () => {
     );
   }
 
+  const currentSlide = ongoingQuiz.currentSlide - 1;
+  let slide = ongoingQuiz.quiz.slides[currentSlide];
   if (ongoingQuiz.currentSlide === 0) {
-    return (
-      <QuizLobby
-        quizCode={ongoingQuiz.id || ""}
-        participants={Object.values(ongoingQuiz.participants || {})}
-        onStartGame={nextSlide}
-      />
-    );
+    slide = {
+      id: "",
+      type: SlideTypes.lobby,
+      title: "Lobby Slide",
+      quizCode: ongoingQuiz.id,
+    } as LobbySlide;
   }
 
-  const currentSlide = ongoingQuiz.currentSlide - 1;
-  const questionSlide = ongoingQuiz.quiz.slides[currentSlide] as QuestionSlide;
-
-  if (!questionSlide) {
+  if (!slide) {
     return (
       <h1 className="text-5xl font-display">
         Your Quiz is missing slides :(
@@ -314,18 +300,27 @@ const HostLogic: React.FC = () => {
     );
   }
 
-  const SlideComponent = getSlideComponents(questionSlide);
+  const SlideComponent = getSlideComponents(slide);
 
   return (
     <div>
       {!showAnswer && (
         <SlideComponent.Host
           participants={Object.values(ongoingQuiz.participants)}
-          slide={questionSlide as never}
+          slide={slide as never}
+          onNextSlide={nextSlide}
+          quizCode={ongoingQuiz.id}
         />
       )}
-      {showAnswer && <h1>Showing answer </h1>}
-      {renderButtons(questionSlide)}
+      {showAnswer && (
+        <SlideComponent.HostAnswer
+          participants={Object.values(ongoingQuiz.participants)}
+          slide={slide as never}
+          onNextSlide={nextSlide}
+          quizCode={ongoingQuiz.id}
+        />
+      )}
+      {renderButtons(slide)}
     </div>
   );
 };
