@@ -1,7 +1,9 @@
 export * from "./Preview";
 export * from "./Render";
 export * from "./Host";
-export * from "./HostAnswer"
+export * from "./HostAnswer";
+export * from "./Participant";
+export * from "./ParticipantAnswer";
 
 import { SlideTypes } from "@/models/Quiz";
 import { Star } from "lucide-react";
