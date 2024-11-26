@@ -3,6 +3,7 @@ import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import { Zap } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const location = useLocation();
@@ -36,14 +37,17 @@ export function Header() {
     };
   }, [location.pathname, timeoutId]);
 
-  if (location.pathname.endsWith("/lobby") && !showHeader) {
+  const inLobby = location.pathname.endsWith("/lobby");
+
+  if (inLobby && !showHeader) {
     return null;
   }
 
   return (
-    <header className={`bg-black/40 hidden md:block transition-opacity duration-200 ${
-      location.pathname.endsWith("/lobby") ? "absolute top-0 left-0 right-0" : ""
-    }`}>
+    <header className={cn(
+      "bg-black/40 hidden md:block transition-opacity duration-200 border-b-2 border-b-primary shadow shadow-black/20 z-50",
+      inLobby && "absolute top-0 left-0 right-0"
+    )}>
       <div className="container flex h-16 items-center px-4">
         <div className="mr-4 hidden md:flex w-full">
           <nav className="flex items-center space-x-6 font-medium w-full justify-between">

@@ -29,7 +29,7 @@ export function Host({
         onClick={() => {
           onNextSlide();
         }}
-        className="m-5"
+        className="absolute bottom-5 right-5"
       >
         Next Slide
       </Button>

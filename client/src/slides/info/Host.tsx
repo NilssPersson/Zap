@@ -10,13 +10,13 @@ export function Host({
   onNextSlide: () => void;
 }) {
   return (
-    <div>
+    <div className="flex-1 flex flex-col">
       <Preview slide={slide} />
       <Button
         onClick={() => {
           onNextSlide();
         }}
-        className="m-5"
+        className="absolute right-5 bottom-5"
       >
         Next Slide
       </Button>

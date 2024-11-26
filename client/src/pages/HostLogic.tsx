@@ -151,7 +151,7 @@ const HostLogic: React.FC = () => {
       case AnswerTypes.rank: {
         const correctAnswer = question.ranking;
         if (participantAnswer.answer.length !== correctAnswer.length) {
-          return undefined;
+          return 0;
         }
         for (let i = 0; i < participantAnswer.answer.length; i++) {
           if (participantAnswer.answer[i] !== correctAnswer[i]) {
@@ -185,6 +185,7 @@ const HostLogic: React.FC = () => {
   };
 
   const updateScores = async (slide: Slide) => {
+    // Do not update scores unless it is a question slide
     if (!(slide.type == SlideTypes.question)) return;
     const participantsObj = ongoingQuiz?.participants;
     if (participantsObj) {
@@ -194,14 +195,12 @@ const HostLogic: React.FC = () => {
       participants.forEach(async (participant: Participant) => {
         const answer = getAnswer(participant);
         const score = calculateScore(slide, participant, answer);
-        if (score !== undefined && score !== null) {
-          updates[participant.participantId] = {
-            ...participant,
-            score: [...(participant.score || []), score],
-            hasAnswered: false,
-            answers: [...(participant.answers || []), answer],
-          };
-        }
+        updates[participant.participantId] = {
+          ...participant,
+          score: [...(participant.score || []), score],
+          hasAnswered: false,
+          answers: [...(participant.answers || []), answer],
+        };
       });
       try {
         const updatedQuiz = ongoingQuiz;
@@ -224,6 +223,7 @@ const HostLogic: React.FC = () => {
     if (!ongoingQuiz) {
       return;
     }
+    // If we are not already showing the answeres
     if (!showAnswer) {
       updateScores(slide);
     }

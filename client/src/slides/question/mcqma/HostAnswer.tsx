@@ -74,7 +74,7 @@ export function HostAnswer({
       <div
         className={cn(
           "grid gap-6 w-full",
-          `grid-cols-${Math.ceil(slide.options.length / 2)}`, // Dynamic columns for answers
+          `grid-cols-${Math.ceil(slide.options.length / 2)}` // Dynamic columns for answers
         )}
         style={{ gridAutoRows: "1fr" }}
       >
@@ -87,7 +87,7 @@ export function HostAnswer({
                 "bg-white/10 backdrop-blur outline outline-white/50":
                   !option.isCorrect,
                 "ring-4 ring-white": option.isCorrect,
-              },
+              }
             )}
             style={{
               backgroundColor: getColor(index),
@@ -117,7 +117,7 @@ export function HostAnswer({
         onClick={() => {
           onNextSlide();
         }}
-        className="ml-auto mt-10 "
+        className="absolute bottom-5 right-5"
       >
         Next Slide
       </Button>
