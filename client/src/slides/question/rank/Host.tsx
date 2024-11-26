@@ -1,4 +1,4 @@
-import { RankSlide } from "@/models/Quiz";
+import { Participant, RankSlide } from "@/models/Quiz";
 import { BaseQuestionRender } from "../base/QuestionRender";
 import SlideRank from "@/slides/_components/SlideRank";
 import { Button } from "@/components/ui/button";
@@ -14,15 +14,17 @@ function randomizeList<T>(list: T[]): T[] {
 
 export function Host({
   slide,
+  participants,
   onNextSlide,
 }: {
   slide: RankSlide;
+  participants: Participant[];
   onNextSlide: () => void;
 }) {
   const randomizedRanking = randomizeList(slide.ranking);
   return (
     <div>
-      <BaseQuestionRender slide={slide}>
+      <BaseQuestionRender participants={participants} slide={slide}>
         <SlideRank ranking={randomizedRanking} />
       </BaseQuestionRender>
       <Button
