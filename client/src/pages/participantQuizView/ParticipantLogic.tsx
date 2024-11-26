@@ -183,7 +183,7 @@ export default function ParticipantLogic() {
       </div>
 
       {/* Middle: Quiz Question */}
-      <div className="flex-grow w-full overflow-auto">
+      <div className="flex-grow flex flex-col w-full overflow-auto">
         <QuizView
           questions={questions}
           currentSlide={currentSlide}
