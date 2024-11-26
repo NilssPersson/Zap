@@ -20,7 +20,7 @@ body {
     display: inline-block;
     letter-spacing: 1px;
     -webkit-text-stroke: 10px black;
-    text-shadow: 5px 5px 0 black, -5px -5px 0 gold;
+    text-shadow: 5px 5px 0 black, -5px -5px 0 hsl(var(--primary));
   }
 
   :root {
