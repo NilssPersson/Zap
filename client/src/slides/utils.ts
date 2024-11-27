@@ -1,5 +1,5 @@
 import { QuestionType, Slide, SlideType } from '@/models/Quiz';
-import { Info, Score, Lobby, MCQSA, MCQMA, FA, Rank } from './';
+import { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank } from './';
 
 export function getSlideComponents(slide: Slide,) {
     if ("questionType" in slide) {
@@ -22,8 +22,8 @@ export function getSlideComponentsFromType(type: SlideType, questionType?: Quest
                     return MCQSA;
                 case "MCQMA":
                     return MCQMA;
-                case "FA":
-                    return FA;
+                case "FTA":
+                    return FTA;
                 case "RANK":
                     return Rank;
                 default:

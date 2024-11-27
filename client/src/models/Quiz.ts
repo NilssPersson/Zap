@@ -45,7 +45,7 @@ export type SlideType = SlideTypes;
 export enum QuestionTypes {
   MCQSA = "MCQSA",
   MCQMA = "MCQMA",
-  FA = "FA",
+  FTA = "FTA",
   RANK = "RANK",
 }
 export type QuestionType = QuestionTypes;
@@ -123,8 +123,8 @@ export interface MCQMASlide extends QuestionSlideBase {
   answerType: AnswerTypes.multipleStrings;
 }
 
-export interface FASlide extends QuestionSlideBase {
-  questionType: QuestionTypes.FA;
+export interface FTASLide extends QuestionSlideBase {
+  questionType: QuestionTypes.FTA;
   answerType: AnswerTypes.freeText;
   correctAnswer: string;
 }
@@ -157,4 +157,4 @@ export interface Participant {
 
 export type Slide = InfoSlide | ScoreSlide | QuestionSlide | LobbySlide;
 
-export type QuestionSlide = MCQSASlide | MCQMASlide | FASlide | RankSlide;
+export type QuestionSlide = MCQSASlide | MCQMASlide | FTASLide | RankSlide;

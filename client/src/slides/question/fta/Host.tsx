@@ -1,4 +1,4 @@
-import { FASlide, Participant } from "@/models/Quiz";
+import { FTASLide, Participant } from "@/models/Quiz";
 import { Preview } from "./Preview";
 import { Button } from "@/components/ui/button";
 
@@ -7,7 +7,7 @@ export function Host({
   participants,
   onNextSlide,
 }: {
-  slide: FASlide;
+  slide: FTASLide;
   participants: Participant[];
   onNextSlide: () => void;
 }) {
