@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { FASlide } from "@/models/Quiz";
+import { FTASLide } from "@/models/Quiz";
 
 interface FastAnswerViewProps {
-  slide: FASlide;
+  slide: FTASLide;
   answerQuestion: (answer: string[]) => void;
 }
 
