@@ -103,7 +103,7 @@ export const toolbarConfigs = {
     },
   ],
 
-  FA: [
+  FTA: [
     ...baseToolbarConfig,
     {
       field: "showCorrectAnswer" as keyof QuestionSlide,
