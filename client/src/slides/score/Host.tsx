@@ -1,22 +1,22 @@
 import { Confetti } from "@/components/particles/Confetti";
 import { Button } from "@/components/ui/button";
-import { ScoreSlide, Participant } from "@/models/Quiz";
+import { ScoreSlide, Participant, Slide } from "@/models/Quiz";
 
 import ScoreBoard from "@/slides/_components/Scoreboard";
 
 export function Host({
   slide,
-  participants,
+  participants, slides, currentSlide,
   onNextSlide,
 }: {
   slide: ScoreSlide;
-  participants: Participant[];
+  participants: Participant[], slides: Slide[], currentSlide: number;
   onNextSlide: () => void;
 }) {
   return (
     <div>
       <Confetti />
-      <ScoreBoard slide={slide} participants={participants} />
+      <ScoreBoard currentSlide={currentSlide} slides={slides} slide={slide} participants={participants} />
       <Button
         onClick={() => {
           onNextSlide();

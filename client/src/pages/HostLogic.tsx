@@ -306,6 +306,8 @@ const HostLogic: React.FC = () => {
     <div>
       {!showAnswer && (
         <SlideComponent.Host
+          slides={ongoingQuiz.quiz.slides}
+          currentSlide={ongoingQuiz.currentSlide}
           participants={Object.values(ongoingQuiz.participants || {})}
           slide={slide as never}
           onNextSlide={nextSlide}
