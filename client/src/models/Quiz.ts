@@ -37,7 +37,7 @@ export enum SlideTypes {
   info = "info",
   score = "score",
   question = "question",
-  lobby = "lobby"
+  lobby = "lobby",
 }
 
 export type SlideType = SlideTypes;
@@ -45,8 +45,9 @@ export type SlideType = SlideTypes;
 export enum QuestionTypes {
   MCQSA = "MCQSA",
   MCQMA = "MCQMA",
-  FTA = "FTA",
+  FTA = "FTA", // Free text answer
   RANK = "RANK",
+  FA = "FA", // Fastest answer
 }
 export type QuestionType = QuestionTypes;
 
@@ -79,6 +80,7 @@ export enum AnswerTypes {
   multipleStrings = "multipleStrings",
   freeText = "freeText",
   rank = "rank",
+  speed = "speed",
 }
 
 export type answerType = AnswerTypes;
@@ -94,7 +96,7 @@ interface QuestionSlideBase extends BaseSlide {
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
   answerType: answerType;
-  showCorrectAnswer: ShowCorrectAnswerTypes; // Lägg till knapp för show answer
+  showCorrectAnswer: ShowCorrectAnswerTypes;
 }
 
 export interface RankSlide extends QuestionSlideBase {
@@ -129,6 +131,12 @@ export interface FTASLide extends QuestionSlideBase {
   correctAnswer: string;
 }
 
+export interface FASlide extends QuestionSlideBase {
+  questionType: QuestionTypes.FA;
+  answerType: AnswerTypes.speed;
+}
+
+
 export interface OngoingQuiz {
   id: string;
   startedAt: string;
@@ -157,4 +165,4 @@ export interface Participant {
 
 export type Slide = InfoSlide | ScoreSlide | QuestionSlide | LobbySlide;
 
-export type QuestionSlide = MCQSASlide | MCQMASlide | FTASLide | RankSlide;
+export type QuestionSlide = MCQSASlide | MCQMASlide | FTASLide | RankSlide | FASlide;

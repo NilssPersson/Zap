@@ -6,6 +6,7 @@ import * as Lobby from "./lobby";
 import * as MCQSA from "./question/mcqsa";
 import * as MCQMA from "./question/mcqma";
 import * as FTA from "./question/fta";
+import * as FA from "./question/fa";
 import * as Rank from "./question/rank";
 
 interface ToolbarProps {
@@ -25,4 +26,4 @@ interface SlideInfo {
 
 export type { ToolbarProps, SlideInfo };
 
-export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank };
+export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA };

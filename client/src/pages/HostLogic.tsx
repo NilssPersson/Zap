@@ -64,35 +64,36 @@ const HostLogic: React.FC = () => {
     }
   }, [showAnswer]);
 
-  useEffect(() => {
-    const checkAnsweres = async () => {
-      const currentSlide = ongoingQuiz?.currentSlide
-        ? ongoingQuiz.currentSlide
-        : 0;
-      if (currentSlide == 0) return;
-      const participantsObj = ongoingQuiz?.participants;
-      if (participantsObj) {
-        const participants = Object.values(participantsObj);
-        const totalAnswers = participants.filter(
-          (participant) => participant.hasAnswered,
-        ).length;
-        // Fetch question slide
-        const questionSlide = ongoingQuiz.quiz.slides[
-          currentSlide - 1
-        ] as QuestionSlide;
-        // If all participants have answered and question slide should show correct answer
-        if (
-          !showAnswer &&
-          totalAnswers == participants?.length &&
-          !(questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never)
-        ) {
-          setShowAnswer(true);
-          updateScores(questionSlide);
-        }
-      }
-    };
-    checkAnsweres();
-  }, [ongoingQuiz]);
+  // useEffect(() => {
+  //   const checkAnsweres = async () => {
+  //     const currentSlide = ongoingQuiz?.currentSlide
+  //       ? ongoingQuiz.currentSlide
+  //       : 0;
+  //     if (currentSlide == 0) return;
+  //     const participantsObj = ongoingQuiz?.participants;
+  //     if (participantsObj) {
+  //       const participants = Object.values(participantsObj);
+  //       const totalAnswers = participants.filter(
+  //         (participant) => participant.hasAnswered,
+  //       ).length;
+  //       // Fetch question slide
+  //       const questionSlide = ongoingQuiz.quiz.slides[
+  //         currentSlide - 1
+  //       ] as QuestionSlide;
+  //       // If all participants have answered and question slide should show correct answer
+  //       if (
+  //         !showAnswer &&
+  //         totalAnswers == participants?.length &&
+  //         !(questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never)
+  //       ) {
+  //         console.log("settong tretses")
+  //         setShowAnswer(true);
+  //         updateScores(questionSlide);
+  //       }
+  //     }
+  //   };
+  //   checkAnsweres();
+  // }, [ongoingQuiz]);
 
   const calculateScore = (
     question: QuestionSlide,
