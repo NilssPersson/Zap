@@ -6,7 +6,7 @@ export function ParticipantAnswer({
   participant: Participant;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center flex-1">
       <h1 className="text-3xl font-display text-center">{participant.name}</h1>
     </div>
   );

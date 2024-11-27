@@ -77,7 +77,7 @@ export function QuizBackground({
     }, [primaryColor, secondaryColor, backgroundColor, style]);
 
     const dataUrl = useMemo(() => {
-        return `data:image/svg+xml;base64,${btoa(svgContent)}`;
+        return `data:image/svg+xml;base64,${btoa(svgContent || '')}`;
     }, [svgContent]);
 
     return (

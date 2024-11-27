@@ -15,7 +15,7 @@ function EmbeddedVideo({ url }: EmbeddedVideoProps) {
         height="315"
         src={src}
         title="YouTube video player"
-        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
         referrerPolicy="strict-origin-when-cross-origin"
       />
     </div>

@@ -1,10 +1,19 @@
-import { MCQSASlide } from "@/models/Quiz";
+import { MCQSASlide, Participant } from "@/models/Quiz";
 import { BaseQuestionRender } from "../base/QuestionRender";
 import { getColor } from "../base/QuizColors";
+import { Button } from "@/components/ui/button";
 
-export function Host({ slide }: { slide: MCQSASlide }) {
+export function Host({
+  slide,
+  participants,
+  onNextSlide,
+}: {
+  slide: MCQSASlide;
+  participants: Participant[];
+  onNextSlide: () => void;
+}) {
   return (
-    <BaseQuestionRender slide={slide}>
+    <BaseQuestionRender slide={slide} participants={participants}>
       <div className="flex flex-col items-center justify-center h-full p-10">
         <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
           {/* Only display 4 options, without any click functionality */}
@@ -20,6 +29,14 @@ export function Host({ slide }: { slide: MCQSASlide }) {
             </div>
           ))}
         </div>
+        <Button
+          onClick={() => {
+            onNextSlide();
+          }}
+          className="absolute bottom-5 right-5"
+        >
+          Next Slide
+        </Button>
       </div>
     </BaseQuestionRender>
   );

@@ -3,8 +3,7 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { SlideCreationMenu } from "./SlideCreationMenu";
 import type { Slide } from "@/models/Quiz";
 import { SlidePreview } from "./SlidePreview";
-import { useEffect } from "react";
-import { CustomTooltip } from "@/components/ui/custom-tooltip";
+import { useEffect, useState } from "react";
 import { SidebarHeader } from "./SidebarHeader";
 import { SlideActions } from "./SlideActions";
 
@@ -24,9 +23,9 @@ interface SlideSidebarProps {
     secondaryColor: string;
 }
 
-export function SlideSidebar({ 
-    quizName, 
-    slides, 
+export function SlideSidebar({
+    quizName,
+    slides,
     onAddSlide,
     activeSlideId,
     onSlideSelect,
@@ -39,6 +38,9 @@ export function SlideSidebar({
     primaryColor,
     secondaryColor
 }: SlideSidebarProps) {
+
+    const [isOpen, setIsOpen] = useState(false);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (!activeSlideId || !document.activeElement?.closest('.slides-container')) return;
@@ -69,19 +71,19 @@ export function SlideSidebar({
     }, [activeSlideId, slides, onSlideSelect]);
 
     return (
-        <aside className="min-w-[200px] bg-secondary/90 h-full border-r shadow-md flex flex-col overflow-hidden">
-            <SidebarHeader 
+        <aside className="min-w-[200px] bg-card/90 h-full border-r shadow-md flex flex-col overflow-hidden">
+            <SidebarHeader
                 quizName={quizName}
                 onSettingsClick={onSettingsClick}
                 onAddSlide={onAddSlide}
                 onSaveClick={onSaveClick}
             />
-            
+
             <div className="flex-1 overflow-y-auto px-3 pt-1 slides-container">
                 <div className="flex flex-col gap-2 pb-3">
                     {slides.map((slide, index) => (
-                        <div 
-                            key={slide.id} 
+                        <div
+                            key={slide.id}
                             className={`group relative border rounded overflow-hidden transition-colors
                                 ${activeSlideId === slide.id ? 'border-primary ring-2 ring-primary' : 'hover:border-primary/50'}
                             `}
@@ -97,15 +99,15 @@ export function SlideSidebar({
                             }}
                         >
                             <div className="cursor-pointer">
-                                <SlidePreview 
-                                    slide={slide} 
+                                <SlidePreview
+                                    slide={slide}
                                     backgroundColor={backgroundColor}
                                     primaryColor={primaryColor}
                                     secondaryColor={secondaryColor}
                                 />
                             </div>
-                            
-                            <SlideActions 
+
+                            <SlideActions
                                 index={index}
                                 totalSlides={slides.length}
                                 onSlideMove={onSlideMove}
@@ -115,18 +117,19 @@ export function SlideSidebar({
                             />
                         </div>
                     ))}
-                    
+
                     {/* New Slide Button */}
-                    <Popover>
-                        <CustomTooltip content="Add Slide">
-                            <PopoverTrigger asChild>
-                                <div className="aspect-video border-2 border-dashed rounded flex items-center justify-center cursor-pointer
-                                    hover:border-primary/50 hover:bg-muted/50 transition-colors">
-                                    <PlusIcon className="w-8 h-8 text-muted-foreground" />
-                                </div>
-                            </PopoverTrigger>
-                        </CustomTooltip>
-                        <SlideCreationMenu onAddSlide={onAddSlide} />
+                    <Popover open={isOpen} onOpenChange={setIsOpen}>
+                        <PopoverTrigger asChild>
+                            <div
+                                className="aspect-video border-2 border-dashed rounded flex items-center justify-center cursor-pointer
+                                        hover:border-primary/50 hover:bg-muted/50 transition-colors"
+                                onMouseEnter={() => setIsOpen(true)}
+                            >
+                                <PlusIcon className="w-8 h-8 text-muted-foreground" />
+                            </div>
+                        </PopoverTrigger>
+                        <SlideCreationMenu onCloseMenu={() => setIsOpen(false)} onAddSlide={onAddSlide} />
                     </Popover>
                 </div>
             </div>

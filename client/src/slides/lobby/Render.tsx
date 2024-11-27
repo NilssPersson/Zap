@@ -4,25 +4,24 @@ import "tw-elements"; // Import Tailwind Elements JS
 import "tailwindcss/tailwind.css"; // Tailwind CSS
 import Avatar, { genConfig } from "react-nice-avatar";
 
-import { Participant } from "@/models/Quiz";
+import { LobbySlide, Participant } from "@/models/Quiz";
 import { useAppContext } from "@/contexts/App/context";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import QRCode from "react-qr-code";
 
-interface LobbyProps {
-  quizCode: string;
-  participants: Participant[];
-  onStartGame: () => void;
-}
-
 //animations och key frames
 
-export default function QuizLobby({
-  quizCode,
+export default function Render({
   participants,
-  onStartGame,
-}: LobbyProps) {
+  onNextSlide,
+  quizCode,
+}: {
+  slide: LobbySlide;
+  participants: Participant[];
+  onNextSlide: () => void;
+  quizCode: string;
+}) {
   const [participantList, setParticipantList] = useState<Participant[]>([]);
   const participantsRef = useRef<HTMLDivElement>(null);
 
@@ -101,7 +100,7 @@ export default function QuizLobby({
 
       <div className="flex justify-around">
         <Button onClick={handleEndQuiz}>End Quiz</Button>
-        <Button onClick={onStartGame}>Start Game</Button>
+        <Button onClick={onNextSlide}>Start Game</Button>
       </div>
     </div>
   );
