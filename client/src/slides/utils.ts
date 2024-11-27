@@ -1,6 +1,6 @@
 import { QuestionType, Slide, SlideType } from '@/models/Quiz';
 import { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank } from './';
-import { toolbarConfigs } from './toolbar/config';
+import { toolbarConfigs } from './toolbar';
 
 export function getSlideComponents(slide: Slide,) {
     if ("questionType" in slide) {

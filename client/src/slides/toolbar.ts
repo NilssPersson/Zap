@@ -1,12 +1,12 @@
 import { Slide, InfoSlide, MCQMASlide, MCQSASlide, RankSlide, QuestionSlide } from "@/models/Quiz";
-import ImageInput from "./inputs/ImageInput";
-import BackgroundInput from "./inputs/BackgroundInput";
-import EmbedVideoInput from "./inputs/EmbedVideoInput";
-import { MCQOptionsInput } from "./inputs/MCQOptionsInput";
-import { RankOptionsInput } from "./inputs/RankOptionsInput";
-import { QuestionSettingsInput } from "./inputs/QuestionSettingsInput";
-import TitleInput from "./inputs/TitleInput";
-import ContentInput from "./inputs/ContentInput";
+import ImageInput from "./_toolbar/inputs/ImageInput";
+import BackgroundInput from "./_toolbar/inputs/BackgroundInput";
+import EmbedVideoInput from "./_toolbar/inputs/EmbedVideoInput";
+import { MCQOptionsInput } from "./_toolbar/inputs/MCQOptionsInput";
+import { RankOptionsInput } from "./_toolbar/inputs/RankOptionsInput";
+import { QuestionSettingsInput } from "./_toolbar/inputs/QuestionSettingsInput";
+import TitleInput from "./_toolbar/inputs/TitleInput";
+import ContentInput from "./_toolbar/inputs/ContentInput";
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;

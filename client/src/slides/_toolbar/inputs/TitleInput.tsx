@@ -1,4 +1,4 @@
-import { ToolbarProps } from "../config";
+import { ToolbarProps } from "../../toolbar";
 import TextInput from "./TextInput";
 import { Slide } from "@/models/Quiz";
 

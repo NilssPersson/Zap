@@ -2,7 +2,7 @@ import { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
 import { SelectItem, SelectTrigger, SelectValue, SelectContent } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
-import { ToolbarProps } from "../config";
+import { ToolbarProps } from "../../toolbar";
 import { Slide } from "@/models/Quiz";
 
 export default function BackgroundInput<T extends Slide>({ slide, onSlideUpdate }: ToolbarProps<T>) {

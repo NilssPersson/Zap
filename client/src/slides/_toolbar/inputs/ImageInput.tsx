@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MinusIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ImageIcon } from "lucide-react";
-import { ToolbarProps } from "../config";
+import { ToolbarProps } from "../../toolbar";
 import { Slider } from "@/components/ui/slider";
 import { Slide } from "@/models/Quiz";
 
