@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export function HostAnswer({
   slide,
-  participants,
+  participants = [],
   onNextSlide,
 }: {
   slide: FASlide;
