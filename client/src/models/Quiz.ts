@@ -123,7 +123,7 @@ export interface MCQMASlide extends QuestionSlideBase {
   answerType: AnswerTypes.multipleStrings;
 }
 
-export interface FTASLide extends QuestionSlideBase {
+export interface FTASlide extends QuestionSlideBase {
   questionType: QuestionTypes.FTA;
   answerType: AnswerTypes.freeText;
   correctAnswer: string;
@@ -157,4 +157,4 @@ export interface Participant {
 
 export type Slide = InfoSlide | ScoreSlide | QuestionSlide | LobbySlide;
 
-export type QuestionSlide = MCQSASlide | MCQMASlide | FTASLide | RankSlide;
+export type QuestionSlide = MCQSASlide | MCQMASlide | FTASlide | RankSlide;
