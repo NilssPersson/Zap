@@ -1,7 +1,6 @@
 export * from './Preview';
 export * from './Participant';
 export * from './ParticipantAnswer'
-export * from './Toolbar';
 export * from './Render';
 export * from './Host';
 export * from './HostAnswer'
