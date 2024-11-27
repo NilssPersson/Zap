@@ -1,11 +1,11 @@
 import { BackgroundStyle } from "@/components/quiz-editor/QuizBackground";
 import { SelectItem, SelectTrigger, SelectValue, SelectContent } from "@/components/ui/select";
-
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
-import { ToolbarProps } from "..";
+import { ToolbarProps } from "../config";
+import { Slide } from "@/models/Quiz";
 
-export default function BackgroundInput({ slide, onSlideUpdate }: ToolbarProps) {
+export default function BackgroundInput<T extends Slide>({ slide, onSlideUpdate }: ToolbarProps<T>) {
     const backgroundStyles: { value: BackgroundStyle; label: string }[] = [
         { value: BackgroundStyle.Waves, label: "Waves" },
         { value: BackgroundStyle.Blob, label: "Blob" },

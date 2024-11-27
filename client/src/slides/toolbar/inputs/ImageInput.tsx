@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { MinusIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { ImageIcon } from "lucide-react";
-import { ToolbarProps } from "..";
+import { ToolbarProps } from "../config";
 import { Slider } from "@/components/ui/slider";
+import { Slide } from "@/models/Quiz";
 
-export default function ImageInput({ slide, onSlideUpdate }: ToolbarProps) {
+export default function ImageInput<T extends Slide>({ slide, onSlideUpdate }: ToolbarProps<T>) {
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

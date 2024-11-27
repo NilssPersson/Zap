@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { MinusIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { EmbedVideoInputProps } from "./Toolbar";
-import { getYoutubeThumbnailUrl, validateYoutubeUrl } from "./utils";
+import { EmbedVideoInputProps } from "../../info/Toolbar";
+import { getYoutubeThumbnailUrl, validateYoutubeUrl } from "../../info/utils";
 
 function EmbedVideoInput({ slide, onSlideUpdate }: EmbedVideoInputProps) {
   const [embedVideoUrl, setEmbedVideoUrl] = React.useState<string>(
