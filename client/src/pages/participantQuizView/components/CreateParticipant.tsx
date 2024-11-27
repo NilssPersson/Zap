@@ -73,7 +73,7 @@ export default function CreateParticipant({
   };
 
   const handleGuestSubmit = () => {
-    if (!guestName) {
+    if (!guestName || !guestAvatar) {
       setShowError(true);
       return;
     }
@@ -156,12 +156,13 @@ export default function CreateParticipant({
                 style={{ width: "6rem", height: "6rem" }}
                 {...genConfig(guestAvatar)}
               />
-              <Button
+              <button
                 onClick={changeGuestAvatarClick}
-                className="mx-5 bg-blue-400"
+                className="m-2 p-2 rounded-full bg-yellow-300 hover:bg-yellow-400 flex items-center justify-center"
+                title="Randomize Avatar"
               >
-                Randomize
-              </Button>
+                <Dices className="w-6 h-6 text-gray-500" />
+              </button>
               <Input
                 placeholder="Guest Name"
                 className={`text-[#333333] text-center font-display md:text-lg text-lg py-8 px-12 w-full shadow-lg ${
@@ -192,19 +193,20 @@ export default function CreateParticipant({
         <div className="bg-component-background w-3/4 mx-auto rounded-lg flex flex-col items-center justify-center p-6">
           <div className="flex flex-col items-center justify-center w-full max-w-md">
             {/* Avatar and Shuffle Icon */}
-            <div className="flex items-center space-x-4 mb-4">
-              <Avatar
-                style={{ width: "4rem", height: "4rem" }}
-                {...genConfig(avatar)}
-              />
-              <Button
-                onClick={changeAvatarClick}
-                className="rounded-full"
-                title="Randomize Avatar"
-              >
-                <Dices className=" text-gray " />
-              </Button>
-            </div>
+
+            <Avatar
+              style={{ width: "4rem", height: "4rem" }}
+              {...genConfig(guestAvatar)}
+            />
+
+            <button
+              onClick={changeAvatarClick}
+              className="m-2 p-2 rounded-full bg-yellow-300 hover:bg-yellow-400 flex items-center justify-center"
+              title="Randomize Avatar"
+            >
+              <Dices className="w-6 h-6 text-gray-500" />
+            </button>
+
             {/* Input Field */}
             <Input
               placeholder="Guest Name"
@@ -225,7 +227,7 @@ export default function CreateParticipant({
             {/* Play Button */}
             <Button
               onClick={handleGuestSubmit}
-              className="text-[#333333] text-center font-display md:text-lg text-md shadow-lg w-2/3"
+              className="text-center font-display md:text-lg text-md shadow-lg w-2/3 text-gray-500"
             >
               Play
             </Button>

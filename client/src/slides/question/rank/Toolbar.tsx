@@ -25,7 +25,7 @@ export function Toolbar({ slide, onSlideUpdate }: RankToolbarProps) {
         <BaseQuestionToolbar slide={slide} onSlideUpdate={onSlideUpdate}>
             <div className="space-y-4">
                 <Label>Rank Answer</Label>
-                {slide.ranking.map((rankItem, index) => (
+                {slide.ranking && slide.ranking.map((rankItem, index) => (
                     <div key={index} className="flex items-center space-x-2">
                         <span className="p-2">{index + 1}</span>
                         <Input

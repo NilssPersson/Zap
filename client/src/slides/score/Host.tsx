@@ -1,12 +1,12 @@
-import { ScoreSlide, Participant } from "@/models/Quiz";
+import { ScoreSlide, Participant, Slide } from "@/models/Quiz";
 
 import ScoreBoard from "@/pages/host/Scoreboard";
 
 
-export function Host({slide, participants }: { slide: ScoreSlide , participants: Participant[]}) {
+export function Host({slide, participants, slides, currentSlide }: { slide: ScoreSlide , participants: Participant[], slides: Slide[], currentSlide: number}) {
   return (
     <div>
-     <ScoreBoard slide={slide} participants={participants} />
+     <ScoreBoard currentSlide={currentSlide} slides={slides} slide={slide} participants={participants} />
     </div>
   );
 }
