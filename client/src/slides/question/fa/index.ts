@@ -1,6 +1,5 @@
 export * from "./Preview";
 export * from "./ParticipantAnswer";
-export * from "./Toolbar";
 export * from "./Participant";
 export * from "./Host";
 export * from "./HostAnswer";
@@ -16,6 +15,6 @@ export const Info: SlideInfo = {
   slideType: SlideTypes.question,
   questionType: QuestionTypes.FA,
   defaults: {
-    answerType: AnswerTypes.speed,
+    answerType: AnswerTypes.time,
   },
 } as const;
