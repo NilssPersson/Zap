@@ -16,5 +16,6 @@ export const Info: SlideInfo = {
   defaults: {
     correctAnswer: "",
     answerType: AnswerTypes.freeText,
+    points:1000,
   },
 } as const;

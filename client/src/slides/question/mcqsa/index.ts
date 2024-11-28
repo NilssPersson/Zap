@@ -22,5 +22,6 @@ export const Info: SlideInfo = {
             isCorrect: i === 0,
         })),
         answerType: AnswerTypes.singleString,
+        points:1000,
     }
 } as const; 
