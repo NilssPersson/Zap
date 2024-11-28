@@ -306,7 +306,7 @@ const HostLogic: React.FC = () => {
   const SlideComponent = getSlideComponents(slide);
 
   // Function to "manually" award points to participants and then move to the next slide
-  function handleAddPoints(
+  async function handleAddPoints(
     pointsData: { participantId: string; awardPoints: boolean }[],
     slide: QuestionSlide,
   ) {
@@ -339,9 +339,13 @@ const HostLogic: React.FC = () => {
     });
 
     try {
-      const updatedQuiz = { ...ongoingQuiz, participants: updates };
-      optimisticUpdate(ongoingQuiz?.id || "", updatedQuiz);
-      nextSlide(); // Move to the next slide after updating
+      const updatedQuiz = {
+        ...ongoingQuiz,
+        participants: updates,
+        currentSlide: ongoingQuiz.currentSlide + 1,
+      };
+      await optimisticUpdate(ongoingQuiz?.id || "", updatedQuiz);
+      setShowAnswer(false);
       console.log("Participants' scores updated successfully:", updatedQuiz);
     } catch (error) {
       console.error("Error updating participants' scores:", error);
