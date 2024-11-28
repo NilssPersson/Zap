@@ -1,5 +1,4 @@
 export * from './Preview';
-export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer'
 export * from './Host';

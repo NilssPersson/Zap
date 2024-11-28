@@ -8,11 +8,7 @@ import * as MCQMA from "./question/mcqma";
 import * as FTA from "./question/fta";
 import * as FA from "./question/fa";
 import * as Rank from "./question/rank";
-
-interface ToolbarProps {
-  slide: Slide;
-  onSlideUpdate: (slide: Slide) => void;
-}
+import * as Matching from "./question/matching";
 
 interface SlideInfo {
   value: string;
@@ -24,6 +20,6 @@ interface SlideInfo {
   uneditable?: boolean;
 }
 
-export type { ToolbarProps, SlideInfo };
+export type { SlideInfo };
 
-export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA };
+export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA, Matching };

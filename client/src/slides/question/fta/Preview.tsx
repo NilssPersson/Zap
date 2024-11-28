@@ -1,11 +1,11 @@
-import { FTASLide, Participant } from "@/models/Quiz";
+import { FTASlide, Participant } from "@/models/Quiz";
 import { BaseQuestionRender } from "@/slides/question/base/QuestionRender";
 
 export function Preview({
   slide,
   participants,
 }: {
-  slide: FTASLide;
+  slide: FTASlide;
   participants: Participant[];
 }) {
   return <BaseQuestionRender participants={participants} slide={slide} />;

@@ -1,7 +1,13 @@
+import { cn } from "@/lib/utils";
 import { Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export function GameShackTitle() {
+interface GameShackTitleProps {
+  icon?: boolean;
+  className?: string;
+}
+
+export function GameShackTitle({ icon = true, className }: GameShackTitleProps) {
   const [rotations, setRotations] = useState<number[]>([]);
 
   useEffect(() => {
@@ -24,11 +30,12 @@ export function GameShackTitle() {
   }, []);
 
   return (
-    <h1 className="text-7xl font-bold font-display flex items-center">
-      <Zap
+    <h1 className={cn("text-7xl font-bold font-display flex items-center", className)}>
+      {icon && <Zap
         className="w-20 h-20 -mr-2 text-primary transition-transform duration-500"
         style={{ transform: `rotate(${rotations[0]}deg)` }}
       />
+      }
       {"Zap!".split("").map((char, idx) => (
         <span
           key={idx}

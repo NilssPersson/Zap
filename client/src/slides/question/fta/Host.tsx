@@ -1,19 +1,24 @@
-import { FTASLide, Participant } from "@/models/Quiz";
-import { Preview } from "./Preview";
+import { FTASlide, Participant } from "@/models/Quiz";
 import { Button } from "@/components/ui/button";
+import { ParticipantAnswers } from "@/slides/_components/ParticipantAnswers";
 
 export function Host({
   slide,
   participants,
   onNextSlide,
 }: {
-  slide: FTASLide;
+  slide: FTASlide;
   participants: Participant[];
   onNextSlide: () => void;
 }) {
   return (
-    <div className="flex-1 flex flex-col">
-      <Preview slide={slide} participants={participants} />
+    <div className="flex flex-col items-center">
+      {/* Slide Title */}
+      <div className="bg-white rounded p-4 mb-10 mt-20 text-wrap text-center">
+        <h1 className="text-4xl text-black font-display">{slide.title}</h1>
+      </div>
+      <ParticipantAnswers participants={participants} />
+
       <Button
         onClick={() => {
           onNextSlide();

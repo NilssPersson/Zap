@@ -1,7 +1,7 @@
 import { ToolbarProps } from "../";
-import TextInput from "../toolbar/TextInput";
-import ImageInput from "../toolbar/ImageInput";
-import BackgroundInput from "../toolbar/BackgroundInput";
+import TextInput from "../_toolbar/TextInput";
+import ImageInput from "../_toolbar/ImageInput";
+import BackgroundInput from "../_toolbar/BackgroundInput";
 import { InfoIcon } from "lucide-react";
 import EmbedVideoInput from "./EmbedVideoInput";
 import { InfoSlide } from "@/models/Quiz";

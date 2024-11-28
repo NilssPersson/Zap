@@ -1,4 +1,4 @@
-import { getYoutubeEmbedUrl } from "./utils";
+import { getYoutubeEmbedUrl } from "../info/utils";
 
 interface EmbeddedVideoProps {
   url: string;

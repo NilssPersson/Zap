@@ -1,6 +1,5 @@
 export * from "./Preview";
 export * from "./ParticipantAnswer";
-export * from "./Toolbar";
 export * from "./Participant";
 export * from "./Host";
 export * from './HostAnswer';
@@ -17,5 +16,6 @@ export const Info: SlideInfo = {
   defaults: {
     correctAnswer: "",
     answerType: AnswerTypes.freeText,
+    points:1000,
   },
 } as const;

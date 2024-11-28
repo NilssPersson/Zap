@@ -1,5 +1,4 @@
 export * from './Preview';
-export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer';
 export * from './Host';
@@ -23,5 +22,6 @@ export const Info: SlideInfo = {
             isCorrect: i <= 1,
         })),
         answerType: AnswerTypes.multipleStrings,
+        points:1000,
     }
 } as const; 
