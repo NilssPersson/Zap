@@ -10,6 +10,7 @@ import {
   Slide,
   ParticipantAnswer,
   LobbySlide,
+  QuestionTypes,
 } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
 
@@ -187,6 +188,9 @@ const HostLogic: React.FC = () => {
   const updateScores = async (slide: Slide) => {
     // Do not update scores unless it is a question slide
     if (!(slide.type == SlideTypes.question)) return;
+    const questionSlide = slide as QuestionSlide;
+    if (questionSlide.questionType == QuestionTypes.FTA) return;
+
     const participantsObj = ongoingQuiz?.participants;
     if (participantsObj) {
       const participants = Object.values(participantsObj);
@@ -199,7 +203,6 @@ const HostLogic: React.FC = () => {
           ...participant,
           score: [...(participant.score || []), score],
           hasAnswered: false,
-          answers: [...(participant.answers || []), answer],
         };
       });
       try {
@@ -302,6 +305,62 @@ const HostLogic: React.FC = () => {
 
   const SlideComponent = getSlideComponents(slide);
 
+  function handleAddPoints(
+    pointsData: { participantId: string; awardPoints: boolean }[],
+    slide: QuestionSlide,
+  ) {
+    const participantsObj = ongoingQuiz?.participants;
+    console.log(slide);
+    if (participantsObj) {
+      const participants = Object.values(participantsObj);
+      const updates: { [key: string]: Participant } = {};
+      const defaultPoints = 1000;
+      const slidePoints = defaultPoints;
+
+      participants.forEach((participant: Participant) => {
+        const participantId = participant.participantId;
+        const awardPoints = pointsData.find(
+          (entry) => entry.participantId === participantId,
+        )?.awardPoints;
+
+        if (awardPoints) {
+          const score = slidePoints;
+          updates[participant.participantId] = {
+            ...participant,
+            score: [...(participant.score || []), score],
+            hasAnswered: false,
+          };
+        } else {
+          // No points awarded, reset `hasAnswered` status
+          const score = 0;
+          updates[participant.participantId] = {
+            ...participant,
+            score: [...(participant.score || []), score],
+            hasAnswered: false,
+          };
+        }
+        nextSlide();
+      });
+
+      try {
+        // Perform optimistic update
+        const updatedQuiz = { ...ongoingQuiz, participants: updates };
+        console.log("Updated quiz after updating scores:", updatedQuiz);
+
+        optimisticUpdate(
+          ongoingQuiz.participants ? ongoingQuiz.id : "",
+          updatedQuiz,
+        );
+
+        console.log("Scores updated and answers reset successfully.");
+      } catch (error) {
+        console.error("Error updating participants score:", error);
+      }
+    } else {
+      console.log("No participants");
+    }
+  }
+
   return (
     <div>
       {!showAnswer && (
@@ -320,6 +379,7 @@ const HostLogic: React.FC = () => {
           slide={slide as never}
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
+          handleAddPoints={handleAddPoints}
         />
       )}
       {renderButtons(slide)}

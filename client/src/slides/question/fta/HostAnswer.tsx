@@ -6,18 +6,19 @@ import { stringSimilarity } from "string-similarity-js";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
-//import { Progress } from "@/components/ui/progress";
 
 export function HostAnswer({
   slide,
   participants = [],
-  onNextSlide,
+  handleAddPoints,
 }: {
   slide: FTASlide;
-  onNextSlide: () => void;
   participants: Participant[];
+  handleAddPoints: (
+    pointsData: { participantId: string; awardPoints: boolean }[],
+    slide: FTASlide,
+  ) => void;
 }) {
-  // Initialize state for participants with their latest answers and similarity scores
   const [latestAnswers, setLatestAnswers] = useState(() =>
     participants.map((participant) => {
       const latestAnswer =
@@ -36,7 +37,6 @@ export function HostAnswer({
     }),
   );
 
-  // Handle toggling the `points` field
   const togglePoints = (participantId: string) => {
     setLatestAnswers((prevAnswers) =>
       prevAnswers.map((entry) =>
@@ -46,6 +46,16 @@ export function HostAnswer({
       ),
     );
   };
+
+  async function handleAwardPointsNextSlide() {
+    await handleAddPoints(
+      latestAnswers.map((entry) => ({
+        participantId: entry.id,
+        awardPoints: entry.points,
+      })),
+      slide,
+    );
+  }
 
   return (
     <div className="flex flex-col items-center">
@@ -75,26 +85,21 @@ export function HostAnswer({
                 {entry.name}
               </h1>
             </div>
-            <div className="w-full">
-              <h1 className="text-5xl font-display text-gray-600 pl-1">
+            <div className="w-full text-center">
+              <h1
+                className="font-display text-gray-600 pl-1"
+                style={{
+                  fontSize: `${Math.max(2 - entry.answer.length / 1, 2)}rem`, // Dynamically adjust font size
+                }}
+              >
                 {entry.answer}
               </h1>
-              {/* <div className="flex flex-row items-center w-full space-x-4">
-                <Progress value={entry.similarity} className="flex-grow" />
-                <div className="flex items-baseline space-x-1">
-                  <h1 className="text-black font-display">
-                    {entry.similarity}%
-                  </h1>
-                  <span className="text-black text-black font-display">
-                    Match
-                  </span>
-                </div>
-              </div>*/}
             </div>
+
             <div
               className={cn("flex items-center space-x-2 p-2 rounded-md", {
-                "bg-green-500 text-white": entry.points, // Apply green background if points are awarded
-                "bg-white text-black ": !entry.points, // Default background otherwise
+                "bg-green-500 text-white": entry.points,
+                "bg-white text-black ": !entry.points,
               })}
             >
               <Label
@@ -114,8 +119,11 @@ export function HostAnswer({
       </div>
 
       {/* Next Slide Button */}
-      <Button onClick={onNextSlide} className="absolute bottom-5 right-5">
-        Next Slide
+      <Button
+        onClick={handleAwardPointsNextSlide}
+        className="absolute bottom-5 right-5"
+      >
+        Award points & Next Slide
       </Button>
     </div>
   );
