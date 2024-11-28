@@ -37,7 +37,7 @@ function DraggableItem({ text, index }: { text: string; index: number }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="flex items-center w-full p-4 rounded-lg shadow-md bg-[#F4F3F2] text-xl font-display cursor-grab text-[#333333]"
+      className="flex items-center w-full p-2.5 rounded-lg shadow-md bg-[#F4F3F2] text-xl font-display cursor-grab text-[#333333]"
       style={style}
     >
       {text}
@@ -127,7 +127,7 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
                   style={{
                     backgroundColor: rankColors(),
                   }}
-                  className="font-display text-2xl font-bold text-center p-4 rounded-lg text-[#F4F3F2] w-20"
+                  className="font-display text-2xl font-bold text-center p-2.5 rounded-lg text-[#F4F3F2] w-20"
                 >
                   {index + 1}
                 </h2>
