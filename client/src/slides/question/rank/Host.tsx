@@ -3,7 +3,6 @@ import { BaseQuestionRender } from "../base/QuestionRender";
 
 import { Button } from "@/components/ui/button";
 
-
 function randomizeList<T>(list: T[]): T[] {
   if (!Array.isArray(list)) {
     throw new Error("The provided list is not an array.");
@@ -31,25 +30,28 @@ export function Host({
     <div className="mt-5">
       <BaseQuestionRender participants={participants} slide={slide}>
         <div
-          className="w-full max-w-1000px grid gap-2 pb-5"
+          className="w-full max-w-1000px flex gap-2 pb-5"
           style={{
-            display: "grid",
-            gridTemplateRows: "repeat(2, 1fr)", // Two rows
-            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", // Adjust based on the number of items
-            justifyContent: "center", // Center-align content
+            justifyContent: "center", // Center-align content horizontally
+            alignItems: "center", // Align items vertically if heights differ
+            flexWrap: "wrap", // Allow wrapping to the next line
           }}
         >
           {randomizedRanking.map((text, index) => (
             <div
               key={index}
-              className="min-w-full flex items-center justify-center p-4 rounded-lg shadow-md"
+              className="flex items-center justify-center p-4 rounded-lg shadow-md"
+              style={{
+                flexBasis: "calc(25% - 10px)", // Set to 25% width, minus gap
+                maxWidth: "100%", // Ensure no more than 4 items per row
+              }}
             >
               {/* Option Text */}
               <div
                 className="flex items-center justify-center p-4 rounded-lg shadow-md bg-[#FFEEA9] text-3xl font-display text-[#333333] min-h-[80px]"
                 style={{
-                  minWidth: "400px", // Ensures each option has a minimum width
-                  maxWidth: "400px", // Prevents the options from expanding too wide
+                  minWidth: "100%", // Ensures the item fills the space available
+                  maxWidth: "100%", // Prevents overflow
                 }}
               >
                 {text}
@@ -57,16 +59,15 @@ export function Host({
             </div>
           ))}
         </div>
+        <Button
+          onClick={() => {
+            onNextSlide();
+          }}
+          className="absolute bottom-5 right-5"
+        >
+          Next Slide
+        </Button>
       </BaseQuestionRender>
-      <Button
-        onClick={() => {
-          onNextSlide();
-        }}
-        className="absolute bottom-5 right-5"
-      >
-        Next Slide
-      </Button>
     </div>
   );
 }
-
