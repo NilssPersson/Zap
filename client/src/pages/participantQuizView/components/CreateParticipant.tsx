@@ -154,7 +154,7 @@ export default function CreateParticipant({
             <Dices className="w-6 h-6 text-gray-500" />
           </button>
           <Input
-            placeholder="Guest Name"
+            placeholder="Enter Name"
             className="text-[#333333] text-center font-display md:text-lg text-lg py-8 px-12 w-full shadow-lg"
             value={guestName}
             onChange={(e) => setGuestName(e.target.value)}
@@ -163,7 +163,7 @@ export default function CreateParticipant({
           {showError && (
             <div className="flex justify-start items-center w-full text-red-500">
               <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
-              <p className="font-display">Please enter a guest name</p>
+              <p className="font-display">Please enter a name</p>
             </div>
           )}
           <Button
