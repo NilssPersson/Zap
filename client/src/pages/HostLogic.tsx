@@ -6,7 +6,6 @@ import {
   SlideTypes,
   ShowCorrectAnswerTypes,
   Participant,
-  
   Slide,
   ParticipantAnswer,
   LobbySlide,
@@ -67,6 +66,9 @@ const HostLogic: React.FC = () => {
   }, [showAnswer]);
 
   useEffect(() => {
+    if (ongoingQuiz && ongoingQuiz.isShowingCorrectAnswer !== undefined) {
+      setShowAnswer(ongoingQuiz.isShowingCorrectAnswer);
+    }
     const checkAnsweres = async () => {
       const currentSlide = ongoingQuiz?.currentSlide
         ? ongoingQuiz.currentSlide
