@@ -5,7 +5,6 @@ export function ParticipantAnswers({
 }: {
   participants: Participant[];
 }) {
-  console.log(participants);
   const noParticipants = participants?.length ? participants?.length : 0;
   var noAnswers = 0;
   if (participants) {
