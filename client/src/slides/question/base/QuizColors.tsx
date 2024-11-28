@@ -18,4 +18,9 @@ export const getColor = (index: number): string => {
     return isCorrect ? "rgb(154, 191, 128)" : "rgb(255, 69, 69)";
   };
 
+  export function rankColors() {
+    
+    return 'rgb(128, 128, 128)'; // No color for other ranks
+  }
+  
   

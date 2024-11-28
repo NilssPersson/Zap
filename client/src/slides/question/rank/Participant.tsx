@@ -11,6 +11,8 @@ import {
 } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
 import { RankSlide } from "@/models/Quiz";
+import {rankColors } from "../base/QuizColors";
+
 
 interface RankViewProps {
   slide: RankSlide;
@@ -35,7 +37,7 @@ function DraggableItem({ text, index }: { text: string; index: number }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="flex items-center w-full p-4 rounded-lg shadow-md bg-[#F4F3F2] text-xl font-display cursor-grab text-[#333333]"
+      className="flex items-center w-full p-2.5 rounded-lg shadow-md bg-[#F4F3F2] text-xl font-display cursor-grab text-[#333333]"
       style={style}
     >
       {text}
@@ -116,9 +118,17 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
           <h3 className="text-2xl font-display text-center">{slide.content}</h3>
           <div className="flex flex-col w-full space-y-3 pb-5">
             {currentRanking.map((text, index) => (
-              <div key={index} className="flex items-center w-full space-x-4">
+              <div
+                key={index}
+                className="rounded-lg flex items-center w-full space-x-4"
+              >
                 {/* Display the index with proper alignment */}
-                <h2 className="font-display text-2xl font-bold text-center text-[#F4F3F2] w-10">
+                <h2
+                  style={{
+                    backgroundColor: rankColors(),
+                  }}
+                  className="font-display text-2xl font-bold text-center p-2.5 rounded-lg text-[#F4F3F2] w-20"
+                >
                   {index + 1}
                 </h2>
                 <DroppableContainer index={index}>
