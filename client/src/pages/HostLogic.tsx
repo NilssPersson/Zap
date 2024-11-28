@@ -303,8 +303,8 @@ const HostLogic: React.FC = () => {
   const SlideComponent = getSlideComponents(slide);
 
   return (
-    <div>
-      {!showAnswer && (
+    <>
+      {!showAnswer ? (
         <SlideComponent.Host
           slides={ongoingQuiz.quiz.slides}
           currentSlide={ongoingQuiz.currentSlide}
@@ -313,8 +313,7 @@ const HostLogic: React.FC = () => {
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
         />
-      )}
-      {showAnswer && (
+      ) : (
         <SlideComponent.HostAnswer
           participants={Object.values(ongoingQuiz.participants)}
           slide={slide as never}
@@ -323,7 +322,7 @@ const HostLogic: React.FC = () => {
         />
       )}
       {renderButtons(slide)}
-    </div>
+    </>
   );
 };
 

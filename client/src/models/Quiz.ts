@@ -137,6 +137,12 @@ export interface OngoingQuiz {
   quiz: Quiz;
   quizId: string;
   quizHost: string;
+  teams?: {
+    [teamId: string]: {
+      name: string;
+      participants: string[]; // array of participant IDs
+    };
+  };
   participants: { [id: string]: Participant };
 }
 
