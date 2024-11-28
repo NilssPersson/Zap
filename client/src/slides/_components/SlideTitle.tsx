@@ -9,7 +9,7 @@ interface SlideTitleProps {
 
 export function SlideTitle({ title, size = "large", wiggle = false }: SlideTitleProps) {
     const className = cn("font-display text-center leading-tight",
-        size === "large" ? "text-8xl" : "text-4xl"
+        size === "large" ? "md:text-8xl text-4xl" : "md:text-4xl text-2xl"
     );
     
     return wiggle ? (

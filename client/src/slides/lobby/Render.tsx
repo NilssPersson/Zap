@@ -1,49 +1,49 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import "tw-elements"; // Import Tailwind Elements JS
 import "tailwindcss/tailwind.css"; // Tailwind CSS
-import Avatar, { genConfig } from "react-nice-avatar";
 
 import { LobbySlide, Participant } from "@/models/Quiz";
 import { useAppContext } from "@/contexts/App/context";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import QRCode from "react-qr-code";
+import Participants from "./Participants";
+import Title from "./Title";
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import TeamView from "./TeamView"
 
-//animations och key frames
+interface Team {
+  id: string;
+  name: string;
+  participants: Participant[];
+  isEditing?: boolean;
+}
 
 export default function Render({
-  participants,
   onNextSlide,
   quizCode,
+  participants,
 }: {
   slide: LobbySlide;
   participants: Participant[];
   onNextSlide: () => void;
   quizCode: string;
 }) {
-  const [participantList, setParticipantList] = useState<Participant[]>([]);
   const participantsRef = useRef<HTMLDivElement>(null);
+  const [teamsEnabled, setTeamsEnabled] = useState(false)
+  const [numberOfTeams, setNumberOfTeams] = useState(2)
+  const [teams, setTeams] = useState<Team[]>([])
 
   const {
     quizzes: { optimisticUpdate },
-    ongoingQuizzes: { optimisticDelete, resources: ongoingQuizzes },
+    ongoingQuizzes: { optimisticDelete, optimisticUpdate: updateOngoingQuiz, resources: ongoingQuizzes },
   } = useAppContext();
   const navigate = useNavigate();
   const { id } = useParams();
 
-  useEffect(() => {
-    const newParticipants = Object.values(participants); // Convert object to array of participants
-    setParticipantList((prevList) => {
-      const updatedList = [...prevList];
-      newParticipants.forEach((participant) => {
-        if (!prevList.some((p) => p.name === participant.name)) {
-          updatedList.push(participant);
-        }
-      });
-      return updatedList;
-    });
-  }, [participants]);
+  const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.id === id);
 
   useEffect(() => {
     if (participantsRef.current) {
@@ -53,54 +53,143 @@ export default function Render({
           participantsRef.current!.scrollHeight;
       }, 0);
     }
-  }, [participantList]);
+  }, []);
+
+  useEffect(() => {
+    const initialTeams: Team[] = [];
+    // Get all currently assigned participants
+    const allAssignedParticipants = teams
+      .filter(team => team.id !== 'unassigned')
+      .flatMap(team => team.participants);
+    
+    // Create new teams
+    for (let i = 0; i < numberOfTeams; i++) {
+      const existingTeam = teams.find(t => t.id === `team-${i}`);
+      if (existingTeam) {
+        // Keep existing team
+        initialTeams.push(existingTeam);
+      } else {
+        // Create new empty team
+        initialTeams.push({
+          id: `team-${i}`,
+          name: `Team ${i + 1}`,
+          participants: [],
+          isEditing: false,
+        });
+      }
+    }
+    
+    // Get participants that were in removed teams
+    const participantsToReassign = allAssignedParticipants.filter(participant => 
+      !initialTeams.some(team => 
+        team.participants.some(p => p.participantId === participant.participantId)
+      )
+    );
+    
+    // Find new participants that aren't in any team yet
+    const existingUnassigned = teams.find(t => t.id === 'unassigned');
+    const allTeamParticipantIds = new Set([
+      ...allAssignedParticipants.map(p => p.participantId),
+      ...(existingUnassigned?.participants.map(p => p.participantId) || [])
+    ]);
+    
+    const newParticipants = participants.filter(
+      p => !allTeamParticipantIds.has(p.participantId)
+    );
+    
+    // Add unassigned team with all unassigned participants
+    initialTeams.push({
+      id: 'unassigned',
+      name: 'Unassigned',
+      participants: [
+        ...(existingUnassigned?.participants || []),
+        ...participantsToReassign,
+        ...newParticipants
+      ],
+      isEditing: false,
+    });
+    
+    setTeams(initialTeams);
+  }, [numberOfTeams, participants]);
 
   const handleEndQuiz = async () => {
-    const onGoingQuiz = ongoingQuizzes.find((quiz) => quiz.id === id);
-    if (!onGoingQuiz) return navigate("/");
-
-    console.log(onGoingQuiz);
+    if (!ongoingQuiz) return navigate("/");
 
     await Promise.all([
-      optimisticDelete(onGoingQuiz.id),
-      optimisticUpdate(onGoingQuiz.quiz.id, { isHosted: false }),
+      optimisticDelete(ongoingQuiz.id),
+      optimisticUpdate(ongoingQuiz.quiz.id, { isHosted: false }),
     ]);
 
     console.log("Ending quiz, navigating to /");
     navigate("/");
   };
 
+  const handleStartGame = async () => {
+    if (!id) return;
+    // Here you can process the teams data before starting the game
+    const assignedTeams = teams.filter(team => team.id !== 'unassigned');
+    await updateOngoingQuiz(id, { teams: assignedTeams.reduce((acc, team) => {
+      acc[team.id] = {
+        name: team.name,
+        participants: team.participants.map(p => p.participantId),
+      };
+      return acc;
+    }, {} as Record<string, { name: string; participants: string[] }>) });
+    onNextSlide();
+  };
+
   return (
-    <div className="flex-1 flex flex-col justify-between p-10">
-      <div className="flex flex-row items-center justify-between">
-        <h1 className="text-5xl font-display ">Join Lobby: {quizCode}</h1>
-        <QRCode
-          style={{ height: "auto", width: "20%", margin: "3" }}
-          value={`${import.meta.env.VITE_QR_BASE_URL}${quizCode}`}
-          viewBox={`0 0 256 256`}
-        />
-      </div>
-      <div
-        ref={participantsRef}
-        className="grid grid-cols-4 gap-4 bg-black/50 backdrop-blur-md m-10 rounded-lg max-h-80 overflow-y-auto"
-      >
-        {participantList.map((participant, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-center p-4 rounded-lg animate-[zoom-in_1s_ease-in-out] "
-          >
-            <Avatar
-              style={{ width: "4.5rem", height: "4.5rem" }}
-              {...genConfig(participant.avatar ? participant.avatar : "")}
-            />
-            <span className="text-2xl font-display">{participant.name}</span>
+    <div className="flex-1 flex flex-col items-center justify-between gap-4 p-10 overflow-y-auto">
+      <Title title={ongoingQuiz?.quiz.quiz_name} quizCode={quizCode} />
+      
+      <div className="flex flex-col items-center gap-4 w-full max-w-4xl">
+        <div className="flex items-center space-x-4 bg-black/30 p-4 rounded-lg">
+          <Switch
+            checked={teamsEnabled}
+            onCheckedChange={setTeamsEnabled}
+            id="team-mode"
+          />
+          <Label htmlFor="team-mode">Enable Teams</Label>
+          
+          {teamsEnabled && (
+            <div className="flex items-center space-x-2">
+              <Label htmlFor="team-count">Number of Teams:</Label>
+              <Input
+                id="team-count"
+                type="number"
+                min={2}
+                max={8}
+                value={numberOfTeams}
+                onChange={(e) => setNumberOfTeams(Number(e.target.value))}
+                className="w-20 text-black"
+              />
+            </div>
+          )}
+        </div>
+
+        {teamsEnabled ? (
+          <TeamView 
+            numberOfTeams={numberOfTeams}
+            participants={participants}
+            teams={teams}
+            setTeams={setTeams}
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-2 w-full">
+            <span className="text-4xl font-display">Players</span>
+            <div
+              ref={participantsRef}
+              className="grid grid-cols-4 gap-4 bg-black/50 backdrop-blur-md rounded-lg min-h-24 max-h-80 overflow-y-auto w-full"
+            >
+              <Participants participants={participants} />
+            </div>
           </div>
-        ))}
+        )}
       </div>
 
-      <div className="flex justify-around">
-        <Button onClick={handleEndQuiz}>End Quiz</Button>
-        <Button onClick={onNextSlide}>Start Game</Button>
+      <div className="flex justify-around gap-4">
+        <Button variant="destructive" onClick={handleEndQuiz}>End Quiz</Button>
+        <Button onClick={handleStartGame}>Start Game</Button>
       </div>
     </div>
   );

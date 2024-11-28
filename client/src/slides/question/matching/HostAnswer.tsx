@@ -1,27 +1,25 @@
-import { FASlide, Participant } from "@/models/Quiz";
-import { Preview } from "./Preview";
 import { Button } from "@/components/ui/button";
+import { Preview } from "./Preview";
+import { Participant, MatchingSlide } from "@/models/Quiz";
 
-export function Host({
+export function HostAnswer({
   slide,
   participants,
   onNextSlide,
 }: {
-  slide: FASlide;
+  slide: MatchingSlide;
   participants: Participant[];
   onNextSlide: () => void;
 }) {
   return (
-    <div className="flex-1 flex flex-col">
+    <div>
       <Preview slide={slide} participants={participants} />
       <Button
-        onClick={() => {
-          onNextSlide();
-        }}
+        onClick={onNextSlide}
         className="absolute bottom-5 right-5"
       >
         Next Slide
       </Button>
     </div>
   );
-}
+} 

@@ -1,5 +1,4 @@
 export * from './Preview';
-export * from './Toolbar';
 export * from './Participant';
 export * from './ParticipantAnswer';
 export * from './Host';
@@ -18,5 +17,6 @@ export const Info: SlideInfo = {
     defaults: {
         ranking: [],
         answerType: AnswerTypes.rank,
+        points:1000,
     }
 } as const; 

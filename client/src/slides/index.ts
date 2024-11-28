@@ -5,13 +5,9 @@ import * as Score from "./score";
 import * as Lobby from "./lobby";
 import * as MCQSA from "./question/mcqsa";
 import * as MCQMA from "./question/mcqma";
-import * as FA from "./question/fa";
+import * as FTA from "./question/fta";
 import * as Rank from "./question/rank";
-
-interface ToolbarProps {
-  slide: Slide;
-  onSlideUpdate: (slide: Slide) => void;
-}
+import * as Matching from "./question/matching";
 
 interface SlideInfo {
   value: string;
@@ -23,6 +19,6 @@ interface SlideInfo {
   uneditable?: boolean;
 }
 
-export type { ToolbarProps, SlideInfo };
+export type { SlideInfo };
 
-export { Info, Score, Lobby, MCQSA, MCQMA, FA, Rank };
+export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, Matching };
