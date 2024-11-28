@@ -317,7 +317,7 @@ const HostLogic: React.FC = () => {
       return;
     }
 
-    const defaultPoints = 1000; // TODO: Get this from the slide later
+    const defaultPoints = slide.points;
     const updates: Record<string, Participant> = {};
 
     Object.values(participantsObj).forEach((participant) => {

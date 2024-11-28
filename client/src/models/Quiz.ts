@@ -89,11 +89,13 @@ export enum ShowCorrectAnswerTypes {
   never = "never",
 }
 
+
 interface QuestionSlideBase extends BaseSlide {
   type: SlideTypes.question;
   questionType: QuestionType;
   timeLimit: number; // in seconds, 0 means no limit
   answerType: answerType;
+  points: number; // Points for correct answer
   showCorrectAnswer: ShowCorrectAnswerTypes; // Lägg till knapp för show answer
 }
 
