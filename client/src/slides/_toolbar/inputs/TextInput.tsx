@@ -1,16 +1,26 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ToolbarProps } from "..";
+import { ToolbarProps } from "../../toolbar";
 import { Textarea } from "@/components/ui/textarea";
+import { Slide } from "@/models/Quiz";
 
-interface TextInputProps extends ToolbarProps {
+interface TextInputProps<T extends Slide> extends ToolbarProps<T> {
     label: string;
-    slideKey: "title" | "content";
+    field: keyof T & string;
     placeholder: string;
     textArea?: boolean;
 }
 
-export default function TextInput({ slide, onSlideUpdate, label, slideKey, placeholder, textArea = false }: TextInputProps) {
+export default function TextInput<T extends Slide>({ 
+    slide, 
+    onSlideUpdate, 
+    label, 
+    field, 
+    placeholder, 
+    textArea = false 
+}: TextInputProps<T>) {
+    const value = (slide[field] as string) || "";
+
     return (
         <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -18,15 +28,15 @@ export default function TextInput({ slide, onSlideUpdate, label, slideKey, place
             </div>
             {textArea ? (
                 <Textarea
-                    value={slide[slideKey] || ""}
-                    onChange={(e) => onSlideUpdate({ ...slide, [slideKey]: e.target.value })}
+                    value={value}
+                    onChange={(e) => onSlideUpdate({ ...slide, [field]: e.target.value })}
                     placeholder={placeholder}
                     className="min-h-[100px] text-black"
                 />
             ) : (
                 <Input
-                    value={slide[slideKey] || ""}
-                    onChange={(e) => onSlideUpdate({ ...slide, [slideKey]: e.target.value })}
+                    value={value}
+                    onChange={(e) => onSlideUpdate({ ...slide, [field]: e.target.value })}
                     className="text-xl font-bold"
                     placeholder={placeholder}
                 />

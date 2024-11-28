@@ -1,4 +1,4 @@
-import { getSlideComponents } from "../../slides/utils";
+import { getToolbarConfig, getSlideComponents } from "../../slides/utils";
 import type { Slide } from "@/models/Quiz";
 
 interface ToolbarProps {
@@ -8,6 +8,7 @@ interface ToolbarProps {
 
 export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
   const SlideComponent = getSlideComponents(slide);
+  const config = getToolbarConfig(slide);
 
   return (
     <div className="h-full bg-card/90 p-4 flex flex-col gap-4 overflow-y-auto text-black">
@@ -16,12 +17,15 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
         <span className="text-sm">{SlideComponent.Info.label}</span>
       </div>
 
-      {"Toolbar" in SlideComponent && (
-        <SlideComponent.Toolbar
-          slide={slide as never}
-          onSlideUpdate={onSlideUpdate}
-        />
-      )}
+      <div className="space-y-4">
+        {config.map(({ component: Component, field }) => (
+          <Component
+            key={String(field)}
+            slide={slide}
+            onSlideUpdate={onSlideUpdate}
+          />
+        ))}
+      </div>
     </div>
   );
 }
