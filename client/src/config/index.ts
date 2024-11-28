@@ -10,7 +10,7 @@ interface ConfigData {
   };
   
   export const viteMode = import.meta.env.VITE_ENVIRONMENT;
-  if (viteMode === "dev") {
+  if (viteMode === "DEV") {
     config.LOAD_PATH_i18 = "/locales/{{lng}}/{{ns}}.json";
     config.ROUTER_BASE_NAME = "";
   } else {

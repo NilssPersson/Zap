@@ -3,5 +3,9 @@
   "logout": "Logga ut",
   "home": "Hem",
   "profile": "Profil",
-  "About": "Om Oss"
+  "about": "Om Oss",
+  "language": "Språk",
+  "chooseLanguage": "Välj språk",
+  "english": "Engelska",
+  "swedish": "Svenska"
 }

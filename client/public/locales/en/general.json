@@ -2,6 +2,10 @@
   "login": "Log in",
   "logout": "Logout",
   "home": "Home",
-  "profile": "Profil",
-  "About": "About"
+  "profile": "Profile",
+  "about": "About",
+  "language": "Language",
+  "chooseLanguage": "Choose language",
+  "english": "English",
+  "swedish": "Swedish"
 }
