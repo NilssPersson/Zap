@@ -20,7 +20,6 @@ export default function TextInput<T extends Slide>({
   textArea = false,
 }: TextInputProps<T>) {
   const value = (slide[field] as string) || "";
-  console.log(label);
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
