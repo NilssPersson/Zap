@@ -125,7 +125,7 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
                 {/* Display the index with proper alignment */}
                 <h2
                   style={{
-                    backgroundColor: rankColors(index),
+                    backgroundColor: rankColors(),
                   }}
                   className="font-display text-2xl font-bold text-center p-4 rounded-lg text-[#F4F3F2] w-20"
                 >

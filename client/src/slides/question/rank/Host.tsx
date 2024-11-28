@@ -28,35 +28,45 @@ export function Host({
 }) {
   const randomizedRanking = randomizeList(slide.ranking);
   return (
-    <div>
-    <BaseQuestionRender participants={participants} slide={slide}>
-      <div className="w-full grid grid-cols-2 gap-2 pb-5"> {/* Reduced gap from gap-4 to gap-2 */}
-        {randomizedRanking.map((text, index) => (
-          <div key={index} className="min-w-full flex items-center justify-center p-4 rounded-lg shadow-md">
-            {/* Option Text */}
+    <div className="mt-5">
+      <BaseQuestionRender participants={participants} slide={slide}>
+        <div
+          className="w-full max-w-1000px grid gap-2 pb-5"
+          style={{
+            display: "grid",
+            gridTemplateRows: "repeat(2, 1fr)", // Two rows
+            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", // Adjust based on the number of items
+            justifyContent: "center", // Center-align content
+          }}
+        >
+          {randomizedRanking.map((text, index) => (
             <div
-              className="flex items-center justify-center  p-4 rounded-lg shadow-md bg-[#f6c492] text-xl font-display text-[#333333] min-h-[80px]"
-              style={{
-                minWidth: "400px", // Ensures each option has a minimum width
-                maxWidth: "400px", // Prevents the options from expanding too wide
-              }}
+              key={index}
+              className="min-w-full flex items-center justify-center p-4 rounded-lg shadow-md"
             >
-              {text}
+              {/* Option Text */}
+              <div
+                className="flex items-center justify-center p-4 rounded-lg shadow-md bg-[#FFEEA9] text-3xl font-display text-[#333333] min-h-[80px]"
+                style={{
+                  minWidth: "400px", // Ensures each option has a minimum width
+                  maxWidth: "400px", // Prevents the options from expanding too wide
+                }}
+              >
+                {text}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </BaseQuestionRender>
-    <Button
-      onClick={() => {
-        onNextSlide();
-      }}
-      className="absolute bottom-5 right-5"
-    >
-      Next Slide
-    </Button>
-  </div>
-  
+          ))}
+        </div>
+      </BaseQuestionRender>
+      <Button
+        onClick={() => {
+          onNextSlide();
+        }}
+        className="absolute bottom-5 right-5"
+      >
+        Next Slide
+      </Button>
+    </div>
   );
-  
 }
+

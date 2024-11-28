@@ -20,11 +20,12 @@ export function HostAnswer({
             <div
               key={index}
               className="flex items-center space-x-4 p-4 rounded-lg shadow-md"
+              style={{ minWidth: "400px" }} // Proper object syntax for style
             >
               {/* Rank Number with Color */}
               <h2
                 style={{
-                  backgroundColor: rankColors(index),
+                  backgroundColor: rankColors(),
                 }}
                 className="font-display text-2xl font-bold text-center p-4 rounded-lg text-[#F4F3F2] w-20"
               >

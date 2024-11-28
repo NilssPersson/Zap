@@ -18,15 +18,8 @@ export const getColor = (index: number): string => {
     return isCorrect ? "rgb(154, 191, 128)" : "rgb(255, 69, 69)";
   };
 
-  export function rankColors(index: number) {
-    if (index === 0) {
-      return 'rgb(255, 215, 0)'; // Gold
-    } else if (index === 1) {
-      return 'rgb(192, 192, 192)'; // Silver
-    } else if (index === 2) {
-      return 'rgb(205, 127, 50)'; // Bronze
-  
-    }
+  export function rankColors() {
+    
     return 'rgb(128, 128, 128)'; // No color for other ranks
   }
   

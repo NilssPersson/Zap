@@ -81,10 +81,7 @@ export default function CreateParticipant({
     handleAddParticipant(guestName, guestAvatar);
   };
 
-  function changeAvatarClick() {
-    const randomString = createRandomId();
-    setAvatar(randomString);
-  }
+
 
   function changeGuestAvatarClick() {
     const randomString = createRandomId();
@@ -196,11 +193,11 @@ export default function CreateParticipant({
 
             <Avatar
               style={{ width: "4rem", height: "4rem" }}
-              {...genConfig(guestAvatar)}
+              {...genConfig(avatar)}
             />
 
             <button
-              onClick={changeAvatarClick}
+              onClick={changeGuestAvatarClick}
               className="m-2 p-2 rounded-full bg-yellow-300 hover:bg-yellow-400 flex items-center justify-center"
               title="Randomize Avatar"
             >
