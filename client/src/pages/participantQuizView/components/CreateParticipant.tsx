@@ -16,7 +16,7 @@ function createRandomId() {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from({ length: 10 }, () =>
-    chars.charAt(Math.random() * chars.length)
+    chars.charAt(Math.random() * chars.length),
   ).join("");
 }
 
@@ -41,7 +41,7 @@ export default function CreateParticipant({
         // Call findOrCreate to fetch or create the user
         const { data, error } = await userService.findOrCreate(
           user.id,
-          user.email
+          user.email,
         );
 
         if (error) {
@@ -80,11 +80,6 @@ export default function CreateParticipant({
 
     handleAddParticipant(guestName, guestAvatar);
   };
-
-  function changeAvatarClick() {
-    const randomString = createRandomId();
-    setAvatar(randomString);
-  }
 
   function changeGuestAvatarClick() {
     const randomString = createRandomId();
@@ -200,7 +195,7 @@ export default function CreateParticipant({
             />
 
             <button
-              onClick={changeAvatarClick}
+              onClick={changeGuestAvatarClick}
               className="m-2 p-2 rounded-full bg-yellow-300 hover:bg-yellow-400 flex items-center justify-center"
               title="Randomize Avatar"
             >
