@@ -26,6 +26,7 @@ i18n
       "general",
       "about",
       "quizEditor",
+      "homepage",
     ],
     defaultNS: "translation",
     load: "languageOnly",

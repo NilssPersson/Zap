@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Quiz from "@/models/Quiz";
 import { SlidePreview } from "../quiz-editor/SlidePreview";
 import {
@@ -11,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { ReactNode } from "react";
 import { Share, Trash, Zap, MoreHorizontal, Copy } from "lucide-react";
 import {
@@ -22,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAppContext } from "@/contexts/App/context";
 import ReactNiceAvatar, { genConfig } from "react-nice-avatar";
+import { useTranslation } from "react-i18next";
 
 interface QuizCardProps {
   quiz: Quiz;
@@ -30,20 +37,14 @@ interface QuizCardProps {
   variant?: "my-quizzes" | "shared-quizzes";
 }
 
-export function QuizCard({
-  quiz,
-  onClick,
-  children,
-  variant
-}: QuizCardProps) {
-  const { users: { resources: users } } = useAppContext();
+export function QuizCard({ quiz, onClick, children, variant }: QuizCardProps) {
+  const {
+    users: { resources: users },
+  } = useAppContext();
   const quizHost = users.find((user) => user.id === quiz.user_id);
 
   return (
-    <Card
-      className={`${onClick ? 'cursor-pointer' : ''}`}
-      onClick={onClick}
-    >
+    <Card className={`${onClick ? "cursor-pointer" : ""}`} onClick={onClick}>
       <CardHeader>
         <div className="flex items-center gap-2">
           <CardTitle className="text-lg mr-auto">{quiz.quiz_name}</CardTitle>
@@ -64,11 +65,13 @@ export function QuizCard({
                 <ReactNiceAvatar
                   style={{
                     width: "28px",
-                    height: "28px"
+                    height: "28px",
                   }}
                   {...genConfig(quizHost.avatar)}
                 />
-                <span className="text-sm rounded p-1 bg-primary-foreground">{quizHost.username}</span>
+                <span className="text-sm rounded p-1 bg-primary-foreground">
+                  {quizHost.username}
+                </span>
               </div>
             )}
           </div>
@@ -80,9 +83,7 @@ export function QuizCard({
           </div>
         )}
       </CardContent>
-      <CardFooter className="gap-2 flex-wrap">
-        {children}
-      </CardFooter>
+      <CardFooter className="gap-2 flex-wrap">{children}</CardFooter>
     </Card>
   );
 }
@@ -94,7 +95,13 @@ interface MyQuizButtonsProps {
   onDelete: (quizId: string) => Promise<void>;
 }
 
-export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtonsProps) {
+export function MyQuizButtons({
+  quiz,
+  onHost,
+  onShare,
+  onDelete,
+}: MyQuizButtonsProps) {
+  const { t } = useTranslation();
   return (
     <>
       <Button
@@ -116,17 +123,17 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem 
+          <DropdownMenuItem
             onClick={(e) => {
               e.stopPropagation();
               onShare(quiz.id);
             }}
           >
             <Share className="w-4 h-4 cursor-pointer" />
-            <span className="cursor-pointer">Share</span>
+            <span className="cursor-pointer">{t("general:share")}</span>
           </DropdownMenuItem>
 
-          <DropdownMenuItem 
+          <DropdownMenuItem
             className="text-destructive"
             onClick={(e) => {
               e.stopPropagation();
@@ -139,13 +146,14 @@ export function MyQuizButtons({ quiz, onHost, onShare, onDelete }: MyQuizButtons
             <Dialog>
               <DialogTrigger className="flex w-full items-center gap-2">
                 <Trash className="w-4 h-4" />
-                Delete
+                {t("general:delete")}
               </DialogTrigger>
               <DialogContent onClick={(e) => e.stopPropagation()}>
                 <DialogHeader>
                   <DialogTitle>Delete Quiz</DialogTitle>
                   <DialogDescription>
-                    Are you sure you want to delete "{quiz.quiz_name}"? This action cannot be undone.
+                    Are you sure you want to delete "{quiz.quiz_name}"? This
+                    action cannot be undone.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -180,7 +188,10 @@ interface SharedQuizButtonsProps {
   onCopyToMyQuizzes: (quiz: Quiz) => Promise<void>;
 }
 
-export function SharedQuizButtons({ quiz, onCopyToMyQuizzes }: SharedQuizButtonsProps) {
+export function SharedQuizButtons({
+  quiz,
+  onCopyToMyQuizzes,
+}: SharedQuizButtonsProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -199,15 +210,14 @@ export function SharedQuizButtons({ quiz, onCopyToMyQuizzes }: SharedQuizButtons
         <DialogHeader>
           <DialogTitle>Copy Quiz</DialogTitle>
           <DialogDescription>
-            Would you like to copy "{quiz.quiz_name}" to your quizzes? You'll be able to modify it as you wish.
+            Would you like to copy "{quiz.quiz_name}" to your quizzes? You'll be
+            able to modify it as you wish.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <div className="flex justify-end gap-2 mt-4">
             <DialogClose asChild>
-              <Button variant="outline">
-                Cancel
-              </Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
             <DialogClose asChild>
               <Button
@@ -225,4 +235,4 @@ export function SharedQuizButtons({ quiz, onCopyToMyQuizzes }: SharedQuizButtons
       </DialogContent>
     </Dialog>
   );
-} 
+}
