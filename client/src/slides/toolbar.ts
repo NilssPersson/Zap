@@ -1,4 +1,4 @@
-import { Slide, InfoSlide, MCQMASlide, MCQSASlide, RankSlide, QuestionSlide, FTASlide } from "@/models/Quiz";
+import { Slide, InfoSlide, MCQMASlide, MCQSASlide, RankSlide, QuestionSlide, FTASlide, MatchingSlide } from "@/models/Quiz";
 import ImageInput from "./_toolbar/inputs/ImageInput";
 import BackgroundInput from "./_toolbar/inputs/BackgroundInput";
 import EmbedVideoInput from "./_toolbar/inputs/EmbedVideoInput";
@@ -9,6 +9,7 @@ import TitleInput from "./_toolbar/inputs/TitleInput";
 import ContentInput from "./_toolbar/inputs/ContentInput";
 import { AnswerText } from "./_toolbar/inputs/AnswerInput";
 import { SelectPoints } from "./_toolbar/inputs/SelectPoints";
+import { MatchingOptionsInput } from "./_toolbar/inputs/MatchingOptionsInput";
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -116,6 +117,15 @@ export const toolbarConfigs = {
       label: "Correct Answer",
       component: AnswerText,
     },
-    
+  ],
+
+  MATCHING: [
+    ...baseToolbarConfig,
+    {
+      field: "labels" as keyof MatchingSlide,
+      label: "Matching Items",
+      component: MatchingOptionsInput,
+    },
+    ...baseQuestionToolbarConfig,
   ],
 } as const; 

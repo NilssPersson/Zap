@@ -1,5 +1,5 @@
 import { QuestionType, Slide, SlideType } from '@/models/Quiz';
-import { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank } from './';
+import { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, Matching } from './';
 import { toolbarConfigs } from './toolbar';
 
 export function getSlideComponents(slide: Slide,) {
@@ -27,6 +27,8 @@ export function getSlideComponentsFromType(type: SlideType, questionType?: Quest
                     return FTA;
                 case "RANK":
                     return Rank;
+                case "MATCHING":
+                    return Matching;
                 default:
                     throw new Error(`Unknown question type: ${questionType}`);
             }

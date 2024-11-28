@@ -1,11 +1,11 @@
 import { RankSlide } from "@/models/Quiz";
-import { ToolbarProps } from "../..";
+import { ToolbarProps } from "@/slides/toolbar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-export function RankOptionsInput({ slide, onSlideUpdate }: ToolbarProps) {
+export function RankOptionsInput({ slide, onSlideUpdate }: ToolbarProps<RankSlide>) {
 
   const [newRank, setNewRank] = useState<string>("");
   

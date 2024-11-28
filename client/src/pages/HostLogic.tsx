@@ -162,6 +162,16 @@ const HostLogic: React.FC = () => {
         const newScore = 1000;
         return newScore;
       }
+      case AnswerTypes.matching: {
+        const correctAnswer = question.labels.every((label) => {
+          return label.correctOptions.every((option) => (participantAnswer.answer as unknown as Record<string, string[]>)[label.id].includes(option));
+        });
+        if (correctAnswer) {
+          const newScore = 1000;
+          return newScore;
+        }
+        return 0;
+      }
       default: {
         return 0;
       }

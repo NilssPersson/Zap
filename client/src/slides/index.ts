@@ -7,6 +7,7 @@ import * as MCQSA from "./question/mcqsa";
 import * as MCQMA from "./question/mcqma";
 import * as FTA from "./question/fta";
 import * as Rank from "./question/rank";
+import * as Matching from "./question/matching";
 
 interface SlideInfo {
   value: string;
@@ -20,4 +21,4 @@ interface SlideInfo {
 
 export type { SlideInfo };
 
-export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank };
+export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, Matching };
