@@ -8,6 +8,7 @@ import { QuestionSettingsInput } from "./_toolbar/inputs/QuestionSettingsInput";
 import TitleInput from "./_toolbar/inputs/TitleInput";
 import ContentInput from "./_toolbar/inputs/ContentInput";
 import { AnswerText } from "./_toolbar/inputs/AnswerInput";
+import { SelectPoints } from "./_toolbar/inputs/SelectPoints";
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -46,6 +47,18 @@ const baseToolbarConfig: ToolbarConfig = [
   },
 ];
 
+const baseQuestionToolbarConfig: ToolbarConfig<QuestionSlide> = [
+  {
+    field: "showCorrectAnswer",
+    label: "Question Settings",
+    component: QuestionSettingsInput,
+  },
+  {
+    field: "points",
+    label: "Select Points",
+    component: SelectPoints,
+  }
+];
 
 
 export const toolbarConfigs = {
@@ -66,57 +79,43 @@ export const toolbarConfigs = {
 
   MCQMA: [
     ...baseToolbarConfig,
+    ...baseQuestionToolbarConfig,
     {
       field: "options" as keyof MCQMASlide,
       label: "Options",
       component: MCQOptionsInput,
     },
-    {
-      field: "showCorrectAnswer" as keyof QuestionSlide,
-      label: "Question Settings",
-      component: QuestionSettingsInput,
-    },
   ],
 
   MCQSA: [
     ...baseToolbarConfig,
+    ...baseQuestionToolbarConfig,
     {
       field: "options" as keyof MCQSASlide,
       label: "Options",
       component: MCQOptionsInput,
     },
-    {
-      field: "showCorrectAnswer" as keyof QuestionSlide,
-      label: "Question Settings",
-      component: QuestionSettingsInput,
-    },
   ],
 
   RANK: [
     ...baseToolbarConfig,
+    ...baseQuestionToolbarConfig,
     {
       field: "ranking" as keyof RankSlide,
       label: "Ranking",
       component: RankOptionsInput,
     },
-    {
-      field: "showCorrectAnswer" as keyof QuestionSlide,
-      label: "Question Settings",
-      component: QuestionSettingsInput,
-    },
+    
   ],
 
   FTA: [
     ...baseToolbarConfig,
-    {
-      field: "showCorrectAnswer" as keyof QuestionSlide,
-      label: "Question Settings",
-      component: QuestionSettingsInput,
-    },
+    ...baseQuestionToolbarConfig,
     {
       field: "correctAnswer" as keyof FTASlide,
       label: "Correct Answer",
       component: AnswerText,
     },
+    
   ],
 } as const; 
