@@ -1,16 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
-import { CookiesProvider } from "react-cookie";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <CookiesProvider>
-        <App />
-      </CookiesProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
-);
+import "@/i18tn";
+
+const rootElement = document.getElementById("root");
+
+import config from "@/config";
+const { ROUTER_BASE_NAME } = config;
+export const router = createBrowserRouter([{ path: "*", element: <App /> }], {
+  basename: ROUTER_BASE_NAME,
+});
+
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>,
+  );
+} else {
+  console.error("Could not find the 'root' element.");
+}
