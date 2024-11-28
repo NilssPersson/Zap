@@ -84,5 +84,6 @@ export type QuestionSlide =
   | MCQSASlide
   | MCQMASlide
   | FTASlide
+  | FASlide
   | RankSlide
   | MatchingSlide;

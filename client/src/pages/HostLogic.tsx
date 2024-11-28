@@ -182,11 +182,10 @@ const HostLogic: React.FC = () => {
         const newScore = 1000;
         return newScore;
       }
-
       case AnswerTypes.matching: {
         const correctAnswer = question.labels.every((label) => {
           return label.correctOptions.every((option) =>
-            (participantAnswers.answer as unknown as Record<string, string[]>)[
+            (participantAnswers?.answer as unknown as Record<string, string[]>)[
               label.id
             ].includes(option)
           );
