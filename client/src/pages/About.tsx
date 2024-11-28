@@ -1,18 +1,19 @@
-import nils from '../assets/photos/nils.jpeg'
+import nils from "../assets/photos/nils.jpeg";
 import ramez from "../assets/photos/ramez.jpeg";
 import lisa from "../assets/photos/lisa.jpeg";
 import jacob from "../assets/photos/jacob.jpeg";
 import filip from "../assets/photos/filip.jpeg";
+import { useTranslation } from "react-i18next";
 
-function About() {
+export default function About() {
+  const { t } = useTranslation();
   return (
     <div className="container  bg-black/50 backdrop-blur-md flex-1">
-      <h1 className="text-2xl font-bold mb-4 font-display">About Us</h1>
-      <p className="mb-4 max-w-2xl">
-        Welcome to our about page. This is where you can learn more about our
-        company and mission.
-      </p>
-      <h3 className="text-2xl font-bold mb-4 font-display">Who are we?</h3>
+      <h1 className="text-2xl font-bold mb-4 font-display">
+        {t("about:title")}
+      </h1>
+      <p className="mb-4 max-w-2xl">{t("about:welcomeText")}</p>
+      <h3 className="text-2xl font-bold mb-4 font-display">{t("about:who")}</h3>
       <div className="px-24 my-16">
         <div className="flex flex-row justify-between mb-3">
           <div className="flex flex-col items-center">
@@ -70,29 +71,21 @@ function About() {
         </div>
       </div>
       <h3 className="text-2xl font-bold mb-4 font-display">
-        Goal of the project
+        {t("about:goalsTitle")}
       </h3>
-      <p className="mb-4 max-w-xl text-balance">
-        We’re a team of students from Uppsala University, here to bring you a
-        fun, easy way to create interactive quizzes! Born out of our Software
-        Engineering Project course, our mission is simple: make quiz-making a
-        blast for everyone. Dive into our ready-to-go templates and create
-        something awesome in minutes!
-      </p>
-      <h3 className="text-2xl font-bold mb-4 font-display">Current status</h3>
-      <p className="mb-6">
-        The project is currently in its start-up phase, to be continued...
-      </p>
+      <p className="mb-4 max-w-xl text-balance">{t("about:goalsText")}</p>
+      <h3 className="text-2xl font-bold mb-4 font-display">
+        {t("about:statusTitle")}
+      </h3>
+      <p className="mb-6">{t("about:statusText")}</p>
       <a
         href="https://github.com/FKnorring/GameShack"
         target="_blank"
         rel="noopener noreferrer"
         className="text-3xl font-display mb-8 hover:text-blue-900"
       >
-        Check out our GitHub Repository!
+        {t("about:github")}
       </a>
     </div>
   );
-} 
-
-export default About
+}

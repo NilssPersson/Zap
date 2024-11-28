@@ -24,6 +24,8 @@ i18n
     },
     ns: [
       "general",
+      "about",
+      "quizEditor",
     ],
     defaultNS: "translation",
     load: "languageOnly",
