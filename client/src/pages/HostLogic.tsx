@@ -6,11 +6,12 @@ import {
   SlideTypes,
   ShowCorrectAnswerTypes,
   Participant,
-  AnswerTypes,
+  
   Slide,
   ParticipantAnswer,
   LobbySlide,
   QuestionTypes,
+  AnswerTypes,
 } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
 
@@ -158,6 +159,15 @@ const HostLogic: React.FC = () => {
           return 0;
         }
       }
+      case AnswerTypes.time: {
+        const correctAnswer = "correct";
+        if (participantAnswers.answer[0] == correctAnswer) {
+          const newScore = 1000;
+          return newScore;
+        } else {
+          return 0;
+        }
+      }
       // The answers should be the same, with regard to order
       case AnswerTypes.rank: {
         const correctAnswer = question.ranking;
@@ -173,15 +183,6 @@ const HostLogic: React.FC = () => {
         return newScore;
       }
 
-      case AnswerTypes.time: {
-        const correctAnswer = "correct";
-        if (participantAnswers.answer[0] == correctAnswer) {
-          const newScore = 1000;
-          return newScore;
-        } else {
-          return 0;
-        }
-      }
       case AnswerTypes.matching: {
         const correctAnswer = question.labels.every((label) => {
           return label.correctOptions.every((option) =>

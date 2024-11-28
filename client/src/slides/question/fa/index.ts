@@ -16,5 +16,6 @@ export const Info: SlideInfo = {
   questionType: QuestionTypes.FA,
   defaults: {
     answerType: AnswerTypes.time,
+    points: 1000
   },
 } as const;
