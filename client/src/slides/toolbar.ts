@@ -1,4 +1,4 @@
-import { Slide, InfoSlide, MCQMASlide, MCQSASlide, RankSlide, QuestionSlide } from "@/models/Quiz";
+import { Slide, InfoSlide, MCQMASlide, MCQSASlide, RankSlide, QuestionSlide, FTASlide } from "@/models/Quiz";
 import ImageInput from "./_toolbar/inputs/ImageInput";
 import BackgroundInput from "./_toolbar/inputs/BackgroundInput";
 import EmbedVideoInput from "./_toolbar/inputs/EmbedVideoInput";
@@ -7,6 +7,7 @@ import { RankOptionsInput } from "./_toolbar/inputs/RankOptionsInput";
 import { QuestionSettingsInput } from "./_toolbar/inputs/QuestionSettingsInput";
 import TitleInput from "./_toolbar/inputs/TitleInput";
 import ContentInput from "./_toolbar/inputs/ContentInput";
+import { AnswerText } from "./_toolbar/inputs/AnswerInput";
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -44,6 +45,8 @@ const baseToolbarConfig: ToolbarConfig = [
     component: BackgroundInput,
   },
 ];
+
+
 
 export const toolbarConfigs = {
   info: [
@@ -109,6 +112,11 @@ export const toolbarConfigs = {
       field: "showCorrectAnswer" as keyof QuestionSlide,
       label: "Question Settings",
       component: QuestionSettingsInput,
+    },
+    {
+      field: "correctAnswer" as keyof FTASlide,
+      label: "Correct Answer",
+      component: AnswerText,
     },
   ],
 } as const; 
