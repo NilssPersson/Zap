@@ -140,6 +140,7 @@ export default function CreateParticipant({
             </TabsContent>
           </div>
         </Tabs>
+
       ) : (
         <div className="bg-component-background w-3/4 mx-auto rounded-lg flex flex-col items-center justify-center p-6  space-y-4">
           <Avatar
@@ -172,6 +173,7 @@ export default function CreateParticipant({
           >
             Play
           </Button>
+
         </div>
       )}
     </div>

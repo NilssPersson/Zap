@@ -1,6 +1,6 @@
 import { Participant, RankSlide } from "@/models/Quiz";
 import { BaseQuestionRender } from "../base/QuestionRender";
-import SlideRank from "@/slides/_components/SlideRank";
+
 import { Button } from "@/components/ui/button";
 
 function randomizeList<T>(list: T[]): T[] {
@@ -25,22 +25,49 @@ export function Host({
   participants: Participant[];
   onNextSlide: () => void;
 }) {
-  const ranking = Array.isArray(slide.ranking) ? slide.ranking : [];
-  const randomizedRanking = randomizeList(ranking);
-  
+  const randomizedRanking = randomizeList(slide.ranking);
   return (
-    <div>
+    <div className="mt-5">
       <BaseQuestionRender participants={participants} slide={slide}>
-        <SlideRank ranking={randomizedRanking} />
+        <div
+          className="w-full max-w-1000px flex gap-2 pb-5"
+          style={{
+            justifyContent: "center", // Center-align content horizontally
+            alignItems: "center", // Align items vertically if heights differ
+            flexWrap: "wrap", // Allow wrapping to the next line
+          }}
+        >
+          {randomizedRanking.map((text, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-center p-4 rounded-lg shadow-md"
+              style={{
+                flexBasis: "calc(25% - 10px)", // Set to 25% width, minus gap
+                maxWidth: "100%", // Ensure no more than 4 items per row
+              }}
+            >
+              {/* Option Text */}
+              <div
+                className="flex items-center justify-center p-4 rounded-lg shadow-md bg-[#FFEEA9] text-3xl font-display text-[#333333] min-h-[80px]"
+                style={{
+                  minWidth: "100%", // Ensures the item fills the space available
+                  maxWidth: "100%", // Prevents overflow
+                }}
+              >
+                {text}
+              </div>
+            </div>
+          ))}
+        </div>
+        <Button
+          onClick={() => {
+            onNextSlide();
+          }}
+          className="absolute bottom-5 right-5"
+        >
+          Next Slide
+        </Button>
       </BaseQuestionRender>
-      <Button
-        onClick={() => {
-          onNextSlide();
-        }}
-        className="absolute bottom-5 right-5"
-      >
-        Next Slide
-      </Button>
     </div>
   );
 }
