@@ -15,7 +15,7 @@ export function ParticipantAnswers({
   }
 
   return (
-    <div className="flex justify-center items-center w-44 h-24 rounded-2xl border bg-primary text-white">
+    <div className="absolute top-4 right-4 flex justify-center items-center w-44 h-24 rounded-2xl border bg-primary text-white">
       <div className="flex items-center space-x-4">
         <div className="text-center font-display">
           <h1 className="text-4xl">

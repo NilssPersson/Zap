@@ -48,7 +48,7 @@ export function HostAnswer({
   };
 
   async function handleAwardPointsNextSlide() {
-    await handleAddPoints(
+    handleAddPoints(
       latestAnswers.map((entry) => ({
         participantId: entry.id,
         awardPoints: entry.points,
