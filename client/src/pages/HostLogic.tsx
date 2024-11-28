@@ -33,7 +33,7 @@ const HostLogic: React.FC = () => {
 
   const ongoingQuiz = useMemo(
     () => ongoingQuizzes.find((quiz) => quiz.id === id),
-    [ongoingQuizzes, id],
+    [ongoingQuizzes, id]
   );
 
   const updateParticipants = useCallback(
@@ -43,10 +43,10 @@ const HostLogic: React.FC = () => {
         {
           participants,
         },
-        true,
+        true
       );
     },
-    [optimisticUpdate],
+    [optimisticUpdate]
   );
 
   usePathOnValue<Participant>(
@@ -54,7 +54,7 @@ const HostLogic: React.FC = () => {
     (participants) => {
       if (!id) return;
       updateParticipants(id, participants);
-    },
+    }
   );
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const HostLogic: React.FC = () => {
       if (participantsObj) {
         const participants = Object.values(participantsObj);
         const totalAnswers = participants.filter(
-          (participant) => participant.hasAnswered,
+          (participant) => participant.hasAnswered
         ).length;
         // Fetch question slide
         const questionSlide = ongoingQuiz.quiz.slides[
@@ -95,21 +95,31 @@ const HostLogic: React.FC = () => {
     checkAnsweres();
   }, [ongoingQuiz]);
 
+  if (!ongoingQuiz) return <div>Loading Quiz...</div>;
+
   const calculateScore = (
     question: QuestionSlide,
-    participant: Participant,
-    participantAnswer: ParticipantAnswer,
+    participant: Participant
   ) => {
     if (!participant.answers) {
       return 0;
     }
+    var participantAnswers = participant.answers.at(-1);
+    if (!participantAnswers) {
+      return 0;
+    }
+    // If participant is missing answer for the latest slide
+    if (participantAnswers.slideNumber != ongoingQuiz.currentSlide - 1) {
+      participantAnswers.answer = [""];
+    }
+
     switch (question.answerType) {
       case AnswerTypes.singleString: {
         const correctAnswer = question.options
           .filter((option) => option.isCorrect)
           .map((option) => option.text);
 
-        if (participantAnswer.answer[0] === correctAnswer[0]) {
+        if (participantAnswers.answer[0] === correctAnswer[0]) {
           const newScore = 1000;
           return newScore;
         } else {
@@ -119,7 +129,7 @@ const HostLogic: React.FC = () => {
       // Todo, handle spelling mistakes etc.
       case AnswerTypes.freeText: {
         const correctAnswer = question.correctAnswer;
-        if (participantAnswer.answer[0] === correctAnswer[0]) {
+        if (participantAnswers.answer[0] === correctAnswer[0]) {
           const newScore = 1000;
           return newScore;
         }
@@ -130,15 +140,15 @@ const HostLogic: React.FC = () => {
         const correctAnswer = question.options
           .filter((option) => option.isCorrect)
           .map((option) => option.text);
-        if (participantAnswer.answer.length !== correctAnswer.length) {
+        if (participantAnswers.answer.length !== correctAnswer.length) {
           return 0;
         }
         // Sort both arrays and compare
-        const sortedParticipantAnswers = [...participantAnswer.answer].sort();
+        const sortedParticipantAnswers = [...participantAnswers.answer].sort();
         const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
-          (value, index) => value === sortedQuestionAnswers[index],
+          (value, index) => value === sortedQuestionAnswers[index]
         );
 
         if (isAnswerCorrect) {
@@ -151,20 +161,34 @@ const HostLogic: React.FC = () => {
       // The answers should be the same, with regard to order
       case AnswerTypes.rank: {
         const correctAnswer = question.ranking;
-        if (participantAnswer.answer.length !== correctAnswer.length) {
+        if (participantAnswers.answer.length !== correctAnswer.length) {
           return 0;
         }
-        for (let i = 0; i < participantAnswer.answer.length; i++) {
-          if (participantAnswer.answer[i] !== correctAnswer[i]) {
+        for (let i = 0; i < participantAnswers.answer.length; i++) {
+          if (participantAnswers.answer[i] !== correctAnswer[i]) {
             return 0;
           }
         }
         const newScore = 1000;
         return newScore;
       }
+
+      case AnswerTypes.time: {
+        const correctAnswer = "correct";
+        if (participantAnswers.answer[0] == correctAnswer) {
+          const newScore = 1000;
+          return newScore;
+        } else {
+          return 0;
+        }
+      }
       case AnswerTypes.matching: {
         const correctAnswer = question.labels.every((label) => {
-          return label.correctOptions.every((option) => (participantAnswer.answer as unknown as Record<string, string[]>)[label.id].includes(option));
+          return label.correctOptions.every((option) =>
+            (participantAnswers.answer as unknown as Record<string, string[]>)[
+              label.id
+            ].includes(option)
+          );
         });
         if (correctAnswer) {
           const newScore = 1000;
@@ -178,20 +202,20 @@ const HostLogic: React.FC = () => {
     }
   };
 
-  const getAnswer = (participant: Participant) => {
+  const createAnswer = (participant: Participant) => {
     if (
       !participant.answers ||
       participant.answers[participant.answers.length - 1].slideNumber !=
-        (ongoingQuiz?.currentSlide || 0) - 1
+        ongoingQuiz.currentSlide - 1
     ) {
       const newAnswer: ParticipantAnswer = {
-        slideNumber: ongoingQuiz?.currentSlide || 0,
+        slideNumber: ongoingQuiz.currentSlide - 1,
         answer: [""],
         time: new Date().toISOString(),
       };
       return newAnswer;
     } else {
-      return participant.answers[participant.answers.length - 1];
+      return null;
     }
   };
 
@@ -207,21 +231,24 @@ const HostLogic: React.FC = () => {
       const updates: { [key: string]: Participant } = {};
 
       participants.forEach(async (participant: Participant) => {
-        const answer = getAnswer(participant);
-        const score = calculateScore(slide, participant, answer);
+        const newAnswer = createAnswer(participant);
+        const score = calculateScore(slide, participant);
         updates[participant.participantId] = {
           ...participant,
           score: [...(participant.score || []), score],
           hasAnswered: false,
+          answers: newAnswer
+            ? [...(participant.answers || []), newAnswer]
+            : [...participant.answers],
         };
       });
       try {
         const updatedQuiz = ongoingQuiz;
         updatedQuiz.participants = updates;
-        console.log("New quiz after updates scores:", updatedQuiz);
+
         optimisticUpdate(
           ongoingQuiz.participants ? ongoingQuiz.id : "",
-          updatedQuiz,
+          updatedQuiz
         );
         console.log("Scores updated and answers reset successfully.");
       } catch (error) {
@@ -238,14 +265,13 @@ const HostLogic: React.FC = () => {
     }
     // If we are not already showing the answeres
     if (!showAnswer) {
-      updateScores(slide);
+      await updateScores(slide);
     }
 
     const updatedQuiz = ongoingQuiz;
-    updatedQuiz.currentSlide = updatedQuiz?.currentSlide + 1;
+    updatedQuiz.currentSlide = updatedQuiz.currentSlide + 1;
 
     await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : "", updatedQuiz);
-    console.log("Next slide: ", ongoingQuiz);
     setShowAnswer(false);
   };
 
@@ -282,8 +308,6 @@ const HostLogic: React.FC = () => {
     );
   };
 
-  if (!ongoingQuiz) return <div>Loading Quiz...</div>;
-
   if (!ongoingQuiz.quiz.slides) {
     return (
       <h1 className="text-5xl font-display">
@@ -318,7 +342,7 @@ const HostLogic: React.FC = () => {
   // Function to "manually" award points to participants and then move to the next slide
   async function handleAddPoints(
     pointsData: { participantId: string; awardPoints: boolean }[],
-    slide: QuestionSlide,
+    slide: QuestionSlide
   ) {
     const participantsObj = ongoingQuiz?.participants;
     console.log(slide);
@@ -335,7 +359,7 @@ const HostLogic: React.FC = () => {
 
       // Check if this participant should be awarded points
       const awardPoints = pointsData.some(
-        (entry) => entry.participantId === participantId && entry.awardPoints,
+        (entry) => entry.participantId === participantId && entry.awardPoints
       );
 
       const scoreToAdd = awardPoints ? defaultPoints : 0;
