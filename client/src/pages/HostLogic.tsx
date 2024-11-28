@@ -305,59 +305,46 @@ const HostLogic: React.FC = () => {
 
   const SlideComponent = getSlideComponents(slide);
 
+  // Function to "manually" award points to participants and then move to the next slide
   function handleAddPoints(
     pointsData: { participantId: string; awardPoints: boolean }[],
     slide: QuestionSlide,
   ) {
     const participantsObj = ongoingQuiz?.participants;
     console.log(slide);
-    if (participantsObj) {
-      const participants = Object.values(participantsObj);
-      const updates: { [key: string]: Participant } = {};
-      const defaultPoints = 1000;
-      const slidePoints = defaultPoints;
-
-      participants.forEach((participant: Participant) => {
-        const participantId = participant.participantId;
-        const awardPoints = pointsData.find(
-          (entry) => entry.participantId === participantId,
-        )?.awardPoints;
-
-        if (awardPoints) {
-          const score = slidePoints;
-          updates[participant.participantId] = {
-            ...participant,
-            score: [...(participant.score || []), score],
-            hasAnswered: false,
-          };
-        } else {
-          // No points awarded, reset `hasAnswered` status
-          const score = 0;
-          updates[participant.participantId] = {
-            ...participant,
-            score: [...(participant.score || []), score],
-            hasAnswered: false,
-          };
-        }
-        nextSlide();
-      });
-
-      try {
-        // Perform optimistic update
-        const updatedQuiz = { ...ongoingQuiz, participants: updates };
-        console.log("Updated quiz after updating scores:", updatedQuiz);
-
-        optimisticUpdate(
-          ongoingQuiz.participants ? ongoingQuiz.id : "",
-          updatedQuiz,
-        );
-
-        console.log("Scores updated and answers reset successfully.");
-      } catch (error) {
-        console.error("Error updating participants score:", error);
-      }
-    } else {
+    if (!participantsObj) {
       console.log("No participants");
+      return;
+    }
+
+    const defaultPoints = 1000; // TODO: Get this from the slide later
+    const updates: Record<string, Participant> = {};
+
+    Object.values(participantsObj).forEach((participant) => {
+      const { participantId } = participant;
+
+      // Check if this participant should be awarded points
+      const awardPoints = pointsData.some(
+        (entry) => entry.participantId === participantId && entry.awardPoints,
+      );
+
+      const scoreToAdd = awardPoints ? defaultPoints : 0;
+
+      // Update the participant's scores and reset `hasAnswered`
+      updates[participantId] = {
+        ...participant,
+        score: [...(participant.score || []), scoreToAdd],
+        hasAnswered: false,
+      };
+    });
+
+    try {
+      const updatedQuiz = { ...ongoingQuiz, participants: updates };
+      optimisticUpdate(ongoingQuiz?.id || "", updatedQuiz);
+      nextSlide(); // Move to the next slide after updating
+      console.log("Participants' scores updated successfully:", updatedQuiz);
+    } catch (error) {
+      console.error("Error updating participants' scores:", error);
     }
   }
 
