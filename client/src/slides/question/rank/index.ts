@@ -17,5 +17,6 @@ export const Info: SlideInfo = {
     defaults: {
         ranking: [],
         answerType: AnswerTypes.rank,
+        points:1000,
     }
 } as const; 
