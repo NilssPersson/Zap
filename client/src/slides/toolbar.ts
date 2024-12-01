@@ -72,9 +72,7 @@ export const toolbarConfigs = {
     },
   ],
 
-  score: [
-    ...baseToolbarConfig,
-  ],
+  score: [...baseToolbarConfig],
 
   lobby: [],
 
@@ -106,7 +104,6 @@ export const toolbarConfigs = {
       label: "Ranking",
       component: RankOptionsInput,
     },
-    
   ],
 
   FTA: [
@@ -118,6 +115,7 @@ export const toolbarConfigs = {
       component: AnswerText,
     },
   ],
+
 
   MATCHING: [
     ...baseToolbarConfig,

@@ -47,7 +47,7 @@ function QuizView({
   return (
     <SlideComponent.Participant
       slide={currentQuestion as never}
-      answerQuestion={answerQuestion}
+      answerQuestion={answerQuestion as never}
     />
   );
 }

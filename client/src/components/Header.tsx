@@ -4,12 +4,26 @@ import { Zap } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
   const location = useLocation();
   const { isAuthenticated, logout } = useKindeAuth();
   const [showHeader, setShowHeader] = useState(false);
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -44,10 +58,12 @@ export function Header() {
   }
 
   return (
-    <header className={cn(
-      "bg-black/40 hidden md:block transition-opacity duration-200 border-b-2 border-b-primary shadow shadow-black/20 z-50",
-      inLobby && "absolute top-0 left-0 right-0"
-    )}>
+    <header
+      className={cn(
+        "bg-black/40 hidden md:block transition-opacity duration-200 border-b-2 border-b-primary shadow shadow-black/20 z-50",
+        inLobby && "absolute top-0 left-0 right-0",
+      )}
+    >
       <div className="container flex h-16 items-center px-4">
         <div className="mr-4 hidden md:flex w-full">
           <nav className="flex items-center space-x-6 font-medium w-full justify-between">
@@ -64,7 +80,7 @@ export function Header() {
                   variant={location.pathname === "/" ? "default" : "ghost"}
                   className="text-lg"
                 >
-                  Home
+                  {t("general:home")}
                 </Button>
               </Link>
               <Link to="/about">
@@ -72,7 +88,7 @@ export function Header() {
                   variant={location.pathname === "/about" ? "default" : "ghost"}
                   className="text-lg"
                 >
-                  About
+                  {t("general:about")}
                 </Button>
               </Link>
               {isAuthenticated && (
@@ -84,14 +100,33 @@ export function Header() {
                       }
                       className="text-lg"
                     >
-                      Profile
+                      {t("general:profile")}
                     </Button>
                   </Link>
                   <Button variant="ghost" className="text-lg" onClick={logout}>
-                    Logout
+                    {t("general:logout")}
                   </Button>
                 </>
               )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-lg">
+                    {t("general:language")}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>
+                    {t("general:chooseLanguage")}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => handleLanguageChange("en")}>
+                    {t("general:english")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleLanguageChange("sv")}>
+                    {t("general:swedish")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </nav>
         </div>

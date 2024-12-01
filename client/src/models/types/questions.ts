@@ -5,6 +5,7 @@ export enum QuestionTypes {
   MCQSA = "MCQSA",
   MCQMA = "MCQMA",
   FTA = "FTA",
+  FA = "FA",
   RANK = "RANK",
   MATCHING = "MATCHING",
 }
@@ -16,6 +17,7 @@ export enum AnswerTypes {
   multipleStrings = "multipleStrings",
   freeText = "freeText",
   rank = "rank",
+  time = "time",
   matching = "matching",
 }
 
@@ -62,6 +64,11 @@ export interface FTASlide extends QuestionSlideBase {
   correctAnswer: string;
 }
 
+export interface FASlide extends QuestionSlideBase {
+  questionType: QuestionTypes.FA;
+  answerType: AnswerTypes.time;
+}
+
 export interface MatchingSlide extends QuestionSlideBase {
   questionType: QuestionTypes.MATCHING;
   answerType: AnswerTypes.matching;
@@ -73,4 +80,10 @@ export interface MatchingSlide extends QuestionSlideBase {
   options: string[];
 }
 
-export type QuestionSlide = MCQSASlide | MCQMASlide | FTASlide | RankSlide | MatchingSlide; 
+export type QuestionSlide =
+  | MCQSASlide
+  | MCQMASlide
+  | FTASlide
+  | FASlide
+  | RankSlide
+  | MatchingSlide;
