@@ -78,7 +78,7 @@ export function AppRoutes() {
       <Route path="/play/:quizCode/" element={<ParticipantLogic />} />
       <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
       <Route path="/profile" element={<Profile />} /> 
-      <Route path="/bomb" element={<BombTimer participants={mockParticipants} initialTime={50} />} /> 
+      <Route path="/bomb" element={<BombTimer participants={mockParticipants} initialTime={2} />} /> 
     </Routes>
   );
 }
