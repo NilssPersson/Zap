@@ -83,7 +83,7 @@
     "globals": "^15.11.0",
     "postcss": "^8.4.47",
     "shadcn-ui": "^0.2.3",
-    "tailwindcss": "^3.4.14",
+    "tailwindcss": "^3.4.15",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "~5.6.2",
