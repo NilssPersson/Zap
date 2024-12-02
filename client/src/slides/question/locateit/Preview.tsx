@@ -1,4 +1,4 @@
-import { LocateItSlide, Participant } from "@/models/Quiz";
+import { LocateItSlide } from "@/models/Quiz";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -32,14 +32,11 @@ const libraries: Libraries = ["places"];
 
 export function Preview({
   slide,
-  participants,
   onSlideUpdate,
 }: {
   slide: LocateItSlide;
-  participants: Participant[];
   onSlideUpdate: (slide: LocateItSlide) => void;
 }) {
-  console.log("part", participants);
   const APIKEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
   const [zoom, setZoom] = useState(4);
   const [circleCenter, setCircleCenter] = useState<google.maps.LatLngLiteral>();
