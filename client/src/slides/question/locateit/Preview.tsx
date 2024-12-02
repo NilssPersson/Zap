@@ -17,15 +17,15 @@ const containerStyle = {
 
 const options = {
   strokeColor: "#FF0000",
-  strokeOpacity: 0.8,
+  strokeOpacity: 0.5,
   strokeWeight: 2,
   fillColor: "#FF0000",
-  fillOpacity: 0.35,
+  fillOpacity: 0.1,
   clickable: false,
   draggable: false,
   editable: false,
   visible: true,
-  radius: 300000,
+
   zIndex: 1,
 };
 
@@ -43,10 +43,13 @@ export function Preview({
   console.log("part", participants);
   const APIKEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
   const [zoom, setZoom] = useState(4);
-  const [circleCenter, setCircleCenter] = useState<google.maps.LatLngLiteral>();
+  const [circleCenter, setCircleCenter] = useState<google.maps.LatLngLiteral>(
+    slide.location,
+  );
   const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>(
     slide.location,
   );
+  const [circleRadius, setCircleRadius] = useState<number>(slide.radius);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: APIKEY,
@@ -58,6 +61,7 @@ export function Preview({
     useState<google.maps.LatLngLiteral>(slide.location);
 
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
+  const circleRef = useRef<google.maps.Circle | null>(null);
 
   // Update marker position if slide.location changes externally
   useEffect(() => {
@@ -65,6 +69,10 @@ export function Preview({
     setCircleCenter(slide.location);
     setMapCenter(slide.location);
   }, [slide.location]);
+
+  useEffect(() => {
+    setCircleRadius(slide.radius);
+  }, [slide.radius]);
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -105,6 +113,42 @@ export function Preview({
     }
   };
 
+  const circleRadiusChanged = () => {
+    const circle = circleRef.current;
+    if (!circle || !onSlideUpdate) return;
+
+    const newRadius = circle.getRadius();
+    setCircleRadius(newRadius);
+    console.log("newRadius", newRadius);
+    if (newRadius !== slide.radius) {
+      const updatedSlide: LocateItSlide = {
+        ...slide,
+        radius: newRadius,
+      };
+      onSlideUpdate(updatedSlide);
+    }
+  };
+
+  const circleCenterChanged = () => {
+    const circle = circleRef.current;
+    if (!circle || !onSlideUpdate) return;
+
+    const newCenter = circle.getCenter();
+    if (!newCenter) return;
+
+    const newLat = newCenter.lat();
+    const newLng = newCenter.lng();
+
+    if (newLat !== slide.location.lat || newLng !== slide.location.lng) {
+      const updatedSlide: LocateItSlide = {
+        ...slide,
+        location: { lat: newLat, lng: newLng },
+      };
+      onSlideUpdate(updatedSlide);
+      setCircleCenter({ lat: newLat, lng: newLng });
+    }
+  };
+
   return (
     <div className="w-full h-full relative">
       <StandaloneSearchBox
@@ -133,13 +177,22 @@ export function Preview({
           zoomControl: true,
           gestureHandling: "greedy",
         }}
+        onUnmount={() => {
+          searchBoxRef.current = null;
+          circleRef.current = null;
+        }}
       >
         <Marker
           position={markerPosition}
           draggable={true}
           onDragEnd={handleDragEnd}
         />
-        <Circle options={options} center={circleCenter} />
+        {slide.awardPointsLocation !== "CLOSEST" && (
+          <Circle
+            options={{ ...options, radius: circleRadius }}
+            center={circleCenter}
+          />
+        )}
       </GoogleMap>
     </div>
   );
