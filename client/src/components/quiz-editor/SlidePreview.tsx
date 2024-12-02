@@ -12,6 +12,7 @@ interface SlidePreviewProps {
   primaryColor?: string;
   secondaryColor?: string;
   whichPreview?: string;
+  onSlideUpdate?: (slide: Slide) => void;
 }
 
 const DESKTOP_WIDTH = 1920;
@@ -27,6 +28,7 @@ export function SlidePreview({
   primaryColor = "#006a67",
   secondaryColor = "#fff4b7",
   whichPreview = "Preview",
+  onSlideUpdate,
 }: SlidePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -60,13 +62,15 @@ export function SlidePreview({
         ] as React.ElementType<{ slide: Slide }>)
       : null;
 
+  const interactivePreview = SlideComponent.Info.interactivePreview || false;
+
   return (
     <div
       ref={containerRef}
       className={cn(
-        "relative w-full pointer-events-none",
+        "relative w-full overflow-hidden",
         isPhoneView ? "aspect-[9/16]" : "aspect-video",
-        "overflow-hidden",
+        !interactivePreview && "pointer-events-none",
         className,
       )}
     >
@@ -86,7 +90,7 @@ export function SlidePreview({
         }}
       >
         <div className="w-full h-full flex items-center justify-center p-16">
-          {Slide && <Slide slide={slide} />}
+          {Slide && <Slide slide={slide} onSlideUpdate={onSlideUpdate} />}
         </div>
       </div>
     </div>

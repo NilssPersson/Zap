@@ -75,6 +75,7 @@ function QuizEdit() {
         <ResizablePanel defaultSize={60}>
           <Editor
             slide={activeSlide}
+            onSlideUpdate={handleSlideUpdate}
             backgroundColor={quizSettings.backgroundColor}
             primaryColor={quizSettings.primaryColor}
             secondaryColor={quizSettings.secondaryColor}
