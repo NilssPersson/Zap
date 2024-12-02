@@ -4,24 +4,16 @@ export * from './ParticipantAnswer';
 export * from './Host';
 export * from './HostAnswer';
 
-import { QuestionTypes, SlideTypes, AnswerTypes } from '@/models/Quiz';
-import { CheckSquareIcon } from "lucide-react";
+import { BombSlide, QuestionTypes, SlideTypes } from '@/models/Quiz';
 import { SlideInfo } from '../..';
-import { nanoid } from 'nanoid'
+import { Bomb } from 'lucide-react';
 
+// Fix the Info definition and the defaults property
 export const Info: SlideInfo = {
-    value: "question:MCQMA",
-    icon: CheckSquareIcon,
-    label: "Multiple Answer MCQ",
+    value: "question:BOMB",
+    icon: Bomb,
+    label: "Bomb Question",
     slideType: SlideTypes.question,
-    questionType: QuestionTypes.MCQMA,
-    defaults: {
-        options: Array.from({ length: 4 }, (_, i) => ({
-            id: nanoid(),
-            text: `Option ${i + 1}`,
-            isCorrect: i <= 1,
-        })),
-        answerType: AnswerTypes.multipleStrings,
-        points:1000,
-    }
-} as const; 
+    questionType: QuestionTypes.BOMB,
+    defaults: {} as Partial<BombSlide>, // Default to an empty object or provide appropriate defaults
+} as const;

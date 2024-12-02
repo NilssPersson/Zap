@@ -15,36 +15,45 @@ const BombTimer = ({ initialTime, participants }: BombTimerProps) => {
   const [participantHearts, setParticipantHearts] = useState(
     Object.fromEntries(participants.map((p) => [p.name, 3]))
   );
-  const [deadParticipants, setDeadParticipants] = useState<Participant[]>([]);
   const [winner, setWinner] = useState<Participant | null>(null);
 
   // Countdown effect
   useEffect(() => {
-    if (time <= 0 || winner) return;
+    if (time <= 0) return;
 
     const timer = setInterval(() => {
       setTime((prevTime) => prevTime - 1);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [time, winner]);
+  }, [time]);
 
-  // Handle "x" key press to rotate positions
+  // Utility function to skip participants with no hearts
+  const getNextParticipantIndex = (startIndex: number): number => {
+    const totalParticipants = currentParticipants.length;
+    let index = startIndex;
+
+    while (participantHearts[currentParticipants[index].name] <= 0) {
+      index = (index + 1) % totalParticipants;
+      if (index === startIndex) break; // Prevent infinite loop if all participants are dead
+    }
+
+    return index;
+  };
+
+  // Rotate participants on "x" key press
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === "x" && currentParticipants.length > 1) {
+      if (e.key === "x") {
         setCurrentParticipants((prevParticipants) => {
-          const firstParticipant = prevParticipants[0];
-          const newParticipants = [...prevParticipants.slice(1), firstParticipant];
+          const totalParticipants = prevParticipants.length;
+          const currentIndex = 0; // Big avatar is always the first participant
+          const nextIndex = getNextParticipantIndex((currentIndex + 1) % totalParticipants);
 
-          // Skip players with 0 hearts
-          while (newParticipants[0] && participantHearts[newParticipants[0].name] === 0) {
-            newParticipants.push(newParticipants.shift() as Participant);
-          }
-
-          return newParticipants;
+          // Reorganize participants array based on the new first participant
+          return [...prevParticipants.slice(nextIndex), ...prevParticipants.slice(0, nextIndex)];
         });
-        setTime(initialTime);
+        setTime(initialTime); // Reset the timer
       }
     };
 
@@ -53,38 +62,42 @@ const BombTimer = ({ initialTime, participants }: BombTimerProps) => {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [initialTime, currentParticipants, participantHearts]);
+  }, [initialTime, participantHearts]);
 
-  // Handle timer going to 0 and losing a heart
+  // Handle timer reaching 0
   useEffect(() => {
     if (time === 0) {
-      const currentPlayer = currentParticipants[0];
+      const currentPlayer = currentParticipants[0].name;
 
-      if (!currentPlayer) return;
-
+      // Decrease heart count
       setParticipantHearts((prevHearts) => {
         const updatedHearts = { ...prevHearts };
-        updatedHearts[currentPlayer.name] = Math.max(0, updatedHearts[currentPlayer.name] - 1);
-
-        if (updatedHearts[currentPlayer.name] === 0) {
-          // Move player to deadParticipants
-          setDeadParticipants((prev) => [...prev, currentPlayer]);
-          setCurrentParticipants((prevParticipants) => prevParticipants.filter((p) => p.name !== currentPlayer.name));
-        }
+        updatedHearts[currentPlayer] = Math.max(0, updatedHearts[currentPlayer] - 1);
 
         return updatedHearts;
       });
 
-      setTime(initialTime);
-    }
-  }, [time, currentParticipants]);
+      // Skip to the next participant if current has no hearts
+      setCurrentParticipants((prevParticipants) => {
+        const nextIndex = getNextParticipantIndex(1); // Find the next valid participant
+        return [...prevParticipants.slice(nextIndex), ...prevParticipants.slice(0, nextIndex)];
+      });
 
-  // Detect winner
-  useEffect(() => {
-    if (currentParticipants.length === 1) {
-      setWinner(currentParticipants[0]);
+      setTime(initialTime); // Reset timer
     }
-  }, [currentParticipants]);
+  }, [time, currentParticipants, initialTime, participantHearts]);
+
+  // Update alive participants and check for winner
+  useEffect(() => {
+    // Filter out dead participants (those with 0 hearts)
+    const aliveParticipants = currentParticipants.filter(
+      (p) => participantHearts[p.name] > 0
+    );
+
+    if (aliveParticipants.length === 1) {
+      setWinner(aliveParticipants[0]); // Set the winner if only one participant remains with hearts > 0
+    }
+  }, [currentParticipants, participantHearts]);
 
   if (winner) {
     // Render the Winner Screen
@@ -132,7 +145,7 @@ const BombTimer = ({ initialTime, participants }: BombTimerProps) => {
       {/* Big Avatar */}
       <div>
         <AnimatePresence mode="wait">
-          {currentParticipants[0] && (
+          {currentParticipants[0] && participantHearts[currentParticipants[0].name] > 0 && (
             <motion.div
               key={currentParticipants[0].name}
               initial={{ opacity: 0, x: "-100%" }}
@@ -147,19 +160,38 @@ const BombTimer = ({ initialTime, participants }: BombTimerProps) => {
                 zIndex: 2,
               }}
             >
-              <Avatar
-                style={{
-                  width: "12rem",
-                  height: "12rem",
-                }}
-                {...genConfig(currentParticipants[0].avatar)}
-              />
+              <div
+  style={{
+    display: "flex",
+    flexDirection: "row", // Places avatar and text side by side
+    alignItems: "center", // Centers avatar vertically
+    gap: "1rem", // Adds spacing between the avatar and text
+  }}
+>
+  <Avatar
+    style={{
+      width: "12rem",
+      height: "12rem",
+    }}
+    {...genConfig(currentParticipants[0].avatar)}
+  />
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center", // Adjusts text to align properly with avatar
+    }}
+  >
+    <h2 style={{ margin: 0 }}>Text</h2>
+  </div>
+</div>
+
+                        
               <h3 className="font-display">{currentParticipants[0].name}</h3>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 {Array.from({ length: participantHearts[currentParticipants[0].name] || 0 }).map((_, index) => (
                   <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
                 ))}
-                {participantHearts[currentParticipants[0].name] === 0 && <span>💀</span>}
               </div>
             </motion.div>
           )}
@@ -178,7 +210,7 @@ const BombTimer = ({ initialTime, participants }: BombTimerProps) => {
           overflow: "hidden",
         }}
       >
-        {participants.map((participant) => (
+        {currentParticipants.map((participant) => (
           <motion.div
             key={participant.name}
             initial={{ opacity: 0, scale: 0.8 }}
@@ -189,7 +221,7 @@ const BombTimer = ({ initialTime, participants }: BombTimerProps) => {
               flexDirection: "column",
               alignItems: "center",
               textAlign: "center",
-              filter: deadParticipants.some((p) => p.name === participant.name) ? "grayscale(100%)" : "none",
+              filter: participantHearts[participant.name] > 0 ? "none" : "grayscale(100%)",
             }}
           >
             <Avatar
@@ -201,11 +233,13 @@ const BombTimer = ({ initialTime, participants }: BombTimerProps) => {
             />
             <h3 className="font-display">{participant.name}</h3>
             <div style={{ display: "flex", gap: "0.5rem" }}>
-              {participantHearts[participant.name] > 0
-                ? Array.from({ length: participantHearts[participant.name] }).map((_, index) => (
-                    <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
-                  ))
-                : "💀"}
+              {participantHearts[participant.name] > 0 ? (
+                Array.from({ length: participantHearts[participant.name] }).map((_, index) => (
+                  <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
+                ))
+              ) : (
+                <span style={{ fontSize: "1.5rem" }}>💀</span>
+              )}
             </div>
           </motion.div>
         ))}
