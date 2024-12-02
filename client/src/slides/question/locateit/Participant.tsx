@@ -1,30 +1,98 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { FTASlide } from "@/models/Quiz";
+import { useState, useEffect } from "react";
+import { LocateItSlide } from "@/models/Quiz";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  Libraries,
+} from "@react-google-maps/api";
+import { NONE, MEDIUM, HIGH } from "./MapStyle";
+
+const containerStyle = {
+  width: "100%",
+  height: "100%",
+};
+
+type location = {
+  lat: number;
+  lng: number;
+};
 
 interface FastAnswerViewProps {
-  slide: FTASlide;
+  slide: LocateItSlide;
   answerQuestion: (answer: string[]) => void;
 }
 
-export function Participant({ slide, answerQuestion }: FastAnswerViewProps) {
-  const [value, setValue] = useState("");
-  return (
-    <div className="flex flex-col items-center justify-center p-8 space-y-5 m-4 rounded-md h-full">
-      <div className="flex flex-col items-center justify-center p-8 space-y-5 bg-white rounded-lg">
-        <h1 className="text-3xl font-display text-center text-[#333333]">
-          {slide.title}
-        </h1>
-        <Input
-          placeholder="Enter Answer"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          className="font-display text-3xl text-[#333333] bg-[#F4F3F2]"
-        />
+const libraries: Libraries = ["places"];
 
-        <Button onClick={() => answerQuestion([value])}>Submit Answer</Button>
-      </div>
+export function Participant({ slide, answerQuestion }: FastAnswerViewProps) {
+  const [markerPosition, setMarkerPosition] = useState<location>({
+    lat: 0,
+    lng: 0,
+  });
+  const APIKEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: APIKEY,
+    libraries,
+  });
+  const [mapDetails, setMapDetails] = useState<any>();
+
+  const handleDragEnd = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      const newLat = event.latLng.lat();
+      const newLng = event.latLng.lng();
+      const updatedPosition = { lat: newLat, lng: newLng };
+      setMarkerPosition(updatedPosition);
+    }
+  };
+
+  useEffect(() => {
+    if (slide.mapDetails === "NONE") {
+      setMapDetails(NONE);
+    } else if (slide.mapDetails === "MEDIUM") {
+      setMapDetails(MEDIUM);
+    } else if (slide.mapDetails === "HIGH") {
+      setMapDetails(HIGH);
+    }
+  }, [slide.mapDetails]);
+
+  if (!isLoaded) return <div>Loading...</div>;
+
+  return (
+    <div className="w-full h-full relative">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={slide.location}
+        zoom={3}
+        options={{
+          disableDefaultUI: true,
+          mapTypeControl: false,
+          streetViewControl: false,
+          zoomControl: true,
+          gestureHandling: "greedy",
+          styles: mapDetails,
+        }}
+      >
+        <Marker
+          position={markerPosition}
+          draggable={true}
+          onDragEnd={handleDragEnd}
+        />
+      </GoogleMap>
+
+      <Button
+        onClick={() =>
+          answerQuestion([
+            markerPosition.lat.toString(),
+            markerPosition.lng.toString(),
+          ])
+        }
+        className="position-absolute bottom-20 left-1/2 transform -translate-x-1/2"
+      >
+        Svara
+      </Button>
     </div>
   );
 }

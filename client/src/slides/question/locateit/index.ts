@@ -4,7 +4,7 @@ export * from "./Participant";
 export * from "./Host";
 export * from './HostAnswer';
 
-import { QuestionTypes, SlideTypes, AnswerTypes } from "@/models/Quiz";
+import { QuestionTypes, SlideTypes, AnswerTypes,AwardPointsLocation,MapDetails } from "@/models/Quiz";
 import { MapPinnedIcon } from "lucide-react";
 import { SlideInfo } from "../..";
 export const Info: SlideInfo = {
@@ -19,7 +19,10 @@ export const Info: SlideInfo = {
       lat: 50.07,
       lng: 19.95,
     },
+    mapDetails: MapDetails.NONE,
+    awardPointsLocation: AwardPointsLocation.DISTANCE,
     answerType: AnswerTypes.location,
     points:1000,
+    radius:300000,
   },
 } as const;

@@ -17,15 +17,14 @@ const containerStyle = {
 
 const options = {
   strokeColor: "#FF0000",
-  strokeOpacity: 0.8,
+  strokeOpacity: 0.5,
   strokeWeight: 2,
   fillColor: "#FF0000",
-  fillOpacity: 0.35,
+  fillOpacity: 0.1,
   clickable: false,
   draggable: false,
   editable: false,
   visible: true,
-  radius: 300000,
   zIndex: 1,
 };
 
@@ -47,6 +46,7 @@ export function Preview({
   const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>(
     slide.location,
   );
+  const [circleRadius, setCircleRadius] = useState<number>(slide.radius);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: APIKEY,
@@ -65,6 +65,10 @@ export function Preview({
     setCircleCenter(slide.location);
     setMapCenter(slide.location);
   }, [slide.location]);
+
+  useEffect(() => {
+    setCircleRadius(slide.radius);
+  }, [slide.radius]);
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -133,13 +137,29 @@ export function Preview({
           zoomControl: true,
           gestureHandling: "greedy",
         }}
+        onUnmount={() => {
+          searchBoxRef.current = null;
+        }}
       >
         <Marker
           position={markerPosition}
           draggable={true}
           onDragEnd={handleDragEnd}
+          onDrag={(event) => {
+            if (event.latLng) {
+              const newLat = event.latLng.lat();
+              const newLng = event.latLng.lng();
+              const newPosition = { lat: newLat, lng: newLng };
+              setCircleCenter(newPosition);
+            }
+          }}
         />
-        <Circle options={options} center={circleCenter} />
+        {slide.awardPointsLocation !== "CLOSEST" && (
+          <Circle
+            options={{ ...options, radius: circleRadius }}
+            center={circleCenter}
+          />
+        )}
       </GoogleMap>
     </div>
   );
