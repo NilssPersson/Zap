@@ -8,6 +8,7 @@ export enum QuestionTypes {
   FA = "FA",
   RANK = "RANK",
   MATCHING = "MATCHING",
+  LOCATEIT = "LOCATEIT",
 }
 
 export type QuestionType = QuestionTypes;
@@ -19,6 +20,7 @@ export enum AnswerTypes {
   rank = "rank",
   time = "time",
   matching = "matching",
+  location = "location",
 }
 
 export type answerType = AnswerTypes;
@@ -36,6 +38,15 @@ export interface RankSlide extends QuestionSlideBase {
   ranking: string[];
   questionType: QuestionTypes.RANK;
   answerType: AnswerTypes.rank;
+}
+
+export interface LocateItSlide extends QuestionSlideBase {
+  location: {
+    lat: number;
+    lng: number;
+  };
+  questionType: QuestionTypes.LOCATEIT;
+  answerType: AnswerTypes.location;
 }
 
 export interface MCQSASlide extends QuestionSlideBase {
@@ -86,4 +97,5 @@ export type QuestionSlide =
   | FTASlide
   | FASlide
   | RankSlide
+  | LocateItSlide
   | MatchingSlide;

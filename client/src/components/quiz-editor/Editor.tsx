@@ -9,6 +9,7 @@ interface EditorProps {
   backgroundColor: string;
   primaryColor: string;
   secondaryColor: string;
+  onSlideUpdate: (slide: Slide) => void;
 }
 
 export function Editor({
@@ -16,6 +17,7 @@ export function Editor({
   backgroundColor,
   primaryColor,
   secondaryColor,
+  onSlideUpdate,
 }: EditorProps) {
   const [whichPreview, setWhichPreview] = useState("Preview");
 
@@ -30,7 +32,11 @@ export function Editor({
   return (
     <div className="p-4 h-full flex flex-col">
       <div className="flex items-center justify-center space-x-4">
-        <Tabs value={whichPreview} onValueChange={setWhichPreview} className="pb-2">
+        <Tabs
+          value={whichPreview}
+          onValueChange={setWhichPreview}
+          className="pb-2"
+        >
           <TabsList>
             <TabsTrigger value="Preview">Preview</TabsTrigger>
             <TabsTrigger value="Host">Host</TabsTrigger>
@@ -45,16 +51,19 @@ export function Editor({
       </div>
 
       <div className="flex-1 flex items-center justify-center bg-card/30 rounded-lg p-4">
-        <div className={cn(
-          "w-full",
-          whichPreview === "Participant" ? "max-w-md" : "max-w-4xl",
-        )}>
+        <div
+          className={cn(
+            "w-full",
+            whichPreview === "Participant" ? "max-w-md" : "max-w-4xl",
+          )}
+        >
           <SlidePreview
             slide={slide}
             backgroundColor={backgroundColor}
             primaryColor={primaryColor}
             secondaryColor={secondaryColor}
             whichPreview={whichPreview}
+            onSlideUpdate={onSlideUpdate}
           />
         </div>
       </div>

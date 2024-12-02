@@ -9,6 +9,7 @@ import * as FTA from "./question/fta";
 import * as FA from "./question/fa";
 import * as Rank from "./question/rank";
 import * as Matching from "./question/matching";
+import * as LocateIt from "./question/locateit";
 
 interface SlideInfo {
   value: string;
@@ -18,8 +19,9 @@ interface SlideInfo {
   questionType?: QuestionType;
   defaults: Partial<Slide>;
   uneditable?: boolean;
+  interactivePreview?: boolean;
 }
 
 export type { SlideInfo };
 
-export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA, Matching };
+export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA, Matching,LocateIt };
