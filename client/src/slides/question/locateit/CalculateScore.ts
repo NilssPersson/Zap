@@ -1,7 +1,6 @@
 import { LocateItSlide,Participant } from "@/models/Quiz";
 import { QuestionSlide } from "@/models/Quiz";
 
-
 interface CalculateDistanceProps {
     coords1: {lat: number, lng: number};
     coords2: {lat: number, lng: number};
@@ -13,33 +12,23 @@ function CalculateDistance({coords1, coords2}: CalculateDistanceProps) {
         return (x * Math.PI) / 180;
       }
     
-      const lon1 = coords1.lng;
-      const lat1 = coords1.lat;
+    const R = 6371; // Radius of the Earth in km
+    const x1 = coords2.lat - coords1.lat;
+    const dLat = toRad(x1);
+    const x2 = coords2.lng - coords1.lng;
+    const dLon = toRad(x2);
     
-      const lon2 = coords2.lng;
-      const lat2 = coords2.lat;
-    
-      const R = 6371; // Radius of the Earth in km
-      const x1 = lat2 - lat1;
-      const dLat = toRad(x1);
-      const x2 = lon2 - lon1;
-      const dLon = toRad(x2);
-    
-      const a =
+    const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat1)) *
-          Math.cos(toRad(lat2)) *
+        Math.cos(toRad(coords1.lat)) *
+          Math.cos(toRad(coords2.lat)) *
           Math.sin(dLon / 2) *
           Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const d = R * c;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
     
-      const distance = d * 1000; // Distance in meters 
-
-      return distance;
-        
-  }
-
+    return d*1000; // Distance in meters
+}
 interface CalculateScoreProps {
     slide: LocateItSlide;
     participants: Participant[];
@@ -47,9 +36,8 @@ interface CalculateScoreProps {
         slide: QuestionSlide,changeSlide:boolean) => void
 }
 export async function CalculateScore({ slide, participants, handleAddPoints }: CalculateScoreProps) {
-    console.log(slide, participants, handleAddPoints);
-    
     const correctLocation = slide.location;
+    const questionType = slide.awardPointsLocation;
 
     const participantsWithDistance = participants.map((participant) => {
         const latestAnswer =
@@ -64,9 +52,7 @@ export async function CalculateScore({ slide, participants, handleAddPoints }: C
         return { participantId: participant.participantId, distance: distance };
     });
 
-    console.log(participantsWithDistance);
-
-    if(slide.awardPointsLocation === 'DISTANCE'){
+    if(questionType === 'DISTANCE'){
         const participantsWithPoints = participantsWithDistance.map((participant) => {
             const distance = participant.distance;
             if(distance <= slide.radius){
@@ -81,7 +67,7 @@ export async function CalculateScore({ slide, participants, handleAddPoints }: C
         handleAddPoints(participantsWithPoints, slide,false);
     }
 
-    else if(slide.awardPointsLocation === 'RADIUS'){
+    else if(questionType === 'RADIUS'){
         const participantsWithPoints = participantsWithDistance.map((participant) => {
             if(participant.distance <= slide.radius){
                 return {participantId: participant.participantId, awardPoints: slide.points};
@@ -94,7 +80,7 @@ export async function CalculateScore({ slide, participants, handleAddPoints }: C
         handleAddPoints(participantsWithPoints, slide,false);
         }
 
-    else if (slide.awardPointsLocation === 'CLOSEST'){
+    else if (questionType === 'CLOSEST'){
         console.log("Closest based points");
         const closestParticipant = participantsWithDistance.reduce((prev, current) => {
             return (prev.distance < current.distance) ? prev : current
@@ -111,5 +97,4 @@ export async function CalculateScore({ slide, participants, handleAddPoints }: C
         );
         handleAddPoints(participantsWithPoints, slide,false);
     }
-
 }
