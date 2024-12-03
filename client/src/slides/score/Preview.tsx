@@ -1,4 +1,4 @@
-import { ScoreSlide, Participant } from "@/models/Quiz";
+import { ScoreSlide, Participant, Slide } from "@/models/Quiz";
 import { SlideTitle } from "@/slides/_components/SlideTitle";
 import ScoreBoard from "@/slides/_components/Scoreboard";
 
@@ -59,7 +59,11 @@ export function Preview({ slide }: { slide: ScoreSlide }) {
     <>
       <div className="space-y-12 w-full">
         <SlideTitle title={slide.title} />
-        <ScoreBoard slide={slide} participants={mockParticipants} />
+        <ScoreBoard
+          slides={[slide] as Slide[]}
+          currentSlide={0}
+          participants={mockParticipants}
+        />
       </div>
     </>
   );
