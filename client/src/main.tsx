@@ -4,7 +4,7 @@ import App from "./App";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-//import "@/i18tn";
+import "@/i18tn";
 import config from "@/config";
 
 const rootElement = document.getElementById("root");
