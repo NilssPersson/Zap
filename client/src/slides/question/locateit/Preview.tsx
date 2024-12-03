@@ -15,20 +15,16 @@ const containerStyle = {
   zoom: 2,
 };
 
-const options = {
+const libraries: Libraries = ["places"];
+
+const circleStyle = {
   strokeColor: "#FF0000",
   strokeOpacity: 0.5,
   strokeWeight: 2,
   fillColor: "#FF0000",
   fillOpacity: 0.1,
-  clickable: false,
-  draggable: false,
-  editable: false,
-  visible: true,
   zIndex: 1,
 };
-
-const libraries: Libraries = ["places"];
 
 export function Preview({
   slide,
@@ -153,7 +149,7 @@ export function Preview({
         />
         {slide.awardPointsLocation !== "CLOSEST" && (
           <Circle
-            options={{ ...options, radius: circleRadius }}
+            options={{ ...circleStyle, radius: circleRadius }}
             center={circleCenter}
           />
         )}
