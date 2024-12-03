@@ -33,7 +33,7 @@ const HostLogic: React.FC = () => {
 
   const ongoingQuiz = useMemo(
     () => ongoingQuizzes.find((quiz) => quiz.id === id),
-    [ongoingQuizzes, id]
+    [ongoingQuizzes, id],
   );
 
   const updateParticipants = useCallback(
@@ -43,10 +43,10 @@ const HostLogic: React.FC = () => {
         {
           participants,
         },
-        true
+        true,
       );
     },
-    [optimisticUpdate]
+    [optimisticUpdate],
   );
 
   usePathOnValue<Participant>(
@@ -54,7 +54,7 @@ const HostLogic: React.FC = () => {
     (participants) => {
       if (!id) return;
       updateParticipants(id, participants);
-    }
+    },
   );
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const HostLogic: React.FC = () => {
       if (participantsObj) {
         const participants = Object.values(participantsObj);
         const totalAnswers = participants.filter(
-          (participant) => participant.hasAnswered
+          (participant) => participant.hasAnswered,
         ).length;
         // Fetch question slide
         const questionSlide = ongoingQuiz.quiz.slides[
@@ -102,12 +102,12 @@ const HostLogic: React.FC = () => {
 
   const calculateScore = (
     question: QuestionSlide,
-    participant: Participant
+    participant: Participant,
   ) => {
     if (!participant.answers) {
       return 0;
     }
-    var participantAnswers = participant.answers.at(-1);
+    const participantAnswers = participant.answers.at(-1);
     if (!participantAnswers) {
       return 0;
     }
@@ -151,7 +151,7 @@ const HostLogic: React.FC = () => {
         const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
-          (value, index) => value === sortedQuestionAnswers[index]
+          (value, index) => value === sortedQuestionAnswers[index],
         );
 
         if (isAnswerCorrect) {
@@ -189,7 +189,7 @@ const HostLogic: React.FC = () => {
           return label.correctOptions.every((option) =>
             (participantAnswers?.answer as unknown as Record<string, string[]>)[
               label.id
-            ].includes(option)
+            ].includes(option),
           );
         });
         if (correctAnswer) {
@@ -250,7 +250,7 @@ const HostLogic: React.FC = () => {
 
         optimisticUpdate(
           ongoingQuiz.participants ? ongoingQuiz.id : "",
-          updatedQuiz
+          updatedQuiz,
         );
         console.log("Scores updated and answers reset successfully.");
       } catch (error) {
@@ -341,10 +341,10 @@ const HostLogic: React.FC = () => {
 
   const SlideComponent = getSlideComponents(slide);
 
-  // Function to "manually" award points to participants and then move to the next slide
+  // Function to award points to participants and then move to the next slide
   async function handleAddPoints(
-    pointsData: { participantId: string; awardPoints: boolean }[],
-    slide: QuestionSlide
+    pointsData: { participantId: string; awardPoints: number }[],
+    slide: QuestionSlide,
   ) {
     const participantsObj = ongoingQuiz?.participants;
     console.log(slide);
@@ -353,23 +353,20 @@ const HostLogic: React.FC = () => {
       return;
     }
 
-    const defaultPoints = slide.points;
     const updates: Record<string, Participant> = {};
 
     Object.values(participantsObj).forEach((participant) => {
       const { participantId } = participant;
 
-      // Check if this participant should be awarded points
-      const awardPoints = pointsData.some(
-        (entry) => entry.participantId === participantId && entry.awardPoints
-      );
-
-      const scoreToAdd = awardPoints ? defaultPoints : 0;
+      // Find the participant's points to award
+      const { awardPoints } = pointsData.find(
+        (data) => data.participantId === participantId,
+      ) || { awardPoints: 0 };
 
       // Update the participant's scores and reset `hasAnswered`
       updates[participantId] = {
         ...participant,
-        score: [...(participant.score || []), scoreToAdd],
+        score: [...(participant.score || []), awardPoints],
         hasAnswered: false,
       };
     });
