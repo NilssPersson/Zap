@@ -15,7 +15,11 @@ export const router = createBrowserRouter([{ path: "*", element: <App /> }], {
 });
 
 if (rootElement) {
-  ReactDOM.createRoot(rootElement).render(<RouterProvider router={router} />);
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>,
+  );
 } else {
   console.error("Could not find the 'root' element.");
 }
