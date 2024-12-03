@@ -1,4 +1,4 @@
-import { ToolbarProps } from "../..";
+import { ToolbarProps } from "@/slides/toolbar";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -7,8 +7,12 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"; // Ensure you import SelectContent and SelectValue
+import { QuestionSlide } from "@/models/Quiz";
 
-export function SelectPoints({ slide, onSlideUpdate }: ToolbarProps) {
+export function SelectPoints({
+  slide,
+  onSlideUpdate,
+}: ToolbarProps<QuestionSlide>) {
   const handlePointsChange = (newPoints: number) => {
     const updatedSlide = {
       ...slide,

@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MatchingSlide } from "@/models/Quiz";
 import { DraggableItem, DroppableContainer } from "@/slides/_components/dnd";
+import { getColor } from "../base/QuizColors";
 
 interface MatchingViewProps {
   slide: MatchingSlide;
@@ -81,19 +82,27 @@ export function Participant({ slide, answerQuestion }: MatchingViewProps) {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className="flex flex-col items-center justify-center w-full p-4">
+      <div className="flex flex-col items-center justify-center w-full p-2">
         <div className="w-full max-w-2xl space-y-4">
           <h2 className="text-4xl font-display text-center">{slide.title}</h2>
           <h3 className="text-2xl font-display text-center mb-8">{slide.content}</h3>
 
           <div className="space-y-4">
-            {slide.labels.map((label) => (
-              <DroppableContainer
+            {slide.labels.map((label, idx) => (
+              <div 
                 key={label.id}
-                id={`label-${label.id}`}
-                label={label.text}
-                matchedOptions={matches[label.id] || []}
-              />
+                className="p-4 rounded-lg"
+                style={{
+                  backgroundColor: getColor(idx)
+                }}
+              >
+                <DroppableContainer
+                  key={label.id}
+                  id={`label-${label.id}`}
+                  label={label.text}
+                  matchedOptions={matches[label.id] || []}
+                />
+              </div>
             ))}
           </div>
 

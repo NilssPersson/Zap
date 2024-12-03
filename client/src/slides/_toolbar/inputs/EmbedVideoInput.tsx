@@ -40,11 +40,12 @@ function EmbedVideoInput({ slide, onSlideUpdate }: EmbedVideoInputProps) {
     onSlideUpdate({ ...slide, embedVideoUrl: debouncedValue });
   };
 
-  
-
-  const handleEmbedVideoUrlChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmbedVideoUrl(e.target.value);
-  }, []);
+  const handleEmbedVideoUrlChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmbedVideoUrl(e.target.value);
+    },
+    []
+  );
 
   const handleRemoveEmbeddedVideo = useCallback(() => {
     onSlideUpdate({ ...slide, embedVideoUrl: "" }); // Remove embedded video

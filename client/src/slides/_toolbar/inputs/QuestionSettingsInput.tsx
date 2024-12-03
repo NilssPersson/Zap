@@ -1,10 +1,19 @@
 import { QuestionSlide, ShowCorrectAnswerTypes } from "@/models/Quiz";
-import { ToolbarProps } from "../..";
+import { ToolbarProps } from "@/slides/toolbar";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 
-export function QuestionSettingsInput({ slide, onSlideUpdate }: ToolbarProps) {
+export function QuestionSettingsInput({
+  slide,
+  onSlideUpdate,
+}: ToolbarProps<QuestionSlide>) {
   if (!("showCorrectAnswer" in slide)) return null;
   const questionSlide = slide as QuestionSlide;
 
@@ -14,10 +23,10 @@ export function QuestionSettingsInput({ slide, onSlideUpdate }: ToolbarProps) {
         <Label>Show Correct Answer</Label>
         <Select
           value={questionSlide.showCorrectAnswer || "auto"}
-          onValueChange={(value) => 
-            onSlideUpdate({ 
-              ...questionSlide, 
-              showCorrectAnswer: value as ShowCorrectAnswerTypes 
+          onValueChange={(value) =>
+            onSlideUpdate({
+              ...questionSlide,
+              showCorrectAnswer: value as ShowCorrectAnswerTypes,
             })
           }
         >
@@ -34,17 +43,17 @@ export function QuestionSettingsInput({ slide, onSlideUpdate }: ToolbarProps) {
 
       <div className="flex items-center space-x-2">
         <Label>Time Limit</Label>
-        <Input 
-          type="number" 
-          value={questionSlide.timeLimit} 
-          onChange={(e) => 
-            onSlideUpdate({ 
-              ...questionSlide, 
-              timeLimit: parseInt(e.target.value) 
+        <Input
+          type="number"
+          value={questionSlide.timeLimit}
+          onChange={(e) =>
+            onSlideUpdate({
+              ...questionSlide,
+              timeLimit: parseInt(e.target.value),
             })
-          } 
+          }
         />
       </div>
     </div>
   );
-} 
+}

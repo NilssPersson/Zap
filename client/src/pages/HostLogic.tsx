@@ -11,12 +11,14 @@ import {
   LobbySlide,
   QuestionTypes,
   AnswerTypes,
+  LocateItSlide,
 } from "@/models/Quiz";
 import { getSlideComponents } from "@/slides/utils";
 
 import Countdown from "react-countdown";
 import { useAppContext } from "@/contexts/App/context";
 import { usePathOnValue } from "@/hooks/usePathOnValue";
+import EndScreen from "@/slides/_specials/endscreen/EndScreen";
 
 export interface LatestScore {
   id: string;
@@ -33,7 +35,7 @@ const HostLogic: React.FC = () => {
 
   const ongoingQuiz = useMemo(
     () => ongoingQuizzes.find((quiz) => quiz.id === id),
-    [ongoingQuizzes, id],
+    [ongoingQuizzes, id]
   );
 
   const updateParticipants = useCallback(
@@ -43,10 +45,10 @@ const HostLogic: React.FC = () => {
         {
           participants,
         },
-        true,
+        true
       );
     },
-    [optimisticUpdate],
+    [optimisticUpdate]
   );
 
   usePathOnValue<Participant>(
@@ -54,7 +56,7 @@ const HostLogic: React.FC = () => {
     (participants) => {
       if (!id) return;
       updateParticipants(id, participants);
-    },
+    }
   );
 
   useEffect(() => {
@@ -78,7 +80,7 @@ const HostLogic: React.FC = () => {
       if (participantsObj) {
         const participants = Object.values(participantsObj);
         const totalAnswers = participants.filter(
-          (participant) => participant.hasAnswered,
+          (participant) => participant.hasAnswered
         ).length;
         // Fetch question slide
         const questionSlide = ongoingQuiz.quiz.slides[
@@ -102,7 +104,7 @@ const HostLogic: React.FC = () => {
 
   const calculateScore = (
     question: QuestionSlide,
-    participant: Participant,
+    participant: Participant
   ) => {
     if (!participant.answers) {
       return 0;
@@ -151,7 +153,7 @@ const HostLogic: React.FC = () => {
         const sortedQuestionAnswers = [...correctAnswer].sort();
 
         const isAnswerCorrect = sortedParticipantAnswers.every(
-          (value, index) => value === sortedQuestionAnswers[index],
+          (value, index) => value === sortedQuestionAnswers[index]
         );
 
         if (isAnswerCorrect) {
@@ -189,7 +191,7 @@ const HostLogic: React.FC = () => {
           return label.correctOptions.every((option) =>
             (participantAnswers?.answer as unknown as Record<string, string[]>)[
               label.id
-            ].includes(option),
+            ].includes(option)
           );
         });
         if (correctAnswer) {
@@ -228,11 +230,12 @@ const HostLogic: React.FC = () => {
     if (questionSlide.questionType == QuestionTypes.FTA) return;
     if (questionSlide.questionType == QuestionTypes.LOCATEIT) {
       const slidecomponent = getSlideComponents(slide);
-      await slidecomponent.CalculateScore({
-        slide,
-        participants: Object.values(ongoingQuiz.participants),
-        handleAddPoints,
-      });
+      if ("CalculateScore" in slidecomponent)
+        await slidecomponent.CalculateScore({
+          slide: slide as LocateItSlide,
+          participants: Object.values(ongoingQuiz.participants),
+          handleAddPoints,
+        });
 
       return;
     }
@@ -260,7 +263,7 @@ const HostLogic: React.FC = () => {
 
         optimisticUpdate(
           ongoingQuiz.participants ? ongoingQuiz.id : "",
-          updatedQuiz,
+          updatedQuiz
         );
         console.log("Scores updated and answers reset successfully.");
       } catch (error) {
@@ -322,10 +325,11 @@ const HostLogic: React.FC = () => {
 
   if (!ongoingQuiz.quiz.slides) {
     return (
-      <h1 className="text-5xl font-display">
-        Your Quiz is missing slides :(
-        <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
-      </h1>
+      <EndScreen
+        quiz={ongoingQuiz.quiz}
+        endQuiz={() => endQuiz(ongoingQuiz.id)}
+        participants={Object.values(ongoingQuiz.participants || {})}
+      />
     );
   }
 
@@ -340,12 +344,13 @@ const HostLogic: React.FC = () => {
     } as LobbySlide;
   }
 
-  if (!slide) {
+  if (currentSlide === ongoingQuiz.quiz.slides.length || !slide) {
     return (
-      <h1 className="text-5xl font-display">
-        Your Quiz is missing slides :(
-        <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
-      </h1>
+      <EndScreen
+        quiz={ongoingQuiz.quiz}
+        endQuiz={() => endQuiz(ongoingQuiz.id)}
+        participants={Object.values(ongoingQuiz.participants || {})}
+      />
     );
   }
 
@@ -355,7 +360,7 @@ const HostLogic: React.FC = () => {
   async function handleAddPoints(
     pointsData: { participantId: string; awardPoints: number }[],
     slide: QuestionSlide,
-    changeSlide?: boolean,
+    changeSlide?: boolean
   ) {
     const participantsObj = ongoingQuiz?.participants;
     console.log(slide);
@@ -371,7 +376,7 @@ const HostLogic: React.FC = () => {
 
       // Find the participant's points to award
       const { awardPoints } = pointsData.find(
-        (data) => data.participantId === participantId,
+        (data) => data.participantId === participantId
       ) || { awardPoints: 0 };
 
       // Update the participant's scores and reset `hasAnswered`

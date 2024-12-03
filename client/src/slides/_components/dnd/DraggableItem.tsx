@@ -1,5 +1,4 @@
 import { useDraggable } from "@dnd-kit/core";
-import * as React from "react";
 
 interface DraggableItemProps {
   id: string;
@@ -7,7 +6,11 @@ interface DraggableItemProps {
   inDroppable?: boolean;
 }
 
-export function DraggableItem({ id, text, inDroppable = false }: DraggableItemProps) {
+export function DraggableItem({
+  id,
+  text,
+  inDroppable = false,
+}: DraggableItemProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
   });
@@ -25,10 +28,10 @@ export function DraggableItem({ id, text, inDroppable = false }: DraggableItemPr
       {...listeners}
       {...attributes}
       className={`p-3 rounded-lg cursor-grab active:cursor-grabbing
-        ${inDroppable ? 'bg-primary/20' : 'bg-primary/10'}`}
+        ${inDroppable ? "bg-primary/20" : "bg-primary/10"}`}
       style={style}
     >
       {text}
     </div>
   );
-} 
+}

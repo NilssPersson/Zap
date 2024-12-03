@@ -1,4 +1,13 @@
-import { Slide, InfoSlide, MCQMASlide, MCQSASlide, RankSlide, QuestionSlide, FTASlide, MatchingSlide } from "@/models/Quiz";
+import {
+  Slide,
+  InfoSlide,
+  MCQMASlide,
+  MCQSASlide,
+  RankSlide,
+  QuestionSlide,
+  FTASlide,
+  MatchingSlide,
+} from "@/models/Quiz";
 import ImageInput from "./_toolbar/inputs/ImageInput";
 import BackgroundInput from "./_toolbar/inputs/BackgroundInput";
 import EmbedVideoInput from "./_toolbar/inputs/EmbedVideoInput";
@@ -11,7 +20,6 @@ import { AnswerText } from "./_toolbar/inputs/AnswerInput";
 import { SelectPoints } from "./_toolbar/inputs/SelectPoints";
 import { LocateItInputs } from "./_toolbar/inputs/LocateItInputs";
 import { MatchingOptionsInput } from "./_toolbar/inputs/MatchingOptionsInput";
-
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -60,9 +68,8 @@ const baseQuestionToolbarConfig: ToolbarConfig<QuestionSlide> = [
     field: "points",
     label: "Select Points",
     component: SelectPoints,
-  }
+  },
 ];
-
 
 export const toolbarConfigs = {
   info: [
@@ -118,6 +125,16 @@ export const toolbarConfigs = {
     },
   ],
 
+  FA: [
+    ...baseToolbarConfig,
+    ...baseQuestionToolbarConfig,
+    {
+      field: "correctAnswer" as keyof FTASlide,
+      label: "Correct Answer",
+      component: AnswerText,
+    },
+  ],
+
   MATCHING: [
     ...baseToolbarConfig,
     {
@@ -137,4 +154,4 @@ export const toolbarConfigs = {
       component: LocateItInputs,
     },
   ],
-} as const; 
+} as const;
