@@ -16,7 +16,7 @@ if (viteMode === "DEV") {
 } else {
   config.LOAD_PATH_i18 =
     "/game-shack-iota.vercel.app/locales/{{lng}}/{{ns}}.json";
-  config.ROUTER_BASE_NAME = "/game-shack-iota.vercel.app/";
+  config.ROUTER_BASE_NAME = "";
 }
 
 export default config;
