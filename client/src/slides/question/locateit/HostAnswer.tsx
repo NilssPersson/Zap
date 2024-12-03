@@ -95,7 +95,7 @@ export function HostAnswer({
   });
 
   const onLoad = useCallback(
-    (mapInstance: any) => {
+    (mapInstance: google.maps.Map) => {
       if (!mapInstance || !latestAnswers.length) return;
       const bounds = new google.maps.LatLngBounds();
 
