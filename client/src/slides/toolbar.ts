@@ -9,7 +9,9 @@ import TitleInput from "./_toolbar/inputs/TitleInput";
 import ContentInput from "./_toolbar/inputs/ContentInput";
 import { AnswerText } from "./_toolbar/inputs/AnswerInput";
 import { SelectPoints } from "./_toolbar/inputs/SelectPoints";
+import { LocateItInputs } from "./_toolbar/inputs/LocateItInputs";
 import { MatchingOptionsInput } from "./_toolbar/inputs/MatchingOptionsInput";
+
 import { BombOptionsInput } from "./_toolbar/inputs/BombOptionsInput";
 
 export interface ToolbarProps<T extends Slide> {
@@ -117,7 +119,6 @@ export const toolbarConfigs = {
     },
   ],
 
-
   MATCHING: [
     ...baseToolbarConfig,
     {
@@ -126,6 +127,16 @@ export const toolbarConfigs = {
       component: MatchingOptionsInput,
     },
     ...baseQuestionToolbarConfig,
+  ],
+
+  LOCATEIT: [
+    ...baseToolbarConfig,
+    ...baseQuestionToolbarConfig,
+    {
+      field: "location" as keyof FTASlide,
+      label: "Location",
+      component: LocateItInputs,
+    },
   ],
 
   BOMB: [

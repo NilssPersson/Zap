@@ -1,5 +1,5 @@
 import { QuestionType, Slide, SlideType } from "@/models/Quiz";
-import { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, Matching, FA, Bomb } from "./";
+import { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, Matching, FA,LocateIt, Bomb } from "./";
 import { toolbarConfigs } from "./toolbar";
 
 export function getSlideComponents(slide: Slide) {
@@ -34,6 +34,8 @@ export function getSlideComponentsFromType(
           return FA;
         case "MATCHING":
           return Matching;
+        case "LOCATEIT":
+          return LocateIt;
         case "BOMB":
           return Bomb;
         default:

@@ -8,6 +8,7 @@ export enum QuestionTypes {
   FA = "FA",
   RANK = "RANK",
   MATCHING = "MATCHING",
+  LOCATEIT = "LOCATEIT",
   BOMB = "BOMB"
 }
 
@@ -20,6 +21,7 @@ export enum AnswerTypes {
   rank = "rank",
   time = "time",
   matching = "matching",
+  location = "location",
   bomb = "bomb"
 }
 
@@ -38,6 +40,34 @@ export interface RankSlide extends QuestionSlideBase {
   ranking: string[];
   questionType: QuestionTypes.RANK;
   answerType: AnswerTypes.rank;
+}
+
+export enum MapDetails {
+  NONE = "NONE", // No borders/labels etc
+  MEDIUM = "MEDIUM", // Country borders
+  HIGH = "HIGH", // High levels of details, roads, cities etc but no names
+}
+
+export type mapDetails = MapDetails;
+
+export enum AwardPointsLocation {
+  CLOSEST = "CLOSEST", // Only one closest location
+  DISTANCE = "DISTANCE", // 0-100% points based on distance
+  RADIUS = "RADIUS", // Full points if inside radius
+}
+
+export type awardPointsLocation = AwardPointsLocation;
+
+export interface LocateItSlide extends QuestionSlideBase {
+  location: {
+    lat: number;
+    lng: number;
+  };
+  awardPointsLocation: awardPointsLocation;
+  mapDetails: mapDetails;
+  questionType: QuestionTypes.LOCATEIT;
+  answerType: AnswerTypes.location;
+  radius: number;
 }
 
 export interface MCQSASlide extends QuestionSlideBase {
@@ -101,5 +131,6 @@ export type QuestionSlide =
   | FTASlide
   | FASlide
   | RankSlide
+  | LocateItSlide
   | MatchingSlide
   | BombSlide
