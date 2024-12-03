@@ -37,7 +37,7 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
     googleMapsApiKey: APIKEY,
     libraries,
   });
-  const [mapDetails, setMapDetails] = useState<any>();
+  const [mapDetails, setMapDetails] = useState<google.maps.MapTypeStyle[]>();
 
   const handleDragEnd = (event: google.maps.MapMouseEvent) => {
     if (event.latLng) {

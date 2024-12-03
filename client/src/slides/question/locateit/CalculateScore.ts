@@ -70,7 +70,7 @@ export async function CalculateScore({ slide, participants, handleAddPoints }: C
         const participantsWithPoints = participantsWithDistance.map((participant) => {
             const distance = participant.distance;
             if(distance <= slide.radius){
-                const points = Math.floor(slide.points * (1 - distance/slide.radius));
+                const points = Math.floor(slide.points * (1-distance/slide.radius));
                 return {participantId: participant.participantId, awardPoints: points};
             }
             else{
