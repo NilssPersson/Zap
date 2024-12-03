@@ -1,130 +1,193 @@
-import { useState } from "react";
-import { FTASlide, Participant } from "@/models/Quiz";
-import { Button } from "@/components/ui/button";
-import Avatar, { genConfig } from "react-nice-avatar";
-import { stringSimilarity } from "string-similarity-js";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox";
+import { LocateItSlide, Participant } from "@/models/Quiz";
+import {
+  GoogleMap,
+  Libraries,
+  useJsApiLoader,
+  Marker,
+  OverlayView,
+  Polyline,
+  Circle,
+} from "@react-google-maps/api";
+import React, { useCallback } from "react";
+import ReactNiceAvatar, { genConfig } from "react-nice-avatar";
+
+const libraries: Libraries = ["places"];
+
+const containerStyle = {
+  width: "100%",
+  height: "100%",
+};
+
+const circleStyle = {
+  strokeColor: "#FF0000",
+  strokeOpacity: 0.5,
+  strokeWeight: 2,
+  fillColor: "#FF0000",
+  fillOpacity: 0.1,
+  zIndex: 1,
+};
+
+const mockData: Participant[] = [
+  {
+    participantId: "DsMCalNtbSK8vCnEpnT59",
+    name: "Nisse",
+    avatar: "EROHNv5Xbi",
+    answers: [
+      {
+        answer: ["0", "0"],
+        slideNumber: 0,
+        time: "2024-12-02T17:28:30.902Z",
+      },
+    ],
+    score: [0],
+    hasAnswered: true,
+  },
+  {
+    participantId: "LKFJJSD",
+    name: "LångtNamnYaoo",
+    avatar: "LKFJJSDEROHNv5Xbi",
+    answers: [
+      {
+        answer: ["1", "1"],
+        slideNumber: 2,
+        time: "2024-12-02T17:30:00.000Z",
+      },
+    ],
+    score: [2000],
+    hasAnswered: false,
+  },
+];
 
 export function HostAnswer({
   slide,
-  participants = [],
-  handleAddPoints,
+  participants = mockData,
 }: {
-  slide: FTASlide;
+  slide: LocateItSlide;
   participants: Participant[];
-  handleAddPoints: (
-    pointsData: { participantId: string; awardPoints: boolean }[],
-    slide: FTASlide,
-  ) => void;
 }) {
-  const [latestAnswers, setLatestAnswers] = useState(() =>
-    participants.map((participant) => {
-      const latestAnswer =
-        participant.answers.length > 0
-          ? participant.answers[participant.answers.length - 1].answer
-          : "??";
-      const similarity = stringSimilarity(latestAnswer[0], slide.correctAnswer);
-      return {
-        name: participant.name,
-        avatar: participant.avatar,
-        id: participant.participantId,
-        answer: latestAnswer,
-        similarity: similarity * 100,
-        points: similarity >= 98,
-      };
-    }),
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  const latestAnswers = participants.map((participant) => {
+    const latestAnswer =
+      participant.answers.length > 0
+        ? participant.answers[participant.answers.length - 1].answer
+        : "??";
+    const latestScore =
+      participant.score.length > 0
+        ? participant.score[participant.score.length - 1]
+        : 0;
+    return {
+      name: participant.name,
+      avatar: participant.avatar,
+      id: participant.participantId,
+      lat: Number(latestAnswer[0]),
+      lng: Number(latestAnswer[1]),
+      score: latestScore,
+    };
+  });
+
+  const onLoad = useCallback(
+    (mapInstance: any) => {
+      if (!mapInstance || !latestAnswers.length) return;
+      const bounds = new google.maps.LatLngBounds();
+
+      latestAnswers.forEach((participant) => {
+        bounds.extend({ lat: participant.lat, lng: participant.lng });
+      });
+      bounds.extend(slide.location);
+
+      mapInstance.fitBounds(bounds);
+    },
+    [latestAnswers, slide.location],
   );
 
-  const togglePoints = (participantId: string) => {
-    setLatestAnswers((prevAnswers) =>
-      prevAnswers.map((entry) =>
-        entry.id === participantId
-          ? { ...entry, points: !entry.points }
-          : entry,
-      ),
-    );
-  };
-
-  async function handleAwardPointsNextSlide() {
-    handleAddPoints(
-      latestAnswers.map((entry) => ({
-        participantId: entry.id,
-        awardPoints: entry.points,
-      })),
-      slide,
-    );
-  }
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col items-center">
-      {/* Slide Title */}
-      <div className="bg-white rounded p-4 mb-10 mt-20 text-wrap text-center">
-        <h1 className="text-4xl text-black font-display">
-          Correct Answer:{" "}
-          <span className="bg-green-500 text-white px-2 py-1 rounded">
-            {slide.correctAnswer}
-          </span>
-        </h1>
-      </div>
-
-      {/* Display Participants' Latest Answers */}
-      <div className="flex flex-wrap gap-4 justify-center">
-        {latestAnswers.map((entry, index) => (
-          <div
-            key={index}
-            className="bg-white rounded p-4 flex flex-col items-center shadow-md space-y-3"
-          >
-            <div className="flex items-center">
-              <Avatar
-                style={{ width: "2rem", height: "2rem" }}
-                {...genConfig(entry.avatar)}
-              />
-              <h1 className="text-2xl font-display text-black pl-1">
-                {entry.name}
-              </h1>
-            </div>
-            <div className="w-full text-center">
-              <h1
-                className="font-display text-gray-600 pl-1"
-                style={{
-                  fontSize: `${Math.max(2 - entry.answer.length / 1, 2)}rem`, // Dynamically adjust font size
-                }}
-              >
-                {entry.answer}
-              </h1>
-            </div>
-
-            <div
-              className={cn("flex items-center space-x-2 p-2 rounded-md", {
-                "bg-green-500 text-white": entry.points,
-                "bg-white text-black ": !entry.points,
-              })}
-            >
-              <Label
-                htmlFor={entry.id}
-                className="cursor-pointer font-display text-xl"
-              >
-                Award points
-              </Label>
-              <Checkbox
-                id={entry.id}
-                checked={entry.points}
-                onCheckedChange={() => togglePoints(entry.id)}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Next Slide Button */}
-      <Button
-        onClick={handleAwardPointsNextSlide}
-        className="absolute bottom-5 right-5"
+    <div className="h-dvh w-full p-20">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={slide.location}
+        onLoad={onLoad}
+        options={{
+          disableDefaultUI: true,
+          mapTypeControl: false,
+          streetViewControl: false,
+          zoomControl: true,
+          gestureHandling: "greedy",
+        }}
+        zoom={4}
       >
-        Award points & Next Slide
-      </Button>
+        <Marker position={slide.location} />
+        {slide.awardPointsLocation === "RADIUS" && (
+          <Circle
+            onUnmount={() => {
+              console.log("unmount");
+            }}
+            center={{ lat: slide.location.lat, lng: slide.location.lng }}
+            options={{ ...circleStyle, radius: slide.radius }}
+          />
+        )}
+        {latestAnswers.map((participant) => {
+          return (
+            <React.Fragment key={participant.id}>
+              <Marker
+                position={{ lat: participant.lat, lng: participant.lng }}
+              />
+              <Polyline
+                path={[
+                  { lat: slide.location.lat, lng: slide.location.lng },
+                  { lat: participant.lat, lng: participant.lng },
+                ]}
+                options={{
+                  strokeColor: "#FF0000",
+                  strokeOpacity: 1,
+                  strokeWeight: 2,
+                }}
+              />
+              <OverlayView
+                position={{ lat: participant.lat, lng: participant.lng }}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              >
+                <div
+                  className={cn(
+                    "bg-white w-fit p-[5px] rounded flex items-center shadow-[0_2px_6px_rgba(0,0,0,0.3)] -mt-[38px] -translate-x-1/2 -translate-y-full",
+                    participant.score !== 0 ? "bg-green-400" : "bg-red-400",
+                  )}
+                >
+                  <ReactNiceAvatar
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                    }}
+                    {...genConfig(participant.avatar)}
+                  />
+                  <div className="flex flex-row items-center">
+                    <span className="font-display text-black text-xl">
+                      {participant.name}
+                    </span>
+                    {slide.awardPointsLocation === "DISTANCE" && (
+                      <>
+                        <span className="font-display text-black text-xl">
+                          :
+                        </span>
+                        <span className="font-display text-black text-xl ml-2">
+                          {participant.score}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </OverlayView>
+            </React.Fragment>
+          );
+        })}
+      </GoogleMap>
     </div>
   );
 }

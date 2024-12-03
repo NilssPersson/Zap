@@ -19,14 +19,14 @@ type location = {
   lng: number;
 };
 
-interface FastAnswerViewProps {
+interface LocateItProps {
   slide: LocateItSlide;
   answerQuestion: (answer: string[]) => void;
 }
 
 const libraries: Libraries = ["places"];
 
-export function Participant({ slide, answerQuestion }: FastAnswerViewProps) {
+export function Participant({ slide, answerQuestion }: LocateItProps) {
   const [markerPosition, setMarkerPosition] = useState<location>({
     lat: 0,
     lng: 0,
@@ -80,19 +80,20 @@ export function Participant({ slide, answerQuestion }: FastAnswerViewProps) {
           draggable={true}
           onDragEnd={handleDragEnd}
         />
+        <div className="absolute flex bottom-20 w-full justify-center">
+          <Button
+            onClick={() =>
+              answerQuestion([
+                markerPosition.lat.toString(),
+                markerPosition.lng.toString(),
+              ])
+            }
+            className="w-fit text-xl"
+          >
+            Svara
+          </Button>
+        </div>
       </GoogleMap>
-
-      <Button
-        onClick={() =>
-          answerQuestion([
-            markerPosition.lat.toString(),
-            markerPosition.lng.toString(),
-          ])
-        }
-        className="position-absolute bottom-20 left-1/2 transform -translate-x-1/2"
-      >
-        Svara
-      </Button>
     </div>
   );
 }
