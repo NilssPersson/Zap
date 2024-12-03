@@ -33,7 +33,7 @@ function QuizView({
   const SlideComponent = getSlideComponents(currentQuestion);
 
   // If we are on a question slide render the corresponding answerView
-  if (showAnswer) {
+  if (showAnswer && "ParticipantAnswer" in SlideComponent) {
     return (
       <SlideComponent.ParticipantAnswer
         slide={currentQuestion as never}
@@ -55,7 +55,7 @@ function QuizView({
 export default function ParticipantLogic() {
   const { quizCode } = useParams();
   const [participantId, setParticipantId] = useState<string | undefined>(
-    undefined,
+    undefined
   );
   const [cookies, setCookie, removeCookie] = useCookies(["participantId"]);
   const [questions, setQuestions] = useState<Slide[]>();
@@ -63,7 +63,7 @@ export default function ParticipantLogic() {
 
   const { currentSlide, participantData, showAnswer } = useGameStatus(
     quizCode as string,
-    participantId as string,
+    participantId as string
   );
 
   // Fetch quiz and participant data
@@ -84,7 +84,7 @@ export default function ParticipantLogic() {
         if (cookies.participantId) {
           const participant = await ParticipantService.getParticipant(
             quizCode,
-            cookies.participantId,
+            cookies.participantId
           );
           // Check if the cookie corresponds to a participant in this ongoingQuiz
           if (participant) {
@@ -111,7 +111,7 @@ export default function ParticipantLogic() {
     try {
       const success = await ParticipantService.removeParticipant(
         quizCode,
-        participantId,
+        participantId
       );
       if (success) {
         removeCookie("participantId");
@@ -124,14 +124,14 @@ export default function ParticipantLogic() {
 
   const handleAddParticipant = async (
     participantName: string,
-    participantAvatar: string,
+    participantAvatar: string
   ) => {
     if (!quizCode || !participantName || !participantAvatar) return;
     try {
       const createdId = await ParticipantService.addParticipant(
         quizCode,
         participantName,
-        participantAvatar,
+        participantAvatar
       );
       if (createdId) {
         setCookie("participantId", createdId);
@@ -151,7 +151,7 @@ export default function ParticipantLogic() {
         quizCode,
         participantId,
         answer,
-        currentSlide - 1,
+        currentSlide - 1
       );
     } catch (error) {
       console.error("Error submitting answer:", error);

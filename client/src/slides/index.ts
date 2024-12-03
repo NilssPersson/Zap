@@ -24,4 +24,4 @@ interface SlideInfo {
 
 export type { SlideInfo };
 
-export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA, Matching,LocateIt };
+export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA, Matching, LocateIt };

@@ -11,19 +11,6 @@ interface EndScreenProps {
   participants: Participant[];
 }
 
-const mockParticipants: Participant[] = [
-  { name: "Player 1", score: [1000, 1000, 0, 0, 1000], avatar: "ABCDEFGH", answers: [], hasAnswered: true, participantId: "1" },
-  { name: "Player 2", score: [0, 1000, 0, 0, 1000], avatar: "BCDEFGHI", answers: [], hasAnswered: true, participantId: "2" },
-  { name: "Player 3", score: [0, 0, 1000, 0, 1000], avatar: "CDEFGHIJ", answers: [], hasAnswered: true, participantId: "3" },
-  { name: "Player 4", score: [0, 0, 0, 1000, 1000], avatar: "DEFGHIJK", answers: [], hasAnswered: true, participantId: "4" },
-  { name: "Player 5", score: [0, 0, 0, 0, 1000], avatar: "EFGHIJKL", answers: [], hasAnswered: true, participantId: "5" },
-  { name: "Player 6", score: [0, 0, 0, 0, 0], avatar: "FGHIJKLM", answers: [], hasAnswered: true, participantId: "6" },
-  { name: "Player 7", score: [0, 0, 0, 0, 0], avatar: "GHIJKLMN", answers: [], hasAnswered: true, participantId: "7" },
-  { name: "Player 8", score: [1000, 1000, 1000, 1000, 0], avatar: "HIJKLMNO", answers: [], hasAnswered: true, participantId: "8" },
-  { name: "Player 9", score: [0, 0, 0, 0, 0], avatar: "IJKLMNOP", answers: [], hasAnswered: true, participantId: "9" },
-  { name: "Player 10", score: [0, 0, 0, 0, 0], avatar: "JKLMNOPQ", answers: [], hasAnswered: true, participantId: "10" },
-];
-
 export default function EndScreen({
   quiz,
   endQuiz,
@@ -46,10 +33,10 @@ export default function EndScreen({
             <TabsTrigger value="statistics">Statistics</TabsTrigger>
           </TabsList>
           <TabsContent className="flex-1 overflow-hidden" value="results">
-            <Results participants={mockParticipants} />
+            <Results participants={participants} />
           </TabsContent>
           <TabsContent className="flex-1" value="statistics">
-            <Stats participants={mockParticipants} />
+            <Stats participants={participants} />
           </TabsContent>
         </Tabs>
       </div>
@@ -61,4 +48,3 @@ export default function EndScreen({
     </div>
   );
 }
-
