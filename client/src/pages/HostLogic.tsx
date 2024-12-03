@@ -226,6 +226,16 @@ const HostLogic: React.FC = () => {
     if (!(slide.type == SlideTypes.question)) return;
     const questionSlide = slide as QuestionSlide;
     if (questionSlide.questionType == QuestionTypes.FTA) return;
+    if (questionSlide.questionType == QuestionTypes.LOCATEIT) {
+      const slidecomponent = getSlideComponents(slide);
+      await slidecomponent.CalculateScore({
+        slide,
+        participants: Object.values(ongoingQuiz.participants),
+        handleAddPoints,
+      });
+
+      return;
+    }
 
     const participantsObj = ongoingQuiz?.participants;
     if (participantsObj) {
@@ -345,6 +355,7 @@ const HostLogic: React.FC = () => {
   async function handleAddPoints(
     pointsData: { participantId: string; awardPoints: number }[],
     slide: QuestionSlide,
+    changeSlide?: boolean,
   ) {
     const participantsObj = ongoingQuiz?.participants;
     console.log(slide);
@@ -375,10 +386,13 @@ const HostLogic: React.FC = () => {
       const updatedQuiz = {
         ...ongoingQuiz,
         participants: updates,
-        currentSlide: ongoingQuiz.currentSlide + 1,
+        currentSlide: changeSlide
+          ? ongoingQuiz.currentSlide + 1
+          : ongoingQuiz.currentSlide,
       };
       await optimisticUpdate(ongoingQuiz?.id || "", updatedQuiz);
-      setShowAnswer(false);
+      if (changeSlide) setShowAnswer(false);
+      else setShowAnswer(true);
       console.log("Participants' scores updated successfully:", updatedQuiz);
     } catch (error) {
       console.error("Error updating participants' scores:", error);

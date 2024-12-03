@@ -3,10 +3,12 @@ export * from "./ParticipantAnswer";
 export * from "./Participant";
 export * from "./Host";
 export * from './HostAnswer';
+export * from './CalculateScore';
 
 import { QuestionTypes, SlideTypes, AnswerTypes,AwardPointsLocation,MapDetails } from "@/models/Quiz";
 import { MapPinnedIcon } from "lucide-react";
 import { SlideInfo } from "../..";
+
 export const Info: SlideInfo = {
   value: "question:LOCATEIT",
   icon: MapPinnedIcon,

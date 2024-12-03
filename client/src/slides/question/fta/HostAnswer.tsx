@@ -17,6 +17,7 @@ export function HostAnswer({
   handleAddPoints: (
     pointsData: { participantId: string; awardPoints: number }[],
     slide: FTASlide,
+    changeSlide: boolean,
   ) => void;
 }) {
   const [latestAnswers, setLatestAnswers] = useState(() =>
@@ -54,6 +55,7 @@ export function HostAnswer({
         awardPoints: entry.points,
       })),
       slide,
+      true,
     );
   }
 
