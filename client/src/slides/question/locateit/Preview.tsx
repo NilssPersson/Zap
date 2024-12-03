@@ -24,6 +24,7 @@ const circleStyle = {
   fillColor: "#FF0000",
   fillOpacity: 0.1,
   zIndex: 1,
+  editable: true,
 };
 
 export function Preview({
@@ -45,12 +46,14 @@ export function Preview({
     googleMapsApiKey: APIKEY,
     libraries,
   });
+  const [currentSlideId, setCurrentSlideId] = useState<string | null>(null);
 
   // Initialize marker position from slide.location
   const [markerPosition, setMarkerPosition] =
     useState<google.maps.LatLngLiteral>(slide.location);
 
   const searchBoxRef = useRef<google.maps.places.SearchBox | null>(null);
+  const circleRef = useRef<google.maps.Circle | null>(null);
 
   // Update marker position if slide.location changes externally
   useEffect(() => {
@@ -62,6 +65,12 @@ export function Preview({
   useEffect(() => {
     setCircleRadius(slide.radius);
   }, [slide.radius]);
+
+  useEffect(() => {
+    if (currentSlideId !== slide.id) {
+      setCurrentSlideId(slide.id);
+    }
+  }, [slide.id, currentSlideId]);
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -102,6 +111,40 @@ export function Preview({
     }
   };
 
+  const handleCircleRadiusChange = () => {
+    const circle = circleRef.current;
+    if (!circle || !onSlideUpdate || slide.id !== currentSlideId) return;
+    const newRadius = Math.floor(circle.getRadius());
+
+    if (newRadius === slide.radius) return;
+
+    setCircleRadius(newRadius);
+    const updatedSlide: LocateItSlide = {
+      ...slide,
+      radius: newRadius,
+    };
+    onSlideUpdate(updatedSlide);
+  };
+
+  const handleCircleCenterChange = () => {
+    const newCenter = circleRef.current?.getCenter();
+    if (!newCenter || !onSlideUpdate || !circleCenter) return;
+
+    const newLat = newCenter.lat();
+    const newLng = newCenter.lng();
+
+    const newPosition = { lat: newLat, lng: newLng };
+
+    if (
+      newPosition.lat === circleCenter.lat &&
+      newPosition.lng === circleCenter.lng
+    )
+      return;
+
+    setCircleCenter(markerPosition);
+    circleRef.current?.setCenter(markerPosition);
+  };
+
   return (
     <div className="w-full h-full relative">
       <StandaloneSearchBox
@@ -132,6 +175,7 @@ export function Preview({
         }}
         onUnmount={() => {
           searchBoxRef.current = null;
+          circleRef.current = null;
         }}
       >
         <Marker
@@ -149,6 +193,9 @@ export function Preview({
         />
         {slide.awardPointsLocation !== "CLOSEST" && (
           <Circle
+            onCenterChanged={handleCircleCenterChange}
+            onRadiusChanged={handleCircleRadiusChange}
+            onLoad={(circle) => (circleRef.current = circle)}
             options={{ ...circleStyle, radius: circleRadius }}
             center={circleCenter}
           />
