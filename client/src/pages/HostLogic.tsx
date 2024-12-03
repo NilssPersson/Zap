@@ -108,7 +108,7 @@ const HostLogic: React.FC = () => {
     if (!participant.answers) {
       return 0;
     }
-    var participantAnswers = participant.answers.at(-1);
+    const participantAnswers = participant.answers.at(-1);
     if (!participantAnswers) {
       return 0;
     }

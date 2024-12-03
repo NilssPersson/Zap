@@ -1,5 +1,16 @@
 import { QuestionType, Slide, SlideType } from "@/models/Quiz";
-import { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, Matching, FA,LocateIt } from "./";
+import {
+  Info,
+  Score,
+  Lobby,
+  MCQSA,
+  MCQMA,
+  FTA,
+  Rank,
+  Matching,
+  FA,
+  LocateIt,
+} from "./";
 import { toolbarConfigs } from "./toolbar";
 
 export function getSlideComponents(slide: Slide) {
