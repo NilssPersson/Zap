@@ -17,6 +17,7 @@ import { getSlideComponents } from "@/slides/utils";
 import Countdown from "react-countdown";
 import { useAppContext } from "@/contexts/App/context";
 import { usePathOnValue } from "@/hooks/usePathOnValue";
+import EndScreen from "@/slides/_specials/endscreen/EndScreen";
 
 export interface LatestScore {
   id: string;
@@ -312,10 +313,11 @@ const HostLogic: React.FC = () => {
 
   if (!ongoingQuiz.quiz.slides) {
     return (
-      <h1 className="text-5xl font-display">
-        Your Quiz is missing slides :(
-        <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
-      </h1>
+      <EndScreen
+        quiz={ongoingQuiz.quiz}
+        endQuiz={() => endQuiz(ongoingQuiz.id)}
+        participants={Object.values(ongoingQuiz.participants || {})}
+      />
     );
   }
 
@@ -330,12 +332,13 @@ const HostLogic: React.FC = () => {
     } as LobbySlide;
   }
 
-  if (!slide) {
+  if (currentSlide === ongoingQuiz.quiz.slides.length || !slide) {
     return (
-      <h1 className="text-5xl font-display">
-        Your Quiz is missing slides :(
-        <Button onClick={() => endQuiz(id || "")}>End Quiz</Button>
-      </h1>
+      <EndScreen
+        quiz={ongoingQuiz.quiz}
+        endQuiz={() => endQuiz(ongoingQuiz.id)}
+        participants={Object.values(ongoingQuiz.participants || {})}
+      />
     );
   }
 

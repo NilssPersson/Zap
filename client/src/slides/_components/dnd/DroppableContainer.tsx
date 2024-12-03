@@ -14,7 +14,7 @@ export function DroppableContainer({ id, label, matchedOptions = [] }: Droppable
   });
 
   return (
-    <div className="bg-secondary p-4 rounded-lg">
+    <>
       <h3 className="text-xl font-semibold mb-2">{label}</h3>
       <div
         ref={setNodeRef}
@@ -33,6 +33,6 @@ export function DroppableContainer({ id, label, matchedOptions = [] }: Droppable
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 } 
