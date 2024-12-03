@@ -10,6 +10,7 @@ import config from "@/config";
 const rootElement = document.getElementById("root");
 
 const { ROUTER_BASE_NAME } = config;
+console.log("ROUTER_BASE_NAME", ROUTER_BASE_NAME);
 export const router = createBrowserRouter([{ path: "*", element: <App /> }], {
   basename: ROUTER_BASE_NAME,
 });
