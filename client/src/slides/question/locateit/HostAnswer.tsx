@@ -9,7 +9,7 @@ import {
   Polyline,
   Circle,
 } from "@react-google-maps/api";
-import React from "react";
+import React, { useCallback } from "react";
 import ReactNiceAvatar, { genConfig } from "react-nice-avatar";
 
 const libraries: Libraries = ["places"];
@@ -49,7 +49,7 @@ const mockData: Participant[] = [
     avatar: "LKFJJSDEROHNv5Xbi",
     answers: [
       {
-        answer: ["10", "10"],
+        answer: ["1", "1"],
         slideNumber: 2,
         time: "2024-12-02T17:30:00.000Z",
       },
@@ -91,6 +91,21 @@ export function HostAnswer({
     };
   });
 
+  const onLoad = useCallback(
+    (mapInstance: any) => {
+      if (!mapInstance || !latestAnswers.length) return;
+      const bounds = new google.maps.LatLngBounds();
+
+      latestAnswers.forEach((participant) => {
+        bounds.extend({ lat: participant.lat, lng: participant.lng });
+      });
+      bounds.extend(slide.location);
+
+      mapInstance.fitBounds(bounds);
+    },
+    [latestAnswers, slide.location],
+  );
+
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
@@ -98,6 +113,7 @@ export function HostAnswer({
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={slide.location}
+        onLoad={onLoad}
         options={{
           disableDefaultUI: true,
           mapTypeControl: false,
