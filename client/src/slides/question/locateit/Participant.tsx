@@ -64,7 +64,10 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
     <div className="w-full h-full relative">
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={slide.location}
+        center={{
+          lat: 0,
+          lng: 0,
+        }}
         zoom={3}
         options={{
           disableDefaultUI: true,
