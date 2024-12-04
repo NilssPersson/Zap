@@ -3,7 +3,7 @@ export * from "./ParticipantAnswer";
 export * from "./Participant";
 export * from "./Host";
 export * from "./HostAnswer";
-
+export * from "./CalculateAnswer";
 import { QuestionTypes, SlideTypes, AnswerTypes } from "@/models/Quiz";
 import { Timer } from "lucide-react";
 import { SlideInfo } from "../..";
