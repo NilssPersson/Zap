@@ -24,7 +24,7 @@ const circleStyle = {
   fillColor: "#FF0000",
   fillOpacity: 0.1,
   zIndex: 1,
-  editable: true,
+  editable: false,
 };
 
 export function Preview({
