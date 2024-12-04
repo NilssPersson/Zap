@@ -17,12 +17,14 @@ function QuizView({
   currentSlide,
   participantData,
   answerQuestion,
+  answerTempQuestion,
   showAnswer,
 }: {
   questions: Slide[] | undefined;
   currentSlide: number;
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
+  answerTempQuestion: (answer: string[]) => Promise<void>;
   showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
@@ -48,6 +50,7 @@ function QuizView({
     <SlideComponent.Participant
       slide={currentQuestion as never}
       answerQuestion={answerQuestion as never}
+      answerTempQuestion={answerTempQuestion as never}
     />
   );
 }
@@ -144,6 +147,20 @@ export default function ParticipantLogic() {
     }
   };
 
+  const answerTempQuestion = async (tempAnswer: string[]) => {
+    if (!quizCode || !participantId || !tempAnswer) return;
+    try {
+      await ParticipantService.addTempAnswer(
+        quizCode,
+        participantId,
+        tempAnswer,
+        currentSlide - 1,
+      );
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+    }
+  }
+
   const answerQuestion = async (answer: string[]) => {
     if (!quizCode || !participantId || !answer) return;
     try {
@@ -191,6 +208,7 @@ export default function ParticipantLogic() {
           participantData={participantData}
           answerQuestion={answerQuestion}
           showAnswer={showAnswer}
+          answerTempQuestion={answerTempQuestion}
         />
       </div>
 

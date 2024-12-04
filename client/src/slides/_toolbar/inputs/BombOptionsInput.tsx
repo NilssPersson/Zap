@@ -1,169 +1,119 @@
-import { MatchingSlide } from "@/models/Quiz";
-import { ToolbarProps } from "@/slides/toolbar";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { BombSlide } from '@/models/Quiz';
+import { ToolbarProps } from '@/slides/toolbar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
-export function BombOptionsInput({ slide, onSlideUpdate }: ToolbarProps<MatchingSlide>) {
-  const [newLabel, setNewLabel] = useState<string>("");
-  const [newOption, setNewOption] = useState<string>("");
+export function BombOptionsInput({
+  slide,
+  onSlideUpdate,
+}: ToolbarProps<BombSlide>) {
+  const [newAnswer, setNewAnswer] = useState<string>('');
 
-  const updateSlide = (updates: Partial<MatchingSlide>) => {
+  const updateSlide = (updates: Partial<BombSlide>) => {
     onSlideUpdate({
       ...slide,
       ...updates,
     });
   };
 
-  const addOption = (option: string) => {
-    if (option.trim() === "") return;
-    updateSlide({ 
-      options: [...slide.options, option]
+  const addAnswers = (input: string) => {
+    const newAnswers = input
+      .split(',')
+      .map((answer) => answer.trim())
+      .filter((answer) => answer !== '');
+
+    if (newAnswers.length === 0) return;
+
+    // Ensure slide.answers is an array before adding new answers
+    updateSlide({
+      answers: Array.from(new Set([...(slide.answers || []), ...newAnswers])),
     });
   };
 
-  const removeOption = (optionToRemove: string) => {
+  const removeAnswer = (answerToRemove: string) => {
     updateSlide({
-      options: slide.options.filter(opt => opt !== optionToRemove),
-      labels: slide.labels.map(label => ({
-        ...label,
-        correctOptions: label.correctOptions.filter(opt => opt !== optionToRemove)
-      }))
-    });
-  };
-
-  const toggleOptionForLabel = (labelId: string, option: string) => {
-    updateSlide({
-      labels: slide.labels.map(label => {
-        if (label.id === labelId) {
-          const correctOptions = label.correctOptions.includes(option)
-            ? label.correctOptions.filter(opt => opt !== option)
-            : [...label.correctOptions, option];
-          return { ...label, correctOptions };
-        }
-        return label;
-      })
+      answers: slide.answers.filter((answer) => answer !== answerToRemove),
     });
   };
 
   return (
     <div className="space-y-6">
-      <div>
-        <Label>Labels</Label>
-        {slide.labels.map((label) => (
-          <div key={label.id} className="mt-4 space-y-2">
-            <div className="flex items-center space-x-2">
+      {/* Hearts and Initial Time */}
+      <div className="space-y-2">
+        <Label>Initial Time (seconds)</Label>
+        <Input
+          type="number"
+          value={slide.initialTime}
+          onChange={(e) => updateSlide({ initialTime: Number(e.target.value) })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Hearts</Label>
+        <Input
+          type="number"
+          value={slide.hearts}
+          onChange={(e) => updateSlide({ hearts: Number(e.target.value) })}
+        />
+      </div>
+
+      {/* Answers Section */}
+      <div className="space-y-2">
+        <Label>Available Answers</Label>
+        {/* Conditionally render the answers section if there are answers */}
+        {slide.answers &&
+        Array.isArray(slide.answers) &&
+        slide.answers.length > 0 ? (
+          slide.answers.map((answer, index) => (
+            <div key={index} className="flex items-center space-x-2">
+              <h2>{index+1}</h2>
               <Input
-                value={label.text}
+                value={answer}
                 onChange={(e) => {
+                  const updatedAnswer = e.target.value.trim();
+                  if (!updatedAnswer) return;
+
                   updateSlide({
-                    labels: slide.labels.map(l => 
-                      l.id === label.id ? { ...l, text: e.target.value } : l
-                    )
+                    answers: slide.answers.map((a, i) =>
+                      i === index ? updatedAnswer : a
+                    ),
                   });
                 }}
-                placeholder="Label"
+                placeholder="Answer"
               />
               <Button
                 variant="destructive"
                 size="icon"
-                onClick={() => {
-                  updateSlide({
-                    labels: slide.labels.filter(l => l.id !== label.id)
-                  });
-                }}
+                onClick={() => removeAnswer(answer)}
               >
                 Del
               </Button>
             </div>
-            <div className="ml-4 space-y-1">
-              <Label className="text-sm text-muted-foreground">Correct options for this label:</Label>
-              {slide.options.map((option) => (
-                <div key={option} className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={label.correctOptions.includes(option)}
-                    onCheckedChange={() => toggleOptionForLabel(label.id, option)}
-                  />
-                  <span className="text-sm">{option}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-        <div className="flex space-x-2 mt-4">
+          ))
+        ) : (
+          <p>No answers available.</p> // Optional message if there are no answers
+        )}
+
+        <div className="flex space-x-2">
           <Input
-            value={newLabel}
-            onChange={(e) => setNewLabel(e.target.value)}
-            placeholder="New Label"
+            value={newAnswer}
+            onChange={(e) => setNewAnswer(e.target.value)}
+            placeholder="New Answers (comma-separated)"
           />
           <Button
             onClick={() => {
-              if (newLabel.trim() !== "") {
-                updateSlide({
-                  labels: [...slide.labels, {
-                    id: Date.now().toString(),
-                    text: newLabel,
-                    correctOptions: []
-                  }]
-                });
-                setNewLabel("");
+              if (newAnswer.trim() !== '') {
+                addAnswers(newAnswer);
+                setNewAnswer('');
               }
             }}
           >
-            Add Label
-          </Button>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label>Available Options</Label>
-        {slide.options.map((option) => (
-          <div key={option} className="flex items-center space-x-2">
-            <Input
-              value={option}
-              onChange={(e) => {
-                const newOption = e.target.value;
-                updateSlide({
-                  options: slide.options.map(opt => 
-                    opt === option ? newOption : opt
-                  ),
-                  labels: slide.labels.map(label => ({
-                    ...label,
-                    correctOptions: label.correctOptions.map(opt =>
-                      opt === option ? newOption : opt
-                    )
-                  }))
-                });
-              }}
-              placeholder="Option"
-            />
-            <Button
-              variant="destructive"
-              size="icon"
-              onClick={() => removeOption(option)}
-            >
-              Del
-            </Button>
-          </div>
-        ))}
-        <div className="flex space-x-2">
-          <Input
-            value={newOption}
-            onChange={(e) => setNewOption(e.target.value)}
-            placeholder="New Option"
-          />
-          <Button
-            onClick={() => {
-              addOption(newOption);
-              setNewOption("");
-            }}
-          >
-            Add Option
+            Add Answer
           </Button>
         </div>
       </div>
     </div>
   );
-} 
+}

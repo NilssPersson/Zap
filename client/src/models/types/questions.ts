@@ -117,12 +117,10 @@ export interface BombSlide extends QuestionSlideBase {
   answerType: AnswerTypes.bomb,
   initialTime: number,
   hearts: number,
-  labels: Array<{
-    id: string[];
-    answers: string[];
-    usedAnswers: string[]
-  }>;
-  
+  participantHearts: { participantId: string, hearts: number }[]
+  id: string;
+  answers: string[];
+  usedAnswers: string[];
 }
 
 export type QuestionSlide =

@@ -4,83 +4,118 @@ import Avatar, { genConfig } from 'react-nice-avatar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from 'lucide-react';
 import { BombSlide } from '@/models/Quiz';
-
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const mockParticipants: Participant[] = [
   {
     answers: [
-      { slideNumber: 1, answer: ["Yes"], time: "2024-11-18T10:05:00Z" },
-      { slideNumber: 2, answer: ["No"], time: "2024-11-18T10:10:00Z" },
+      { slideNumber: 1, answer: ['Yes'], time: '2024-11-18T10:05:00Z' },
+      { slideNumber: 2, answer: ['No'], time: '2024-11-18T10:10:00Z' },
     ],
     hasAnswered: true,
-    avatar: "https://example.com/avatar1.png",
-    name: "Alice Johnson",
-    participantId: "P001",
+    avatar: 'https://example.com/avatar1.png',
+    name: 'Alice Johnson',
+    participantId: 'P001',
     score: [8, 12],
-    tempAnswers: []
+    tempAnswers: [],
+    isTurn: false
   },
   {
     answers: [
-      { slideNumber: 1, answer: ["Maybe"], time: "2024-11-18T10:06:00Z" },
-      { slideNumber: 2, answer: ["Yes"], time: "2024-11-18T10:11:00Z" },
+      { slideNumber: 1, answer: ['Maybe'], time: '2024-11-18T10:06:00Z' },
+      { slideNumber: 2, answer: ['Yes'], time: '2024-11-18T10:11:00Z' },
     ],
     hasAnswered: true,
-    avatar: "https://example.com/avatar2.png",
-    name: "Bob Smith",
-    participantId: "P002",
+    avatar: 'https://example.com/avatar2.png',
+    name: 'Bob Smith',
+    participantId: 'P002',
     score: [10, 15],
-    tempAnswers: []
+    tempAnswers: [],
+    isTurn: false
   },
   {
-    answers: [{ slideNumber: 1, answer: ["No"], time: "2024-11-18T10:07:00Z" }],
+    answers: [{ slideNumber: 1, answer: ['No'], time: '2024-11-18T10:07:00Z' }],
     hasAnswered: true,
-    avatar: "https://example.com/avatar3.png",
-    name: "Charlie Brown",
-    participantId: "P003",
+    avatar: 'https://example.com/avatar3.png',
+    name: 'Charlie Brown',
+    participantId: 'P003',
     score: [5],
-    tempAnswers: []
+    tempAnswers: [],
+    isTurn: false
   },
   {
     answers: [],
     hasAnswered: false,
-    avatar: "https://example.com/avatar4.png",
-    name: "Diana Prince",
-    participantId: "P004",
+    avatar: 'https://example.com/avatar4.png',
+    name: 'Diana Prince',
+    participantId: 'P004',
     score: [],
-    tempAnswers: []
+    tempAnswers: [],
+    isTurn: false
   },
   {
     answers: [
-      { slideNumber: 1, answer: ["Agree"], time: "2024-11-18T10:08:00Z" },
-      { slideNumber: 3, answer: ["Disagree"], time: "2024-11-18T10:15:00Z" },
+      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
+      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
     ],
     hasAnswered: true,
-    avatar: "https://example.com/avatar5.png",
-    name: "Ethan Hunt",
-    participantId: "P005",
+    avatar: 'https://example.com/avatar5.png',
+    name: 'Ethan Hunt',
+    participantId: 'P005',
     score: [9, 11],
-    tempAnswers: []
+    tempAnswers: [],
+    isTurn: false
   },
 ];
 
-
-
-
 type PreviewProps = {
-  initialTime: number;
-  hearts: number;
   participants: Participant[];
-  slide: BombSlide
+  slide: BombSlide;
 };
 
-export function Preview({initialTime, participants, slide, hearts }: PreviewProps ) {
-  const [time, setTime] = useState(initialTime);
-  const [currentParticipants, setCurrentParticipants] = useState(mockParticipants);
-  const [participantHearts, setParticipantHearts] = useState(
-    Object.fromEntries(participants.map((p) => [p.name, hearts]))
+export function Preview({
+  participants = mockParticipants,
+  slide,
+}: PreviewProps) {
+  const [time, setTime] = useState(slide.initialTime || 10);
+  const [currentParticipants, setCurrentParticipants] = useState(
+    mockParticipants || []
   );
+  const [participantHearts, setParticipantHearts] = useState(
+    mockParticipants
+      ? Object.fromEntries(
+          mockParticipants.map((p) => [p.name, Math.min(slide.hearts || 3, 5)]) // Ensure max hearts are 5
+        )
+      : {}
+  );
+
+  // Sync participantHearts when slide.hearts changes, with max hearts set to 5
+  useEffect(() => {
+    if (mockParticipants) {
+      setParticipantHearts(
+        Object.fromEntries(
+          mockParticipants.map((p) => [p.name, Math.min(slide.hearts || 3, 5)]) // Ensure max hearts are 5
+        )
+      );
+    }
+  }, [slide.hearts, mockParticipants]);
   const [winner, setWinner] = useState<Participant | null>(null);
-  const [userAnswer, setUserAnswer] = useState('hello');
+  const [userAnswer, setUserAnswer] = useState('');
+  const [validAnswers, setValidAnswers] = useState<string[]>(
+    slide.answers || []
+  );
+  const [usedAnswers, setUsedAnswers] = useState<string[]>([]);
+
+  if (currentParticipants.length === 0) {
+    return <div>No participants available</div>;
+  }
+
+  const currentPlayer = currentParticipants[0];
+  if (!currentPlayer || !(currentPlayer.name in participantHearts)) {
+    console.log('Currentparticipants', currentParticipants);
+    return <div>Invalid participant data</div>;
+  }
 
   // Countdown effect
   useEffect(() => {
@@ -88,7 +123,7 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
 
     const timer = setInterval(() => {
       setTime((prevTime) => prevTime - 1);
-    }, 990);
+    }, 1000);
 
     return () => clearInterval(timer);
   }, [time]);
@@ -123,7 +158,7 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
             ...prevParticipants.slice(0, nextIndex),
           ];
         });
-        setTime(initialTime); // Reset the timer
+        setTime(slide.initialTime); // Reset the timer
       }
     };
 
@@ -132,7 +167,25 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [initialTime, participantHearts]);
+  }, [slide.initialTime, participantHearts]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserAnswer(e.target.value); // Update the state with the new input value
+  };
+
+  const handleCheckAnswer = () => {
+    // Check if the userAnswer is valid and in the validAnswers array
+    if (validAnswers.includes(userAnswer)) {
+      // If valid, remove it from validAnswers and add to usedAnswers
+      setValidAnswers((prev) => prev.filter((answer) => answer !== userAnswer));
+      setUsedAnswers((prev) => [...prev, userAnswer]);
+
+      // Return true if the answer was correct
+      return true;
+    }
+    // If not valid, return false
+    return false;
+  };
 
   // Handle timer reaching 0
   useEffect(() => {
@@ -159,9 +212,9 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
         ];
       });
 
-      setTime(initialTime); // Reset timer
+      setTime(slide.initialTime); // Reset timer
     }
-  }, [time, currentParticipants, initialTime, participantHearts]);
+  }, [time, currentParticipants, slide.initialTime, participantHearts]);
 
   // Update alive participants and check for winner
   useEffect(() => {
@@ -210,11 +263,12 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        gap: '8rem',
       }}
     >
       <div>
-        <div className="mt-4 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center w-full">
-          <h1>Länder i världen</h1>
+        <div className="gap-4rem mt-4 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center w-full">
+          <h1 className="p-4">{slide.title}</h1>
         </div>
 
         <AnimatePresence mode="wait">
@@ -234,14 +288,14 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
                   zIndex: 2,
                 }}
               >
-                <div className="bg-black grid grid-cols-2 gap-4">
+                <div className=" grid grid-cols-2 gap-4">
                   {/* Timer stays in the first column */}
                   <div className="flex-col justify-center items-center font-display ">
-                    <h2 className='text-5xl'>{time}</h2>
-                    <div className='mt-4 text-4xl'>
-                    <h3 className="font-display">
-                      {currentParticipants[0].name}
-                    </h3>
+                    <h2 className="text-5xl">{time}</h2>
+                    <div className="mt-4 text-4xl">
+                      <h3 className="font-display">
+                        {currentParticipants[0].name}
+                      </h3>
                     </div>
                     <div className=" mt-4 justify-center items center flex gap-0.5rem">
                       {Array.from({
@@ -273,10 +327,14 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
                   {/* Name and Hearts placed under the timer in the first column */}
                   <div className="flex flex-col items-center justify-center col-span-1"></div>
                 </div>
-
                 <div className="flex justify-center items-center">
-                  <div className="mt-4 bg-white p-2 px-4 rounded-md inline-block text-center text-black font-display text-2xl">
-                    {userAnswer}
+                  <div className="bg-white p-2 px-4 rounded-md   text-black font-display text-2xl">
+                    <Input
+                      value={userAnswer}
+                      onChange={handleInputChange}
+                      placeholder="Enter your answer"
+                    />
+                    <Button onClick={handleCheckAnswer}>Check Answer</Button>
                   </div>
                 </div>
               </motion.div>
@@ -337,6 +395,6 @@ export function Preview({initialTime, participants, slide, hearts }: PreviewProp
       </motion.div>
     </motion.div>
   );
-};
+}
 
 export default Preview;

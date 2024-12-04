@@ -1,4 +1,4 @@
-import { ToolbarProps } from "../..";
+import { ToolbarProps } from "@/slides/toolbar";
 import { Label } from "@/components/ui/label";
 import {
   Select,

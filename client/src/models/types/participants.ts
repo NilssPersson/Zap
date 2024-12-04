@@ -8,6 +8,7 @@ export interface ParticipantAnswer {
 export interface Participant {
   answers: Array<ParticipantAnswer>;
   tempAnswers: string[];
+  isTurn: boolean,
   hasAnswered: boolean;
   avatar: string;
   name: string;

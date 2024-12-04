@@ -15,5 +15,6 @@ export const Info: SlideInfo = {
     label: "Bomb Question",
     slideType: SlideTypes.question,
     questionType: QuestionTypes.BOMB,
-    defaults: {} as Partial<BombSlide>, // Default to an empty object or provide appropriate defaults
+    interactivePreview: true,
+    defaults: {points: 1000} as Partial<BombSlide>, // Default to an empty object or provide appropriate defaults
 } as const;

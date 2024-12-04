@@ -4,8 +4,6 @@ import Avatar, { genConfig } from 'react-nice-avatar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from 'lucide-react';
 import { BombSlide } from '@/models/Quiz';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 const mockParticipants: Participant[] = [
   {
@@ -15,10 +13,11 @@ const mockParticipants: Participant[] = [
     ],
     hasAnswered: true,
     avatar: 'https://example.com/avatar1.png',
-    name: 'Alice Johnson',
+    name: 'Olle',
     participantId: 'P001',
     score: [8, 12],
     tempAnswers: [],
+    isTurn: false,
   },
   {
     answers: [
@@ -31,6 +30,7 @@ const mockParticipants: Participant[] = [
     participantId: 'P002',
     score: [10, 15],
     tempAnswers: [],
+    isTurn: false,
   },
   {
     answers: [{ slideNumber: 1, answer: ['No'], time: '2024-11-18T10:07:00Z' }],
@@ -40,6 +40,7 @@ const mockParticipants: Participant[] = [
     participantId: 'P003',
     score: [5],
     tempAnswers: [],
+    isTurn: false,
   },
   {
     answers: [],
@@ -49,6 +50,7 @@ const mockParticipants: Participant[] = [
     participantId: 'P004',
     score: [],
     tempAnswers: [],
+    isTurn: false,
   },
   {
     answers: [
@@ -61,30 +63,105 @@ const mockParticipants: Participant[] = [
     participantId: 'P005',
     score: [9, 11],
     tempAnswers: [],
+    isTurn: false,
   },
 ];
 
 type PreviewProps = {
-  
-  
   participants: Participant[];
   slide: BombSlide;
 };
 
-export function Host({
-  
-  participants,
-  slide,
-  
-}: PreviewProps) {
-  const [time, setTime] = useState(slide.initialTime);
-  const [currentParticipants, setCurrentParticipants] =
-    useState(mockParticipants);
-  const [participantHearts, setParticipantHearts] = useState(
-    Object.fromEntries(participants.map((p) => [p.name, slide.hearts]))
-  );
+type ParticipantHearts = {
+  participantId: string;
+  hearts: number;
+};
+
+export function Host({ participants = mockParticipants, slide }: PreviewProps) {
+  const [time, setTime] = useState(slide.initialTime || 100);
+  const [currentParticipants, setCurrentParticipants] = useState(participants);
+  const [participantHearts, setParticipantHearts] = useState<
+    ParticipantHearts[]
+  >([]);
+
   const [winner, setWinner] = useState<Participant | null>(null);
-  const [userAnswer, setUserAnswer] = useState('');
+  const [userAnswer, setUserAnswer] = useState('HALLOO');
+  const [validAnswers, setValidAnswers] = useState<string[]>(
+    slide.answers || []
+  );
+  const [usedAnswers, setUsedAnswers] = useState<string[]>([]);
+
+  const initializeHearts = () => {
+    const newParticipantHearts = participants.map((participant) => {
+      // Check if slide.participantHearts is defined and is an array
+      const existingHeart = Array.isArray(slide.participantHearts)
+        ? slide.participantHearts.find(
+            (ph) => ph.participantId === participant.participantId
+          )
+        : null;
+
+      return {
+        participantId: participant.participantId, // Participant ID is a string
+        hearts: Math.min(existingHeart?.hearts ?? slide.hearts, 5), // Default to slide.hearts if not found, capped at 5
+      };
+    });
+
+    setParticipantHearts(newParticipantHearts);
+  };
+
+  // Utility function to skip participants with no hearts
+  const getNextParticipantIndex = (startIndex: number): number => {
+    const totalParticipants = currentParticipants.length;
+    let index = startIndex;
+
+    while (
+      (participantHearts.find(
+        (ph) => ph.participantId === currentParticipants[index].participantId
+      )?.hearts ?? 0) <= 0 // Default to 0 if undefined
+    ) {
+      index = (index + 1) % totalParticipants;
+
+      if (index === startIndex) break; // Prevent infinite loop if all participants are out of hearts
+    }
+
+    return index;
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserAnswer(e.target.value); // Update the state with the new input value
+  };
+
+  const handleCheckAnswer = () => {
+    // Check if the userAnswer is valid and in the validAnswers array
+    if (validAnswers.includes(userAnswer)) {
+      // If valid, remove it from validAnswers and add to usedAnswers
+      setValidAnswers((prev) => prev.filter((answer) => answer !== userAnswer));
+      setUsedAnswers((prev) => [...prev, userAnswer]);
+
+      // Return true if the answer was correct
+      return true;
+    }
+    // If not valid, return false
+    return false;
+  };
+
+  const updateHearts = (participantHearts: ParticipantHearts[]) => {
+    // call firebase and update hearts for the user that lost hearts
+  };
+
+  const listenForAnser = 
+
+  useEffect(() => {
+    // Call the temporary function to initialize participant hearts
+    initializeHearts();
+  }, [participants, slide.hearts]);
+
+  // Sync participantHearts when slide.hearts changes
+  useEffect(() => {
+    if (participants && slide.hearts !== undefined) {
+      initializeHearts(); // Reinitialize hearts when slide.hearts changes
+    }
+  }, [slide.hearts, participants]);
 
   // Countdown effect
   useEffect(() => {
@@ -92,23 +169,10 @@ export function Host({
 
     const timer = setInterval(() => {
       setTime((prevTime) => prevTime - 1);
-    }, 990);
+    }, 1000);
 
     return () => clearInterval(timer);
   }, [time]);
-
-  // Utility function to skip participants with no hearts
-  const getNextParticipantIndex = (startIndex: number): number => {
-    const totalParticipants = currentParticipants.length;
-    let index = startIndex;
-
-    while (participantHearts[currentParticipants[index].name] <= 0) {
-      index = (index + 1) % totalParticipants;
-      if (index === startIndex) break; // Prevent infinite loop if all participants are dead
-    }
-
-    return index;
-  };
 
   // Rotate participants on "x" key press
   useEffect(() => {
@@ -138,100 +202,58 @@ export function Host({
     };
   }, [slide.initialTime, participantHearts]);
 
-  // Handle timer reaching 0
+ 
+
   useEffect(() => {
     if (time === 0) {
-      const currentPlayer = currentParticipants[0].name;
+      const currentPlayerId = currentParticipants[0].participantId; // Current participant's ID
 
       // Decrease heart count
-      setParticipantHearts((prevHearts) => {
-        const updatedHearts = { ...prevHearts };
-        updatedHearts[currentPlayer] = Math.max(
-          0,
-          updatedHearts[currentPlayer] - 1
-        );
-
-        return updatedHearts;
-      });
-
-      // Skip to the next participant if current has no hearts
+      setParticipantHearts((prevHearts) =>
+        prevHearts.map((ph) =>
+          ph.participantId === currentPlayerId
+            ? { ...ph, hearts: Math.max(0, ph.hearts - 1) } // Decrease hearts but ensure it doesn't go below 0
+            : ph
+        )
+      );
+      updateHearts(participantHearts);
+      // Skip to the next participant if the current one has no hearts
       setCurrentParticipants((prevParticipants) => {
-        const nextIndex = getNextParticipantIndex(1); // Find the next valid participant
+        const currentIndex = 0; // The current participant is always the first in the array
+        const nextIndex = getNextParticipantIndex(currentIndex + 1); // Find the next participant with hearts
+
         return [
           ...prevParticipants.slice(nextIndex),
           ...prevParticipants.slice(0, nextIndex),
         ];
       });
 
-      setTime(slide.initialTime); // Reset timer
+      // Reset the timer
+      setTime(slide.initialTime);
     }
-  }, [time, currentParticipants, slide.initialTime, participantHearts]);
+  }, [
+    time,
+    currentParticipants,
+    participantHearts,
+    slide.initialTime,
+    setParticipantHearts,
+    setCurrentParticipants,
+    setTime,
+  ]);
 
-  // Update alive participants and check for winner
   useEffect(() => {
     // Filter out dead participants (those with 0 hearts)
-    const aliveParticipants = currentParticipants.filter(
-      (p) => participantHearts[p.name] > 0
-    );
+    const aliveParticipants = currentParticipants.filter((p) => {
+      const hearts =
+        participantHearts.find((ph) => ph.participantId === p.participantId)
+          ?.hearts ?? 0;
+      return hearts > 0; // Keep participants with hearts > 0
+    });
 
     if (aliveParticipants.length === 1) {
       setWinner(aliveParticipants[0]); // Set the winner if only one participant remains with hearts > 0
     }
-  }, [currentParticipants, participantHearts]);
-
-  
-   
-  
-    // Handle change for the input field
-    const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setUserAnswer(event.target.value);
-    }
-    
-
-  const handleCheckTempAnswer = (
-    tempAnswer: string,
-    participant: Participant
-  ) => {
-    // Loop through the labels of the BombSlide
-    for (const label of slide.labels) {
-      // Check if the tempAnswer is already included in the answers
-      if (label.answers.includes(tempAnswer)) {
-        // If the answer is found in answers, check if it has been used already
-        if (label.usedAnswers.includes(tempAnswer)) {
-          // If the answer is already used, mark the answer as invalid
-          console.log(`The answer "${tempAnswer}" has already been used!`);
-          return false; // Invalid answer
-        } else {
-          // Otherwise, add the tempAnswer to the usedAnswers list and mark as valid
-          label.usedAnswers.push(tempAnswer);
-          console.log(`The answer "${tempAnswer}" is valid.`);
-          participant.tempAnswers.push(tempAnswer);
-          return true; // Valid answer
-        }
-      }
-    }
-
-    // If tempAnswer is not found in any labels.answers
-    console.log(
-      `The answer "${tempAnswer}" is not a valid answer for this question.`
-    );
-    return false; // Invalid answer
-  };
-  // Temporary array to store invalid answers
-
-  // Submit handler for button click
-  const handleSubmit = () => {
-    // Assuming the first participant in currentParticipants is the one who submitted
-    const isValid = handleCheckTempAnswer(userAnswer, currentParticipants[0]);
-    if (isValid) {
-      // Handle successful answer submission (e.g., update score or state)
-      console.log("Answer is valid");
-    } else {
-      // Handle invalid answer
-      console.log("Answer is invalid");
-    }
-  };
-
+  }, [currentParticipants, participantHearts, setWinner]);
 
   if (winner) {
     // Render the Winner Screen
@@ -268,16 +290,19 @@ export function Host({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        gap: '8rem',
       }}
     >
       <div>
-        <div className="mt-4 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center w-full">
-          <h1>Länder i världen</h1>
+        <div className="gap-4rem mt-4 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center w-full">
+          <h1 className="p-4">{slide.title}</h1>
         </div>
 
         <AnimatePresence mode="wait">
           {currentParticipants[0] &&
-            participantHearts[currentParticipants[0].name] > 0 && (
+            (participantHearts.find(
+              (ph) => ph.participantId === currentParticipants[0].participantId
+            )?.hearts ?? 0) > 0 && (
               <motion.div
                 key={currentParticipants[0].name}
                 initial={{ opacity: 0, x: '-100%' }}
@@ -292,19 +317,23 @@ export function Host({
                   zIndex: 2,
                 }}
               >
-                <div className="bg-black grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   {/* Timer stays in the first column */}
-                  <div className="flex-col justify-center items-center font-display ">
+                  <div className="flex-col justify-center items-center font-display">
                     <h2 className="text-5xl">{time}</h2>
                     <div className="mt-4 text-4xl">
                       <h3 className="font-display">
                         {currentParticipants[0].name}
                       </h3>
                     </div>
-                    <div className=" mt-4 justify-center items center flex gap-0.5rem">
+                    <div className="mt-4 justify-center items center flex gap-0.5rem">
                       {Array.from({
                         length:
-                          participantHearts[currentParticipants[0].name] || 0,
+                          participantHearts.find(
+                            (ph) =>
+                              ph.participantId ===
+                              currentParticipants[0].participantId
+                          )?.hearts || 0,
                       }).map((_, index) => (
                         <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
                       ))}
@@ -331,20 +360,10 @@ export function Host({
                   {/* Name and Hearts placed under the timer in the first column */}
                   <div className="flex flex-col items-center justify-center col-span-1"></div>
                 </div>
-
                 <div className="flex justify-center items-center">
-                  <div className="mt-4 bg-white p-2 px-4 rounded-md inline-block text-center text-black font-display text-2xl">
+                  <div className="bg-white p-2 px-4 rounded-md text-black font-display text-2xl">
                     {userAnswer}
                   </div>
-                  <Input
-                    value={userAnswer}
-                    onChange={handleAnswerChange} // Update userAnswer when the input changes
-                    type="text" // Using "text" instead of "string" for input types
-                    placeholder="Enter your answer"
-                  />
-                  <Button onClick={handleSubmit} type="submit">
-                    Answer
-                  </Button>
                 </div>
               </motion.div>
             )}
@@ -363,7 +382,7 @@ export function Host({
           overflow: 'hidden',
         }}
       >
-        {currentParticipants.map((participant: Participant) => (
+        {currentParticipants.map((participant) => (
           <motion.div
             key={participant.name}
             initial={{ opacity: 0, scale: 0.8 }}
@@ -375,7 +394,9 @@ export function Host({
               alignItems: 'center',
               textAlign: 'center',
               filter:
-                participantHearts[participant.name] > 0
+                (participantHearts.find(
+                  (ph) => ph.participantId === participant.participantId
+                )?.hearts ?? 0) > 0
                   ? 'none'
                   : 'grayscale(100%)',
             }}
@@ -389,12 +410,17 @@ export function Host({
             />
             <h3 className="font-display">{participant.name}</h3>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              {participantHearts[participant.name] > 0 ? (
-                Array.from({ length: participantHearts[participant.name] }).map(
-                  (_, index) => (
-                    <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
-                  )
-                )
+              {(participantHearts.find(
+                (ph) => ph.participantId === participant.participantId
+              )?.hearts ?? 0) > 0 ? (
+                Array.from({
+                  length:
+                    participantHearts.find(
+                      (ph) => ph.participantId === participant.participantId
+                    )?.hearts ?? 0,
+                }).map((_, index) => (
+                  <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
+                ))
               ) : (
                 <span style={{ fontSize: '1.5rem' }}>💀</span>
               )}
