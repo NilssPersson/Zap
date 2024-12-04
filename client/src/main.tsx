@@ -5,10 +5,10 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "@/i18tn";
+import config from "@/config";
 
 const rootElement = document.getElementById("root");
 
-import config from "@/config";
 const { ROUTER_BASE_NAME } = config;
 export const router = createBrowserRouter([{ path: "*", element: <App /> }], {
   basename: ROUTER_BASE_NAME,
@@ -16,9 +16,9 @@ export const router = createBrowserRouter([{ path: "*", element: <App /> }], {
 
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
+    <React.Fragment>
       <RouterProvider router={router} />
-    </React.StrictMode>,
+    </React.Fragment>
   );
 } else {
   console.error("Could not find the 'root' element.");

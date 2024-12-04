@@ -11,6 +11,7 @@ import {
 } from "@react-google-maps/api";
 import React, { useCallback } from "react";
 import ReactNiceAvatar, { genConfig } from "react-nice-avatar";
+import { Button } from "@/components/ui/button";
 
 const libraries: Libraries = ["places"];
 
@@ -61,9 +62,11 @@ const mockData: Participant[] = [
 
 export function HostAnswer({
   slide,
+  onNextSlide,
   participants = mockData,
 }: {
   slide: LocateItSlide;
+  onNextSlide: () => void;
   participants: Participant[];
 }) {
   const { isLoaded } = useJsApiLoader({
@@ -92,7 +95,7 @@ export function HostAnswer({
   });
 
   const onLoad = useCallback(
-    (mapInstance: any) => {
+    (mapInstance: google.maps.Map) => {
       if (!mapInstance || !latestAnswers.length) return;
       const bounds = new google.maps.LatLngBounds();
 
@@ -188,6 +191,9 @@ export function HostAnswer({
           );
         })}
       </GoogleMap>
+      <Button onClick={onNextSlide} className="absolute bottom-5 right-5">
+        Next Slide
+      </Button>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
         {config.map(({ component: Component, field }) => (
           <Component
             key={String(field)}
-            slide={slide}
+            slide={slide as never}
             onSlideUpdate={onSlideUpdate}
           />
         ))}

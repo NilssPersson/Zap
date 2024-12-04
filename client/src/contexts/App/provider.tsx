@@ -5,8 +5,10 @@ import { AppContext } from "./context";
 import { useQuizzes } from "@/hooks/useQuizzes";
 import { useCallback } from "react";
 import { useUsers } from "@/hooks/useUsers";
+import { useNavigate } from "react-router-dom";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
 
   const { user, updateUser } = useGetAuthenticatedUser();
 
@@ -41,6 +43,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       console.error(deleteError, updateError);
       return false;
     }
+
+    navigate(`/`);
 
     return true;
   }, [deleteOngoingQuiz, ongoingQuizzes, updateQuiz]);

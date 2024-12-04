@@ -15,8 +15,8 @@ export function HostAnswer({
   slide: FTASlide;
   participants: Participant[];
   handleAddPoints: (
-    pointsData: { participantId: string; awardPoints: boolean }[],
-    slide: FTASlide,
+    pointsData: { participantId: string; awardPoints: number }[],
+    changeSlide: boolean,
   ) => void;
 }) {
   const [latestAnswers, setLatestAnswers] = useState(() =>
@@ -32,7 +32,7 @@ export function HostAnswer({
         id: participant.participantId,
         answer: latestAnswer,
         similarity: similarity * 100,
-        points: similarity >= 98,
+        points: similarity >= 98 ? slide.points : 0,
       };
     }),
   );
@@ -41,7 +41,7 @@ export function HostAnswer({
     setLatestAnswers((prevAnswers) =>
       prevAnswers.map((entry) =>
         entry.id === participantId
-          ? { ...entry, points: !entry.points }
+          ? { ...entry, points: entry.points === 0 ? slide.points : 0 }
           : entry,
       ),
     );
@@ -53,7 +53,7 @@ export function HostAnswer({
         participantId: entry.id,
         awardPoints: entry.points,
       })),
-      slide,
+      true,
     );
   }
 
@@ -110,7 +110,7 @@ export function HostAnswer({
               </Label>
               <Checkbox
                 id={entry.id}
-                checked={entry.points}
+                checked={entry.points !== 0}
                 onCheckedChange={() => togglePoints(entry.id)}
               />
             </div>

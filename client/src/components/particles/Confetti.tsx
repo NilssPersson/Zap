@@ -61,7 +61,7 @@ export function Confetti() {
             size: {
               value: {
                 min: 2,
-                max: 4
+                max: 8
               }
             },
             links: {
@@ -153,7 +153,7 @@ export function Confetti() {
               height: 0
             },
             position: {
-              y: 100,
+              y: 75,
               x: 50
             }
           }

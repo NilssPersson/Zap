@@ -61,9 +61,8 @@ const baseQuestionToolbarConfig: ToolbarConfig<QuestionSlide> = [
     field: "points",
     label: "Select Points",
     component: SelectPoints,
-  }
+  },
 ];
-
 
 export const toolbarConfigs = {
   info: [
@@ -110,6 +109,16 @@ export const toolbarConfigs = {
   ],
 
   FTA: [
+    ...baseToolbarConfig,
+    ...baseQuestionToolbarConfig,
+    {
+      field: "correctAnswer" as keyof FTASlide,
+      label: "Correct Answer",
+      component: AnswerText,
+    },
+  ],
+
+  FA: [
     ...baseToolbarConfig,
     ...baseQuestionToolbarConfig,
     {

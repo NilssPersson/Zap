@@ -1,8 +1,9 @@
-import { ToolbarProps } from "../..";
+import { ToolbarProps } from "@/slides/toolbar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { FTASlide } from "@/models/Quiz";
 
-export function AnswerText({ slide, onSlideUpdate }: ToolbarProps) {
+export function AnswerText({ slide, onSlideUpdate }: ToolbarProps<FTASlide>) {
   // Ensure the slide is of type FTASlide
 
   return (

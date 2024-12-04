@@ -5,7 +5,7 @@ import { QuizBackground } from "./QuizBackground";
 import { getSlideComponents } from "@/slides/utils";
 
 interface SlidePreviewProps {
-  slide: Slide & { titleWiggle?: boolean; contentWiggle?: boolean };
+  slide: Slide;
   className?: string;
   thumbnail?: boolean;
   backgroundColor?: string;
@@ -59,7 +59,10 @@ export function SlidePreview({
     whichPreview in SlideComponent
       ? (SlideComponent[
           whichPreview as keyof typeof SlideComponent
-        ] as React.ElementType<{ slide: Slide }>)
+        ] as React.ElementType<{
+          slide: Slide;
+          onSlideUpdate?: (slide: Slide) => void;
+        }>)
       : null;
 
   const interactivePreview = SlideComponent.Info.interactivePreview || false;
@@ -71,7 +74,7 @@ export function SlidePreview({
         "relative w-full overflow-hidden",
         isPhoneView ? "aspect-[9/16]" : "aspect-video",
         !interactivePreview && "pointer-events-none",
-        className,
+        className
       )}
     >
       <QuizBackground

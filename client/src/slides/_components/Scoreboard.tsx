@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Avatar, { genConfig } from "react-nice-avatar";
 import { motion, AnimatePresence } from "framer-motion";
-import { Participant, ScoreSlide, Slide, SlideTypes } from "@/models/Quiz";
+import { Participant, Slide, SlideTypes } from "@/models/Quiz";
 
 // Counter component for animating the score display
 function Counter({
@@ -40,7 +40,6 @@ function Counter({
 
 // Scoreboard component to render and calculate the scores
 interface ScoreBoardProps {
-  slide: ScoreSlide;
   participants: Participant[];
   slides: Slide[];
   currentSlide: number;
@@ -181,7 +180,5 @@ function ScoreBoard({ participants, slides, currentSlide }: ScoreBoardProps) {
     </div>
   );
 }
-
-
 
 export default ScoreBoard;

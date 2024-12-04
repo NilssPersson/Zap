@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { LocateItSlide } from "@/models/Quiz";
 import {
   GoogleMap,
@@ -31,13 +31,14 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
     lat: 0,
     lng: 0,
   });
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const APIKEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: APIKEY,
     libraries,
   });
-  const [mapDetails, setMapDetails] = useState<any>();
+  const [mapDetails, setMapDetails] = useState<google.maps.MapTypeStyle[]>();
 
   const handleDragEnd = (event: google.maps.MapMouseEvent) => {
     if (event.latLng) {
@@ -45,6 +46,23 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
       const newLng = event.latLng.lng();
       const updatedPosition = { lat: newLat, lng: newLng };
       setMarkerPosition(updatedPosition);
+    }
+  };
+
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      clickTimeoutRef.current = setTimeout(() => {
+        const newLat = event.latLng!.lat();
+        const newLng = event.latLng!.lng();
+        setMarkerPosition({ lat: newLat, lng: newLng });
+      }, 10);
+    }
+  };
+
+  const handleDragStart = () => {
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+      clickTimeoutRef.current = null;
     }
   };
 
@@ -64,7 +82,7 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
     <div className="w-full h-full relative">
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={slide.location}
+        center={markerPosition}
         zoom={3}
         options={{
           disableDefaultUI: true,
@@ -74,6 +92,8 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
           gestureHandling: "greedy",
           styles: mapDetails,
         }}
+        onClick={handleMapClick}
+        onDragStart={handleDragStart}
       >
         <Marker
           position={markerPosition}
