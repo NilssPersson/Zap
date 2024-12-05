@@ -10,6 +10,7 @@ import * as FA from "./question/fa";
 import * as Rank from "./question/rank";
 import * as Matching from "./question/matching";
 import * as LocateIt from "./question/locateit";
+import * as Bomb from "./question/bomb";
 
 interface SlideInfo {
   value: string;
@@ -35,4 +36,4 @@ interface QuestionSlideInfo<T extends QuestionSlide> extends SlideInfo {
 
 export type { SlideInfo, QuestionSlideInfo, CalculateScoreProps };
 
-export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA, Matching, LocateIt };
+export { Info, Score, Lobby, MCQSA, MCQMA, FTA, Rank, FA, Matching, LocateIt, Bomb };

@@ -9,6 +9,7 @@ export enum QuestionTypes {
   RANK = "RANK",
   MATCHING = "MATCHING",
   LOCATEIT = "LOCATEIT",
+  BOMB = "BOMB"
 }
 
 export type QuestionType = QuestionTypes;
@@ -21,6 +22,7 @@ export enum AnswerTypes {
   time = "time",
   matching = "matching",
   location = "location",
+  bomb = "bomb"
 }
 
 export type answerType = AnswerTypes;
@@ -110,6 +112,17 @@ export interface MatchingSlide extends QuestionSlideBase {
   options: string[];
 }
 
+export interface BombSlide extends QuestionSlideBase {
+  questionType: QuestionTypes.BOMB,
+  answerType: AnswerTypes.bomb,
+  initialTime: number,
+  hearts: number,
+  participantHearts: { participantId: string, hearts: number }[]
+  id: string;
+  answers: string[];
+  usedAnswers: string[];
+}
+
 export type QuestionSlide =
   | MCQSASlide
   | MCQMASlide
@@ -117,4 +130,5 @@ export type QuestionSlide =
   | FASlide
   | RankSlide
   | LocateItSlide
-  | MatchingSlide;
+  | MatchingSlide
+  | BombSlide

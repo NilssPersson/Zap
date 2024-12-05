@@ -19,6 +19,8 @@ function HostLogic() {
 
   if (!ongoingQuiz) return <div>Loading Quiz...</div>;
 
+  
+
   const slide = getCurrentSlide();
   
   if (!ongoingQuiz.quiz.slides || !slide) {
