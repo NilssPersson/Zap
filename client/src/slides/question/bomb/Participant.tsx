@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BombSlide } from '@/models/Quiz';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,10 +9,9 @@ interface BombParticipantProps {
   answerTempQuestion: (answer: string) => boolean
 }
 
-export function Participant({ slide, answerQuestion, answerTempQuestion }: BombParticipantProps) {
+export function Participant({ slide, answerTempQuestion }: BombParticipantProps) {
   const [userAnswer, setUserAnswer] = useState('');
-  const [validAnswers, setValidAnswers] = useState<string[]>(slide.answers || []);
-  const [usedAnswers, setUsedAnswers] = useState<string[]>([]);
+
 
   // Handle the input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

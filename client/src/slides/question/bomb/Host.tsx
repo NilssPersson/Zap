@@ -187,6 +187,7 @@ export function Host({ participants = mockParticipants, slide }: PreviewProps) {
 
   const updateHearts = (participantHearts: ParticipantHearts[]) => {
     // call firebase and update hearts for the user that lost hearts
+    console.log(participantHearts)
   };
 
   useEffect(() => {
