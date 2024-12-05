@@ -6,6 +6,7 @@ import { X, Check } from "lucide-react";
 import { useAppContext } from "@/contexts/App/context";
 import { usePathOnValue } from "@/hooks/usePathOnValue";
 import { BaseQuestionRender } from "../base/QuestionRender";
+import { useTranslation } from "react-i18next";
 
 export function Host({
   slide,
@@ -19,6 +20,7 @@ export function Host({
   quizCode: string;
 }) {
   const [participantsQueue, setParticipantsQueue] = useState<Participant[]>([]);
+  const { t } = useTranslation(["questions"]);
 
   const {
     ongoingQuizzes: { resources: ongoingQuizzes, optimisticUpdate },
@@ -150,7 +152,7 @@ export function Host({
     <div>
       <BaseQuestionRender slide={slide} participants={participants} />
       <div className="flex flex-col items-center m-16 gap-10">
-        <h1 className="text-6xl font-display">Next up to answer:</h1>
+        <h1 className="text-6xl font-display">{t("nextUp")}</h1>
         {participantsQueue.slice(0, 3).map((participant, index) => (
           <div
             key={index}
@@ -165,7 +167,7 @@ export function Host({
                 >
                   <X />
                 </Button>
-                <h1 className="text-1xl font-display">Wrong answer</h1>
+                <h1 className="text-1xl font-display">{t("wrongAnswer")}</h1>
               </div>
             )}
             <div className="flex flex-col items-center justify-center p-4 rounded-lg animate-[zoom-in_1s_ease-in-out] ">
@@ -202,7 +204,7 @@ export function Host({
                 >
                   <Check />
                 </Button>
-                <h1 className="text-1xl font-display">Right answer</h1>
+                <h1 className="text-1xl font-display">{t("rightAnswer")}</h1>
               </div>
             )}
           </div>
