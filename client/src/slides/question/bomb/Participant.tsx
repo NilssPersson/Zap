@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 interface BombParticipantProps {
   slide: BombSlide;
   answerQuestion: (answer: string[]) => void;
-  answerTempQuestion: (answer: string[]) => boolean
+  answerTempQuestion: (answer: string) => boolean
 }
 
 export function Participant({ slide, answerQuestion, answerTempQuestion }: BombParticipantProps) {
@@ -23,7 +23,7 @@ export function Participant({ slide, answerQuestion, answerTempQuestion }: BombP
   // Handle answer checking (call answerTempQuestion function)
   const handleCheckAnswer = () => {
     // Call answerTempQuestion to validate the answer
-    const isValid = answerTempQuestion([userAnswer]);
+    const isValid = answerTempQuestion(userAnswer);
 
     if (isValid) {
       

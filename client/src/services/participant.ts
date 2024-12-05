@@ -55,7 +55,6 @@ export const ParticipantService = {
       name,
       avatar,
       participantId,
-      tempAnswer: "",
       isTurn: false
     };
 
@@ -116,8 +115,8 @@ export const ParticipantService = {
   async addTempAnswer(
     quizCode: string,
     participantId: string,
-    tempAnswer: string[],
-    slideNumber: number
+    tempAnswer: string,
+    
   ): Promise<boolean> {
     const participantExists = await this.participantExists(
       quizCode,
@@ -139,16 +138,13 @@ export const ParticipantService = {
       console.error("Participant data not found");
       return false;
     }
-    const participantData = participantSnap.val();
-    const updatedTempAnswers= [
-      ...(participantData.answers || []),
-      { slideNumber, tempAnswer, time: new Date().toISOString() },
-    ];
+    const updatedTempAnswers={tempAnswer, time: new Date().toISOString() };
+    
 
     try {
       await update(participantRef, {
         tempAnswer: updatedTempAnswers,
-        hasAnswered: true,
+        hasAnswered: false,
       });
       return true;
     } catch (error) {

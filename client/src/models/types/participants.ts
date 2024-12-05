@@ -5,9 +5,14 @@ export interface ParticipantAnswer {
   
 }
 
+export interface TempAnswer {
+  time: string;
+  tempAnswer: string;
+}
+
 export interface Participant {
   answers: Array<ParticipantAnswer>;
-  tempAnswers: string[];
+  tempAnswer: TempAnswer;
   isTurn: boolean,
   hasAnswered: boolean;
   avatar: string;

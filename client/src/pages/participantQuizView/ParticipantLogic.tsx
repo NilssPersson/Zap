@@ -24,7 +24,7 @@ function QuizView({
   currentSlide: number;
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
-  answerTempQuestion: (answer: string[]) => Promise<void>;
+  answerTempQuestion: (answer: string) => Promise<void>;
   showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
@@ -147,14 +147,14 @@ export default function ParticipantLogic() {
     }
   };
 
-  const answerTempQuestion = async (tempAnswer: string[]) => {
+  const answerTempQuestion = async (tempAnswer: string) => {
     if (!quizCode || !participantId || !tempAnswer) return;
     try {
       await ParticipantService.addTempAnswer(
         quizCode,
         participantId,
         tempAnswer,
-        currentSlide - 1,
+        
       );
     } catch (error) {
       console.error("Error submitting answer:", error);

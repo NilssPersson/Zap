@@ -16,7 +16,7 @@ const mockParticipants: Participant[] = [
     name: 'Olle',
     participantId: 'P001',
     score: [8, 12],
-    tempAnswers: [],
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
     isTurn: false,
   },
   {
@@ -29,7 +29,7 @@ const mockParticipants: Participant[] = [
     name: 'Bob Smith',
     participantId: 'P002',
     score: [10, 15],
-    tempAnswers: [],
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
     isTurn: false,
   },
   {
@@ -39,7 +39,7 @@ const mockParticipants: Participant[] = [
     name: 'Charlie Brown',
     participantId: 'P003',
     score: [5],
-    tempAnswers: [],
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
     isTurn: false,
   },
   {
@@ -49,7 +49,7 @@ const mockParticipants: Participant[] = [
     name: 'Diana Prince',
     participantId: 'P004',
     score: [],
-    tempAnswers: [],
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
     isTurn: false,
   },
   {
@@ -62,7 +62,7 @@ const mockParticipants: Participant[] = [
     name: 'Ethan Hunt',
     participantId: 'P005',
     score: [9, 11],
-    tempAnswers: [],
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
     isTurn: false,
   },
 ];
@@ -85,10 +85,8 @@ export function Host({ participants = mockParticipants, slide }: PreviewProps) {
   >([]);
 
   const [winner, setWinner] = useState<Participant | null>(null);
-  const [userAnswer, setUserAnswer] = useState('HALLOO');
-  const [validAnswers, setValidAnswers] = useState<string[]>(
-    slide.answers || []
-  );
+  const [userAnswer] = useState('TempAnswer');
+  const [answers, setAnswers] = useState<string[]>(slide.answers || []);
   const [usedAnswers, setUsedAnswers] = useState<string[]>([]);
 
   const initializeHearts = () => {
@@ -127,29 +125,69 @@ export function Host({ participants = mockParticipants, slide }: PreviewProps) {
     return index;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserAnswer(e.target.value); // Update the state with the new input value
-  };
-
-  const handleCheckAnswer = () => {
-    // Check if the userAnswer is valid and in the validAnswers array
-    if (validAnswers.includes(userAnswer)) {
-      // If valid, remove it from validAnswers and add to usedAnswers
-      setValidAnswers((prev) => prev.filter((answer) => answer !== userAnswer));
-      setUsedAnswers((prev) => [...prev, userAnswer]);
-
-      // Return true if the answer was correct
-      return true;
+  useEffect(() => {
+    if (participants) {
+      // Update currentParticipants while retaining the original order
+      setCurrentParticipants((prevParticipants) =>
+        prevParticipants.map(
+          (prevParticipant) =>
+            participants.find(
+              (participant) =>
+                participant.participantId === prevParticipant.participantId
+            ) || prevParticipant
+        )
+      );
     }
-    // If not valid, return false
-    return false;
-  };
+  }, [participants]);
+
+  useEffect(() => {
+    if (currentParticipants.length > 0) {
+      const currentParticipant = currentParticipants[0];
+  
+      console.log(currentParticipant);
+  
+      // Check if the last tempAnswer matches an available answer
+      const lastTempAnswer = currentParticipant.tempAnswer;
+  
+      console.log(lastTempAnswer);
+  
+      if (
+        lastTempAnswer && // Ensure there's a lastTempAnswer
+        answers.includes(lastTempAnswer.tempAnswer) && // Check if tempAnswer exists in answers
+        !usedAnswers.includes(lastTempAnswer.tempAnswer) // Ensure tempAnswer is not in usedAnswers
+      ) {
+        console.log("Answer was correct");
+  
+        // Update the state: move the answer to usedAnswers
+        const newAnswers = answers.filter(
+          (answer) => answer !== lastTempAnswer.tempAnswer
+        );
+        const newUsedAnswers = [...usedAnswers, lastTempAnswer.tempAnswer];
+  
+        // Update used answers
+        setAnswers(newAnswers);
+        setUsedAnswers(newUsedAnswers);
+  
+        setCurrentParticipants((prevParticipants) => {
+          const currentIndex = 0; // The current participant is always the first in the array
+          const nextIndex = getNextParticipantIndex(currentIndex + 1); // Find the next participant with hearts
+  
+          return [
+            ...prevParticipants.slice(nextIndex),
+            ...prevParticipants.slice(0, nextIndex),
+          ];
+        });
+  
+        // Reset the timer
+        setTime(slide.initialTime);
+      }
+    }
+  }, [currentParticipants, answers, usedAnswers]);
+  
 
   const updateHearts = (participantHearts: ParticipantHearts[]) => {
     // call firebase and update hearts for the user that lost hearts
   };
-
-  const listenForAnser = 
 
   useEffect(() => {
     // Call the temporary function to initialize participant hearts
@@ -201,8 +239,6 @@ export function Host({ participants = mockParticipants, slide }: PreviewProps) {
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [slide.initialTime, participantHearts]);
-
- 
 
   useEffect(() => {
     if (time === 0) {
