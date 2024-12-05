@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Eye, Timer } from "lucide-react";
 
 export function QuestionSettingsInput({
   slide,
@@ -19,8 +20,11 @@ export function QuestionSettingsInput({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2">
-        <Label>Show Correct Answer</Label>
+      <div className="space-y-1">
+        <div className="flex flex-row items-center space-x-1">
+          <Eye size={17} />
+          <Label>Show Correct Answer</Label>
+        </div>
         <Select
           value={questionSlide.showCorrectAnswer || "auto"}
           onValueChange={(value) =>
@@ -41,8 +45,11 @@ export function QuestionSettingsInput({
         </Select>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Label>Time Limit</Label>
+      <div className="space-y-1">
+        <div className="flex flex-row items-center">
+          <Timer size={17} />
+          <Label>Time Limit</Label>
+        </div>
         <Input
           type="number"
           value={questionSlide.timeLimit}

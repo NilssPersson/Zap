@@ -24,7 +24,7 @@ const circleStyle = {
   fillColor: "#FF0000",
   fillOpacity: 0.1,
   zIndex: 1,
-  editable: false,
+  editable: true,
 };
 
 export function Preview({
@@ -191,7 +191,16 @@ export function Preview({
             }
           }}
         />
-        {slide.awardPointsLocation !== "CLOSEST" && (
+        {slide.awardPointsLocation === "RADIUS" && (
+          <Circle
+            onCenterChanged={handleCircleCenterChange}
+            onRadiusChanged={handleCircleRadiusChange}
+            onLoad={(circle) => (circleRef.current = circle)}
+            options={{ ...circleStyle, radius: circleRadius }}
+            center={circleCenter}
+          />
+        )}
+        {slide.awardPointsLocation === "DISTANCE" && (
           <Circle
             onCenterChanged={handleCircleCenterChange}
             onRadiusChanged={handleCircleRadiusChange}
