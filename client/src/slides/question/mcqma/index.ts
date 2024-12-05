@@ -13,7 +13,7 @@ import { nanoid } from 'nanoid'
 export const Info: SlideInfo = {
     value: "question:MCQMA",
     icon: CheckSquareIcon,
-    label: "Multiple Answer MCQ",
+    label: "Multiple Choice",
     slideType: SlideTypes.question,
     questionType: QuestionTypes.MCQMA,
     defaults: {

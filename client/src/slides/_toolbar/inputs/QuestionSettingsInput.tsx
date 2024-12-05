@@ -53,7 +53,10 @@ export function QuestionSettingsInput({
           <SelectContent>
             <SelectItem value="auto">
               <h1 className="font-bold">Auto</h1>
-              <h3>Shows the correct answers when everyone has answered.</h3>
+              <h3>
+                Shows the correct answers when everyone has answered or the time
+                runs out.
+              </h3>
             </SelectItem>
             <SelectItem value="manual">
               <h1 className="font-bold">Manual</h1>
