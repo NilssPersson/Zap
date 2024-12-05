@@ -21,11 +21,11 @@ const containerStyle = {
 };
 
 const circleStyle = {
-  strokeColor: "#FF0000",
-  strokeOpacity: 0.5,
+  strokeColor: "#008000",
+  strokeOpacity: 1,
   strokeWeight: 2,
-  fillColor: "#FF0000",
-  fillOpacity: 0.1,
+  fillColor: "#00FF00",
+  fillOpacity: 0.08,
   zIndex: 1,
 };
 

@@ -1,9 +1,10 @@
 import { LocateItSlide } from "@/models/Quiz";
 import { CalculateScoreProps } from "@/slides";
 
+
 interface CalculateDistanceProps {
-  coords1: { lat: number; lng: number };
-  coords2: { lat: number; lng: number };
+    coords1: {lat: number, lng: number};
+    coords2: {lat: number, lng: number};
 }
 
 function CalculateDistance({ coords1, coords2 }: CalculateDistanceProps) {
