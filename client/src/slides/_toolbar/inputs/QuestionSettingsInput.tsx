@@ -35,12 +35,37 @@ export function QuestionSettingsInput({
           }
         >
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue>
+              {(() => {
+                switch (slide.showCorrectAnswer) {
+                  case "auto":
+                    return "Auto";
+                  case "manual":
+                    return "Manual";
+                  case "never":
+                    return "Never";
+                  default:
+                    return "Select Award Points";
+                }
+              })()}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="auto">Auto</SelectItem>
-            <SelectItem value="manual">Manual</SelectItem>
-            <SelectItem value="never">Never</SelectItem>
+            <SelectItem value="auto">
+              <h1 className="font-bold">Auto</h1>
+              <h3>Shows the correct answers when everyone has answered.</h3>
+            </SelectItem>
+            <SelectItem value="manual">
+              <h1 className="font-bold">Manual</h1>
+              <h3>
+                Renders a button that allows the presenter to show the correct
+                answers.
+              </h3>
+            </SelectItem>
+            <SelectItem value="never">
+              <h1 className="font-bold">Never</h1>
+              <h3>Never show the correct answers.</h3>
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
