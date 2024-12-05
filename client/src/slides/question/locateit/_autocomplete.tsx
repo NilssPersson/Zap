@@ -34,7 +34,7 @@ export const PlaceAutocompleteClassic = ({ onPlaceSelect }: Props) => {
 
   return (
     <div className="mt-2 text-black">
-      <Input className="md:text-2xl p-6" ref={inputRef} />
+      <Input className="md:text-2xl font-bold p-6" ref={inputRef} />
     </div>
   );
 };
