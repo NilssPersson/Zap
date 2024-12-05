@@ -2,17 +2,12 @@ import { Participant } from "@/models/Quiz";
 import { Users } from "lucide-react";
 
 export function ParticipantAnswers({
-  participants,
+  participants = [],
 }: {
   participants: Participant[];
 }) {
-  const noParticipants = participants?.length ? participants?.length : 0;
-  let noAnswers = 0;
-  if (participants) {
-    noAnswers = participants.filter(
-      (participant) => participant.hasAnswered,
-    ).length;
-  }
+  const noParticipants = participants.length;
+  const noAnswers = participants.filter((participant) => participant.hasAnswered).length;
 
   return (
     <div className="absolute top-4 right-4 flex justify-center items-center w-44 h-24 rounded-2xl border bg-primary text-white">
