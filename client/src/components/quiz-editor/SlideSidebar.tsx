@@ -6,6 +6,7 @@ import { SlidePreview } from "./SlidePreview";
 import { useEffect, useState } from "react";
 import { SidebarHeader } from "./SidebarHeader";
 import { SlideActions } from "./SlideActions";
+import { getSlideComponents } from "@/slides/utils";
 
 interface SlideSidebarProps {
   quizName: string;
@@ -80,46 +81,55 @@ export function SlideSidebar({
 
       <div className="flex-1 overflow-y-auto px-3 pt-1 slides-container">
         <div className="flex flex-col gap-2 pb-3">
-          {slides.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`group relative border rounded overflow-hidden transition-colors
+          {slides.map((slide, index) => {
+            const slideComponent = getSlideComponents(slide);
+            return (
+              <div>
+                <h1 className="font-bold text-black text-sm">
+                  {index + 1}. {slideComponent.Info.label}
+                </h1>
+                <h1></h1>
+                <div
+                  key={slide.id}
+                  className={`group relative border rounded overflow-hidden transition-colors
                                 ${
                                   activeSlideId === slide.id
                                     ? "border-primary ring-2 ring-primary"
                                     : "hover:border-primary/50"
                                 }
                             `}
-              onClick={() => onSlideSelect(slide.id)}
-              tabIndex={0}
-              role="button"
-              aria-selected={activeSlideId === slide.id}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onSlideSelect(slide.id);
-                }
-              }}
-            >
-              <div className="cursor-pointer">
-                <SlidePreview
-                  slide={slide}
-                  backgroundColor={backgroundColor}
-                  primaryColor={primaryColor}
-                  secondaryColor={secondaryColor}
-                />
-              </div>
+                  onClick={() => onSlideSelect(slide.id)}
+                  tabIndex={0}
+                  role="button"
+                  aria-selected={activeSlideId === slide.id}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onSlideSelect(slide.id);
+                    }
+                  }}
+                >
+                  <div className="cursor-pointer">
+                    <SlidePreview
+                      slide={slide}
+                      backgroundColor={backgroundColor}
+                      primaryColor={primaryColor}
+                      secondaryColor={secondaryColor}
+                    />
+                  </div>
 
-              <SlideActions
-                index={index}
-                totalSlides={slides.length}
-                onSlideMove={onSlideMove}
-                onSlideDuplicate={onSlideDuplicate}
-                onSlideDelete={onSlideDelete}
-                slideId={slide.id}
-              />
-            </div>
-          ))}
+                  <SlideActions
+                    index={index}
+                    totalSlides={slides.length}
+                    onSlideMove={onSlideMove}
+                    onSlideDuplicate={onSlideDuplicate}
+                    onSlideDelete={onSlideDelete}
+                    slideId={slide.id}
+                  />
+                </div>
+              </div>
+            );
+          })}
 
           {/* New Slide Button */}
           <Popover open={isOpen} onOpenChange={setIsOpen}>

@@ -11,7 +11,7 @@ import { SlideInfo } from "../..";
 export const Info: SlideInfo = {
   value: "question:FA",
   icon: Timer,
-  label: "Fastest Answer Question",
+  label: "Fastest Answer",
   slideType: SlideTypes.question,
   questionType: QuestionTypes.FA,
   defaults: {
