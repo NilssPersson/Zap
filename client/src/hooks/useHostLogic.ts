@@ -160,7 +160,7 @@ export const useHostLogic = (id: string | undefined) => {
   };
 
   useEffect(() => {
-    const checkAnswers = async () => {
+    const checkAnswers = () => {
       const currentSlide = ongoingQuiz?.currentSlide
         ? ongoingQuiz.currentSlide
         : 0;
