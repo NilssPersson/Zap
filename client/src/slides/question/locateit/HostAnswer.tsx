@@ -4,7 +4,7 @@ import {
   AdvancedMarker,
   Pin,
 } from '@vis.gl/react-google-maps';
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LocateItSlide, Participant } from '@/models/Quiz';
 import { Button } from '@/components/ui/button';
 import { Circle } from './_circle';
@@ -60,6 +60,7 @@ export function HostAnswer({
     slide.location
   );
   const [circleRadius, setCircleRadius] = useState<number>(slide.radius);
+  const [zoom, setZoom] = useState(6);
 
   const latestAnswers = participants.map((participant) => {
     const latestAnswer =
@@ -80,36 +81,6 @@ export function HostAnswer({
     };
   });
 
-  const defaultBounds: google.maps.LatLngBoundsLiteral = useMemo(() => {
-    if (!latestAnswers.length) {
-      return {
-        north: slide.location.lat,
-        south: slide.location.lat,
-        east: slide.location.lng,
-        west: slide.location.lng,
-      };
-    }
-    const bounds = {
-      north: Math.max(
-        ...latestAnswers.map((loc) => loc.lat),
-        slide.location.lat
-      ),
-      south: Math.min(
-        ...latestAnswers.map((loc) => loc.lat),
-        slide.location.lat
-      ),
-      east: Math.max(
-        ...latestAnswers.map((loc) => loc.lng),
-        slide.location.lng
-      ),
-      west: Math.min(
-        ...latestAnswers.map((loc) => loc.lng),
-        slide.location.lng
-      ),
-    };
-    return bounds;
-  }, [latestAnswers, slide.location]);
-
   useEffect(() => {
     setMapCenter(slide.location);
     setCircleRadius(slide.radius);
@@ -121,16 +92,14 @@ export function HostAnswer({
         <Map
           mapId={slide.id}
           style={{ width: '100%', height: '100%', zoom: 1.5 }}
-          center={mapCenter}
           onCenterChanged={(e) => setMapCenter(e.detail.center)}
+          onZoomChanged={(e) => setZoom(e.detail.zoom)}
           gestureHandling="greedy"
           disableDefaultUI={true}
           zoomControl={true}
           reuseMaps={true}
-          defaultBounds={{
-            ...defaultBounds,
-            padding: 10,
-          }}
+          zoom={zoom}
+          center={mapCenter}
         >
           <AdvancedMarker position={slide.location}>
             <Pin scale={1.5} />
