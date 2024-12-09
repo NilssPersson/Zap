@@ -6,16 +6,17 @@ import { Button } from '@/components/ui/button';
 interface BombParticipantProps {
   slide: BombSlide;
   answerQuestion: (answer: string[]) => void;
-  answerTempQuestion: (answer: string) => boolean
+  answerTempQuestion: (answer: string) => boolean;
 }
 
-export function Participant({ slide, answerTempQuestion }: BombParticipantProps) {
+export function Participant({
+  slide,
+  answerTempQuestion,
+}: BombParticipantProps) {
   const [userAnswer, setUserAnswer] = useState('');
-
 
   // Handle the input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("input changed")
     setUserAnswer(e.target.value);
   };
 
@@ -25,10 +26,10 @@ export function Participant({ slide, answerTempQuestion }: BombParticipantProps)
     const isValid = answerTempQuestion(userAnswer);
 
     if (isValid) {
-      
-      return isValid
+      setUserAnswer('');
+      return isValid;
     } else {
-      console.log("wrong answer");
+      console.log('wrong answer');
     }
     return isValid;
   };
