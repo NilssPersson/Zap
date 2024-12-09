@@ -207,12 +207,18 @@ export const useHostLogic = (id: string | undefined) => {
 
   const showAnswer = () => {
     if (!ongoingQuiz?.id) return;
-
-    optimisticUpdate(ongoingQuiz.id, {
-      isShowingCorrectAnswer: true,
-    });
-
     const currentSlide = getCurrentSlide();
+
+    if (
+      currentSlide &&
+      currentSlide.type == SlideTypes.question &&
+      currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
+    ) {
+      optimisticUpdate(ongoingQuiz.id, {
+        isShowingCorrectAnswer: true,
+      });
+    }
+
     if (currentSlide) {
       updateScores(currentSlide);
     }
