@@ -101,7 +101,7 @@ export const useHostLogic = (id: string | undefined) => {
       currentSlide: changeSlide
         ? ongoingQuiz!.currentSlide + 1
         : ongoingQuiz!.currentSlide,
-      isShowingCorrectAnswer: changeSlide ? false : true,
+      // isShowingCorrectAnswer: changeSlide ? false : true,
     });
     return participants;
   };
@@ -148,8 +148,6 @@ export const useHostLogic = (id: string | undefined) => {
 
   const nextSlide = async () => {
     if (!ongoingQuiz) return;
-    //slide.type !== SlideTypes.question
-    // "questionType" in slid
 
     await addMissingAnswers();
 
