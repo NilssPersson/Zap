@@ -3,6 +3,8 @@ import {
   Map,
   AdvancedMarker,
   Pin,
+  InfoWindow,
+  useAdvancedMarkerRef,
 } from '@vis.gl/react-google-maps';
 import React, { useEffect, useState } from 'react';
 import { LocateItSlide, Participant } from '@/models/Quiz';
@@ -117,26 +119,43 @@ export function HostAnswer({
             />
           )}
 
-          {latestAnswers.map((participant) => (
-            <React.Fragment key={participant.id}>
-              <AdvancedMarker
-                position={{ lat: participant.lat, lng: participant.lng }}
-                style={{ border: '2px solid #000000', borderRadius: '50%' }}
-              >
-                <Avatar
-                  style={{ width: '3rem', height: '3rem' }}
-                  {...genConfig(participant.avatar)}
+          {latestAnswers.map((participant) => {
+            const [markerRef, marker] = useAdvancedMarkerRef();
+
+            return (
+              <React.Fragment key={participant.id}>
+                <AdvancedMarker
+                  ref={markerRef}
+                  position={{ lat: participant.lat, lng: participant.lng }}
+                  style={{ border: '2px solid #000000', borderRadius: '50%' }}
+                >
+                  <InfoWindow
+                    anchor={marker}
+                    disableAutoPan
+                    headerDisabled
+                    shouldFocus={true}
+                  >
+                    <div className="text-lg flex flex-col items-center font-display text-black">
+                      <p>
+                        {participant.name} : {participant.score}
+                      </p>
+                    </div>
+                  </InfoWindow>
+                  <Avatar
+                    style={{ width: '3rem', height: '3rem' }}
+                    {...genConfig(participant.avatar)}
+                  />
+                </AdvancedMarker>
+                <Polyline
+                  path={[
+                    slide.location,
+                    { lat: participant.lat, lng: participant.lng },
+                  ]}
+                  strokeColor="#FF0000"
                 />
-              </AdvancedMarker>
-              <Polyline
-                path={[
-                  slide.location,
-                  { lat: participant.lat, lng: participant.lng },
-                ]}
-                strokeColor="#FF0000"
-              />
-            </React.Fragment>
-          ))}
+              </React.Fragment>
+            );
+          })}
         </Map>
       </APIProvider>
       <Button onClick={onNextSlide} className="absolute bottom-5 right-5">
