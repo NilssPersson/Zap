@@ -89,7 +89,7 @@ export function HostAnswer({
   }, [slide.location, slide.radius]);
 
   return (
-    <div className="w-full h-full relative p-20">
+    <div className="h-dvh w-full relative p-10 ">
       <APIProvider apiKey={APIKEY}>
         <Map
           mapId={slide.id}
@@ -98,7 +98,7 @@ export function HostAnswer({
           onZoomChanged={(e) => setZoom(e.detail.zoom)}
           gestureHandling="greedy"
           disableDefaultUI={true}
-          zoomControl={true}
+          zoomControl={false}
           reuseMaps={true}
           zoom={zoom}
           center={mapCenter}
@@ -107,7 +107,7 @@ export function HostAnswer({
             <Pin scale={1.5} />
           </AdvancedMarker>
 
-          {slide.awardPointsLocation === 'RADIUS' && (
+          {slide.awardPointsLocation !== 'CLOSEST' && (
             <Circle
               center={slide.location}
               radius={circleRadius}
