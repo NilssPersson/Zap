@@ -4,8 +4,6 @@ import Avatar, { genConfig } from 'react-nice-avatar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from 'lucide-react';
 import { BombSlide } from '@/models/Quiz';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 const mockParticipants: Participant[] = [
   {
@@ -18,8 +16,8 @@ const mockParticipants: Participant[] = [
     name: 'Alice Johnson',
     participantId: 'P001',
     score: [8, 12],
-    tempAnswers: [],
-    isTurn: false
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
+    isTurn: false,
   },
   {
     answers: [
@@ -31,8 +29,8 @@ const mockParticipants: Participant[] = [
     name: 'Bob Smith',
     participantId: 'P002',
     score: [10, 15],
-    tempAnswers: [],
-    isTurn: false
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
+    isTurn: false,
   },
   {
     answers: [{ slideNumber: 1, answer: ['No'], time: '2024-11-18T10:07:00Z' }],
@@ -41,8 +39,8 @@ const mockParticipants: Participant[] = [
     name: 'Charlie Brown',
     participantId: 'P003',
     score: [5],
-    tempAnswers: [],
-    isTurn: false
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
+    isTurn: false,
   },
   {
     answers: [],
@@ -51,8 +49,8 @@ const mockParticipants: Participant[] = [
     name: 'Diana Prince',
     participantId: 'P004',
     score: [],
-    tempAnswers: [],
-    isTurn: false
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
+    isTurn: false,
   },
   {
     answers: [
@@ -64,8 +62,8 @@ const mockParticipants: Participant[] = [
     name: 'Ethan Hunt',
     participantId: 'P005',
     score: [9, 11],
-    tempAnswers: [],
-    isTurn: false
+    tempAnswer: { tempAnswer: 'hej', time: '10.01' },
+    isTurn: false,
   },
 ];
 
@@ -83,16 +81,16 @@ export function Preview({
     mockParticipants || []
   );
   const [participantHearts, setParticipantHearts] = useState(
-    mockParticipants
+    participants
       ? Object.fromEntries(
-          mockParticipants.map((p) => [p.name, Math.min(slide.hearts || 3, 5)]) // Ensure max hearts are 5
+          participants.map((p) => [p.name, Math.min(slide.hearts || 3, 5)]) // Ensure max hearts are 5
         )
       : {}
   );
 
   // Sync participantHearts when slide.hearts changes, with max hearts set to 5
   useEffect(() => {
-    if (mockParticipants) {
+    if (participants) {
       setParticipantHearts(
         Object.fromEntries(
           mockParticipants.map((p) => [p.name, Math.min(slide.hearts || 3, 5)]) // Ensure max hearts are 5
@@ -101,11 +99,6 @@ export function Preview({
     }
   }, [slide.hearts, mockParticipants]);
   const [winner, setWinner] = useState<Participant | null>(null);
-  const [userAnswer, setUserAnswer] = useState('');
-  const [validAnswers, setValidAnswers] = useState<string[]>(
-    slide.answers || []
-  );
-  const [usedAnswers, setUsedAnswers] = useState<string[]>([]);
 
   if (currentParticipants.length === 0) {
     return <div>No participants available</div>;
@@ -168,24 +161,6 @@ export function Preview({
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [slide.initialTime, participantHearts]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserAnswer(e.target.value); // Update the state with the new input value
-  };
-
-  const handleCheckAnswer = () => {
-    // Check if the userAnswer is valid and in the validAnswers array
-    if (validAnswers.includes(userAnswer)) {
-      // If valid, remove it from validAnswers and add to usedAnswers
-      setValidAnswers((prev) => prev.filter((answer) => answer !== userAnswer));
-      setUsedAnswers((prev) => [...prev, userAnswer]);
-
-      // Return true if the answer was correct
-      return true;
-    }
-    // If not valid, return false
-    return false;
-  };
 
   // Handle timer reaching 0
   useEffect(() => {
@@ -328,14 +303,7 @@ export function Preview({
                   <div className="flex flex-col items-center justify-center col-span-1"></div>
                 </div>
                 <div className="flex justify-center items-center">
-                  <div className="bg-white p-2 px-4 rounded-md   text-black font-display text-2xl">
-                    <Input
-                      value={userAnswer}
-                      onChange={handleInputChange}
-                      placeholder="Enter your answer"
-                    />
-                    <Button onClick={handleCheckAnswer}>Check Answer</Button>
-                  </div>
+                  <div className="bg-white p-2 px-4 rounded-md   text-black font-display text-2xl"></div>
                 </div>
               </motion.div>
             )}

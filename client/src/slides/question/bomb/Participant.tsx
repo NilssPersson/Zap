@@ -6,16 +6,19 @@ import { Button } from '@/components/ui/button';
 interface BombParticipantProps {
   slide: BombSlide;
   answerQuestion: (answer: string[]) => void;
-  answerTempQuestion: (answer: string) => boolean
+  answerTempQuestion: (answer: string) => boolean;
+  isTurn?: boolean;
 }
 
-export function Participant({ slide, answerTempQuestion }: BombParticipantProps) {
+export function Participant({
+  slide,
+  answerTempQuestion,
+  isTurn
+}: BombParticipantProps) {
   const [userAnswer, setUserAnswer] = useState('');
-
 
   // Handle the input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("input changed")
     setUserAnswer(e.target.value);
   };
 
@@ -25,10 +28,10 @@ export function Participant({ slide, answerTempQuestion }: BombParticipantProps)
     const isValid = answerTempQuestion(userAnswer);
 
     if (isValid) {
-      
-      return isValid
+      setUserAnswer('');
+      return isValid;
     } else {
-      console.log("wrong answer");
+      console.log('wrong answer');
     }
     return isValid;
   };
@@ -38,13 +41,15 @@ export function Participant({ slide, answerTempQuestion }: BombParticipantProps)
       <h1 className="text-5xl font-display font-bold text-center mb-8">
         {slide.title}
       </h1>
-      <div className="bg-white p-2 px-4 rounded-md text-black font-display text-2xl mb-8">
-        <Input
-          value={userAnswer}
-          onChange={handleInputChange}
-          placeholder="Enter your answer"
-        />
-      </div>
+      {isTurn && (
+        <div className="bg-white p-2 px-4 rounded-md text-black font-display text-2xl mb-8">
+          <Input
+            value={userAnswer}
+            onChange={handleInputChange}
+            placeholder="Enter your answer"
+          />
+        </div>
+      )}
       <Button onClick={handleCheckAnswer}>Check Answer</Button>
     </div>
   );

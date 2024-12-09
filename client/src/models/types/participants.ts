@@ -2,7 +2,6 @@ export interface ParticipantAnswer {
   slideNumber: number;
   answer: string[];
   time: string;
-  
 }
 
 export interface TempAnswer {
@@ -12,11 +11,11 @@ export interface TempAnswer {
 
 export interface Participant {
   answers: Array<ParticipantAnswer>;
-  tempAnswer: TempAnswer;
-  isTurn: boolean,
+  tempAnswer?: TempAnswer;
+  isTurn?: boolean;
   hasAnswered: boolean;
   avatar: string;
   name: string;
   participantId: string;
   score: number[];
-} 
+}
