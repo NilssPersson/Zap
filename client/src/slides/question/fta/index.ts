@@ -11,7 +11,7 @@ import { SlideInfo } from "../..";
 export const Info: SlideInfo = {
   value: "question:FTA",
   icon: TypeIcon,
-  label: "Free Text Answer Question",
+  label: "Free Text",
   slideType: SlideTypes.question,
   questionType: QuestionTypes.FTA,
   defaults: {

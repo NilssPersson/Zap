@@ -55,6 +55,7 @@ export const ParticipantService = {
       name,
       avatar,
       participantId,
+      isTurn: false
     };
 
     try {
@@ -102,6 +103,48 @@ export const ParticipantService = {
       await update(participantRef, {
         answers: updatedAnswers,
         hasAnswered: true,
+      });
+      return true;
+    } catch (error) {
+      console.error("Error updating the answer:", error);
+      return false;
+    }
+  },
+
+// required for bomb slide where we need tempanswer
+  async addTempAnswer(
+    quizCode: string,
+    participantId: string,
+    tempAnswer: string,
+    
+  ): Promise<boolean> {
+    const participantExists = await this.participantExists(
+      quizCode,
+      participantId
+    );
+
+    if (!participantExists) {
+      console.error("Participant does not exist in quiz");
+      return false;
+    }
+
+    const participantRef = ref(
+      database,
+      `ongoingQuizzes/${quizCode}/participants/${participantId}`
+    );
+    const participantSnap = await get(participantRef);
+
+    if (!participantSnap.exists()) {
+      console.error("Participant data not found");
+      return false;
+    }
+    const updatedTempAnswers={tempAnswer, time: new Date().toISOString() };
+    
+
+    try {
+      await update(participantRef, {
+        tempAnswer: updatedTempAnswers,
+        hasAnswered: false,
       });
       return true;
     } catch (error) {
