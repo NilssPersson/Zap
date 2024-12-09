@@ -7,11 +7,13 @@ interface BombParticipantProps {
   slide: BombSlide;
   answerQuestion: (answer: string[]) => void;
   answerTempQuestion: (answer: string) => boolean;
+  isTurn: boolean;
 }
 
 export function Participant({
   slide,
   answerTempQuestion,
+  isTurn
 }: BombParticipantProps) {
   const [userAnswer, setUserAnswer] = useState('');
 
@@ -39,13 +41,15 @@ export function Participant({
       <h1 className="text-5xl font-display font-bold text-center mb-8">
         {slide.title}
       </h1>
-      <div className="bg-white p-2 px-4 rounded-md text-black font-display text-2xl mb-8">
-        <Input
-          value={userAnswer}
-          onChange={handleInputChange}
-          placeholder="Enter your answer"
-        />
-      </div>
+      {isTurn && (
+        <div className="bg-white p-2 px-4 rounded-md text-black font-display text-2xl mb-8">
+          <Input
+            value={userAnswer}
+            onChange={handleInputChange}
+            placeholder="Enter your answer"
+          />
+        </div>
+      )}
       <Button onClick={handleCheckAnswer}>Check Answer</Button>
     </div>
   );

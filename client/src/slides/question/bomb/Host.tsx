@@ -94,20 +94,18 @@ export function Host({
   const [participantHearts, setParticipantHearts] = useState<
     ParticipantHearts[]
   >([]);
-
   const [winner, setWinner] = useState<Participant | null>(null);
   const [hasUpdatedDatabaseDontDelete, setHasUpdatedDatabaseDontDelete] =
     useState(false);
   const [userAnswer, setUserAnswer] = useState('Answer');
-  const [answers] = useState<string[]>(slide.answers || []);
   const [usedAnswers, setUsedAnswers] = useState<string[]>([]);
+  const [answers] = useState(slide.answers);
   const [isCorrect, setIsCorrect] = useState('');
   const [deadParticipants, setDeadParticipants] = useState<string[]>([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const initializeHeartsAndTime = () => {
     const newParticipantHearts = participants.map((participant) => {
-      // Check if slide.participantHearts is defined and is an array
       const existingHeart = Array.isArray(slide.participantHearts)
         ? slide.participantHearts.find(
             (ph) => ph.participantId === participant.participantId
@@ -115,15 +113,14 @@ export function Host({
         : null;
 
       return {
-        participantId: participant.participantId, // Participant ID is a string
-        hearts: Math.min(existingHeart?.hearts ?? slide.hearts, 5), // Default to slide.hearts if not found, capped at 5
+        participantId: participant.participantId,
+        hearts: Math.min(existingHeart?.hearts ?? slide.hearts, 5),
       };
     });
-    setTime(slide.initialTime || 20)
+    setTime(10000);
     setParticipantHearts(newParticipantHearts);
   };
 
-  // Utility function to skip participants with no hearts
   const getNextParticipantIndex = (startIndex: number): number => {
     const totalParticipants = currentParticipants.length;
     let index = startIndex;
@@ -131,129 +128,106 @@ export function Host({
     while (
       (participantHearts.find(
         (ph) => ph.participantId === currentParticipants[index].participantId
-      )?.hearts ?? 0) <= 0 // Default to 0 if undefined
+      )?.hearts ?? 0) <= 0
     ) {
       index = (index + 1) % totalParticipants;
-
-      if (index === startIndex) break; // Prevent infinite loop if all participants are out of hearts
+      if (index === startIndex) break;
     }
 
     return index;
   };
 
-  useEffect(() => {
-    if (participants) {
-      // Update currentParticipants while retaining the original order
-      setCurrentParticipants((prevParticipants) =>
-        prevParticipants.map(
-          (prevParticipant) =>
-            participants.find(
-              (participant) =>
-                participant.participantId === prevParticipant.participantId
-            ) || prevParticipant
-        )
-      );
-    }
-  }, [participants]);
-  useEffect(() => {
-    const handleParticipant = async () => {
-      if (currentParticipants.length > 0 && !isTransitioning) {
-        // Only proceed if not transitioning
-        const currentParticipant = currentParticipants[0];
-        const lastTempAnswer = currentParticipant.tempAnswer;
-  
-        // If the answer is correct and not used
-        if (
-          lastTempAnswer &&
-          answers.includes(lastTempAnswer.tempAnswer) &&
-          !usedAnswers.includes(lastTempAnswer.tempAnswer)
-        ) {
-          console.log(lastTempAnswer.tempAnswer, 'User answer is correct');
-  
-          // Temporarily store updated usedAnswers
-          const updatedUsedAnswers = [
-            ...usedAnswers,
-            lastTempAnswer.tempAnswer,
-          ];
-  
-          setIsCorrect('true');
-          setUsedAnswers(updatedUsedAnswers);
-          setUserAnswer(lastTempAnswer.tempAnswer);
-  
-          // Lock transitions during the state update process
-          setIsTransitioning(true);
-  
-          // Wait for 1.2 seconds to display the color change
-          setTimeout(async () => {
-            setIsCorrect(''); // Reset the visual state
-  
-            // Clear the user answer before rotating to the next participant
-            setUserAnswer('');
-  
-            // Rotate participants
-            setCurrentParticipants((prevParticipants) => {
-              const nextIndex = getNextParticipantIndex(1); // Rotate participants
-              return [
-                ...prevParticipants.slice(nextIndex),
-                ...prevParticipants.slice(0, nextIndex),
-              ];
-            });
-  
-            try {
-              // Remove tempAnswer for the current participant
-              await ParticipantService.removeTempAnswer(
-                quizCode,
-                currentParticipant.participantId
-              );
-            } catch (error) {
-              console.error('Failed to remove tempAnswer for user:', error);
-            }
-  
-            // Reset the timer
-            setTime(slide.initialTime);
-  
-            setIsTransitioning(false); // Unlock transitions
-          }, 1200);
-        } else if (
-          lastTempAnswer &&
-          !answers.includes(lastTempAnswer.tempAnswer)
-        ) {
-          setIsCorrect('false');
-          setUserAnswer(lastTempAnswer.tempAnswer);
-        } else if (
-          lastTempAnswer &&
-          usedAnswers.includes(lastTempAnswer.tempAnswer)
-        ) {
-          // Prevent marking answer as correct if already used
-          console.log('Answer already used');
-  
-          // Check if transition time is nearly over and prevent marking correct
-          if (time > 300) {  // A small buffer (300ms), adjust as needed
-            setIsTransitioning(true);
-            setIsCorrect('used');
-            setUserAnswer(lastTempAnswer.tempAnswer);
-          } else {
-            setIsCorrect(''); // Reset it before transition
-          }
-  
-          // Prevent transition if the answer is already used
-          setIsTransitioning(false); // Unlock transitions immediately
-        }
-      }
-    };
-    handleParticipant();
-  }, [currentParticipants, time]); // Ensure the time also triggers this effect when changed
-  
-  
+  const retainParticipantOrder = () => {
+    // Only update the participants if they are not already in sync and the arrays have the same length
+    if (
+      participants !== currentParticipants &&
+      participants &&
+      currentParticipants.length === participants.length
+    ) {
+      console.log('retain order');
 
-  const updateHearts = (participantHearts: ParticipantHearts[]) => {
-    // call firebase and update hearts for the user that lost hearts
-    console.log(participantHearts);
+      // Retain the original order from currentParticipants while updating data from participants
+      const newParticipants = currentParticipants.map((currentParticipant) => {
+        // Find the matching participant in the new data (from the database)
+        const matchingParticipant = participants.find(
+          (participant) =>
+            participant.participantId === currentParticipant.participantId
+        );
+
+        // If a match is found, merge data; otherwise, keep the original currentParticipant
+        return matchingParticipant
+          ? { ...currentParticipant, ...matchingParticipant }
+          : currentParticipant;
+      });
+
+      // Update the state with the new array
+      setCurrentParticipants(newParticipants);
+    }
   };
 
-  // Countdown effect
   useEffect(() => {
-    if (time <= 0) return;
+    // Update the order only if participants are different
+    retainParticipantOrder();
+  }, [participants]); // Trigger this effect only when participants change
+
+  useEffect(() => {
+    if (time <= 0 || isTransitioning || currentParticipants.length === 0)
+      return;
+
+    const currentParticipant = currentParticipants[0];
+    const lastTempAnswer = currentParticipant?.tempAnswer?.tempAnswer;
+
+    console.log('lasttempasnwer was: ', lastTempAnswer);
+    // Handle correct answers
+    if (
+      lastTempAnswer &&
+      answers.includes(lastTempAnswer) &&
+      !usedAnswers.includes(lastTempAnswer)
+    ) {
+      setIsCorrect('true');
+      setUsedAnswers((prev) => [...prev, lastTempAnswer]);
+      setUserAnswer(lastTempAnswer);
+      setIsTransitioning(true);
+
+      setTimeout(() => {
+        setIsCorrect('');
+        setUserAnswer('');
+        setCurrentParticipants((prevParticipants) => {
+          const nextIndex = getNextParticipantIndex(1); // Get the next participant
+          return [
+            ...prevParticipants.slice(nextIndex),
+            ...prevParticipants.slice(0, nextIndex),
+          ];
+        });
+
+        ParticipantService.removeTempAnswer(
+          quizCode,
+          currentParticipant.participantId
+        );
+
+        setTime(1000); // Reset the timer
+        setIsTransitioning(false); // Unlock transitions
+      }, 1200);
+    } else if (lastTempAnswer && !answers.includes(lastTempAnswer)) {
+      setIsCorrect('false');
+      setUserAnswer(lastTempAnswer);
+    } else if (
+      lastTempAnswer &&
+      answers.includes(lastTempAnswer) &&
+      usedAnswers.includes(lastTempAnswer)
+    ) {
+      console.log('inside used', usedAnswers, lastTempAnswer);
+      setIsCorrect('used');
+      setUserAnswer(lastTempAnswer);
+      setIsTransitioning(false); // Reset transition lock
+      setTimeout(() => {});
+    }
+  }, [currentParticipants]);
+
+  useEffect(() => {
+    if (time == 0) {
+      playerLoseHeart();
+    }
 
     const timer = setInterval(() => {
       setTime((prevTime) => prevTime - 1);
@@ -262,125 +236,71 @@ export function Host({
     return () => clearInterval(timer);
   }, [time]);
 
-  // Rotate participants on "x" key press
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'x') {
-        setCurrentParticipants((prevParticipants) => {
-          const totalParticipants = prevParticipants.length;
-          const currentIndex = 0; // Big avatar is always the first participant
-          const nextIndex = getNextParticipantIndex(
-            (currentIndex + 1) % totalParticipants
-          );
+  function playerLoseHeart() {
+    if (!isTransitioning) {
+      const currentPlayerId = currentParticipants[0].participantId;
 
-          // Reorganize participants array based on the new first participant
-          return [
-            ...prevParticipants.slice(nextIndex),
-            ...prevParticipants.slice(0, nextIndex),
-          ];
-        });
-        setTime(slide.initialTime); // Reset the timer
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [slide.initialTime, participantHearts]);
-
-  useEffect(() => {
-    if (time === 0 && !isTransitioning) {
-      // Only proceed if not transitioning
-      const currentPlayerId = currentParticipants[0].participantId; // Current participant's ID
-
-      // Decrease heart count
       setParticipantHearts((prevHearts) => {
         const updatedHearts = prevHearts.map((ph) =>
           ph.participantId === currentPlayerId
-            ? { ...ph, hearts: Math.max(0, ph.hearts - 1) } // Decrease hearts but ensure it doesn't go below 0
+            ? { ...ph, hearts: Math.max(0, ph.hearts - 1) }
             : ph
         );
 
-        // Check if the current participant's hearts reach 0
         const currentParticipant = updatedHearts.find(
           (ph) => ph.participantId === currentPlayerId
         );
         if (currentParticipant && currentParticipant.hearts === 0) {
-          setDeadParticipants((prevDead) => [...prevDead, currentPlayerId]); // Add participant ID to deadParticipants
+          setDeadParticipants((prevDead) => [...prevDead, currentPlayerId]);
         }
 
         return updatedHearts;
       });
 
-      // Identify alive participants
       const aliveParticipants = currentParticipants.filter((p) => {
         const hearts =
           participantHearts.find((ph) => ph.participantId === p.participantId)
             ?.hearts ?? 0;
-        return hearts > 0; // Keep participants with hearts > 0
+        return hearts > 0;
       });
-      console.log(aliveParticipants.length, "alive.length")
-      console.log("winner",winner,"hasupdated",hasUpdatedDatabaseDontDelete)
+
       if (
-        ((currentParticipants.length)-deadParticipants.length) === 1 &&
+        currentParticipants.length - deadParticipants.length === 1 &&
         !winner &&
         !hasUpdatedDatabaseDontDelete
       ) {
+        //GAME IS DONE!
         sendAnswersToDatabase(aliveParticipants);
       }
 
-      //updateHearts(participantHearts);
-
-      // Skip to the next participant if the current one has no hearts
       setCurrentParticipants((prevParticipants) => {
-        const currentIndex = 0; // The current participant is always the first in the array
-        const nextIndex = getNextParticipantIndex(currentIndex + 1); // Find the next participant with hearts
-
+        console.log('setcurrentparticipant');
+        const currentIndex = 0;
+        const nextIndex = getNextParticipantIndex(currentIndex + 1);
         return [
           ...prevParticipants.slice(nextIndex),
           ...prevParticipants.slice(0, nextIndex),
         ];
       });
 
-      // Reset the timer
-      setTime(slide.initialTime);
+      setTime(1000);
     }
-  }, [
-    time,
-    currentParticipants,
-    participantHearts,
-    slide.initialTime,
-    isTransitioning,
-  ]);
-
-  // Effect for when there are no more correct answer the game should finish
-  // check after correvt ansewer if statment is true in const
-  useEffect(() => {
-    if (usedAnswers.length == answers.length) {
-      // fix so remaining players are all winners
-    }
-  }, [usedAnswers]);
+  }
 
   async function sendAnswersToDatabase(aliveParticipants: Participant[]) {
-    setWinner(aliveParticipants[0]); // Set the winner if only one participant remains with hearts > 0
-
+    setWinner(aliveParticipants[0]);
     const currentPlayerId = currentParticipants[0].participantId;
 
-    // Update deadParticipants state correctly
     setDeadParticipants((prevDead) => {
-      const newDeadParticipants = [...prevDead, currentPlayerId]; // Add the current player to deadParticipants
+      const newDeadParticipants = [...prevDead, currentPlayerId];
 
-      // Call addAnswer for all dead participants
       const addAnswerPromises = newDeadParticipants.map(
         async (participantId, index) => {
           try {
-            // Convert the index to a string and send it as the answer
             const result = await ParticipantService.addAnswer(
               quizCode,
               participantId,
-              [index.toString()], // Send the index as a string
+              [index.toString()],
               slideNumber
             );
             if (result) {
@@ -401,7 +321,6 @@ export function Host({
         }
       );
 
-      // Wait for all promises to resolve (optional if you want to wait until all answers are processed)
       Promise.all(addAnswerPromises)
         .then(() => {
           console.log("All dead participants' answers processed.");
@@ -413,10 +332,37 @@ export function Host({
           );
         });
 
-      return newDeadParticipants; // Update the state correctly after adding the current player
+      return newDeadParticipants;
     });
+
     setHasUpdatedDatabaseDontDelete(true);
   }
+
+  // TEMPCODE FOR ROTATING PLAYERS!
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'x') {
+        setCurrentParticipants((prevParticipants) => {
+          const currentIndex = 0; // Big avatar is always the first participant
+          const nextIndex = getNextParticipantIndex(
+            (currentIndex + 1) % prevParticipants.length
+          );
+          return [
+            ...prevParticipants.slice(nextIndex),
+            ...prevParticipants.slice(0, nextIndex),
+          ];
+        });
+        setTime(1000);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [slide.initialTime, participantHearts]);
 
   if (winner) {
     // Render the Winner Screen
