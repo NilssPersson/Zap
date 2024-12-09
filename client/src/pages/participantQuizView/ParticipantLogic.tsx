@@ -51,6 +51,7 @@ function QuizView({
       slide={currentQuestion as never}
       answerQuestion={answerQuestion as never}
       answerTempQuestion={answerTempQuestion as never}
+      isTurn={participantData.isTurn}
     />
   );
 }
