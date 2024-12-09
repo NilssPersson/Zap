@@ -1,14 +1,14 @@
-import { Participant } from "@/models/Quiz";
-import { Check, X } from "lucide-react";
+import { Participant } from '@/models/Quiz';
+import { Check, X } from 'lucide-react';
 
 const inspirationalQuotes = [
   "Failure isn't the end—it's just the beginning. 💥",
-  "Even the brightest minds stumble. Don’t be afraid to fail. 💡",
-  "Mistakes aren’t failures, they’re fuel for your fire. 🔥",
-  "Perseverance isn’t just about winning; it’s about proving them wrong. 😈",
-  "One misstep won’t define you—your comeback will. 💪",
-  "Success is built on the ruins of failure. Rise from the ashes. 🔥",
-  "Falling is easy. Getting back up? That’s where you become unstoppable. ⚡",
+  'Even the brightest minds stumble. Don’t be afraid to fail. 💡',
+  'Mistakes aren’t failures, they’re fuel for your fire. 🔥',
+  'Perseverance isn’t just about winning; it’s about proving them wrong. 😈',
+  'One misstep won’t define you—your comeback will. 💪',
+  'Success is built on the ruins of failure. Rise from the ashes. 🔥',
+  'Falling is easy. Getting back up? That’s where you become unstoppable. ⚡',
   "You've got to get back to the grind-set mindset 😈",
   "You've got to LOCK-IN 🔒",
 ];

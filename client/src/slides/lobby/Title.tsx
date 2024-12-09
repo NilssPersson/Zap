@@ -1,4 +1,5 @@
 import { GameShackTitle } from '@/components/GameShackTitle';
+import { t } from 'i18next';
 import QRCode from 'react-qr-code';
 
 interface TitleProps {
@@ -25,7 +26,7 @@ export default function Title({ title = 'Loading...', quizCode }: TitleProps) {
               {title}
             </span>
             <span className="text-black font-display text-3xl">
-              Lobby code: {quizCode}
+              {t('slides:quizCode')} {quizCode}
             </span>
           </span>
         </div>

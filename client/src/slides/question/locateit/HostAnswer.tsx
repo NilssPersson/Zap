@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Circle } from './_circle';
 import Avatar, { genConfig } from 'react-nice-avatar';
 import { Polyline } from './_polyline';
+import { useTranslation } from 'react-i18next';
 
 const mockData: Participant[] = [
   {
@@ -63,6 +64,7 @@ export function HostAnswer({
   );
   const [circleRadius, setCircleRadius] = useState<number>(slide.radius);
   const [zoom, setZoom] = useState(6);
+  const { t } = useTranslation();
 
   const latestAnswers = participants.map((participant) => {
     const latestAnswer =
@@ -159,7 +161,7 @@ export function HostAnswer({
         </Map>
       </APIProvider>
       <Button onClick={onNextSlide} className="absolute bottom-5 right-5">
-        Next Slide
+        {t('general:nextSlide')}
       </Button>
     </div>
   );
