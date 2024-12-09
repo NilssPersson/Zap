@@ -148,11 +148,14 @@ export const useHostLogic = (id: string | undefined) => {
 
   const nextSlide = async () => {
     if (!ongoingQuiz) return;
+    //slide.type !== SlideTypes.question
+    // "questionType" in slid
 
     await addMissingAnswers();
+
     var updatedParticipants = ongoingQuiz.participants;
+    const currentSlide = getCurrentSlide();
     if (!ongoingQuiz.isShowingCorrectAnswer) {
-      const currentSlide = getCurrentSlide();
       if (currentSlide) {
         const tempParticipants = await updateScores(currentSlide);
         if (Object.keys(tempParticipants).length != 0) {
@@ -174,7 +177,12 @@ export const useHostLogic = (id: string | undefined) => {
 
     await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : '', {
       ...ongoingQuiz,
-      isShowingCorrectAnswer: false,
+      isShowingCorrectAnswer:
+        !ongoingQuiz.isShowingCorrectAnswer &&
+        currentSlide?.type == SlideTypes.question &&
+        currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
+          ? true
+          : false,
       currentSlide: ongoingQuiz.currentSlide + 1,
       participants: updatedParticipants,
     });
