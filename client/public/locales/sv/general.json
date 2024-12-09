@@ -12,5 +12,8 @@
   "delete": "Radera",
   "randomize": "Slumpa",
   "update": "Uppdatera",
-  "username": "Användarnamn"
+  "username": "Användarnamn",
+  "nextSlide": "Nästa slide",
+  "answer": "Svara",
+  "participants": "Deltagare"
 }

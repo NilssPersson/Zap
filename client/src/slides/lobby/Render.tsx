@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import TeamView from './TeamView';
+import { useTranslation } from 'react-i18next';
 
 interface Team {
   id: string;
@@ -35,6 +36,7 @@ export default function Render({
   const [teamsEnabled, setTeamsEnabled] = useState(false);
   const [numberOfTeams, setNumberOfTeams] = useState(2);
   const [teams, setTeams] = useState<Team[]>([]);
+  const { t } = useTranslation();
 
   const {
     quizzes: { optimisticUpdate },
@@ -127,7 +129,6 @@ export default function Render({
       optimisticUpdate(ongoingQuiz.quiz.id, { isHosted: false }),
     ]);
 
-    console.log('Ending quiz, navigating to /');
     navigate('/');
   };
 
@@ -164,7 +165,9 @@ export default function Render({
           />
         ) : (
           <div className="flex flex-col items-center gap-2 w-full">
-            <span className="text-4xl font-display">Players</span>
+            <span className="text-4xl font-display">
+              {t('general:participants')}
+            </span>
             <div
               ref={participantsRef}
               className="grid grid-cols-4 gap-4 bg-black/50 backdrop-blur-md rounded-lg min-h-40 overflow-y-auto w-full"
@@ -179,10 +182,10 @@ export default function Render({
             onCheckedChange={setTeamsEnabled}
             id="team-mode"
           />
-          <Label htmlFor="team-mode">Enable Teams</Label>
+          <Label htmlFor="team-mode">{t('slides:enableTeams')}</Label>
           {teamsEnabled && (
             <div className="flex items-center space-x-2 ">
-              <Label htmlFor="team-count">Number of Teams:</Label>
+              <Label htmlFor="team-count">{t('slides:numTeams')}:</Label>
               <Input
                 id="team-count"
                 type="number"
@@ -203,10 +206,10 @@ export default function Render({
           variant="destructive"
           onClick={handleEndQuiz}
         >
-          End Quiz
+          {t('slides:endQuiz')}
         </Button>
         <Button className="absolute right-5 bottom-5" onClick={handleStartGame}>
-          Start Game
+          {t('slides:startQuiz')}
         </Button>
       </div>
     </div>

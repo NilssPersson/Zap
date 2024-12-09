@@ -12,5 +12,8 @@
   "delete": "Delete",
   "randomize": "Randomize",
   "update": "Update",
-  "username": "Username"
+  "username": "Username",
+  "nextSlide": "Next slide",
+  "answer": "Answer",
+  "participants": "Participants"
 }
