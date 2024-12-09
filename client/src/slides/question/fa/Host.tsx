@@ -72,7 +72,11 @@ export function Host({
 
         let insertIndex = updatedQueue.findIndex(
           (queuedParticipant) =>
-            new Date(queuedParticipant.tempAnswer?.time? queuedParticipant.tempAnswer.time: "").getTime() > newTime
+            new Date(
+              queuedParticipant.tempAnswer?.time
+                ? queuedParticipant.tempAnswer.time
+                : ''
+            ).getTime() > newTime
         );
 
         if (insertIndex === -1) {
@@ -105,7 +109,10 @@ export function Host({
   const setAnswerCorrect = async (participant: Participant) => {
     const participantsObj = ongoingQuiz.participants;
     // If participant was already correct
-    if (participant.answers && participant.answers.at(-1)?.slideNumber == ongoingQuiz.currentSlide) {
+    if (
+      participant.answers &&
+      participant.answers.at(-1)?.slideNumber == ongoingQuiz.currentSlide
+    ) {
       return;
     }
     if (participantsObj) {
@@ -116,7 +123,7 @@ export function Host({
       const correctAnswer: ParticipantAnswer = {
         answer: ['correct'],
         slideNumber: ongoingQuiz.currentSlide,
-        time: participant.tempAnswer?.time? participant.tempAnswer?.time:"",
+        time: participant.tempAnswer?.time ? participant.tempAnswer?.time : '',
       };
       updatedAnswers.push(correctAnswer);
 
@@ -134,14 +141,14 @@ export function Host({
         },
       };
       try {
-        optimisticUpdate(quizCode, updatedQuiz);
-        moveFirstParticipantToLast();
+        await optimisticUpdate(quizCode, updatedQuiz);
       } catch (error) {
         console.error("Error updating participant's answer", error);
       }
     } else {
       console.error('No participants found');
     }
+    moveFirstParticipantToLast();
   };
 
   return (
@@ -194,7 +201,6 @@ export function Host({
                   variant="ghost"
                   className="w-16 h-16 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center p-0 [&_svg]:size-8"
                   onClick={() => {
-                    moveFirstParticipantToLast();
                     setAnswerCorrect(participant);
                   }}
                 >
