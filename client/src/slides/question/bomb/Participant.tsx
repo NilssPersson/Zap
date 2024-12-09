@@ -7,7 +7,7 @@ interface BombParticipantProps {
   slide: BombSlide;
   answerQuestion: (answer: string[]) => void;
   answerTempQuestion: (answer: string) => boolean;
-  isTurn: boolean;
+  isTurn?: boolean;
 }
 
 export function Participant({
