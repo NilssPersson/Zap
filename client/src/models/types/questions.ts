@@ -99,6 +99,7 @@ export interface FTASlide extends QuestionSlideBase {
 export interface FASlide extends QuestionSlideBase {
   questionType: QuestionTypes.FA;
   answerType: AnswerTypes.time;
+  correctAnswer: string;
 }
 
 export interface MatchingSlide extends QuestionSlideBase {

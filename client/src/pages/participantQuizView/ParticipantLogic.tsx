@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ParticipantService, useGameStatus } from "@/services/participant";
-import TeamInfo from "./components/ParticipantInfo";
-import CreateParticipant from "./components/CreateParticipant";
-import { LogOut, Zap } from "lucide-react";
-import { useCookies } from "react-cookie";
-import LobbyView from "@/pages/participantQuizView/components/LobbyView";
-import HasAnsweredView from "@/pages/participantQuizView/components/HasAnsweredView";
-import QuizEndedView from "@/pages/participantQuizView/components/QuizEndedView";
-import { Participant, Slide } from "@/models/Quiz";
-import { getSlideComponents } from "@/slides/utils";
+import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ParticipantService, useGameStatus } from '@/services/participant';
+import TeamInfo from './components/ParticipantInfo';
+import CreateParticipant from './components/CreateParticipant';
+import { LogOut, Zap } from 'lucide-react';
+import { useCookies } from 'react-cookie';
+import LobbyView from '@/pages/participantQuizView/components/LobbyView';
+import HasAnsweredView from '@/pages/participantQuizView/components/HasAnsweredView';
+import QuizEndedView from '@/pages/participantQuizView/components/QuizEndedView';
+import { Participant, Slide } from '@/models/Quiz';
+import { getSlideComponents } from '@/slides/utils';
 
 function QuizView({
   questions,
@@ -35,7 +35,7 @@ function QuizView({
   const SlideComponent = getSlideComponents(currentQuestion);
 
   // If we are on a question slide render the corresponding answerView
-  if (showAnswer && "ParticipantAnswer" in SlideComponent) {
+  if (showAnswer && 'ParticipantAnswer' in SlideComponent) {
     return (
       <SlideComponent.ParticipantAnswer
         slide={currentQuestion as never}
@@ -44,7 +44,7 @@ function QuizView({
     );
   }
 
-  if (participantData.hasAnswered) return <HasAnsweredView />;
+  if (participantData.hasAnswered || participantData.tempAnswer) return <HasAnsweredView />;
 
   return (
     <SlideComponent.Participant
@@ -60,7 +60,7 @@ export default function ParticipantLogic() {
   const [participantId, setParticipantId] = useState<string | undefined>(
     undefined
   );
-  const [cookies, setCookie, removeCookie] = useCookies(["participantId"]);
+  const [cookies, setCookie, removeCookie] = useCookies(['participantId']);
   const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
 
@@ -78,8 +78,8 @@ export default function ParticipantLogic() {
         // Check if the ongoingQuiz exists, if not send the player back to /play
         const quizExists = await ParticipantService.checkIfGameExists(quizCode);
         if (!quizExists) {
-          navigate("/play");
-          removeCookie("participantId");
+          navigate('/play');
+          removeCookie('participantId');
           return;
         }
 
@@ -97,12 +97,12 @@ export default function ParticipantLogic() {
             setQuestions(slides);
           } else {
             // Cookie corresponds to participant in different quiz, remove it
-            removeCookie("participantId");
+            removeCookie('participantId');
             setParticipantId(undefined);
           }
         }
       } catch (error) {
-        console.error("Error initializing quiz:", error);
+        console.error('Error initializing quiz:', error);
       }
     };
 
@@ -117,11 +117,11 @@ export default function ParticipantLogic() {
         participantId
       );
       if (success) {
-        removeCookie("participantId");
-        navigate("/play");
+        removeCookie('participantId');
+        navigate('/play');
       }
     } catch (error) {
-      console.error("Error removing participant:", error);
+      console.error('Error removing participant:', error);
     }
   };
 
@@ -137,29 +137,30 @@ export default function ParticipantLogic() {
         participantAvatar
       );
       if (createdId) {
-        setCookie("participantId", createdId);
+        setCookie('participantId', createdId);
         setParticipantId(createdId);
         const slides = await ParticipantService.getQuizSlides(quizCode);
         setQuestions(slides);
       }
     } catch (error) {
-      console.error("Error adding participant:", error);
+      console.error('Error adding participant:', error);
     }
   };
 
   const answerTempQuestion = async (tempAnswer: string) => {
-    if (!quizCode || !participantId || !tempAnswer) return;
+
+    if (!quizCode || !participantId) return;
     try {
       await ParticipantService.addTempAnswer(
         quizCode,
         participantId,
-        tempAnswer,
-        
+        tempAnswer
       );
+      console.log('in answerTempQuestion');
     } catch (error) {
-      console.error("Error submitting answer:", error);
+      console.error('Error submitting answer:', error);
     }
-  }
+  };
 
   const answerQuestion = async (answer: string[]) => {
     if (!quizCode || !participantId || !answer) return;
@@ -171,7 +172,7 @@ export default function ParticipantLogic() {
         currentSlide - 1
       );
     } catch (error) {
-      console.error("Error submitting answer:", error);
+      console.error('Error submitting answer:', error);
     }
   };
 
