@@ -1,9 +1,15 @@
-import { LocateItSlide } from "@/models/Quiz";
-import { APIProvider, Map, AdvancedMarker, Pin, MapControl, ControlPosition } from "@vis.gl/react-google-maps"
-import { useState, useEffect } from "react";
-
-import { Circle } from "./_circle";
-import { PlaceAutocompleteClassic } from "./_autocomplete";
+import { LocateItSlide } from '@/models/Quiz';
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  Pin,
+  MapControl,
+  ControlPosition,
+} from '@vis.gl/react-google-maps';
+import { useState, useEffect } from 'react';
+import { Circle } from './_circle';
+import { PlaceAutocompleteClassic } from './_autocomplete';
 
 export function Preview({
   slide,
@@ -16,7 +22,7 @@ export function Preview({
   const [zoom, setZoom] = useState(6);
   const [circleCenter, setCircleCenter] = useState<google.maps.LatLngLiteral>();
   const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>(
-    slide.location,
+    slide.location
   );
   const [circleRadius, setCircleRadius] = useState<number>(slide.radius);
   const [currentSlideId, setCurrentSlideId] = useState<string | null>(null);
@@ -94,8 +100,8 @@ export function Preview({
     <div className="w-full h-full relative">
       <APIProvider apiKey={APIKEY}>
         <Map
-          mapId="classic"
-          style={{ width: "100%", height: "100%" }}
+          mapId="locateit-preview"
+          style={{ width: '100%', height: '100%', zoom: 1.5 }}
           center={mapCenter}
           zoom={zoom}
           onCenterChanged={(e) => setMapCenter(e.detail.center)}
@@ -103,12 +109,13 @@ export function Preview({
           gestureHandling="greedy"
           disableDefaultUI={true}
           zoomControl={true}
+          reuseMaps={true}
         >
-        
           <MapControl position={ControlPosition.TOP}>
             <PlaceAutocompleteClassic onPlaceSelect={onPlacesChanged} />
           </MapControl>
-          {(slide.awardPointsLocation === "RADIUS" || slide.awardPointsLocation === "DISTANCE") && (
+          {(slide.awardPointsLocation === 'RADIUS' ||
+            slide.awardPointsLocation === 'DISTANCE') && (
             <Circle
               onRadiusChanged={handleCircleRadiusChange}
               center={circleCenter}
@@ -126,7 +133,7 @@ export function Preview({
             draggable={true}
             onDragEnd={handleDragEnd}
           >
-            <Pin scale={2} />
+            <Pin scale={1.5} />
           </AdvancedMarker>
         </Map>
       </APIProvider>
