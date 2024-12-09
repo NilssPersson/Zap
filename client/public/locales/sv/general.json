@@ -16,5 +16,9 @@
   "nextSlide": "Nästa slide",
   "answer": "Svara",
   "participants": "Deltagare",
-  "cancel": "Avbryt"
+  "cancel": "Avbryt",
+  "preview": "Förhandsgranska",
+  "host": "Presentatör",
+  "participant": "Deltagare",
+  "hostAnswer": "Svar"
 }

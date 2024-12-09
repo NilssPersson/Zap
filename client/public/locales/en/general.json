@@ -16,5 +16,9 @@
   "nextSlide": "Next slide",
   "answer": "Answer",
   "participants": "Participants",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "preview": "Priview",
+  "host": "Host",
+  "participant": "Participant",
+  "hostAnswer": "Answer view"
 }
