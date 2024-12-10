@@ -25,6 +25,7 @@ export function Participant({
   // Handle answer checking (call answerTempQuestion function)
   const handleCheckAnswer = () => {
     // Call answerTempQuestion to validate the answer
+    console.log('answertempQuestion database access');
     const isValid = answerTempQuestion(userAnswer);
 
     if (isValid) {
@@ -42,20 +43,26 @@ export function Participant({
       <h1 className="text-5xl font-display font-bold text-center mb-8">
         {slide.title}
       </h1>
-      {isTurn &&
-        (slide && (
-          <div className="bg-white p-2 px-4 rounded-md text-black font-display text-2xl mb-8">
-            <Input
-              value={userAnswer}
-              onChange={handleInputChange}
-              placeholder="Enter your answer"
-            />
-            <Button onClick={handleCheckAnswer}>Check Answer</Button>
-          </div>
-        ))}
+      {isTurn && slide && (
+        <div className="bg-white p-4 rounded-md text-black font-display text-2xl mb-6">
+          <Input
+            value={userAnswer}
+            onChange={handleInputChange}
+            placeholder="Enter your answer"
+            className="mb-4 w-full p-2 border border-gray-300 rounded-md"
+          />
+          <Button
+            onClick={handleCheckAnswer}
+            className="w-full p-2 text-white rounded-md hover:bg-blue-600"
+          >
+            Check Answer
+          </Button>
+        </div>
+      )}
+
       {!isTurn && (
-        <div className="bg-white p-2 px-4 rounded-md text-black font-display text-2xl mb-8">
-          <h2>Wait for your turn!!</h2>
+        <div className="bg-white p-4 rounded-md text-black font-display text-2xl mb-6">
+          <h2 className="text-center">Wait for your turn!!</h2>
         </div>
       )}
     </div>
