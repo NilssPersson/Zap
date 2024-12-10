@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { FASlide } from '@/models/Quiz';
 import NextSlide from '@/slides/_components/NextSlide';
 import { useTranslation } from 'react-i18next';
