@@ -103,12 +103,16 @@ export function MyQuizButtons({
   onDelete,
 }: MyQuizButtonsProps) {
   const { t } = useTranslation();
+  const noSlides = !quiz.slides || quiz.slides.length === 0;
   return (
     <>
       <Button
         size="sm"
+        disabled={noSlides}
+        variant={noSlides ? 'outline' : 'default'}
         onClick={(e) => {
           e.stopPropagation();
+          if (noSlides) return;
           onHost(quiz);
         }}
         className="gap-1 mr-auto flex items-center"
