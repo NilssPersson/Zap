@@ -12,7 +12,6 @@ function HostLogic() {
     ongoingQuiz, 
     getCurrentSlide, 
     nextSlide, 
-    showAnswer, 
     changeTurn,
     endQuiz,
     handleAddPoints 
@@ -45,13 +44,13 @@ function HostLogic() {
           <div>
             <Countdown
               date={Date.now() + slide.timeLimit * 1000}
-              onComplete={showAnswer}
+              onComplete={nextSlide}
             />
           </div>
         )}
         {!ongoingQuiz.isShowingCorrectAnswer &&
           slide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
-            <Button onClick={showAnswer} className="m-5">
+            <Button onClick={nextSlide} className="m-5">
               Show Answer
             </Button>
           )}
