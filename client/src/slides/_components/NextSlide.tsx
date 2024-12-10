@@ -16,7 +16,6 @@ export default function NextSlide({ onClick }: { onClick: () => void }) {
         )
       }
     >
-
       <span className="block h-10 overflow-hidden font-display" aria-hidden>
         {t('general:nextSlide')}
       </span>

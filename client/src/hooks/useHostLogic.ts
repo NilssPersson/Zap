@@ -259,6 +259,24 @@ export const useHostLogic = (id: string | undefined) => {
     checkAnswers();
   }, [ongoingQuiz, allAnswered]);
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (
+        event.code === 'Space' ||
+        event.code === 'Enter' ||
+        event.code === 'ArrowRight'
+      ) {
+        nextSlide();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [nextSlide]);
+
   return {
     ongoingQuiz,
     getCurrentSlide,
