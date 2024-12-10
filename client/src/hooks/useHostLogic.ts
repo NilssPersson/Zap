@@ -116,7 +116,7 @@ export const useHostLogic = (id: string | undefined) => {
       async ([id, participant]) => {
         if (
           !participant.answers ||
-          participant.answers.at(-1)?.slideNumber !== ongoingQuiz.currentSlide
+          participant.answers.at(-1)?.slideNumber !== ongoingQuiz.currentSlide-1
         ) {
           // Construct the missing answer
           const newAnswer = {
