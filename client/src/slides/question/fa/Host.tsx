@@ -122,7 +122,7 @@ export function Host({
 
       const correctAnswer: ParticipantAnswer = {
         answer: ['correct'],
-        slideNumber: ongoingQuiz.currentSlide,
+        slideNumber: ongoingQuiz.currentSlide - 1,
         time: participant.tempAnswer?.time ? participant.tempAnswer?.time : '',
       };
       updatedAnswers.push(correctAnswer);
@@ -148,7 +148,7 @@ export function Host({
     } else {
       console.error('No participants found');
     }
-    moveFirstParticipantToLast();
+    await new Promise((resolve) => setTimeout(resolve, 10000));
   };
 
   return (
@@ -188,8 +188,8 @@ export function Host({
                   index === 0
                     ? 'text-5xl font-bold'
                     : index === 1
-                    ? 'text-2xl font-medium'
-                    : 'text-xl font-normal'
+                      ? 'text-2xl font-medium'
+                      : 'text-xl font-normal'
                 } font-display`}
               >
                 {participant.name}
