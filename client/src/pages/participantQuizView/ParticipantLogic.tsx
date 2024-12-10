@@ -18,6 +18,7 @@ function QuizView({
   participantData,
   answerQuestion,
   answerTempQuestion,
+
   showAnswer,
 }: {
   questions: Slide[] | undefined;
@@ -25,6 +26,7 @@ function QuizView({
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
   answerTempQuestion: (answer: string) => Promise<void>;
+
   showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
@@ -44,7 +46,10 @@ function QuizView({
     );
   }
 
-  if (participantData.hasAnswered || participantData.tempAnswer)
+  if (
+    participantData.hasAnswered ||
+    (participantData.tempAnswer && !participantData.isTurn)
+  )
     return <HasAnsweredView />;
 
   return (

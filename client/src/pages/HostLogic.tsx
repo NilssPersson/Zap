@@ -11,7 +11,8 @@ function HostLogic() {
   const { 
     ongoingQuiz, 
     getCurrentSlide, 
-    nextSlide, 
+    nextSlide,  
+    changeTurn,
     endQuiz,
     handleAddPoints 
   } = useHostLogic(id);
@@ -68,6 +69,7 @@ function HostLogic() {
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
           slideNumber={ongoingQuiz.currentSlide}
+          changeTurn={changeTurn}
           
 
         />

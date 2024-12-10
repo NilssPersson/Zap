@@ -11,6 +11,7 @@ import {
   QuestionTypes,
 } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
+import { ParticipantService } from '@/services/participant';
 
 export interface LatestScore {
   id: string;
@@ -54,7 +55,7 @@ export const useHostLogic = (id: string | undefined) => {
     (participant) => participant.hasAnswered
   );
 
-  const updateScores = async (slide: Slide) => {
+  const updateScores = async (slide: Slide, showAnswer: boolean) => {
     if (slide.type !== SlideTypes.question) return {};
     const questionSlide = slide as QuestionSlide;
     if (questionSlide.questionType == QuestionTypes.FTA) return {};
@@ -72,7 +73,7 @@ export const useHostLogic = (id: string | undefined) => {
           participantId: participants[index].participantId,
           awardPoints: point,
         })),
-        false
+        showAnswer
       );
       return updateParticipants;
     } else return ongoingQuiz?.participants ? ongoingQuiz.participants : {};
@@ -80,7 +81,7 @@ export const useHostLogic = (id: string | undefined) => {
 
   const handleAddPoints = async (
     pointsData: { participantId: string; awardPoints: number }[],
-    changeSlide?: boolean
+    showAnswer: boolean
   ) => {
     const participants = { ...ongoingQuiz!.participants };
 
@@ -98,10 +99,7 @@ export const useHostLogic = (id: string | undefined) => {
     await optimisticUpdate(ongoingQuiz!.id, {
       ...ongoingQuiz,
       participants,
-      currentSlide: changeSlide
-        ? ongoingQuiz!.currentSlide + 1
-        : ongoingQuiz!.currentSlide,
-      isShowingCorrectAnswer: changeSlide ? false : true,
+      isShowingCorrectAnswer: showAnswer,
     });
     return participants;
   };
@@ -119,7 +117,7 @@ export const useHostLogic = (id: string | undefined) => {
       async ([id, participant]) => {
         if (
           !participant.answers ||
-          participant.answers.at(-1)?.slideNumber !== ongoingQuiz.currentSlide
+          participant.answers.at(-1)?.slideNumber !== ongoingQuiz.currentSlide-1
         ) {
           // Construct the missing answer
           const newAnswer = {
@@ -150,12 +148,17 @@ export const useHostLogic = (id: string | undefined) => {
     if (!ongoingQuiz) return;
 
     await addMissingAnswers();
+    const currentSlide = getCurrentSlide();
+
+    const showAnswer =
+      !ongoingQuiz.isShowingCorrectAnswer &&
+      currentSlide?.type == SlideTypes.question &&
+      currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never;
 
     var updatedParticipants = ongoingQuiz.participants;
-    const currentSlide = getCurrentSlide();
     if (!ongoingQuiz.isShowingCorrectAnswer) {
       if (currentSlide) {
-        const tempParticipants = await updateScores(currentSlide);
+        const tempParticipants = await updateScores(currentSlide, showAnswer);
         if (Object.keys(tempParticipants).length != 0) {
           updatedParticipants = tempParticipants;
         }
@@ -175,13 +178,10 @@ export const useHostLogic = (id: string | undefined) => {
 
     await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : '', {
       ...ongoingQuiz,
-      isShowingCorrectAnswer:
-        !ongoingQuiz.isShowingCorrectAnswer &&
-        currentSlide?.type == SlideTypes.question &&
-        currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
-          ? true
-          : false,
-      currentSlide: ongoingQuiz.currentSlide + 1,
+      isShowingCorrectAnswer: showAnswer,
+      currentSlide: showAnswer
+        ? ongoingQuiz.currentSlide
+        : ongoingQuiz.currentSlide + 1,
       participants: updatedParticipants,
     });
   };
@@ -203,22 +203,34 @@ export const useHostLogic = (id: string | undefined) => {
     return ongoingQuiz.quiz.slides[currentSlideIndex];
   };
 
-  const showAnswer = () => {
-    if (!ongoingQuiz?.id) return;
-    const currentSlide = getCurrentSlide();
+  
 
-    if (
-      currentSlide &&
-      currentSlide.type == SlideTypes.question &&
-      currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
-    ) {
-      optimisticUpdate(ongoingQuiz.id, {
-        isShowingCorrectAnswer: true,
-      });
+  const changeTurn = async (turn: boolean, quizCode:string,participantId:string) => {
+    if (!quizCode || !participantId) {
+      console.error('Quiz code or participant ID is missing.');
+      return;
     }
 
-    if (currentSlide) {
-      updateScores(currentSlide);
+    try {
+      const success = await ParticipantService.changeIsTurn(
+        quizCode,
+        participantId,
+        turn
+      );
+      if (success) {
+        console.log(
+          `Participant ${participantId} turn changed to ${turn} and reset hasAnswered.`
+        );
+      } else {
+        console.error(
+          `Failed to change turn for participant ${participantId}.`
+        );
+      }
+    } catch (error) {
+      console.error(
+        `Error changing turn for participant ${participantId}:`,
+        error
+      );
     }
   };
 
@@ -238,7 +250,7 @@ export const useHostLogic = (id: string | undefined) => {
         allAnswered &&
         !(questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never)
       ) {
-        showAnswer();
+        nextSlide();
       }
     };
     checkAnswers();
@@ -248,8 +260,8 @@ export const useHostLogic = (id: string | undefined) => {
     ongoingQuiz,
     getCurrentSlide,
     nextSlide,
-    showAnswer,
     handleAddPoints,
+    changeTurn,
     endQuiz,
   };
 };
