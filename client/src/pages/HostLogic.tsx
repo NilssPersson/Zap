@@ -20,25 +20,15 @@ function HostLogic() {
   if (!ongoingQuiz) return <div>Loading Quiz...</div>;
 
   const slide = getCurrentSlide();
-
-  if (!ongoingQuiz.quiz.slides || !slide) {
-    return (
-      <EndScreen
-        quiz={ongoingQuiz.quiz}
-        endQuiz={() => endQuiz(ongoingQuiz.id)}
-        participants={Object.values(ongoingQuiz.participants || {})}
-      />
-    );
-  }
-
   const [timer, setTimer] = useState(
-    slide.type == SlideTypes.question && slide.timeLimit > 0
+    slide?.type == SlideTypes.question && slide?.timeLimit > 0
       ? slide.timeLimit * 1
       : -2
   );
 
   // Reinitialize the timer whenever the slide changes
   useEffect(() => {
+    if (!slide) return;
     if (slide.type === SlideTypes.question && slide.timeLimit > 0) {
       setTimer(slide.timeLimit);
     } else {
@@ -58,11 +48,18 @@ function HostLogic() {
     return () => clearInterval(countDown);
   }, [timer, nextSlide]);
 
-  const SlideComponent = getSlideComponents(slide);
+  if (!ongoingQuiz.quiz.slides || !slide) {
+    return (
+      <EndScreen
+        quiz={ongoingQuiz.quiz}
+        endQuiz={() => endQuiz(ongoingQuiz.id)}
+        participants={Object.values(ongoingQuiz.participants || {})}
+      />
+    );
+  }
 
   const RenderButtons = () => {
     if (slide.type !== SlideTypes.question) return null;
-
     return (
       <div className="flex flex-col">
         {!ongoingQuiz.isShowingCorrectAnswer && slide.timeLimit > 0 && (
@@ -80,31 +77,34 @@ function HostLogic() {
     );
   };
 
-  return (
-    <>
-      {!ongoingQuiz.isShowingCorrectAnswer ? (
-        <SlideComponent.Host
-          slides={ongoingQuiz.quiz.slides}
-          currentSlide={ongoingQuiz.currentSlide}
-          participants={Object.values(ongoingQuiz.participants || {})}
-          slide={slide as never}
-          onNextSlide={nextSlide}
-          quizCode={ongoingQuiz.id}
-          slideNumber={ongoingQuiz.currentSlide}
-          changeTurn={changeTurn}
-        />
-      ) : (
-        <SlideComponent.HostAnswer
-          participants={Object.values(ongoingQuiz.participants)}
-          slide={slide as never}
-          onNextSlide={nextSlide}
-          quizCode={ongoingQuiz.id}
-          handleAddPoints={handleAddPoints}
-        />
-      )}
-      <RenderButtons />
-    </>
-  );
+  const SlideComponent = getSlideComponents(slide);
+  if (slide) {
+    return (
+      <>
+        {!ongoingQuiz.isShowingCorrectAnswer ? (
+          <SlideComponent.Host
+            slides={ongoingQuiz.quiz.slides}
+            currentSlide={ongoingQuiz.currentSlide}
+            participants={Object.values(ongoingQuiz.participants || {})}
+            slide={slide as never}
+            onNextSlide={nextSlide}
+            quizCode={ongoingQuiz.id}
+            slideNumber={ongoingQuiz.currentSlide}
+            changeTurn={changeTurn}
+          />
+        ) : (
+          <SlideComponent.HostAnswer
+            participants={Object.values(ongoingQuiz.participants)}
+            slide={slide as never}
+            onNextSlide={nextSlide}
+            quizCode={ongoingQuiz.id}
+            handleAddPoints={handleAddPoints}
+          />
+        )}
+        <RenderButtons />
+      </>
+    );
+  }
 }
 
 export default HostLogic;
