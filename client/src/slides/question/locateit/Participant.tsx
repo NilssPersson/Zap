@@ -37,7 +37,6 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
       const newLng = event.latLng.lng();
       const updatedPosition = { lat: newLat, lng: newLng };
       setMarkerPosition(updatedPosition);
-      setMapCenter(updatedPosition);
     }
   };
 
@@ -47,7 +46,6 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
         const newLat = event.detail.latLng!.lat;
         const newLng = event.detail.latLng!.lng;
         setMarkerPosition({ lat: newLat, lng: newLng });
-        setMapCenter({ lat: newLat, lng: newLng });
       }, 10);
     }
   };
@@ -81,7 +79,7 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
           disableDefaultUI={true}
           mapTypeControl={false}
           streetViewControl={false}
-          zoomControl={true}
+          zoomControl={false}
           gestureHandling="greedy"
           onClick={handleMapClick}
           onDragstart={handleDragStart}
@@ -92,7 +90,7 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
             onDragEnd={handleDragEnd}
           />
 
-          <div className="absolute flex bottom-20 w-full justify-center">
+          <div className="absolute flex bottom-8 w-full justify-center">
             <Button
               onClick={() =>
                 answerQuestion([
@@ -100,7 +98,7 @@ export function Participant({ slide, answerQuestion }: LocateItProps) {
                   markerPosition.lng.toString(),
                 ])
               }
-              className="w-fit text-xl"
+              className="text-3xl p-8"
             >
               {t('general:answer')}
             </Button>

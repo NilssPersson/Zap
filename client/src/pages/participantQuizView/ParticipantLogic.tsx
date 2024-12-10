@@ -18,7 +18,7 @@ function QuizView({
   participantData,
   answerQuestion,
   answerTempQuestion,
-  
+
   showAnswer,
 }: {
   questions: Slide[] | undefined;
@@ -26,7 +26,7 @@ function QuizView({
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
   answerTempQuestion: (answer: string) => Promise<void>;
-  
+
   showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
@@ -182,8 +182,6 @@ export default function ParticipantLogic() {
     }
   };
 
-  
-
   if (!participantId || !participantData) {
     return <CreateParticipant handleAddParticipant={handleAddParticipant} />;
   }
@@ -218,12 +216,11 @@ export default function ParticipantLogic() {
           answerQuestion={answerQuestion}
           showAnswer={showAnswer}
           answerTempQuestion={answerTempQuestion}
-          
         />
       </div>
 
       {/* Bottom: Team info */}
-      <TeamInfo participant={participantData} />
+      {showAnswer && <TeamInfo participant={participantData} />}
     </div>
   );
 }
