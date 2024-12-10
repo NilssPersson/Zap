@@ -5,10 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { max_options } from "@/config/max";
 
 export function MatchingOptionsInput({ slide, onSlideUpdate }: ToolbarProps<MatchingSlide>) {
   const [newLabel, setNewLabel] = useState<string>("");
   const [newOption, setNewOption] = useState<string>("");
+
+  const canAddLabel = slide.labels.length < max_options.match.labels;
 
   const updateSlide = (updates: Partial<MatchingSlide>) => {
     onSlideUpdate({
@@ -99,6 +102,7 @@ export function MatchingOptionsInput({ slide, onSlideUpdate }: ToolbarProps<Matc
             placeholder="New Label"
           />
           <Button
+            disabled={!canAddLabel}
             onClick={() => {
               if (newLabel.trim() !== "") {
                 updateSlide({

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { max_options } from "@/config/max";
 
 export function RankOptionsInput({ slide, onSlideUpdate }: ToolbarProps<RankSlide>) {
 
@@ -17,6 +18,8 @@ export function RankOptionsInput({ slide, onSlideUpdate }: ToolbarProps<RankSlid
       ranking: updatedRanking,
     } as RankSlide);
   };
+
+  const canAdd = slide.ranking.length < max_options.rank;
 
   return (
     <div className="space-y-4">
@@ -54,6 +57,7 @@ export function RankOptionsInput({ slide, onSlideUpdate }: ToolbarProps<RankSlid
           placeholder="Answer"
         />
         <Button
+          disabled={!canAdd}
           onClick={() => {
             if (newRank.trim() !== "") {
               const updatedRanking = [...(slide as RankSlide).ranking, newRank];
