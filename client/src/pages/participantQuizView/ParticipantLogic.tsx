@@ -18,6 +18,7 @@ function QuizView({
   participantData,
   answerQuestion,
   answerTempQuestion,
+  
   showAnswer,
 }: {
   questions: Slide[] | undefined;
@@ -25,6 +26,7 @@ function QuizView({
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
   answerTempQuestion: (answer: string) => Promise<void>;
+  
   showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
@@ -44,7 +46,11 @@ function QuizView({
     );
   }
 
-  if (participantData.hasAnswered || participantData.tempAnswer) return <HasAnsweredView />;
+  if (
+    participantData.hasAnswered ||
+    (participantData.tempAnswer && !participantData.isTurn)
+  )
+    return <HasAnsweredView />;
 
   return (
     <SlideComponent.Participant
@@ -149,7 +155,6 @@ export default function ParticipantLogic() {
   };
 
   const answerTempQuestion = async (tempAnswer: string) => {
-
     if (!quizCode || !participantId) return;
     try {
       await ParticipantService.addTempAnswer(
@@ -176,6 +181,8 @@ export default function ParticipantLogic() {
       console.error('Error submitting answer:', error);
     }
   };
+
+  
 
   if (!participantId || !participantData) {
     return <CreateParticipant handleAddParticipant={handleAddParticipant} />;
@@ -211,6 +218,7 @@ export default function ParticipantLogic() {
           answerQuestion={answerQuestion}
           showAnswer={showAnswer}
           answerTempQuestion={answerTempQuestion}
+          
         />
       </div>
 
