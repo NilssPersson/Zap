@@ -54,7 +54,7 @@ export const useHostLogic = (id: string | undefined) => {
     (participant) => participant.hasAnswered
   );
 
-  const updateScores = async (slide: Slide) => {
+  const updateScores = async (slide: Slide, showAnswer: boolean) => {
     if (slide.type !== SlideTypes.question) return {};
     const questionSlide = slide as QuestionSlide;
     if (questionSlide.questionType == QuestionTypes.FTA) return {};
@@ -72,6 +72,7 @@ export const useHostLogic = (id: string | undefined) => {
           participantId: participants[index].participantId,
           awardPoints: point,
         })),
+        showAnswer,
         false
       );
       return updateParticipants;
@@ -80,6 +81,7 @@ export const useHostLogic = (id: string | undefined) => {
 
   const handleAddPoints = async (
     pointsData: { participantId: string; awardPoints: number }[],
+    showAnswer: boolean,
     changeSlide?: boolean
   ) => {
     const participants = { ...ongoingQuiz!.participants };
@@ -101,7 +103,7 @@ export const useHostLogic = (id: string | undefined) => {
       currentSlide: changeSlide
         ? ongoingQuiz!.currentSlide + 1
         : ongoingQuiz!.currentSlide,
-      isShowingCorrectAnswer: changeSlide ? false : true,
+      isShowingCorrectAnswer: showAnswer,
     });
     return participants;
   };
@@ -150,12 +152,17 @@ export const useHostLogic = (id: string | undefined) => {
     if (!ongoingQuiz) return;
 
     await addMissingAnswers();
+    const currentSlide = getCurrentSlide();
+
+    const showAnswer =
+      !ongoingQuiz.isShowingCorrectAnswer &&
+      currentSlide?.type == SlideTypes.question &&
+      currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never;
 
     var updatedParticipants = ongoingQuiz.participants;
-    const currentSlide = getCurrentSlide();
     if (!ongoingQuiz.isShowingCorrectAnswer) {
       if (currentSlide) {
-        const tempParticipants = await updateScores(currentSlide);
+        const tempParticipants = await updateScores(currentSlide, showAnswer);
         if (Object.keys(tempParticipants).length != 0) {
           updatedParticipants = tempParticipants;
         }
@@ -175,15 +182,18 @@ export const useHostLogic = (id: string | undefined) => {
 
     await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : '', {
       ...ongoingQuiz,
-      isShowingCorrectAnswer:
-        !ongoingQuiz.isShowingCorrectAnswer &&
-        currentSlide?.type == SlideTypes.question &&
-        currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
-          ? true
-          : false,
+      isShowingCorrectAnswer: showAnswer,
       currentSlide: ongoingQuiz.currentSlide + 1,
       participants: updatedParticipants,
     });
+    console.log(
+      'is showing in next slide',
+      !ongoingQuiz.isShowingCorrectAnswer &&
+        currentSlide?.type == SlideTypes.question &&
+        currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
+        ? true
+        : false
+    );
   };
 
   const getCurrentSlide = (): Slide | null => {
@@ -203,22 +213,29 @@ export const useHostLogic = (id: string | undefined) => {
     return ongoingQuiz.quiz.slides[currentSlideIndex];
   };
 
-  const showAnswer = () => {
+  const showAnswer = async () => {
     if (!ongoingQuiz?.id) return;
     const currentSlide = getCurrentSlide();
-
-    if (
+    const showAnswer =
       currentSlide &&
       currentSlide.type == SlideTypes.question &&
-      currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
-    ) {
-      optimisticUpdate(ongoingQuiz.id, {
+      currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never;
+    if (showAnswer) {
+      await optimisticUpdate(ongoingQuiz.id, {
         isShowingCorrectAnswer: true,
       });
     }
+    console.log(
+      'Show answer if statement:',
+      currentSlide,
+      currentSlide?.type == SlideTypes.question,
+      currentSlide?.type == SlideTypes.question &&
+        currentSlide?.showCorrectAnswer != ShowCorrectAnswerTypes.never
+    );
+    console.log('is showing to show answer:', true);
 
     if (currentSlide) {
-      updateScores(currentSlide);
+      await updateScores(currentSlide, showAnswer);
     }
   };
 
