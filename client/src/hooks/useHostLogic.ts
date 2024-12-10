@@ -72,8 +72,7 @@ export const useHostLogic = (id: string | undefined) => {
           participantId: participants[index].participantId,
           awardPoints: point,
         })),
-        showAnswer,
-        false
+        showAnswer
       );
       return updateParticipants;
     } else return ongoingQuiz?.participants ? ongoingQuiz.participants : {};
@@ -81,8 +80,7 @@ export const useHostLogic = (id: string | undefined) => {
 
   const handleAddPoints = async (
     pointsData: { participantId: string; awardPoints: number }[],
-    showAnswer: boolean,
-    changeSlide?: boolean
+    showAnswer: boolean
   ) => {
     const participants = { ...ongoingQuiz!.participants };
 
@@ -100,9 +98,6 @@ export const useHostLogic = (id: string | undefined) => {
     await optimisticUpdate(ongoingQuiz!.id, {
       ...ongoingQuiz,
       participants,
-      currentSlide: changeSlide
-        ? ongoingQuiz!.currentSlide + 1
-        : ongoingQuiz!.currentSlide,
       isShowingCorrectAnswer: showAnswer,
     });
     return participants;
@@ -183,17 +178,11 @@ export const useHostLogic = (id: string | undefined) => {
     await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : '', {
       ...ongoingQuiz,
       isShowingCorrectAnswer: showAnswer,
-      currentSlide: ongoingQuiz.currentSlide + 1,
+      currentSlide: showAnswer
+        ? ongoingQuiz.currentSlide
+        : ongoingQuiz.currentSlide + 1,
       participants: updatedParticipants,
     });
-    console.log(
-      'is showing in next slide',
-      !ongoingQuiz.isShowingCorrectAnswer &&
-        currentSlide?.type == SlideTypes.question &&
-        currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never
-        ? true
-        : false
-    );
   };
 
   const getCurrentSlide = (): Slide | null => {
@@ -213,32 +202,6 @@ export const useHostLogic = (id: string | undefined) => {
     return ongoingQuiz.quiz.slides[currentSlideIndex];
   };
 
-  const showAnswer = async () => {
-    if (!ongoingQuiz?.id) return;
-    const currentSlide = getCurrentSlide();
-    const showAnswer =
-      currentSlide &&
-      currentSlide.type == SlideTypes.question &&
-      currentSlide.showCorrectAnswer != ShowCorrectAnswerTypes.never;
-    if (showAnswer) {
-      await optimisticUpdate(ongoingQuiz.id, {
-        isShowingCorrectAnswer: true,
-      });
-    }
-    console.log(
-      'Show answer if statement:',
-      currentSlide,
-      currentSlide?.type == SlideTypes.question,
-      currentSlide?.type == SlideTypes.question &&
-        currentSlide?.showCorrectAnswer != ShowCorrectAnswerTypes.never
-    );
-    console.log('is showing to show answer:', true);
-
-    if (currentSlide) {
-      await updateScores(currentSlide, showAnswer);
-    }
-  };
-
   useEffect(() => {
     const checkAnswers = async () => {
       const currentSlide = ongoingQuiz?.currentSlide
@@ -255,7 +218,7 @@ export const useHostLogic = (id: string | undefined) => {
         allAnswered &&
         !(questionSlide.showCorrectAnswer == ShowCorrectAnswerTypes.never)
       ) {
-        showAnswer();
+        nextSlide();
       }
     };
     checkAnswers();
@@ -265,7 +228,6 @@ export const useHostLogic = (id: string | undefined) => {
     ongoingQuiz,
     getCurrentSlide,
     nextSlide,
-    showAnswer,
     handleAddPoints,
     endQuiz,
   };
