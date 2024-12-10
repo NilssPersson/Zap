@@ -16,7 +16,7 @@ export const Info: SlideInfo = {
     slideType: SlideTypes.question,
     questionType: QuestionTypes.RANK,
     defaults: {
-        ranking: [],
+        ranking: ["Best", "Good", "Bad", "Worst"],
         answerType: AnswerTypes.rank,
         points:1000,
     }
