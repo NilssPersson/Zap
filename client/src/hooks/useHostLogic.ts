@@ -203,18 +203,7 @@ export const useHostLogic = (id: string | undefined) => {
     return ongoingQuiz.quiz.slides[currentSlideIndex];
   };
 
-  const showAnswer = () => {
-    if (!ongoingQuiz?.id) return;
-
-    optimisticUpdate(ongoingQuiz.id, {
-      isShowingCorrectAnswer: true,
-    });
-
-    const currentSlide = getCurrentSlide();
-    if (currentSlide) {
-      updateScores(currentSlide);
-    }
-  };
+  
 
   const changeTurn = async (turn: boolean, quizCode:string,participantId:string) => {
     if (!quizCode || !participantId) {

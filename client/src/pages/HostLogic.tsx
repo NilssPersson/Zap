@@ -11,7 +11,7 @@ function HostLogic() {
   const { 
     ongoingQuiz, 
     getCurrentSlide, 
-    nextSlide, 
+    nextSlide,  
     changeTurn,
     endQuiz,
     handleAddPoints 
