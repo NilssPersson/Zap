@@ -14,6 +14,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import TeamView from './TeamView';
 import { useTranslation } from 'react-i18next';
+import PlayButton from './PlayButton';
+import EndButton from './EndButton';
 
 interface Team {
   id: string;
@@ -200,17 +202,9 @@ export default function Render({
         </div>
       </div>
 
-      <div>
-        <Button
-          className="absolute left-5 top-5"
-          variant="destructive"
-          onClick={handleEndQuiz}
-        >
-          {t('slides:endQuiz')}
-        </Button>
-        <Button className="absolute right-5 bottom-5" onClick={handleStartGame}>
-          {t('slides:startQuiz')}
-        </Button>
+      <div className="flex items-center">
+        <EndButton onClick={handleEndQuiz} />
+        <PlayButton disabled={!participants || participants.length === 0} onClick={handleStartGame} />
       </div>
     </div>
   );
