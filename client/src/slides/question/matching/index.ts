@@ -20,7 +20,7 @@ export const Info: SlideInfo = {
             { id: '1', text: "Pizzas", correctOptions: ["Margherita", "Pepperoni"] },
             { id: '2', text: "Pastas", correctOptions: ["Spaghetti", "Lasagna"] }
         ],
-        options: ["Margherita", "Pepperoni", "Spaghetti", "Lasagna"],
+        options: ["Margherita", "Pepperoni", "Spaghetti", "Lasagna", "Risotto"],
         answerType: AnswerTypes.matching,
         points: 1000,
     }
