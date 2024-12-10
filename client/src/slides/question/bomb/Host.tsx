@@ -7,8 +7,6 @@ import { BombSlide } from '@/models/Quiz';
 import { ParticipantService } from '@/services/participant';
 import { Button } from '@/components/ui/button';
 
-
-
 type HostProps = {
   participants: Participant[];
   slide: BombSlide;
@@ -210,7 +208,6 @@ export function Host({
           currentParticipant.participantId
         );
         handleChangeTurnTrue(nextParticipant);
-        
 
         setTime(slide.initialTime); // Reset the timer
         setIsTransitioning(false); // Unlock transitions
@@ -279,6 +276,9 @@ export function Host({
       ) {
         //GAME IS DONE!
         sendAnswersToDatabase(aliveParticipants);
+        currentParticipants.forEach((participant) => {
+          handleChangeTurnFalse(participant);
+        });
       }
       handleChangeTurnFalse(currentParticipants[0]);
       const nextIndex = getNextParticipantIndex(1);
@@ -288,11 +288,11 @@ export function Host({
         ...currentParticipants.slice(0, nextIndex),
       ][0];
 
-      handleChangeTurnTrue(nextParticipant)
+      handleChangeTurnTrue(nextParticipant);
 
       setCurrentParticipants((prevParticipants) => {
         console.log('setcurrentparticipant');
-       
+
         const nextIndex = getNextParticipantIndex(1);
         return [
           ...prevParticipants.slice(nextIndex),
@@ -353,6 +353,7 @@ export function Host({
     });
 
     setHasUpdatedDatabaseDontDelete(true);
+    onNextSlide();
   }
 
   // TEMPCODE FOR ROTATING PLAYERS!
