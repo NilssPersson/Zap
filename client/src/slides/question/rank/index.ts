@@ -12,7 +12,7 @@ import { SlideInfo } from '../..';
 export const Info: SlideInfo = {
     value: "question:RANK",
     icon: ListOrdered,
-    label: "Ranking",
+    label: "Rank It Right",
     slideType: SlideTypes.question,
     questionType: QuestionTypes.RANK,
     defaults: {

@@ -12,7 +12,7 @@ import { SlideInfo } from '../..';
 export const Info: SlideInfo = {
     value: "question:MATCHING",
     icon: ListTree,
-    label: "Match Items",
+    label: "Meet Your Match",
     slideType: SlideTypes.question,
     questionType: QuestionTypes.MATCHING,
     defaults: {
