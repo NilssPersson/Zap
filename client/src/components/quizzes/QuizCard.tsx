@@ -103,13 +103,19 @@ export function MyQuizButtons({
   onDelete,
 }: MyQuizButtonsProps) {
   const { t } = useTranslation();
+  const { ongoingQuizzes: { resources, isLoading } } = useAppContext();
   const noSlides = !quiz.slides || quiz.slides.length === 0;
+
+  const existingOngoingQuiz = resources.length !== 0;
+
+  const isDisabled = noSlides || isLoading || existingOngoingQuiz;
+
   return (
     <>
       <Button
         size="sm"
-        disabled={noSlides}
-        variant={noSlides ? 'outline' : 'default'}
+        disabled={isDisabled}
+        variant={isDisabled ? 'outline' : 'default'}
         onClick={(e) => {
           e.stopPropagation();
           if (noSlides) return;
