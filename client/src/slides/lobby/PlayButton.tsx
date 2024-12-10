@@ -16,9 +16,9 @@ export default function PlayButton({ onClick, disabled }: { onClick: () => void,
     >
       
       <span className="block h-10 overflow-hidden font-display" aria-hidden>
-      {t('slides:startQuiz')}
+        {t('slides:startQuiz')}
       </span>
-      <Play className="w-8 h-8" />
+      <Play strokeWidth={3} className="w-8 h-8" />
     </button>
   );
 }

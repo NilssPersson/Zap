@@ -7,6 +7,7 @@ import { useAppContext } from '@/contexts/App/context';
 import { usePathOnValue } from '@/hooks/usePathOnValue';
 import { BaseQuestionRender } from '../base/QuestionRender';
 import { useTranslation } from 'react-i18next';
+import NextSlide from '@/slides/_components/NextSlide';
 
 export function Host({
   slide,
@@ -212,9 +213,7 @@ export function Host({
           </div>
         ))}
       </div>
-      <Button onClick={onNextSlide} className="absolute bottom-5 right-5">
-        Next Slide
-      </Button>
+      <NextSlide onClick={onNextSlide} />
     </div>
   );
 }

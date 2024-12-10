@@ -2,6 +2,7 @@ import { MCQMASlide, Participant } from "@/models/Quiz";
 import { BaseQuestionRender } from "../base/QuestionRender";
 import { getColor } from "../base/QuizColors";
 import { Button } from "@/components/ui/button";
+import NextSlide from "@/slides/_components/NextSlide";
 
 export function Host({
   slide,
@@ -29,14 +30,7 @@ export function Host({
             </div>
           ))}
         </div>
-        <Button
-          onClick={() => {
-            onNextSlide();
-          }}
-          className="absolute bottom-5 right-5"
-        >
-          Next Slide
-        </Button>{" "}
+        <NextSlide onClick={onNextSlide} />
       </div>
     </BaseQuestionRender>
   );

@@ -6,6 +6,7 @@ import { HeartIcon } from 'lucide-react';
 import { BombSlide } from '@/models/Quiz';
 import { ParticipantService } from '@/services/participant';
 import { Button } from '@/components/ui/button';
+import NextSlide from '@/slides/_components/NextSlide';
 
 
 
@@ -403,14 +404,7 @@ export function Host({
           }}
           {...genConfig(winner.avatar)}
         />
-        <Button
-          onClick={() => {
-            onNextSlide();
-          }}
-          className="absolute bottom-5 right-5"
-        >
-          Next Slide
-        </Button>
+        <NextSlide onClick={onNextSlide} />
       </motion.div>
     );
   }

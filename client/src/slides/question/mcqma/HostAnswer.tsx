@@ -3,6 +3,7 @@ import { CheckCircle2, CircleX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getColor } from "../base/QuizColors";
 import { Button } from "@/components/ui/button";
+import NextSlide from "@/slides/_components/NextSlide";
 
 export function HostAnswer({
   slide,
@@ -113,14 +114,7 @@ export function HostAnswer({
       </div>
       <AnswerCount />
       <CorrectAnswers />
-      <Button
-        onClick={() => {
-          onNextSlide();
-        }}
-        className="absolute bottom-5 right-5"
-      >
-        Next Slide
-      </Button>
+      <NextSlide onClick={onNextSlide} />
     </div>
   );
 }

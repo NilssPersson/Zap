@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { FASlide } from '@/models/Quiz';
+import NextSlide from '@/slides/_components/NextSlide';
 import { useTranslation } from 'react-i18next';
 
 export function HostAnswer({
@@ -17,9 +18,7 @@ export function HostAnswer({
         <h1 className="text-9xl font-display">{slide.correctAnswer}</h1>
       </div>
 
-      <Button onClick={onNextSlide} className="absolute bottom-5 right-5">
-        Next Slide
-      </Button>
+      <NextSlide onClick={onNextSlide} />
     </div>
   );
 }

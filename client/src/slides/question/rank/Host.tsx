@@ -2,6 +2,7 @@ import { Participant, RankSlide } from "@/models/Quiz";
 import { BaseQuestionRender } from "../base/QuestionRender";
 
 import { Button } from "@/components/ui/button";
+import NextSlide from "@/slides/_components/NextSlide";
 
 function randomizeList<T>(list: T[]): T[] {
   if (!Array.isArray(list)) {
@@ -59,14 +60,7 @@ export function Host({
             </div>
           ))}
         </div>
-        <Button
-          onClick={() => {
-            onNextSlide();
-          }}
-          className="absolute bottom-5 right-5"
-        >
-          Next Slide
-        </Button>
+        <NextSlide onClick={onNextSlide} />
       </BaseQuestionRender>
     </div>
   );

@@ -10,7 +10,7 @@ export default function PlayButton({ onClick }: { onClick: () => void }) {
         onClick={onClick}
         className="relative border-2 border-destructive p-2 text-4xl bg-destructive text-background transition-colors hover:bg-destructive/10 hover:text-destructive flex items-center gap-2 rounded-l-full"
       >
-        <StopCircle className="pl-1 w-10 h-10" />
+        <StopCircle strokeWidth={3} className="pl-1 w-10 h-10" />
       </button>
     </CustomTooltip>
   );

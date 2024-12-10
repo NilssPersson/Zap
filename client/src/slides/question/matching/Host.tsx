@@ -2,6 +2,7 @@ import { Participant, MatchingSlide } from "@/models/Quiz";
 import { BaseQuestionRender } from "../base/QuestionRender";
 import { Button } from "@/components/ui/button";
 import { getColor } from "../base/QuizColors";
+import NextSlide from "@/slides/_components/NextSlide";
 
 function randomizeList<T>(list: T[]): T[] {
   const shuffled = [...list];
@@ -46,12 +47,7 @@ export function Host({
           </div>
         </div>
       </BaseQuestionRender>
-      <Button
-        onClick={onNextSlide}
-        className="absolute bottom-5 right-5"
-      >
-        Next Slide
-      </Button>
+      <NextSlide onClick={onNextSlide} />
     </div>
   );
 } 
