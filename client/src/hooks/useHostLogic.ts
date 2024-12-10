@@ -119,11 +119,6 @@ export const useHostLogic = (id: string | undefined) => {
           participant.answers.at(-1)?.slideNumber !==
             ongoingQuiz.currentSlide - 1
         ) {
-          console.log(
-            'Adding missing answer',
-            participant.answers.at(-1)?.slideNumber,
-            ongoingQuiz.currentSlide - 1
-          );
           var updatedParticipants = ongoingQuiz.participants;
           const newAnswer = {
             answer: [''],
