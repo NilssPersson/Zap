@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Preview } from "./Preview";
 import { Participant, MatchingSlide } from "@/models/Quiz";
+import NextSlide from "@/slides/_components/NextSlide";
 
 export function HostAnswer({
   slide,
@@ -14,12 +15,7 @@ export function HostAnswer({
   return (
     <div>
       <Preview slide={slide} participants={participants} />
-      <Button
-        onClick={onNextSlide}
-        className="absolute bottom-5 right-5"
-      >
-        Next Slide
-      </Button>
+      <NextSlide onClick={onNextSlide} />
     </div>
   );
 } 

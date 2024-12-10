@@ -111,18 +111,17 @@ export const useHostLogic = (id: string | undefined) => {
       !ongoingQuiz.participants
     )
       return;
-
-    var updatedParticipants = ongoingQuiz.participants;
     Object.entries(ongoingQuiz.participants).forEach(
       async ([id, participant]) => {
         if (
           !participant.answers ||
-          participant.answers.at(-1)?.slideNumber !== ongoingQuiz.currentSlide-1
+          participant.answers.at(-1)?.slideNumber !==
+            ongoingQuiz.currentSlide - 1
         ) {
-          // Construct the missing answer
+          var updatedParticipants = ongoingQuiz.participants;
           const newAnswer = {
             answer: [''],
-            slideNumber: ongoingQuiz.currentSlide,
+            slideNumber: ongoingQuiz.currentSlide - 1,
             time: new Date().toISOString(),
           };
           if (!participant.answers) {
@@ -130,24 +129,25 @@ export const useHostLogic = (id: string | undefined) => {
           } else {
             updatedParticipants[id].answers.push(newAnswer);
           }
+          try {
+            await optimisticUpdate(ongoingQuiz.id, {
+              ...ongoingQuiz,
+              participants: updatedParticipants,
+            });
+          } catch (error) {
+            console.error(
+              `Failed to add missing answers to participants`,
+              error
+            );
+          }
         }
       }
     );
-
-    try {
-      await optimisticUpdate(ongoingQuiz.id, {
-        ...ongoingQuiz,
-        participants: updatedParticipants,
-      });
-    } catch (error) {
-      console.error(`Failed to add missing answers to participants`, error);
-    }
   };
 
   const nextSlide = async () => {
     if (!ongoingQuiz) return;
 
-    await addMissingAnswers();
     const currentSlide = getCurrentSlide();
 
     const showAnswer =
@@ -157,6 +157,7 @@ export const useHostLogic = (id: string | undefined) => {
 
     var updatedParticipants = ongoingQuiz.participants;
     if (!ongoingQuiz.isShowingCorrectAnswer) {
+      await addMissingAnswers();
       if (currentSlide) {
         const tempParticipants = await updateScores(currentSlide, showAnswer);
         if (Object.keys(tempParticipants).length != 0) {
@@ -203,9 +204,11 @@ export const useHostLogic = (id: string | undefined) => {
     return ongoingQuiz.quiz.slides[currentSlideIndex];
   };
 
-  
-
-  const changeTurn = async (turn: boolean, quizCode:string,participantId:string) => {
+  const changeTurn = async (
+    turn: boolean,
+    quizCode: string,
+    participantId: string
+  ) => {
     if (!quizCode || !participantId) {
       console.error('Quiz code or participant ID is missing.');
       return;

@@ -13,6 +13,7 @@ import { Circle } from './_circle';
 import Avatar, { genConfig } from 'react-nice-avatar';
 import { Polyline } from './_polyline';
 import { useTranslation } from 'react-i18next';
+import NextSlide from '@/slides/_components/NextSlide';
 
 const mockData: Participant[] = [
   {
@@ -160,9 +161,7 @@ export function HostAnswer({
           })}
         </Map>
       </APIProvider>
-      <Button onClick={onNextSlide} className="absolute bottom-5 right-5">
-        {t('general:nextSlide')}
-      </Button>
+      <NextSlide onClick={onNextSlide} />
     </div>
   );
 }
