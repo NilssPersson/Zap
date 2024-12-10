@@ -6,7 +6,6 @@ import 'tailwindcss/tailwind.css'; // Tailwind CSS
 import { LobbySlide, Participant } from '@/models/Quiz';
 import { useAppContext } from '@/contexts/App/context';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import Participants from './Participants';
 import Title from './Title';
 import { Switch } from '@/components/ui/switch';
@@ -16,6 +15,7 @@ import TeamView from './TeamView';
 import { useTranslation } from 'react-i18next';
 import PlayButton from './PlayButton';
 import EndButton from './EndButton';
+import { flags } from '@/config/features';
 
 interface Team {
   id: string;
@@ -23,6 +23,8 @@ interface Team {
   participants: Participant[];
   isEditing?: boolean;
 }
+
+const ENABLE_TEAMS = flags.ENABLE_TEAMS;
 
 export default function Render({
   onNextSlide,
@@ -178,9 +180,10 @@ export default function Render({
             </div>
           </div>
         )}
-        <div className="flex flex-col items-center space-y-2 bg-black/30 p-4 rounded-lg">
-          <Switch
-            checked={teamsEnabled}
+        {ENABLE_TEAMS && (
+          <div className="flex flex-col items-center space-y-2 bg-black/30 p-4 rounded-lg">
+            <Switch
+              checked={teamsEnabled}
             onCheckedChange={setTeamsEnabled}
             id="team-mode"
           />
@@ -198,8 +201,9 @@ export default function Render({
                 className="w-20 text-black"
               />
             </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex items-center">
