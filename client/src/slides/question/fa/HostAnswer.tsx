@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { FASlide } from "@/models/Quiz";
-import { useTranslation } from "react-i18next";
+import { Button } from '@/components/ui/button';
+import { FASlide } from '@/models/Quiz';
+import { useTranslation } from 'react-i18next';
 
 export function HostAnswer({
   slide,
@@ -9,11 +9,11 @@ export function HostAnswer({
   slide: FASlide;
   onNextSlide: () => void;
 }) {
-  const { t } = useTranslation(["questions"]);
+  const { t } = useTranslation(['questions']);
   return (
-    <div>
-      <div className="flex flex-col items-center gap-28">
-        <h1 className="text-5xl font-display">{t("correctAnswer")} ...</h1>
+    <div className='flex flex-1' >
+      <div className="flex-1 flex flex-col items-center gap-28 justify-center">
+        <h1 className="text-5xl font-display">{t('correctAnswer')} ...</h1>
         <h1 className="text-9xl font-display">{slide.correctAnswer}</h1>
       </div>
 
