@@ -12,7 +12,7 @@ export function HostAnswer({
 }) {
   const { t } = useTranslation(['questions']);
   return (
-    <div className='flex flex-1' >
+    <div className="flex flex-1">
       <div className="flex-1 flex flex-col items-center gap-28 justify-center">
         <h1 className="text-5xl font-display">{t('correctAnswer')} ...</h1>
         <h1 className="text-9xl font-display">{slide.correctAnswer}</h1>
