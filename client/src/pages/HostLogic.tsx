@@ -1,28 +1,26 @@
-import { useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { SlideTypes, ShowCorrectAnswerTypes } from "@/models/Quiz";
-import { getSlideComponents } from "@/slides/utils";
-import Countdown from "react-countdown";
-import EndScreen from "@/slides/_specials/endscreen/EndScreen";
-import { useHostLogic } from "@/hooks/useHostLogic";
+import { useParams } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { SlideTypes, ShowCorrectAnswerTypes } from '@/models/Quiz';
+import { getSlideComponents } from '@/slides/utils';
+import Countdown from 'react-countdown';
+import EndScreen from '@/slides/_specials/endscreen/EndScreen';
+import { useHostLogic } from '@/hooks/useHostLogic';
 
 function HostLogic() {
   const { id } = useParams();
-  const { 
-    ongoingQuiz, 
-    getCurrentSlide, 
-    nextSlide,  
+  const {
+    ongoingQuiz,
+    getCurrentSlide,
+    nextSlide,
     changeTurn,
     endQuiz,
-    handleAddPoints 
+    handleAddPoints,
   } = useHostLogic(id);
 
   if (!ongoingQuiz) return <div>Loading Quiz...</div>;
 
-  
-
   const slide = getCurrentSlide();
-  
+
   if (!ongoingQuiz.quiz.slides || !slide) {
     return (
       <EndScreen
@@ -70,8 +68,6 @@ function HostLogic() {
           quizCode={ongoingQuiz.id}
           slideNumber={ongoingQuiz.currentSlide}
           changeTurn={changeTurn}
-          
-
         />
       ) : (
         <SlideComponent.HostAnswer
@@ -80,7 +76,6 @@ function HostLogic() {
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
           handleAddPoints={handleAddPoints}
-          
         />
       )}
       <RenderButtons />

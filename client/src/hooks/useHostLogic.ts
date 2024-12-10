@@ -111,7 +111,6 @@ export const useHostLogic = (id: string | undefined) => {
       !ongoingQuiz.participants
     )
       return;
-    console.log('participants', ongoingQuiz.participants);
     Object.entries(ongoingQuiz.participants).forEach(
       async ([id, participant]) => {
         if (
@@ -135,7 +134,6 @@ export const useHostLogic = (id: string | undefined) => {
               ...ongoingQuiz,
               participants: updatedParticipants,
             });
-            console.log('Updated participants', updatedParticipants);
           } catch (error) {
             console.error(
               `Failed to add missing answers to participants`,
@@ -159,7 +157,6 @@ export const useHostLogic = (id: string | undefined) => {
 
     var updatedParticipants = ongoingQuiz.participants;
     if (!ongoingQuiz.isShowingCorrectAnswer) {
-      console.log('Calling missing answers');
       await addMissingAnswers();
       if (currentSlide) {
         const tempParticipants = await updateScores(currentSlide, showAnswer);

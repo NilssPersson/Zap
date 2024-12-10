@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FASlide, Participant, ParticipantAnswer } from '@/models/Quiz';
+import { FASlide, Participant } from '@/models/Quiz';
 import { Button } from '@/components/ui/button';
 import Avatar, { genConfig } from 'react-nice-avatar';
 import { X, Check } from 'lucide-react';

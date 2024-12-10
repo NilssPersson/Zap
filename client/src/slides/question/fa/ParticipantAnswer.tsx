@@ -8,4 +8,3 @@ export function ParticipantAnswer({
 }) {
   return <RenderCorrectIncorrect participant={participant} />;
 }
-
