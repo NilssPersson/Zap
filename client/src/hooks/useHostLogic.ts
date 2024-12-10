@@ -11,6 +11,7 @@ import {
   QuestionTypes,
 } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
+import { ParticipantService } from '@/services/participant';
 
 export interface LatestScore {
   id: string;
@@ -202,6 +203,37 @@ export const useHostLogic = (id: string | undefined) => {
     return ongoingQuiz.quiz.slides[currentSlideIndex];
   };
 
+  
+
+  const changeTurn = async (turn: boolean, quizCode:string,participantId:string) => {
+    if (!quizCode || !participantId) {
+      console.error('Quiz code or participant ID is missing.');
+      return;
+    }
+
+    try {
+      const success = await ParticipantService.changeIsTurn(
+        quizCode,
+        participantId,
+        turn
+      );
+      if (success) {
+        console.log(
+          `Participant ${participantId} turn changed to ${turn} and reset hasAnswered.`
+        );
+      } else {
+        console.error(
+          `Failed to change turn for participant ${participantId}.`
+        );
+      }
+    } catch (error) {
+      console.error(
+        `Error changing turn for participant ${participantId}:`,
+        error
+      );
+    }
+  };
+
   useEffect(() => {
     const checkAnswers = async () => {
       const currentSlide = ongoingQuiz?.currentSlide
@@ -229,6 +261,7 @@ export const useHostLogic = (id: string | undefined) => {
     getCurrentSlide,
     nextSlide,
     handleAddPoints,
+    changeTurn,
     endQuiz,
   };
 };
