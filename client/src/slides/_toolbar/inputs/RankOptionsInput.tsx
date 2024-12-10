@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
 import { ListOrdered } from 'lucide-react';
+import { max_options } from '@/config/max';
 
 export function RankOptionsInput({
   slide,
@@ -21,6 +22,8 @@ export function RankOptionsInput({
       ranking: updatedRanking,
     } as RankSlide);
   };
+
+  const canAdd = slide.ranking.length < max_options.rank;
 
   return (
     <div className="space-y-4">
@@ -55,7 +58,7 @@ export function RankOptionsInput({
         </div>
       ))}
       <div className="flex space-x-2">
-        {slide.ranking.length < 8 && (
+        {canAdd && (
           <>
             <Input
               value={newRank}
