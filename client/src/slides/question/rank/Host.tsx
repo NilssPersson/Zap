@@ -1,7 +1,6 @@
 import { RankSlide, Participant } from '@/models/Quiz';
 import NextSlide from '@/slides/_components/NextSlide';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
-import { useTranslation } from 'react-i18next';
 import { getSlideComponents } from '@/slides/utils';
 
 export function Host({
@@ -18,7 +17,7 @@ export function Host({
     <div className="flex flex-col items-center">
       <div className="bg-white rounded p-4 mb-10 mt-20 text-wrap text-center flex-row flex items-center">
         <div className="flex flex-row items-center space-x-1">
-          <SlideComponent.Info.icon className="w-15 h-16 text-black" />
+          <SlideComponent.Info.icon className="w-16 h-16 text-black" />
           <h1 className="text-5xl text-black font-display">{slide.title}</h1>
         </div>
         {slide.imageUrl && (
