@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Preview } from "./Preview";
 import { ScoreSlide } from "@/models/Quiz";
 import { Confetti } from "@/components/particles/Confetti";
