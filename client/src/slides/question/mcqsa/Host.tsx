@@ -29,7 +29,7 @@ export function Host({
               style={{
                 backgroundColor: getColor(index), // Get different color for each div. Centrerad text och bredare
               }}
-              className="flex items-center justify-center text-5xl text-white font-display h-64 w-[550px] rounded-lg box-border p-8" // Same padding and box-border as Preview
+              className="flex items-center justify-center text-5xl text-white font-display h-56 w-[500px] rounded-lg box-border p-8" // Same padding and box-border as Preview
             >
               <span>{option.text}</span>
             </div>

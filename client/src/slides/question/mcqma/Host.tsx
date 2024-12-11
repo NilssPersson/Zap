@@ -1,8 +1,8 @@
-import { MCQMASlide, Participant } from "@/models/Quiz";
-import { BaseQuestionRender } from "../base/QuestionRender";
-import { getColor } from "../base/QuizColors";
-import NextSlide from "@/slides/_components/NextSlide";
-import { cn } from "@/lib/utils";
+import { MCQMASlide, Participant } from '@/models/Quiz';
+import { BaseQuestionRender } from '../base/QuestionRender';
+import { getColor } from '../base/QuizColors';
+import NextSlide from '@/slides/_components/NextSlide';
+import { cn } from '@/lib/utils';
 
 export function Host({
   slide,
@@ -29,7 +29,7 @@ export function Host({
               style={{
                 backgroundColor: getColor(index), // Get different color for each div. Centrerad text och bredare
               }}
-              className="flex items-center justify-center text-5xl text-white font-display h-64 w-[550px] rounded-lg box-border p-8"
+              className="flex items-center justify-center text-5xl text-white font-display h-56 w-[500px] rounded-lg box-border p-8"
             >
               <span>{option.text}</span>
             </div>

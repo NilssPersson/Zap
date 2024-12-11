@@ -15,7 +15,7 @@ export function BaseQuestionRender({
     <div className="flex-1 flex flex-col space-y-12 w-full justify-center">
       <div className="flex flex-row justify-center items-center">
         <div className="space-y-8">
-          <div className="flex flex-row justify-center p-40 ">
+          <div className="flex flex-row justify-center pt-32 ">
             <SlideTitle title={slide.title} />
             <div className="mr-1">
               <ParticipantAnswers participants={participants} />
