@@ -1,7 +1,7 @@
-import { Participant, MatchingSlide } from "@/models/Quiz";
-import { BaseQuestionRender } from "../base/QuestionRender";
-import { getColor } from "../base/QuizColors";
-import NextSlide from "@/slides/_components/NextSlide";
+import { Participant, MatchingSlide } from '@/models/Quiz';
+import { BaseQuestionRender } from '../base/QuestionRender';
+import { getColor } from '../base/QuizColors';
+import NextSlide from '@/slides/_components/NextSlide';
 
 export function Host({
   slide,
@@ -12,7 +12,6 @@ export function Host({
   participants: Participant[];
   onNextSlide: () => void;
 }) {
-
   return (
     <>
       <BaseQuestionRender participants={participants} slide={slide}>
@@ -31,4 +30,4 @@ export function Host({
       <NextSlide onClick={onNextSlide} />
     </>
   );
-} 
+}

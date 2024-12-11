@@ -8,7 +8,6 @@ import { usePathOnValue } from '@/hooks/usePathOnValue';
 import { BaseQuestionRender } from '../base/QuestionRender';
 import { useTranslation } from 'react-i18next';
 import NextSlide from '@/slides/_components/NextSlide';
-import { divMode } from '@tsparticles/engine';
 
 export function Host({
   slide,
@@ -152,12 +151,11 @@ export function Host({
       <div className="flex flex-1 flex-col text-center justify-center gap-20">
         <div>
           <h1 className="font-display text-9xl justify-center">
-            Get ready in {time}
+            {t('getReady')}
+            {time}
           </h1>
         </div>
-        <h1 className="font-display text-6xl">
-          Know the answer? Press the button!
-        </h1>
+        <h1 className="font-display text-6xl">{t('knowTheAnswer')}</h1>
       </div>
     );
   } else {
