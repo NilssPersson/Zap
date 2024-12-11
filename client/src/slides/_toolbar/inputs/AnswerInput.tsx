@@ -28,7 +28,7 @@ export function AnswerText({ slide, onSlideUpdate }: ToolbarProps<FTASlide>) {
         placeholder="Enter the correct answer..."
       />
       {slide.correctAnswer === '' && (
-        <div className="flex flex-row items-center space-x-1">
+        <div className="flex flex-row items-center space-x-1 ">
           <InfoIcon size={16} className="text-red-400" />
           <p className="text-red-400 text-sm">No answer</p>
         </div>
