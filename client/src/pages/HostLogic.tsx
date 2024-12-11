@@ -2,9 +2,9 @@ import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { SlideTypes, ShowCorrectAnswerTypes } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
+import Countdown from 'react-countdown';
 import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
-import { useEffect, useState } from 'react';
 
 function HostLogic() {
   const { id } = useParams();
@@ -31,33 +31,6 @@ function HostLogic() {
     );
   }
 
-  const [timer, setTimer] = useState(
-    slide.type == SlideTypes.question && slide.timeLimit > 0
-      ? slide.timeLimit * 1
-      : -2
-  );
-
-  // Reinitialize the timer whenever the slide changes
-  useEffect(() => {
-    if (slide.type === SlideTypes.question && slide.timeLimit > 0) {
-      setTimer(slide.timeLimit);
-    } else {
-      setTimer(-1); // No timer for non-question slides
-    }
-  }, [slide]);
-
-  useEffect(() => {
-    if (timer < 0) return;
-
-    if (timer == 0) nextSlide();
-
-    const countDown = setInterval(() => {
-      setTimer((prevTime) => prevTime - 1);
-    }, 1000);
-
-    return () => clearInterval(countDown);
-  }, [timer, nextSlide]);
-
   const SlideComponent = getSlideComponents(slide);
 
   const RenderButtons = () => {
@@ -67,7 +40,10 @@ function HostLogic() {
       <div className="flex flex-col">
         {!ongoingQuiz.isShowingCorrectAnswer && slide.timeLimit > 0 && (
           <div>
-            <h1 className="text-4xl">{timer}</h1>
+            <Countdown
+              date={Date.now() + slide.timeLimit * 1000}
+              onComplete={nextSlide}
+            />
           </div>
         )}
         {!ongoingQuiz.isShowingCorrectAnswer &&
