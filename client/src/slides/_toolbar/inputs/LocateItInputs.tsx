@@ -1,14 +1,23 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { LocateItSlide, mapDetails, awardPointsLocation } from "@/models/Quiz";
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { LocateItSlide, mapDetails, awardPointsLocation } from '@/models/Quiz';
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
-import { Map, Trophy } from "lucide-react";
+} from '@/components/ui/select';
+import {
+  Map,
+  MoveHorizontal,
+  MoveVertical,
+  Radius,
+  Trophy,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export function LocateItInputs({
   slide,
@@ -17,11 +26,12 @@ export function LocateItInputs({
   slide: LocateItSlide;
   onSlideUpdate: (slide: LocateItSlide) => void;
 }) {
-  const handleLocationChange = (type: "lat" | "lng", value: string) => {
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const handleLocationChange = (type: 'lat' | 'lng', value: string) => {
     const numberValue = Number(value);
     if (isNaN(numberValue)) return; // Ignore invalid number input
-    if (type === "lat" && (numberValue < -90 || numberValue > 90)) return; // Latitude range
-    if (type === "lng" && (numberValue < -180 || numberValue > 180)) return; // Longitude range
+    if (type === 'lat' && (numberValue < -90 || numberValue > 90)) return; // Latitude range
+    if (type === 'lng' && (numberValue < -180 || numberValue > 180)) return; // Longitude range
 
     const updatedSlide = {
       ...slide,
@@ -30,8 +40,8 @@ export function LocateItInputs({
     onSlideUpdate(updatedSlide);
   };
 
-  const handleSelectChange = (type: "map" | "points", value: string) => {
-    if (type === "map") {
+  const handleSelectChange = (type: 'map' | 'points', value: string) => {
+    if (type === 'map') {
       const updatedSlide = {
         ...slide,
         mapDetails: value as mapDetails,
@@ -57,20 +67,20 @@ export function LocateItInputs({
           </div>
           <Select
             value={slide.mapDetails}
-            onValueChange={(value) => handleSelectChange("map", value)}
+            onValueChange={(value) => handleSelectChange('map', value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue>
                 {(() => {
                   switch (slide.mapDetails) {
-                    case "NONE":
-                      return "None";
-                    case "MEDIUM":
-                      return "Medium";
-                    case "HIGH":
-                      return "High";
+                    case 'NONE':
+                      return 'None';
+                    case 'MEDIUM':
+                      return 'Medium';
+                    case 'HIGH':
+                      return 'High';
                     default:
-                      return "Select Map Details";
+                      return 'Select Map Details';
                   }
                 })()}
               </SelectValue>
@@ -100,20 +110,20 @@ export function LocateItInputs({
           </div>
           <Select
             value={slide.awardPointsLocation}
-            onValueChange={(value) => handleSelectChange("points", value)}
+            onValueChange={(value) => handleSelectChange('points', value)}
           >
             <SelectTrigger className="w-full">
               <SelectValue>
                 {(() => {
                   switch (slide.awardPointsLocation) {
-                    case "RADIUS":
-                      return "Inside Radius";
-                    case "DISTANCE":
-                      return "Distance Based";
-                    case "CLOSEST":
-                      return "Closest Wins";
+                    case 'RADIUS':
+                      return 'Inside Radius';
+                    case 'DISTANCE':
+                      return 'Distance Based';
+                    case 'CLOSEST':
+                      return 'Closest Wins';
                     default:
-                      return "Select Award Points";
+                      return 'Select Award Points';
                   }
                 })()}
               </SelectValue>
@@ -144,39 +154,59 @@ export function LocateItInputs({
           </Select>
         </div>
 
-        {slide.awardPointsLocation !== "CLOSEST" && (
-          <div className="flex items-center">
-            <Label className="pr-2 ">Radius</Label>
+        <Button
+          variant="outline"
+          className="justify-start p-2 "
+          onClick={() => setShowAdvanced(!showAdvanced)}
+        >
+          {showAdvanced ? <ChevronDown /> : <ChevronUp />}Show Advanced
+        </Button>
+        {showAdvanced && (
+          <div className="px-2 bg-white rounded-md pb-2">
+            {slide.awardPointsLocation !== 'CLOSEST' && (
+              <div className="flex flex-col space-y-1 ">
+                <div className="flex flex-row items-center pt-2 space-x-1">
+                  <Radius size={15} />
+                  <Label>Radius</Label>
+                </div>
+                <Input
+                  value={slide.radius}
+                  type="number"
+                  onChange={(e) => {
+                    const numberValue = Number(e.target.value);
+                    const updatedSlide = {
+                      ...slide,
+                      radius: numberValue,
+                    };
+                    onSlideUpdate(updatedSlide);
+                  }}
+                  placeholder="Enter the correct answer..."
+                />
+              </div>
+            )}
+
+            <div className="flex flex-row items-center pt-2 space-x-1 pb-1">
+              <MoveHorizontal size={15} />
+              <Label>Latitude</Label>
+            </div>
             <Input
-              value={slide.radius}
-              onChange={(e) => {
-                const numberValue = Number(e.target.value);
-                const updatedSlide = {
-                  ...slide,
-                  radius: numberValue, // Update the correctAnswer
-                };
-                onSlideUpdate(updatedSlide); // Trigger the slide update
-              }}
-              placeholder="Enter the correct answer..."
+              type="number"
+              value={slide.location.lat}
+              onChange={(e) => handleLocationChange('lat', e.target.value)}
+              placeholder="Enter latitude (-90 to 90)"
+            />
+            <div className="flex flex-row items-center pt-2 space-x-1 pb-1">
+              <MoveVertical size={15} />
+              <Label>Longitude</Label>
+            </div>
+            <Input
+              type="number"
+              value={slide.location.lng}
+              onChange={(e) => handleLocationChange('lng', e.target.value)}
+              placeholder="Enter longitude (-180 to 180)"
             />
           </div>
         )}
-        <div className="flex flex-row space-x-3 items-center">
-          <Label className="text-sm">Latitude</Label>
-          <Input
-            type="number"
-            value={slide.location.lat}
-            onChange={(e) => handleLocationChange("lat", e.target.value)}
-            placeholder="Enter latitude (-90 to 90)"
-          />
-          <Label className="text-sm">Longitude</Label>
-          <Input
-            type="number"
-            value={slide.location.lng}
-            onChange={(e) => handleLocationChange("lng", e.target.value)}
-            placeholder="Enter longitude (-180 to 180)"
-          />
-        </div>
       </div>
     </div>
   );
