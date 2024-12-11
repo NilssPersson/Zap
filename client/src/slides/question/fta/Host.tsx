@@ -1,5 +1,4 @@
 import { FTASlide, Participant } from "@/models/Quiz";
-import { Button } from "@/components/ui/button";
 import { ParticipantAnswers } from "@/slides/_components/ParticipantAnswers";
 import NextSlide from "@/slides/_components/NextSlide";
 

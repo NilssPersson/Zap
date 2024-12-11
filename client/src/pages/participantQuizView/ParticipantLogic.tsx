@@ -76,6 +76,12 @@ export default function ParticipantLogic() {
     participantId as string
   );
 
+  useEffect(() => {
+    if (navigator.vibrate) {
+      navigator.vibrate(200);
+    }
+  }, [currentSlide]);
+
   // Fetch quiz and participant data
   useEffect(() => {
     const initialize = async () => {
