@@ -25,6 +25,6 @@ export const Info: SlideInfo = {
     awardPointsLocation: AwardPointsLocation.DISTANCE,
     answerType: AnswerTypes.location,
     points:1000,
-    radius:300000,
+    radius:100000,
   },
 } as const;

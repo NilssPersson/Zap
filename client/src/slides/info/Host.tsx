@@ -1,6 +1,5 @@
 import { InfoSlide } from "@/models/Quiz";
 import { Preview } from "./Preview";
-import { Button } from "@/components/ui/button";
 import NextSlide from "../_components/NextSlide";
 
 export function Host({

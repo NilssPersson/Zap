@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Preview } from "./Preview";
 import { InfoSlide } from "@/models/Quiz";
 import NextSlide from "../_components/NextSlide";

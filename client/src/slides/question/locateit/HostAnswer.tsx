@@ -93,13 +93,12 @@ export function HostAnswer({
       <APIProvider apiKey={APIKEY}>
         <Map
           mapId={slide.id}
-          style={{ width: '100%', height: '100%', zoom: 1.5 }}
           onCenterChanged={(e) => setMapCenter(e.detail.center)}
           onZoomChanged={(e) => setZoom(e.detail.zoom)}
           gestureHandling="greedy"
           disableDefaultUI={true}
           zoomControl={false}
-          reuseMaps={true}
+          streetViewControl={false}
           zoom={zoom}
           center={mapCenter}
         >
@@ -127,17 +126,24 @@ export function HostAnswer({
                 <AdvancedMarker
                   ref={markerRef}
                   position={{ lat: participant.lat, lng: participant.lng }}
-                  style={{ border: '2px solid #000000', borderRadius: '50%' }}
+                  style={{
+                    border: '2px solid #000000',
+                    borderRadius: '50%',
+                    touchAction: 'none',
+                  }}
                 >
                   <InfoWindow
                     anchor={marker}
                     disableAutoPan
                     headerDisabled
                     shouldFocus={true}
+                    className="touch-action-none will-change-transform select-none"
                   >
                     <div className="text-lg flex flex-col items-center font-display text-black">
                       <p>
-                        {participant.name} : {participant.score}
+                        {participant.name}
+                        {slide.awardPointsLocation === 'DISTANCE' &&
+                          ' :' + participant.score}
                       </p>
                     </div>
                   </InfoWindow>
@@ -151,7 +157,7 @@ export function HostAnswer({
                     slide.location,
                     { lat: participant.lat, lng: participant.lng },
                   ]}
-                  strokeColor="#FF0000"
+                  strokeColor={participant.score > 0 ? '#008000' : '#FF0000'}
                 />
               </React.Fragment>
             );

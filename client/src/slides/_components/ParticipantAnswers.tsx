@@ -22,7 +22,7 @@ export function ParticipantAnswers({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <div className="absolute top-4 right-4 flex justify-center items-center w-44 h-24 rounded-2xl border bg-primary text-white space-x-4">
+        <div className=" absolute right top-10 right-10 flex justify-center items-center w-44 h-24 rounded-2xl border bg-primary text-white space-x-4">
           <div className="text-center font-display">
             <h1 className="text-4xl">
               {noAnswers} / {noParticipants}
@@ -32,7 +32,7 @@ export function ParticipantAnswers({
         </div>
       </PopoverTrigger>
       <PopoverContent>
-        <div className="position-relative bg-white p-4 rounded shadow-lg text-black">
+        <div className="bg-white p-4 rounded shadow-lg text-black">
           <h1 className="text-lg font-display ">Participants</h1>
           {participants.map((participant) => (
             <div

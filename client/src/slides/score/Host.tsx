@@ -1,5 +1,4 @@
 import { Confetti } from "@/components/particles/Confetti";
-import { Button } from "@/components/ui/button";
 import { Participant, Slide } from "@/models/Quiz";
 
 import ScoreBoard from "@/slides/_components/Scoreboard";

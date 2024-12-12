@@ -4,6 +4,7 @@
   "answer": "Answer",
   "rightAnswer": "Right Answer",
   "wrongAnswer": "Wrong Answer",
-  "nextUp": "Next up to answer:"
-  
+  "nextUp": "Next up to answer:",
+  "getReady": "Get ready in ",
+  "knowTheAnswer": "Know the answer? Press the button!"
 }

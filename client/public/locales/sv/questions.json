@@ -4,5 +4,7 @@
   "answer": "Svara",
   "rightAnswer": "Rätt svar",
   "wrongAnswer": "Fel svar",
-  "nextUp": "Nästa persons tur att svara:"
+  "nextUp": "Nästa persons tur att svara:",
+  "getReady": "Var dig redo om ",
+  "knowTheAnswer": "Vet du svaret? Tryck på knappen!"
 }

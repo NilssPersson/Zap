@@ -119,6 +119,7 @@ export function QuizSettingsToolbar({
           { value: 'blobInverted', label: 'Blob Inverted' },
           { value: 'circle', label: 'Circle' },
           { value: 'solid', label: 'Solid' },
+          { value: 'random', label: 'Random' },
         ]}
       />
 
