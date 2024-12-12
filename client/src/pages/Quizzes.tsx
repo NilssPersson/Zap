@@ -1,16 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
-import CreateQuizPopover from "@/components/quizzes/CreateQuizPopover";
-import QuizList from "@/components/quizzes/QuizList";
-import { useCallback, useEffect, useState } from "react";
-import { Loader2, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import Quiz from "@/models/Quiz";
-import { useAppContext } from "@/contexts/App/context";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { quizService } from "@/services/quizzes";
-import { useTranslation } from "react-i18next";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
+import CreateQuizPopover from '@/components/quizzes/CreateQuizPopover';
+import QuizList from '@/components/quizzes/QuizList';
+import { useCallback, useEffect, useState } from 'react';
+import { Loader2, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import Quiz from '@/models/Quiz';
+import { useAppContext } from '@/contexts/App/context';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { quizService } from '@/services/quizzes';
+import { useTranslation } from 'react-i18next';
 
 function useQuizzesPage() {
   const {
@@ -27,6 +27,9 @@ function useQuizzesPage() {
 
   const [sharedQuizzes, setSharedQuizzes] = useState<Quiz[]>([]);
   const [sharedQuizzesLoading, setSharedQuizzesLoading] = useState(false);
+
+  console.log(sharedQuizzes);
+  console.log(quizzes);
 
   useEffect(() => {
     if (user) {
@@ -48,13 +51,13 @@ function useQuizzesPage() {
       });
 
       if (error) {
-        toast.error("Failed to create quiz");
+        toast.error('Failed to create quiz');
         return;
       }
 
-      toast.success("Quiz created successfully");
+      toast.success('Quiz created successfully');
     },
-    [user, optimisticCreate],
+    [user, optimisticCreate]
   );
 
   const handleDeleteQuiz = useCallback(
@@ -62,25 +65,25 @@ function useQuizzesPage() {
       const { error } = await optimisticDelete(quizId);
 
       if (error) {
-        toast.error("Failed to delete quiz");
+        toast.error('Failed to delete quiz');
         return;
       }
 
-      toast.success("Quiz deleted successfully");
+      toast.success('Quiz deleted successfully');
     },
-    [optimisticDelete],
+    [optimisticDelete]
   );
 
   const handleShareQuiz = useCallback(
     async (quizId: string) => {
       const currentShareState = quizzes.find(
-        (quiz) => quiz.id === quizId,
+        (quiz) => quiz.id === quizId
       )?.isShared;
       const { error } = await optimisticUpdate(quizId, {
         isShared: !currentShareState,
       });
 
-      const shareString = !currentShareState ? "shared" : "unshared";
+      const shareString = !currentShareState ? 'shared' : 'unshared';
 
       if (error) {
         toast.error(`Failed to ${shareString} quiz`);
@@ -89,7 +92,7 @@ function useQuizzesPage() {
 
       toast.success(`Quiz ${shareString} successfully`);
     },
-    [optimisticUpdate, quizzes],
+    [optimisticUpdate, quizzes]
   );
 
   const handleCopyQuiz = useCallback(
@@ -105,7 +108,7 @@ function useQuizzesPage() {
       });
 
       if (error || !data) {
-        toast.error("Failed to copy quiz");
+        toast.error('Failed to copy quiz');
         return;
       }
 
@@ -114,13 +117,13 @@ function useQuizzesPage() {
       });
 
       if (updateError) {
-        toast.error("Failed to copy quiz");
+        toast.error('Failed to copy quiz');
         return;
       }
 
-      toast.success("Quiz copied successfully");
+      toast.success('Quiz copied successfully');
     },
-    [user, optimisticCreate, optimisticUpdate],
+    [user, optimisticCreate, optimisticUpdate]
   );
 
   const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.quizHost === user?.id);
@@ -153,20 +156,20 @@ function Quizzes() {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <div className="flex-1 flex flex-col items-center justify-around gap-4 overflow-y-auto p-4">
       <Card className="w-full max-w-7xl">
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
-            <span>{t("homepage:myQuizzes")}</span>
+            <span>{t('homepage:myQuizzes')}</span>
             {ongoingQuiz && (
               <Button
                 variant="outline"
                 onClick={() => navigate(`/quizzes/${ongoingQuiz.id}/lobby`)}
               >
-                {t("homepage:gotoOngoing")}
+                {t('homepage:gotoOngoing')}
               </Button>
             )}
             <CreateQuizPopover onCreateQuiz={handleCreateQuiz} />
@@ -192,12 +195,12 @@ function Quizzes() {
         <CardHeader>
           <CardTitle>
             <div className="flex items-center gap-4">
-              <span className="m-0">{t("homepage:sharedQuizzes")}</span>
+              <span className="m-0">{t('homepage:sharedQuizzes')}</span>
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder={t("homepage:searchShared")}
+                  placeholder={t('homepage:searchShared')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="max-w-lg"

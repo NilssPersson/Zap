@@ -74,7 +74,18 @@ export const toolbarConfigs = {
     },
   ],
 
-  score: [...baseToolbarConfig],
+  score: [
+    {
+      field: "title",
+      label: "Title",
+      component: TitleInput,
+    },
+    {
+      field: "backgroundStyle",
+      label: "Background",
+      component: BackgroundInput,
+    },
+  ],
 
   lobby: [],
 
