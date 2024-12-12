@@ -7,17 +7,14 @@ import { BombSlide } from '@/models/Quiz';
 import { ParticipantService } from '@/services/participant';
 import { Button } from '@/components/ui/button';
 import NextSlide from '@/slides/_components/NextSlide';
+import { BombIcon } from 'lucide-react';
 
 type HostProps = {
   participants: Participant[];
   slide: BombSlide;
   quizCode: string;
   slideNumber: number;
-  changeTurn: (
-    turn: boolean,
-    quizCode: string,
-    participantId: string
-  ) => Promise<void>;
+  changeTurn: (participantId: string, quizCode: string) => void;
   onNextSlide: () => void;
 };
 
@@ -31,6 +28,7 @@ export function Host({
   slide,
   quizCode,
   slideNumber,
+  changeTurn,
   onNextSlide,
 }: HostProps) {
   const [time, setTime] = useState(1000000000);
@@ -47,12 +45,10 @@ export function Host({
   const [isCorrect, setIsCorrect] = useState('');
   const [deadParticipants, setDeadParticipants] = useState<string[]>([]);
   const [aliveParticipants, setAliveParticipants] = useState<Participant[]>([]);
-
+  const [isTurn, setIsturn] = useState('');
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  if (participants == null || undefined) {
-    return <h1>No preview sorry!</h1>;
-  }
+  const [gameStarted, setGameStarted] = useState(false);
+  const [showQuestion, setShowQuestion] = useState(false);
 
   const initializeHeartsAndTime = () => {
     const newParticipantHearts = participants.map((participant) => {
@@ -67,10 +63,22 @@ export function Host({
         hearts: Math.min(existingHeart?.hearts ?? slide.hearts, 5),
       };
     });
+    setGameStarted(true);
     setTime(slide.initialTime);
-    handleChangeTurnTrue(currentParticipants[0]);
+    handleChangeTurn(currentParticipants[0].participantId);
+
     setParticipantHearts(newParticipantHearts);
     setAliveParticipants(currentParticipants);
+  };
+
+  const handleChangeTurn = async (participantId: string) => {
+    try {
+      await changeTurn(participantId, quizCode);
+      console.log('Turn changed successfully.');
+      setIsturn(participantId);
+    } catch (error) {
+      console.error('Error while changing turn:', error);
+    }
   };
 
   const getNextParticipantIndex = (startIndex: number): number => {
@@ -90,6 +98,10 @@ export function Host({
   };
 
   const retainParticipantOrder = () => {
+    if (!participants) {
+      console.log('test');
+      return <h1>No Host </h1>;
+    }
     // Only update the participants if they are not already in sync and the arrays have the same length
     if (
       participants !== currentParticipants &&
@@ -115,141 +127,84 @@ export function Host({
     }
   };
 
-  async function handleChangeTurnFalse(participant: Participant) {
-    if (participant) {
-      console.log('handleChangeTurnFalse Access database ');
-      try {
-        const result = await ParticipantService.changeIsTurn(
-          quizCode,
-          participant.participantId,
-          false
-        );
-        if (result) {
-          console.log(
-            `Successfully set isTurn to false for participant: ${participant.name}`
-          );
-        } else {
-          console.error(
-            `Failed to set isTurn to false for participant: ${participant.name}`
-          );
-        }
-      } catch (error) {
-        console.error(
-          `Error setting isTurn to false for participant ${participant.name}:`,
-          error
-        );
-      }
-    }
-  }
-
-  async function handleChangeTurnTrue(participant: Participant) {
-    if (participant) {
-      console.log('here we also access database, handlechange');
-      try {
-        const result = await ParticipantService.changeIsTurn(
-          quizCode,
-          participant.participantId,
-          true
-        );
-        if (result) {
-          console.log(
-            `Successfully set isTurn to true for participant: ${participant.name}`
-          );
-        } else {
-          console.error(
-            `Failed to set isTurn to true for participant: ${participant.name}`
-          );
-        }
-      } catch (error) {
-        console.error(
-          `Error setting isTurn to true for participant ${participant.name}:`,
-          error
-        );
-      }
-    }
-  }
-
   useEffect(() => {
-    console.log('use efffect retainparticipantOrder');
     // Update the order only if participants are different
     retainParticipantOrder();
   }, [participants]); // Trigger this effect only when participants change
 
   useEffect(() => {
-    const updateParticipants = async () => {
-      if (time <= 0 || isTransitioning || currentParticipants.length === 0)
-        return;
+    if (currentParticipants) {
+      const updateParticipants = async () => {
+        if (time <= 0 || isTransitioning || currentParticipants.length === 0)
+          return;
 
-      const currentParticipant = currentParticipants[0];
-      const lastTempAnswer = currentParticipant?.tempAnswer?.tempAnswer;
+        const currentParticipant = currentParticipants[0];
+        const lastTempAnswer = currentParticipant?.tempAnswer?.tempAnswer;
 
-      if (
-        lastTempAnswer &&
-        answers.includes(lastTempAnswer) &&
-        !usedAnswers.includes(lastTempAnswer) &&
-        currentParticipant.isTurn
-      ) {
-        setIsCorrect('true');
-        setUsedAnswers((prev) => [...prev, lastTempAnswer]);
-        setUserAnswer(lastTempAnswer);
-        setIsTransitioning(true);
+        if (
+          lastTempAnswer &&
+          answers.includes(lastTempAnswer) &&
+          !usedAnswers.includes(lastTempAnswer) &&
+          currentParticipant.participantId == isTurn
+        ) {
+          setIsCorrect('true');
+          setUsedAnswers((prev) => [...prev, lastTempAnswer]);
+          setUserAnswer(lastTempAnswer);
+          setIsTransitioning(true);
 
-        // Update is turn logic
-        setTimeout(async () => {
-          handleChangeTurnFalse(currentParticipant);
-          setIsCorrect('');
-          setUserAnswer('');
+          // Update is turn logic
+          setTimeout(async () => {
+            setIsCorrect('');
+            setUserAnswer('');
 
-          // Get the first participant from the updated order
-          const nextParticipant = [
-            ...currentParticipants.slice(getNextParticipantIndex(1)),
-            ...currentParticipants.slice(0, getNextParticipantIndex(1)),
-          ][0];
+            // Get the first participant from the updated order
+            const nextParticipant = [
+              ...currentParticipants.slice(getNextParticipantIndex(1)),
+              ...currentParticipants.slice(0, getNextParticipantIndex(1)),
+            ][0];
 
-          // Compute the updated participants array
-          setCurrentParticipants((prevParticipants) => {
-            const nextIndex = getNextParticipantIndex(1); // Get the next participant index
-            return [
-              ...prevParticipants.slice(nextIndex),
-              ...prevParticipants.slice(0, nextIndex),
-            ];
-          });
+            // Compute the updated participants array
+            setCurrentParticipants((prevParticipants) => {
+              const nextIndex = getNextParticipantIndex(1); // Get the next participant index
+              return [
+                ...prevParticipants.slice(nextIndex),
+                ...prevParticipants.slice(0, nextIndex),
+              ];
+            });
 
-          console.log('Right before database access');
+            // Wait for the async operation to finish before continuing
+            await ParticipantService.removeTempAnswer(
+              quizCode,
+              currentParticipant.participantId
+            );
 
-          // Wait for the async operation to finish before continuing
-          await ParticipantService.removeTempAnswer(
-            quizCode,
-            currentParticipant.participantId
-          );
+            handleChangeTurn(nextParticipant.participantId);
 
-          handleChangeTurnTrue(nextParticipant);
+            setTime(slide.initialTime); // Reset the timer
+            setIsTransitioning(false); // Unlock transitions
+          }, 1200);
+        } else if (lastTempAnswer && !answers.includes(lastTempAnswer)) {
+          setIsCorrect('false');
+          setUserAnswer(lastTempAnswer);
+        } else if (
+          lastTempAnswer &&
+          answers.includes(lastTempAnswer) &&
+          usedAnswers.includes(lastTempAnswer)
+        ) {
+          setIsCorrect('used');
+          setUserAnswer(lastTempAnswer);
+          setIsTransitioning(false); // Reset transition lock
+          setTimeout(() => {});
+        }
+      };
 
-          setTime(slide.initialTime); // Reset the timer
-          setIsTransitioning(false); // Unlock transitions
-        }, 1200);
-      } else if (lastTempAnswer && !answers.includes(lastTempAnswer)) {
-        setIsCorrect('false');
-        setUserAnswer(lastTempAnswer);
-      } else if (
-        lastTempAnswer &&
-        answers.includes(lastTempAnswer) &&
-        usedAnswers.includes(lastTempAnswer)
-      ) {
-        setIsCorrect('used');
-        setUserAnswer(lastTempAnswer);
-        setIsTransitioning(false); // Reset transition lock
-        setTimeout(() => {});
-      }
-    };
-
-    updateParticipants(); // Call the async function
+      updateParticipants(); // Call the async function
+    }
   }, [currentParticipants]);
 
   useEffect(() => {
     if (time == 0) {
       playerLoseHeart(currentParticipants[0]);
-      handleChangeTurnFalse(currentParticipants[0]);
     }
 
     const timer = setInterval(() => {
@@ -259,71 +214,77 @@ export function Host({
     return () => clearInterval(timer);
   }, [time]);
 
+  function calculateAliveLength(participants: Participant[]) {
+    return participants.length;
+  }
+
   function playerLoseHeart(participant: Participant) {
     console.log('playerLoseHeart');
     setUserAnswer('');
+    if (aliveParticipants) {
+      if (!isTransitioning) {
+        const currentPlayerId = participant.participantId;
 
-    if (!isTransitioning) {
-      const currentPlayerId = participant.participantId;
-
-      setParticipantHearts((prevHearts) => {
-        const updatedHearts = prevHearts.map((ph) =>
-          ph.participantId === currentPlayerId
-            ? { ...ph, hearts: Math.max(0, ph.hearts - 1) }
-            : ph
-        );
-
-        const currentParticipant = updatedHearts.find(
-          (ph) => ph.participantId === currentPlayerId
-        );
-        if (currentParticipant && currentParticipant.hearts === 0) {
-          setDeadParticipants((prevDead) => [...prevDead, currentPlayerId]);
-          setAliveParticipants((prevAlive) =>
-            prevAlive.filter(
-              (participant) => participant.participantId !== currentPlayerId
-            )
+        setParticipantHearts((prevHearts) => {
+          const updatedHearts = prevHearts.map((ph) =>
+            ph.participantId === currentPlayerId
+              ? { ...ph, hearts: Math.max(0, ph.hearts - 1) }
+              : ph
           );
-        }
 
-        return updatedHearts;
-      });
+          const currentParticipant = updatedHearts.find(
+            (ph) => ph.participantId === currentPlayerId
+          );
 
-      console.log("aliveparticipant length", aliveParticipants.length)
-      console.log("aliveparticipants",aliveParticipants)
+          if (currentParticipant && currentParticipant.hearts === 0) {
+            setDeadParticipants((prevDead) => [...prevDead, currentPlayerId]);
 
-      if (
-        aliveParticipants.length == 1 &&
-        !winner &&
-        !hasUpdatedDatabaseDontDelete
-      ) {
-        //GAME IS DONE!
-        setWinner(aliveParticipants[0])
-        sendAnswersToDatabase(aliveParticipants, deadParticipants);
-        currentParticipants.forEach((participant) => {
-          handleChangeTurnFalse(participant);
+            setAliveParticipants((prevAlive) => {
+              const updatedAlive = prevAlive.filter(
+                (participant) => participant.participantId !== currentPlayerId
+              );
+
+              // Calculate aliveLength directly here
+              const aliveLength = calculateAliveLength(updatedAlive);
+
+              // Handle the game-ending logic inline
+              if (
+                aliveLength === 1 &&
+                !winner &&
+                !hasUpdatedDatabaseDontDelete
+              ) {
+                setWinner(updatedAlive[0]);
+                sendAnswersToDatabase(updatedAlive, [
+                  ...deadParticipants,
+                  currentPlayerId,
+                ]);
+              }
+
+              return updatedAlive;
+            });
+          }
+
+          return updatedHearts;
         });
-      }
-      handleChangeTurnFalse(currentParticipants[0]);
-      const nextIndex = getNextParticipantIndex(1);
-      // Use the current state of participants to calculate the next participant
-      const nextParticipant = [
-        ...currentParticipants.slice(nextIndex),
-        ...currentParticipants.slice(0, nextIndex),
-      ][0];
-
-      handleChangeTurnTrue(nextParticipant);
-
-      setCurrentParticipants((prevParticipants) => {
-        console.log('setcurrentparticipant');
 
         const nextIndex = getNextParticipantIndex(1);
-        return [
-          ...prevParticipants.slice(nextIndex),
-          ...prevParticipants.slice(0, nextIndex),
-        ];
-      });
+        const nextParticipant = [
+          ...currentParticipants.slice(nextIndex),
+          ...currentParticipants.slice(0, nextIndex),
+        ][0];
 
-      setTime(slide.initialTime);
+        handleChangeTurn(nextParticipant.participantId);
+
+        setCurrentParticipants((prevParticipants) => {
+          const nextIndex = getNextParticipantIndex(1);
+          return [
+            ...prevParticipants.slice(nextIndex),
+            ...prevParticipants.slice(0, nextIndex),
+          ];
+        });
+
+        setTime(slide.initialTime);
+      }
     }
   }
 
@@ -331,7 +292,6 @@ export function Host({
     finalparticipants: Participant[],
     deadParticipantsId: string[]
   ) {
-    console.log('send answer to database');
     setWinner(finalparticipants[0]);
     const currentPlayerId = currentParticipants[0].participantId;
 
@@ -404,183 +364,204 @@ export function Host({
       </motion.div>
     );
   }
-
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: '4rem',
-      }}
-    >
-      {/* Title moved outside of the motion.div */}
-      <div className="gap-4rem mt-4 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center w-full">
-        <h1 className="p-4">{slide.title}</h1>
+  if (!gameStarted) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center gap-16">
+        {showQuestion && (
+          <div className="mt-10 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center max-w-[60%] break-words text-center">
+            <BombIcon size={32} className="ml-4"></BombIcon>
+            <h1 className="p-4">{slide.title}</h1>
+          </div>
+        )}
+        <div className="space-y-10 mx-10">
+          <Button
+            size={'lg'}
+            className="text-3xl p-8 mx-10"
+            onClick={initializeHeartsAndTime}
+          >
+            Start game
+          </Button>
+          <Button
+            size={'lg'}
+            className="text-3xl p-8 mx-10"
+            onClick={() => setShowQuestion(true)}
+          >
+            Show question
+          </Button>
+        </div>
       </div>
+    );
+  }
 
-      <motion.div
-        style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          gap: '4rem',
-          width: '100%', // Ensure width is properly set
-        }}
-      >
-        <AnimatePresence mode="wait">
-          {currentParticipants[0] &&
-            (participantHearts.find(
-              (ph) => ph.participantId === currentParticipants[0].participantId
-            )?.hearts ?? 0) > 0 && (
+  if (currentParticipants && currentParticipants.length > 0 && gameStarted) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-start gap-16">
+        {/* Title moved outside of the motion.div */}
+        <div className="mt-10 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center max-w-[60%] break-words text-center">
+          <BombIcon size={32} className="ml-4"></BombIcon>
+          <h1 className="p-4">{slide.title}</h1>
+        </div>
+
+        <motion.div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: '4rem',
+            width: '100%', // Ensure width is properly set
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {currentParticipants[0] &&
+              (participantHearts.find(
+                (ph) =>
+                  ph.participantId === currentParticipants[0].participantId
+              )?.hearts ?? 0) > 0 && (
+                <motion.div
+                  key={currentParticipants[0].name}
+                  initial={{ opacity: 0, x: '-100%' }}
+                  animate={{ opacity: 1, x: '0%' }}
+                  exit={{ opacity: 0, y: '+100%' }}
+                  transition={{ duration: 0.35, ease: 'easeInOut' }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    zIndex: 2,
+                    width: '100%', // Ensure full width for content
+                  }}
+                >
+                  <div className="  items-center bg-component-background rounded-lg grid grid-cols-2 gap-4 p-4">
+                    {/* Timer stays in the first column */}
+                    <div className="flex-col justify-center items-center font-display">
+                      <h2 className=" text-black text-5xl">{time}</h2>
+                      <div className="mt-4 text-4xl">
+                        <h3 className="text-black font-display">
+                          {currentParticipants[0].name}
+                        </h3>
+                      </div>
+                      <div className="mt-4 justify-center items center flex gap-0.5rem">
+                        {Array.from({
+                          length:
+                            participantHearts.find(
+                              (ph) =>
+                                ph.participantId ===
+                                currentParticipants[0].participantId
+                            )?.hearts || 0,
+                        }).map((_, index) => (
+                          <HeartIcon
+                            key={index}
+                            fill="#FF4545"
+                            color="#FF4545"
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Avatar stays in the second column, center aligned */}
+                    <motion.div
+                      className=" flex-col items-center justify-center"
+                      initial={{ opacity: 1 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.35, ease: 'easeInOut' }}
+                    >
+                      <Avatar
+                        style={{
+                          width: '8rem',
+
+                          height: '8rem', // Ensure avatar size is big
+                        }}
+                        {...genConfig(currentParticipants[0].avatar)}
+                      />
+                    </motion.div>
+                  </div>
+                  <div className="mt-16 flex justify-center items-center">
+                    <div
+                      className={`p-2 px-4 rounded-md text-black font-display text-2xl ${
+                        userAnswer === ''
+                          ? 'bg-white' // White background for empty answer
+                          : isCorrect === 'true'
+                            ? 'bg-green-500' // Green for 'true'
+                            : isCorrect === 'false'
+                              ? 'bg-red-500' // Red for 'false'
+                              : isCorrect === 'used'
+                                ? 'bg-yellow-500' // Yellow for 'used'
+                                : 'bg-white' // Default to white
+                      }`}
+                    >
+                      {userAnswer === '' ? 'Answering...' : userAnswer}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+          </AnimatePresence>
+
+          {/* Avatar Row */}
+          <motion.div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '4rem',
+              width: '100%',
+              padding: '1rem 2rem',
+              overflow: 'hidden',
+            }}
+          >
+            {currentParticipants.map((participant) => (
               <motion.div
-                key={currentParticipants[0].name}
-                initial={{ opacity: 0, x: '-100%' }}
-                animate={{ opacity: 1, x: '0%' }}
-                exit={{ opacity: 0, y: '+100%' }}
-                transition={{ duration: 0.35, ease: 'easeInOut' }}
+                key={participant.name}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
-                  zIndex: 2,
-                  width: '100%', // Ensure full width for content
+                  filter:
+                    (participantHearts.find(
+                      (ph) => ph.participantId === participant.participantId
+                    )?.hearts ?? 0) > 0
+                      ? 'none'
+                      : 'grayscale(100%)',
                 }}
               >
-                <div className="  items-center bg-component-background rounded-lg grid grid-cols-2 gap-4 p-4">
-                  {/* Timer stays in the first column */}
-                  <div className="flex-col justify-center items-center font-display">
-                    <h2 className=" text-black text-5xl">{time}</h2>
-                    <div className="mt-4 text-4xl">
-                      <h3 className="text-black font-display">
-                        {currentParticipants[0].name}
-                      </h3>
-                    </div>
-                    <div className="mt-4 justify-center items center flex gap-0.5rem">
-                      {Array.from({
-                        length:
-                          participantHearts.find(
-                            (ph) =>
-                              ph.participantId ===
-                              currentParticipants[0].participantId
-                          )?.hearts || 0,
-                      }).map((_, index) => (
-                        <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Avatar stays in the second column, center aligned */}
-                  <motion.div
-                    className=" flex-col items-center justify-center"
-                    initial={{ opacity: 1 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.35, ease: 'easeInOut' }}
-                  >
-                    <Avatar
-                      style={{
-                        width: '8rem',
-
-                        height: '8rem', // Ensure avatar size is big
-                      }}
-                      {...genConfig(currentParticipants[0].avatar)}
-                    />
-                  </motion.div>
-                </div>
-                <div className="mt-16 flex justify-center items-center">
-                  <div
-                    className={`p-2 px-4 rounded-md text-black font-display text-2xl ${
-                      userAnswer === ''
-                        ? 'bg-white' // White background for empty answer
-                        : isCorrect === 'true'
-                          ? 'bg-green-500' // Green for 'true'
-                          : isCorrect === 'false'
-                            ? 'bg-red-500' // Red for 'false'
-                            : isCorrect === 'used'
-                              ? 'bg-yellow-500' // Yellow for 'used'
-                              : 'bg-white' // Default to white
-                    }`}
-                  >
-                    {userAnswer === '' ? 'Answering...' : userAnswer}
-                  </div>
+                <Avatar
+                  style={{
+                    width: '6rem',
+                    height: '6rem',
+                  }}
+                  {...genConfig(participant.avatar)}
+                />
+                <h3 className="font-display">{participant.name}</h3>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  {(participantHearts.find(
+                    (ph) => ph.participantId === participant.participantId
+                  )?.hearts ?? 0) > 0 ? (
+                    Array.from({
+                      length:
+                        participantHearts.find(
+                          (ph) => ph.participantId === participant.participantId
+                        )?.hearts ?? 0,
+                    }).map((_, index) => (
+                      <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
+                    ))
+                  ) : (
+                    <span style={{ fontSize: '1.5rem' }}>💀</span>
+                  )}
                 </div>
               </motion.div>
-            )}
-        </AnimatePresence>
-
-        {/* Avatar Row */}
-        <motion.div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '4rem',
-            width: '100%',
-            padding: '1rem 2rem',
-            overflow: 'hidden',
-          }}
-        >
-          {currentParticipants.map((participant) => (
-            <motion.div
-              key={participant.name}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                filter:
-                  (participantHearts.find(
-                    (ph) => ph.participantId === participant.participantId
-                  )?.hearts ?? 0) > 0
-                    ? 'none'
-                    : 'grayscale(100%)',
-              }}
-            >
-              <Avatar
-                style={{
-                  width: '6rem',
-                  height: '6rem',
-                }}
-                {...genConfig(participant.avatar)}
-              />
-              <h3 className="font-display">{participant.name}</h3>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {(participantHearts.find(
-                  (ph) => ph.participantId === participant.participantId
-                )?.hearts ?? 0) > 0 ? (
-                  Array.from({
-                    length:
-                      participantHearts.find(
-                        (ph) => ph.participantId === participant.participantId
-                      )?.hearts ?? 0,
-                  }).map((_, index) => (
-                    <HeartIcon key={index} fill="#FF4545" color="#FF4545" />
-                  ))
-                ) : (
-                  <span style={{ fontSize: '1.5rem' }}>💀</span>
-                )}
-              </div>
-            </motion.div>
-          ))}
+            ))}
+          </motion.div>
         </motion.div>
-      </motion.div>
-      <div>
-        <Button className="m-4 p-6" onClick={initializeHeartsAndTime}>
-          Start game
-        </Button>
-        <Button className="m-4 p-6">Pause game</Button>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Host;

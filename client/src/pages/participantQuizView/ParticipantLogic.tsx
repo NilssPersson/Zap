@@ -4,12 +4,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ParticipantService, useGameStatus } from '@/services/participant';
 import TeamInfo from './components/ParticipantInfo';
 import CreateParticipant from './components/CreateParticipant';
-import { LogOut, Zap } from 'lucide-react';
+import {LogOut, Zap } from 'lucide-react';
 import { useCookies } from 'react-cookie';
 import LobbyView from '@/pages/participantQuizView/components/LobbyView';
 import HasAnsweredView from '@/pages/participantQuizView/components/HasAnsweredView';
 import QuizEndedView from '@/pages/participantQuizView/components/QuizEndedView';
-import { Participant, Slide } from '@/models/Quiz';
+import { Participant, QuestionTypes, Slide } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
 
 function QuizView({
@@ -18,6 +18,7 @@ function QuizView({
   participantData,
   answerQuestion,
   answerTempQuestion,
+  isTurn,
 
   showAnswer,
 }: {
@@ -26,12 +27,14 @@ function QuizView({
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
   answerTempQuestion: (answer: string) => Promise<void>;
+  isTurn: string
 
   showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
   if (currentSlide === 0) return <LobbyView />;
   if (currentSlide > questions.length) return <QuizEndedView />;
+
 
   const currentQuestion = questions[currentSlide - 1];
   const SlideComponent = getSlideComponents(currentQuestion);
@@ -48,7 +51,9 @@ function QuizView({
 
   if (
     participantData.hasAnswered ||
-    (participantData.tempAnswer && !participantData.isTurn)
+    (participantData.tempAnswer &&
+      'questionType' in currentQuestion &&
+      currentQuestion.questionType !== QuestionTypes.BOMB)
   )
     return <HasAnsweredView />;
 
@@ -57,7 +62,9 @@ function QuizView({
       slide={currentQuestion as never}
       answerQuestion={answerQuestion as never}
       answerTempQuestion={answerTempQuestion as never}
-      isTurn={participantData.isTurn}
+      participantData={participantData}
+      isTurn={isTurn}
+      
     />
   );
 }
@@ -70,11 +77,14 @@ export default function ParticipantLogic() {
   const [cookies, setCookie, removeCookie] = useCookies(['participantId']);
   const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
+ 
 
-  const { currentSlide, participantData, showAnswer } = useGameStatus(
+  const { currentSlide, participantData, showAnswer, isTurn } = useGameStatus(
     quizCode as string,
     participantId as string
   );
+
+  
 
   // Fetch quiz and participant data
   useEffect(() => {
@@ -216,6 +226,7 @@ export default function ParticipantLogic() {
           answerQuestion={answerQuestion}
           showAnswer={showAnswer}
           answerTempQuestion={answerTempQuestion}
+          isTurn={isTurn}
         />
       </div>
 
