@@ -68,6 +68,7 @@ function HostLogic() {
           quizCode={ongoingQuiz.id}
           slideNumber={ongoingQuiz.currentSlide}
           changeTurn={changeTurn}
+          
         />
       ) : (
         <SlideComponent.HostAnswer
@@ -76,6 +77,7 @@ function HostLogic() {
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
           handleAddPoints={handleAddPoints}
+
         />
       )}
       <RenderButtons />

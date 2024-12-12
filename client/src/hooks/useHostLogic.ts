@@ -11,7 +11,6 @@ import {
   QuestionTypes,
 } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
-import { ParticipantService } from '@/services/participant';
 
 export interface LatestScore {
   id: string;
@@ -205,35 +204,39 @@ export const useHostLogic = (id: string | undefined) => {
   };
 
   const changeTurn = async (
-    turn: boolean,
-    quizCode: string,
-    participantId: string
-  ) => {
-    if (!quizCode || !participantId) {
-      console.error('Quiz code or participant ID is missing.');
-      return;
+    participantId: string,
+    quizCode: string
+  ): Promise<void> => {
+    if (!ongoingQuiz || !participantId) {
+      console.error('Ongoing quiz or participant ID is missing.');
+      throw new Error('Invalid parameters provided.');
+    }
+
+    // Validate if the ongoing quiz has valid slides
+    if (!ongoingQuiz.quiz?.slides) {
+      console.error('Quiz slides are missing.');
+      throw new Error('Invalid quiz data.');
     }
 
     try {
-      const success = await ParticipantService.changeIsTurn(
-        quizCode,
-        participantId,
-        turn
-      );
-      if (success) {
-        console.log(
-          `Participant ${participantId} turn changed to ${turn} and reset hasAnswered.`
-        );
-      } else {
-        console.error(
-          `Failed to change turn for participant ${participantId}.`
-        );
-      }
+      // Prepare the updated quiz object with the new turn
+      const updatedQuiz = {
+        ...ongoingQuiz,
+        isTurn: participantId, // Update isTurn directly on ongoingQuiz
+      };
+
+      console.log(`Updating turn to participant ID: ${participantId}`);
+
+      // Perform an optimistic update
+      await optimisticUpdate(quizCode, updatedQuiz);
+
+      console.log(`Turn successfully updated to participant ${participantId}.`);
     } catch (error) {
       console.error(
-        `Error changing turn for participant ${participantId}:`,
+        `Error updating turn for participant ${participantId}:`,
         error
       );
+      throw error; // Propagate the error for the caller to handle
     }
   };
 
