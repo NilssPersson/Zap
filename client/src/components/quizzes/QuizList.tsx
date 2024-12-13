@@ -1,16 +1,16 @@
-import Quiz from "@/models/Quiz";
-import { useNavigate } from "react-router-dom";
-import { QuizCard, MyQuizButtons, SharedQuizButtons } from "./QuizCard";
-import { toast } from "sonner";
-import { useAppContext } from "@/contexts/App/context";
-import { database } from "@/firebase";
-import { ref, get } from "firebase/database";
+import Quiz from '@/models/Quiz';
+import { useNavigate } from 'react-router-dom';
+import { QuizCard, MyQuizButtons, SharedQuizButtons } from './QuizCard';
+import { toast } from 'sonner';
+import { useAppContext } from '@/contexts/App/context';
+import { database } from '@/firebase';
+import { ref, get } from 'firebase/database';
 
 interface QuizListProps {
   quizzes: Quiz[];
-  variant: "my-quizzes" | "shared-quizzes";
+  variant: 'my-quizzes' | 'shared-quizzes';
   onDeleteQuiz?: (quizId: string) => Promise<void>;
-  onShareQuiz?: (quizId: string) => Promise<void>;
+  onShareQuiz?: (quizId: string, quizName: string) => Promise<void>;
   onCopyQuiz?: (quiz: Quiz) => Promise<void>;
   searchTerm?: string;
 }
@@ -21,7 +21,7 @@ function QuizList({
   onDeleteQuiz,
   onShareQuiz,
   onCopyQuiz,
-  searchTerm = "",
+  searchTerm = '',
 }: QuizListProps) {
   const navigate = useNavigate();
   const {
@@ -30,14 +30,14 @@ function QuizList({
   } = useAppContext();
 
   const generateQuizCode = async (): Promise<string> => {
-    let quizCode = "";
+    let quizCode = '';
     let isUnique = false;
 
     while (!isUnique) {
       // Generate a random 4-letter code
       quizCode = Array.from({ length: 4 }, () =>
         String.fromCharCode(65 + Math.floor(Math.random() * 26))
-      ).join("");
+      ).join('');
 
       const quizRef = ref(database, `ongoingQuizzes/${quizCode}`);
       const quiz = await get(quizRef);
@@ -69,15 +69,15 @@ function QuizList({
         ]);
 
       if (updateError || createError || !quizCode) {
-        toast.error("Failed to host quiz");
+        toast.error('Failed to host quiz');
         return;
       }
 
-      toast.success("Quiz hosted successfully");
+      toast.success('Quiz hosted successfully');
       navigate(`/quizzes/${quizCode}/lobby`);
     } catch (err) {
-      console.error("Error creating ongoing quiz:", err);
-      toast.error("Failed to host quiz" + err);
+      console.error('Error creating ongoing quiz:', err);
+      toast.error('Failed to host quiz' + err);
     }
   };
 
@@ -101,12 +101,12 @@ function QuizList({
               quiz={quiz}
               variant={variant}
               onClick={
-                variant === "shared-quizzes"
+                variant === 'shared-quizzes'
                   ? undefined
                   : () => navigate(`/quizzes/${quiz.id}/edit`)
               }
             >
-              {variant === "my-quizzes" && onDeleteQuiz && onShareQuiz && (
+              {variant === 'my-quizzes' && onDeleteQuiz && onShareQuiz && (
                 <MyQuizButtons
                   quiz={quiz}
                   onHost={handleHostGame}
@@ -114,7 +114,7 @@ function QuizList({
                   onDelete={onDeleteQuiz}
                 />
               )}
-              {variant === "shared-quizzes" && onCopyQuiz && (
+              {variant === 'shared-quizzes' && onCopyQuiz && (
                 <SharedQuizButtons quiz={quiz} onCopyToMyQuizzes={onCopyQuiz} />
               )}
             </QuizCard>
