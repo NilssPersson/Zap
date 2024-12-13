@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/dialog';
 import { ReactNode } from 'react';
 import { Copy } from 'lucide-react';
-import { useAppContext } from '@/contexts/App/context';
 import ReactNiceAvatar, { genConfig } from 'react-nice-avatar';
 import { t } from 'i18next';
 
@@ -29,10 +28,6 @@ export function SharedQuizCard({
   onClick,
   children,
 }: SharedQuizCardProps) {
-  const {
-    users: { resources: users },
-  } = useAppContext();
-  const quizHost = users.find((user) => user.id !== quiz.userId);
   const mockInfo = {
     title: quiz.quizName,
     description: '',
@@ -49,21 +44,19 @@ export function SharedQuizCard({
         <div className="aspect-video w-full rounded overflow text-white relative">
           <SlidePreview slide={mockInfo as InfoSlide} />
 
-          {quizHost && (
-            <div className="absolute bottom-[-10px] left-[-10px] z-50 bg-primary p-1 px-2 rounded text-white flex flex-row items-center gap-2">
-              <span className="text-sm font-bold">By:</span>
-              <ReactNiceAvatar
-                style={{
-                  width: '28px',
-                  height: '28px',
-                }}
-                {...genConfig(quizHost.avatar)}
-              />
-              <span className="text-sm rounded p-1 bg-primary-foreground">
-                {quizHost.username}
-              </span>
-            </div>
-          )}
+          <div className="absolute bottom-[-10px] left-[-10px] z-50 bg-primary p-1 px-2 rounded text-white flex flex-row items-center gap-2">
+            <span className="text-sm font-bold">By:</span>
+            <ReactNiceAvatar
+              style={{
+                width: '28px',
+                height: '28px',
+              }}
+              {...genConfig(quiz.userAvatar)}
+            />
+            <span className="text-sm rounded p-1 bg-primary-foreground">
+              {quiz.userName}
+            </span>
+          </div>
         </div>
       </CardContent>
       <CardFooter className="gap-2 flex-wrap">{children}</CardFooter>
