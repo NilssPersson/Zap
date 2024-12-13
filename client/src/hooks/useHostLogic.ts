@@ -11,6 +11,8 @@ import {
   QuestionTypes,
 } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
+import { database } from '@/firebase';
+import { ref, update } from 'firebase/database';
 
 export interface LatestScore {
   id: string;
@@ -55,6 +57,7 @@ export const useHostLogic = (id: string | undefined) => {
   );
 
   const updateScores = async (slide: Slide, showAnswer: boolean) => {
+    console.log('Inne i updatescore');
     if (slide.type !== SlideTypes.question) return {};
     const questionSlide = slide as QuestionSlide;
     if (questionSlide.questionType == QuestionTypes.FTA) return {};
@@ -74,6 +77,7 @@ export const useHostLogic = (id: string | undefined) => {
         })),
         showAnswer
       );
+      console.log('innan return');
       return updateParticipants;
     } else return ongoingQuiz?.participants ? ongoingQuiz.participants : {};
   };
@@ -207,28 +211,19 @@ export const useHostLogic = (id: string | undefined) => {
     participantId: string,
     quizCode: string
   ): Promise<void> => {
-    if (!ongoingQuiz || !participantId) {
-      console.error('Ongoing quiz or participant ID is missing.');
+    if (!participantId) {
+      console.error('Participant ID is missing.');
       throw new Error('Invalid parameters provided.');
     }
 
-    // Validate if the ongoing quiz has valid slides
-    if (!ongoingQuiz.quiz?.slides) {
-      console.error('Quiz slides are missing.');
-      throw new Error('Invalid quiz data.');
-    }
-
     try {
-      // Prepare the updated quiz object with the new turn
-      const updatedQuiz = {
-        ...ongoingQuiz,
-        isTurn: participantId, // Update isTurn directly on ongoingQuiz
-      };
-
       console.log(`Updating turn to participant ID: ${participantId}`);
 
-      // Perform an optimistic update
-      await optimisticUpdate(quizCode, updatedQuiz);
+      // Reference the specific quiz path in the database
+      const quizRef = ref(database, `ongoingQuizzes/${quizCode}`);
+
+      // Update only the 'isTurn' field
+      await update(quizRef, { isTurn: participantId });
 
       console.log(`Turn successfully updated to participant ${participantId}.`);
     } catch (error) {
@@ -237,6 +232,61 @@ export const useHostLogic = (id: string | undefined) => {
         error
       );
       throw error; // Propagate the error for the caller to handle
+    }
+  };
+
+  const updateSlideUsedAnswers = async (
+    slideId: string,
+    quizCode: string,
+    usedAnswers: string[]
+  ): Promise<void> => {
+    if (!ongoingQuiz || !ongoingQuiz.quiz?.slides) {
+      console.error('Quiz data or slides are missing.');
+      throw new Error('Invalid quiz data.');
+    }
+
+    console.log('Used answers:', usedAnswers);
+
+    try {
+      // Get the slide to update
+      const slide = ongoingQuiz.quiz.slides[ongoingQuiz.currentSlide - 1];
+      console.log('Slide to be updated:', slide);
+
+      // Update the usedAnswers field
+      const updatedSlide = {
+        ...slide,
+        usedAnswers, // Update the usedAnswers field with the provided list
+      };
+
+      // Create a copy of the quiz with the updated slide
+      const updatedQuiz = {
+        ...ongoingQuiz,
+        quiz: {
+          ...ongoingQuiz.quiz,
+          slides: [
+            ...ongoingQuiz.quiz.slides.slice(0, ongoingQuiz.currentSlide - 1),
+            updatedSlide,
+            ...ongoingQuiz.quiz.slides.slice(ongoingQuiz.currentSlide),
+          ],
+        },
+      };
+
+      // Log the updated quiz to verify the changes before updating the database
+      console.log('Updated Quiz:', updatedQuiz);
+
+      console.log('updated slide', updatedSlide);
+
+      // Perform an optimistic update
+      const updateResult = await optimisticUpdate(quizCode, updatedQuiz);
+      if (!updateResult) {
+        console.error('Optimistic update failed.');
+        throw new Error('Optimistic update failed.');
+      }
+
+      console.log(`UsedAnswers updated for slide ${slideId}.`);
+    } catch (error) {
+      console.error(`Error updating usedAnswers for slide ${slideId}:`, error);
+      throw error;
     }
   };
 
@@ -286,6 +336,7 @@ export const useHostLogic = (id: string | undefined) => {
     nextSlide,
     handleAddPoints,
     changeTurn,
+    updateSlideUsedAnswers,
     endQuiz,
   };
 };

@@ -3,6 +3,7 @@ export * from './Participant';
 export * from './ParticipantAnswer';
 export * from './Host';
 export * from './HostAnswer';
+export * from './CalculateScore';
 
 import { BombSlide, QuestionTypes, SlideTypes } from '@/models/Quiz';
 import { SlideInfo } from '../..';

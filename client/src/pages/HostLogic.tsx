@@ -13,6 +13,7 @@ function HostLogic() {
     getCurrentSlide,
     nextSlide,
     changeTurn,
+    updateSlideUsedAnswers,
     endQuiz,
     handleAddPoints,
   } = useHostLogic(id);
@@ -68,6 +69,7 @@ function HostLogic() {
           quizCode={ongoingQuiz.id}
           slideNumber={ongoingQuiz.currentSlide}
           changeTurn={changeTurn}
+          updateSlideUsedAnswers={updateSlideUsedAnswers}
           
         />
       ) : (
