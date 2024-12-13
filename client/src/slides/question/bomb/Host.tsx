@@ -6,7 +6,7 @@ import { HeartIcon } from 'lucide-react';
 import { BombSlide } from '@/models/Quiz';
 import { ParticipantService } from '@/services/participant';
 import { Button } from '@/components/ui/button';
-import NextSlide from '@/slides/_components/NextSlide';
+
 import { BombIcon } from 'lucide-react';
 
 type HostProps = {
@@ -15,6 +15,12 @@ type HostProps = {
   quizCode: string;
   slideNumber: number;
   changeTurn: (participantId: string, quizCode: string) => void;
+
+  updateSlideUsedAnswers: (
+    slideId: string,
+    quizCode: string,
+    usedAnswers: string[]
+  ) => void;
   onNextSlide: () => void;
 };
 
@@ -29,24 +35,29 @@ export function Host({
   quizCode,
   slideNumber,
   changeTurn,
-  onNextSlide,
+  updateSlideUsedAnswers,
+  
 }: HostProps) {
   const [time, setTime] = useState(1000000000);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [currentParticipants, setCurrentParticipants] = useState(participants);
   const [participantHearts, setParticipantHearts] = useState<
     ParticipantHearts[]
   >([]);
-  const [winner, setWinner] = useState<Participant | null>(null);
+  const [winner, setWinner] = useState<Participant[] | null>(null);
   const [hasUpdatedDatabaseDontDelete, setHasUpdatedDatabaseDontDelete] =
     useState(false);
+
   const [userAnswer, setUserAnswer] = useState('Answer');
   const [usedAnswers, setUsedAnswers] = useState<string[]>([]);
   const [answers] = useState(slide.answers);
   const [isCorrect, setIsCorrect] = useState('');
   const [deadParticipants, setDeadParticipants] = useState<string[]>([]);
   const [aliveParticipants, setAliveParticipants] = useState<Participant[]>([]);
+
   const [isTurn, setIsturn] = useState('');
   const [isTransitioning, setIsTransitioning] = useState(false);
+
   const [gameStarted, setGameStarted] = useState(false);
   const [showQuestion, setShowQuestion] = useState(false);
 
@@ -64,6 +75,7 @@ export function Host({
       };
     });
     setGameStarted(true);
+    setIsTimerRunning(true);
     setTime(slide.initialTime);
     handleChangeTurn(currentParticipants[0].participantId);
 
@@ -74,7 +86,7 @@ export function Host({
   const handleChangeTurn = async (participantId: string) => {
     try {
       await changeTurn(participantId, quizCode);
-      console.log('Turn changed successfully.');
+
       setIsturn(participantId);
     } catch (error) {
       console.error('Error while changing turn:', error);
@@ -99,7 +111,6 @@ export function Host({
 
   const retainParticipantOrder = () => {
     if (!participants) {
-      console.log('test');
       return <h1>No Host </h1>;
     }
     // Only update the participants if they are not already in sync and the arrays have the same length
@@ -148,7 +159,23 @@ export function Host({
           currentParticipant.participantId == isTurn
         ) {
           setIsCorrect('true');
-          setUsedAnswers((prev) => [...prev, lastTempAnswer]);
+
+          setUsedAnswers((prev) => {
+            const updatedAnswers = [...prev, lastTempAnswer];
+
+            if (answers.length === updatedAnswers.length) {
+              console.log('inne I FKNIN LOOPEN');
+              sendAnswersToDatabase(
+                aliveParticipants,
+                deadParticipants,
+                updatedAnswers
+              );
+              setWinner(aliveParticipants);
+            }
+
+            return updatedAnswers;
+          });
+
           setUserAnswer(lastTempAnswer);
           setIsTransitioning(true);
 
@@ -182,6 +209,7 @@ export function Host({
 
             setTime(slide.initialTime); // Reset the timer
             setIsTransitioning(false); // Unlock transitions
+            setUserAnswer('');
           }, 1200);
         } else if (lastTempAnswer && !answers.includes(lastTempAnswer)) {
           setIsCorrect('false');
@@ -206,12 +234,12 @@ export function Host({
     if (time == 0) {
       playerLoseHeart(currentParticipants[0]);
     }
-
-    const timer = setInterval(() => {
-      setTime((prevTime) => prevTime - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
+    if (isTimerRunning) {
+      const timer = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
   }, [time]);
 
   function calculateAliveLength(participants: Participant[]) {
@@ -219,8 +247,8 @@ export function Host({
   }
 
   function playerLoseHeart(participant: Participant) {
-    console.log('playerLoseHeart');
     setUserAnswer('');
+
     if (aliveParticipants) {
       if (!isTransitioning) {
         const currentPlayerId = participant.participantId;
@@ -253,12 +281,20 @@ export function Host({
                 !winner &&
                 !hasUpdatedDatabaseDontDelete
               ) {
-                setWinner(updatedAlive[0]);
-                sendAnswersToDatabase(updatedAlive, [
-                  ...deadParticipants,
-                  currentPlayerId,
-                ]);
+                setWinner(updatedAlive);
+                sendAnswersToDatabase(
+                  updatedAlive,
+                  [...deadParticipants, currentPlayerId],
+                  usedAnswers
+                );
               }
+
+              console.log(
+                'answers.length',
+                answers.length,
+                'usedanswers.length',
+                usedAnswers.length
+              );
 
               return updatedAlive;
             });
@@ -282,31 +318,48 @@ export function Host({
             ...prevParticipants.slice(0, nextIndex),
           ];
         });
-
+        setUserAnswer('');
         setTime(slide.initialTime);
       }
     }
   }
 
   async function sendAnswersToDatabase(
-    finalparticipants: Participant[],
-    deadParticipantsId: string[]
+    finalParticipants: Participant[],
+    deadParticipantsId: string[],
+    usedAnswersToDatabase: string[]
   ) {
-    setWinner(finalparticipants[0]);
-    const currentPlayerId = currentParticipants[0].participantId;
+    const allParticipants: string[] = [];
 
-    // Merge the current player ID with the list of dead participant IDs
-    const newDeadParticipants = [...deadParticipantsId, currentPlayerId];
+    await handleSendUsedAnswer(slide.id, quizCode, usedAnswersToDatabase);
 
-    const addAnswerPromises = newDeadParticipants.map(
-      async (participantId, index) => {
+    const processAnswers = async (
+      participants: string[] | Participant[],
+      indexOffset: number
+    ) => {
+      console.log(indexOffset, 'indexOffset');
+      const promises = participants.map(async (participant, index) => {
         try {
+          const participantId =
+            typeof participant === 'string'
+              ? participant
+              : participant.participantId;
+
+          // Calculate the index to send
+          const answerIndex =
+            indexOffset > 0
+              ? indexOffset.toString()
+              : (index + indexOffset).toString();
+
+          console.log(answerIndex, 'answerIndex');
+
           const result = await ParticipantService.addAnswer(
             quizCode,
             participantId,
-            [index.toString()],
-            slideNumber
+            [answerIndex],
+            slideNumber - 1
           );
+
           if (result) {
             console.log(
               `Answer successfully submitted for participant: ${participantId}`
@@ -318,52 +371,51 @@ export function Host({
           }
         } catch (error) {
           console.error(
-            `Error submitting answer for participant ${participantId}:`,
+            `Error submitting answer for participant ${typeof participant === 'string' ? participant : participant.participantId}:`,
             error
           );
         }
-      }
-    );
-
-    // Wait for all promises to resolve
-    Promise.all(addAnswerPromises)
-      .then(() => {
-        console.log("All dead participants' answers processed.");
-      })
-      .catch((error) => {
-        console.error('Error processing answers for dead participants:', error);
       });
 
+      await Promise.all(promises);
+    };
+
+    if (finalParticipants.length > 1) {
+      // Handle tie case
+      console.log('tie');
+      await processAnswers(
+        finalParticipants,
+        deadParticipantsId.length === 0 ? 1 : deadParticipantsId.length
+      );
+
+      if (deadParticipantsId.length > 0) {
+        await processAnswers(deadParticipantsId, 0);
+      }
+    } else if (finalParticipants.length === 1) {
+      // Handle single final participant case
+      allParticipants.push(
+        ...deadParticipantsId,
+        finalParticipants[0].participantId
+      );
+      await processAnswers(allParticipants, 0);
+    }
+
+    // Finalize and update state
     setHasUpdatedDatabaseDontDelete(true);
-    onNextSlide();
   }
 
-  if (winner) {
-    // Render the Winner Screen
-    return (
-      <motion.div
-        style={{
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '2rem',
-          textAlign: 'center',
-        }}
-      >
-        <h1 className="font-display text-6xl">Winner is {winner.name}!</h1>
-        <Avatar
-          style={{
-            width: '12rem', // Make sure the size is large enough
-            height: '12rem', // Make sure the size is large enough
-          }}
-          {...genConfig(winner.avatar)}
-        />
-        <NextSlide onClick={onNextSlide} />
-      </motion.div>
-    );
-  }
+  const handleSendUsedAnswer = async (
+    slideId: string,
+    quizCode: string,
+    usedAnswers: string[]
+  ) => {
+    try {
+      await updateSlideUsedAnswers(slideId, quizCode, usedAnswers);
+    } catch (error) {
+      console.error('Could not updated usedAnswers', error);
+    }
+  };
+
   if (!gameStarted) {
     return (
       <div className="h-screen flex flex-col items-center justify-center gap-16">
