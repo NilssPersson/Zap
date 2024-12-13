@@ -1,24 +1,26 @@
-import { PlusCircle } from "lucide-react";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import { SlideCreationMenu } from "./SlideCreationMenu";
-import type { Slide } from "@/models/Quiz";
-import { SlidePreview } from "./SlidePreview";
-import { useEffect, useState } from "react";
-import { SidebarHeader } from "./SidebarHeader";
-import { SlideActions } from "./SlideActions";
-import { getSlideComponents } from "@/slides/utils";
+import { PlusCircle } from 'lucide-react';
+import { Popover, PopoverTrigger } from '@/components/ui/popover';
+import { SlideCreationMenu } from './SlideCreationMenu';
+import type { Slide } from '@/models/Quiz';
+import { SlidePreview } from './SlidePreview';
+import { useEffect, useState } from 'react';
+import { SidebarHeader } from './SidebarHeader';
+import { SlideActions } from './SlideActions';
+import { getSlideComponents } from '@/slides/utils';
 
 interface SlideSidebarProps {
   quizName: string;
   slides: Slide[];
-  onAddSlide: Parameters<typeof SlideCreationMenu>[0]["onAddSlide"];
+  onAddSlide: Parameters<typeof SlideCreationMenu>[0]['onAddSlide'];
   activeSlideId: string | null;
   onSlideSelect: (slideId: string) => void;
   onSlideDelete: (slideId: string) => void;
   onSlideDuplicate: (slideId: string) => void;
-  onSlideMove: (slideId: string, direction: "up" | "down") => void;
+  onSlideMove: (slideId: string, direction: 'up' | 'down') => void;
   onSettingsClick: () => void;
   onSaveClick: () => void;
+  hasUnsavedChanges?: boolean;
+  isSaving?: boolean;
   backgroundColor: string;
   primaryColor: string;
   secondaryColor: string;
@@ -34,6 +36,9 @@ export function SlideSidebar({
   onSlideDuplicate,
   onSlideMove,
   onSettingsClick,
+  onSaveClick,
+  hasUnsavedChanges,
+  isSaving,
   backgroundColor,
   primaryColor,
   secondaryColor,
@@ -44,25 +49,25 @@ export function SlideSidebar({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
         !activeSlideId ||
-        !document.activeElement?.closest(".slides-container")
+        !document.activeElement?.closest('.slides-container')
       )
         return;
 
       const currentIndex = slides.findIndex(
-        (slide) => slide.id === activeSlideId,
+        (slide) => slide.id === activeSlideId
       );
       if (currentIndex === -1) return;
 
       switch (e.key) {
-        case "ArrowUp":
-        case "ArrowLeft":
+        case 'ArrowUp':
+        case 'ArrowLeft':
           if (currentIndex > 0) {
             e.preventDefault();
             onSlideSelect(slides[currentIndex - 1].id);
           }
           break;
-        case "ArrowDown":
-        case "ArrowRight":
+        case 'ArrowDown':
+        case 'ArrowRight':
           if (currentIndex < slides.length - 1) {
             e.preventDefault();
             onSlideSelect(slides[currentIndex + 1].id);
@@ -71,13 +76,19 @@ export function SlideSidebar({
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [activeSlideId, slides, onSlideSelect]);
 
   return (
     <aside className="min-w-[200px] bg-card/90 h-full border-r shadow-md flex flex-col overflow-hidden">
-      <SidebarHeader quizName={quizName} onSettingsClick={onSettingsClick} />
+      <SidebarHeader
+        quizName={quizName}
+        onSettingsClick={onSettingsClick}
+        onSaveClick={onSaveClick}
+        hasUnsavedChanges={hasUnsavedChanges}
+        isSaving={isSaving}
+      />
 
       <div className="flex-1 overflow-y-auto px-3 pt-1 slides-container">
         <div className="flex flex-col gap-2 pb-3">
@@ -94,8 +105,8 @@ export function SlideSidebar({
                   className={`group relative border rounded overflow-hidden transition-colors
                                 ${
                                   activeSlideId === slide.id
-                                    ? "border-primary ring-2 ring-primary"
-                                    : "hover:border-primary/50"
+                                    ? 'border-primary ring-2 ring-primary'
+                                    : 'hover:border-primary/50'
                                 }
                             `}
                   onClick={() => onSlideSelect(slide.id)}
@@ -103,7 +114,7 @@ export function SlideSidebar({
                   role="button"
                   aria-selected={activeSlideId === slide.id}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
+                    if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       onSlideSelect(slide.id);
                     }
