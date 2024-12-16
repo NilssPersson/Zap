@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   type Slide,
   type SlideType,
@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 
 const DEFAULT_TIME_LIMIT = 0;
 const SAVE_ON_N_ACTIONS = 50;
-const SAVE_ON_LAST_ACTION = 60000; // 1 minute
+const SAVE_ON_LAST_ACTION = 30000; // 30 seconds
 
 export function useQuizEditor(quizId: string | undefined) {
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export function useQuizEditor(quizId: string | undefined) {
   const [showSettings, setShowSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const {
-    quizzes: { optimisticUpdate, resources: quizzes, isLoading },
+    quizzes: { optimisticUpdate, resources: quizzes, isLoading, enrichResource },
   } = useAppContext();
 
   const { t } = useTranslation(['questions']);
@@ -35,14 +35,22 @@ export function useQuizEditor(quizId: string | undefined) {
   const [localQuiz, setLocalQuiz] = useState<Quiz | null>(null);
   const [, setActionCount] = useState(0);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const globalQuiz = quizzes.find((q) => q.id === quizId);
-  console.log(quizzes);
-  // Initialize local quiz from global state
+  const [enriched, setEnriched] = useState(false);
+
   useEffect(() => {
-    if (globalQuiz && !localQuiz) {
-      setLocalQuiz(globalQuiz);
+    if (quizId) {
+      enrichResource(quizId).then(() => setEnriched(true));
     }
-  }, [globalQuiz]);
+  }, [quizId]);
+
+  useEffect(() => {
+    if (quizId && enriched) {
+      const globalQuiz = quizzes.find((q) => q.id === quizId)
+      if (globalQuiz) {
+        setLocalQuiz(globalQuiz);
+      }
+    }
+  }, [quizId, enriched]);
 
   // Auto-save timer
   useEffect(() => {
