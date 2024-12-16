@@ -45,7 +45,7 @@ export function BombOptionsInput({
     <div className="space-y-6">
       {/* Hearts and Initial Time */}
       <div className="space-y-2">
-        <Label>Initial Time (seconds)</Label>
+        <Label>{t('initialTime')}</Label>
         <Input
           type="number"
           value={slide.initialTime}

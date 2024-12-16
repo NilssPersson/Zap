@@ -22,5 +22,10 @@
   "del": "Del",
   "noAnswer": "No answers available",
   "addAnswer": "Add Answer",
-  "lookAtYourScreen": "Look at your screen and rank the options"
+  "lookAtYourScreen": "Look at your screen and rank the options",
+  "rankAnswers": "Rank Answers",
+  "add":"Add",
+  "embededYT":"Embed YouTube Video",
+  "embeded":"Embed",
+  "remove":"Remove"
 }
