@@ -11,8 +11,9 @@
   "FA": "Snabbast på knappen",
   "FTA": "Fri text",
   "LOCATEIT": "Närmast vinner",
-  "MATCHING": "Matcha",
+  "MATCHING": "Matcha rätt kategori",
   "MCQMA": "Flervalsfråga",
   "MCQSA": "Ett svar gäller",
-  "RANK": "Ranka rätt"
+  "RANK": "Ranka rätt",
+  "addSlide": "Lägg till slide"
 }
