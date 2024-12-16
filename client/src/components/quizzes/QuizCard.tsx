@@ -92,7 +92,7 @@ export function QuizCard({ quiz, onClick, children, variant }: QuizCardProps) {
 interface MyQuizButtonsProps {
   quiz: Quiz;
   onHost: (quiz: Quiz) => Promise<void>;
-  onShare: (quizId: string) => Promise<void>;
+  onShare: (quizId: string, quizName: string) => Promise<void>;
   onDelete: (quizId: string) => Promise<void>;
 }
 
@@ -103,7 +103,9 @@ export function MyQuizButtons({
   onDelete,
 }: MyQuizButtonsProps) {
   const { t } = useTranslation();
-  const { ongoingQuizzes: { resources, isLoading } } = useAppContext();
+  const {
+    ongoingQuizzes: { resources, isLoading },
+  } = useAppContext();
   const noSlides = !quiz.slides || quiz.slides.length === 0;
 
   const existingOngoingQuiz = resources.length !== 0;
@@ -137,7 +139,7 @@ export function MyQuizButtons({
           <DropdownMenuItem
             onClick={(e) => {
               e.stopPropagation();
-              onShare(quiz.id);
+              onShare(quiz.id, quiz.quiz_name);
             }}
           >
             <Share className="w-4 h-4 cursor-pointer" />

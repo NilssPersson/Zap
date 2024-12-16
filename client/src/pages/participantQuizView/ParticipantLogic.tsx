@@ -225,7 +225,7 @@ export default function ParticipantLogic() {
           participantData={participantData}
           answerQuestion={answerQuestion}
           showAnswer={showAnswer}
-          answerTempQuestion={answerTempQuestion}
+          answerTempQuestion={answerTempQuestion} 
           isTurn={isTurn}
         />
       </div>
