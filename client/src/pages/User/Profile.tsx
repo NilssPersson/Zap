@@ -2,12 +2,12 @@ import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, CircleX } from 'lucide-react';
+import { Check, CircleX, ArrowBigRight, ArrowBigLeft } from 'lucide-react';
 import { useAppContext } from '@/contexts/App/context';
 import { useTranslation } from 'react-i18next';
 import { Dices } from 'lucide-react';
 import { avatarCollections, collectionNames } from '@/utils'; // Import the collections and names
-import Avatar from '@/Avatar'; // Import the Avatar component
+import Avatar, { findCollectionIndexByName } from '@/Avatar'; // Import the Avatar component
 
 function makeid(length: number) {
   let result = '';
@@ -38,7 +38,13 @@ function Profile() {
   useEffect(() => {
     if (!user) return;
     setAvatarString(user.avatar || '');
+
     setUsername(user.username || '');
+
+    const index = findCollectionIndexByName(user.collectionName);
+    if (index !== null) {
+      setCollectionIndex(index);
+    }
   }, [user]);
 
   const changeAvatarClick = () => {
@@ -99,17 +105,20 @@ function Profile() {
             collectionName={selectedCollectionName}
           />
 
-          <div>
+          <div className="flex-1 w-full flex-col flex items-center justify-center overflow-hidden">
             <Button onClick={changeAvatarClick} className="mx-5">
               <Dices className="size-20" />
               {t('general:randomize')}
             </Button>
-            <Button onClick={goToPreviousCollection} className="mx-5">
-              Previous Collection
-            </Button>
-            <Button onClick={goToNextCollection} className="mx-5">
-              Next Collection
-            </Button>
+            <h1  className='font-display mt-4'>{t('homepage:collection')}!</h1>
+            <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
+              <ArrowBigLeft size={"48"} onClick={goToPreviousCollection} className="mx-5">
+                Previous Collection
+              </ArrowBigLeft>
+              <ArrowBigRight size={"48"} onClick={goToNextCollection} className="mx-5">
+                Next Collection
+              </ArrowBigRight>
+            </div>
           </div>
 
           <Input
