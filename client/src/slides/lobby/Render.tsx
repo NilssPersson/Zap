@@ -29,11 +29,13 @@ export default function Render({
   onNextSlide,
   quizCode,
   participants,
+  removeParticipant,
 }: {
   slide: LobbySlide;
   participants: Participant[];
   onNextSlide: () => void;
   quizCode: string;
+  removeParticipant: (participantId: string) => void;
 }) {
   const participantsRef = useRef<HTMLDivElement>(null);
   const [teamsEnabled, setTeamsEnabled] = useState(false);
@@ -172,7 +174,7 @@ export default function Render({
               ref={participantsRef}
               className="flex flex-wrap items-center justify-center rounded-lg min-h-40 overflow-y-auto w-full max-h-[29rem]"
             >
-              <Participants participants={participants} />
+              <Participants participants={participants} removeParticipant={removeParticipant} />
             </div>
           </div>
         )}
