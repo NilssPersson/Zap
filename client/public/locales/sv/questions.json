@@ -15,5 +15,12 @@
   "MCQMA": "Flervalsfråga",
   "MCQSA": "Ett svar gäller",
   "RANK": "Ranka rätt",
-  "addSlide": "Lägg till slide"
+  "addSlide": "Lägg till slide",
+  "hearts": "Hjärtan",
+  "initialTime": "Tid (sekunder)",
+  "availableAnswers": "Tillgängliga svar",
+  "del": "Del",
+  "noAnswer": "Inga svar har lagts till",
+  "addAnswer": "Lägg till svar",
+  "lookAtYourScreen":"Kolla på din skräm och ranka alternativen"
 }
