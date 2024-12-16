@@ -31,7 +31,7 @@ export default function Settings() {
       <PopoverTrigger asChild>
         <Button variant="ghost" className="text-lg flex flex-row items-center">
           <User size={24} />
-          Settings
+          {t('general:settings')}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="max-w-80 w-fit">
@@ -77,7 +77,7 @@ export default function Settings() {
                       transform: isAppearanceOpen ? `rotate(180deg)` : 'none',
                     }}
                   />
-                  Appearance
+                  {t('general:appearance')}
                 </CollapsibleTrigger>
                 <CollapsibleContent className="px-4 py-2 bg-gray-50 rounded">
                   <div className="grid gap-2">
@@ -92,7 +92,7 @@ export default function Settings() {
                   onClick={logout}
                 >
                   <LogIn size={16} transform="rotate(180)" />
-                  Log out
+                  {t('general:logout')}
                 </Button>
               </div>
             </>
