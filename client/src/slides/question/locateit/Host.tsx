@@ -1,15 +1,12 @@
-import { LocateItSlide, Participant } from '@/models/Quiz';
-import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
+import { LocateItSlide } from '@/models/Quiz';
 import markerIcon from '@/assets/markerIcon.png';
 import NextSlide from '@/slides/_components/NextSlide';
 
 export function Host({
   slide,
-  participants = [],
   onNextSlide,
 }: {
   slide: LocateItSlide;
-  participants: Participant[];
   onNextSlide: () => void;
 }) {
   return (
@@ -41,8 +38,6 @@ export function Host({
           </div>
         </div>
       )}
-
-      <ParticipantAnswers participants={participants} />
       <NextSlide onClick={onNextSlide} />
     </div>
   );

@@ -5,6 +5,7 @@ import { getSlideComponents } from '@/slides/utils';
 import Countdown from 'react-countdown';
 import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
+import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 
 function HostLogic() {
   const { id } = useParams();
@@ -61,19 +62,27 @@ function HostLogic() {
   return (
     <>
       {!ongoingQuiz.isShowingCorrectAnswer ? (
-        <SlideComponent.Host
-          slides={ongoingQuiz.quiz.slides}
-          currentSlide={ongoingQuiz.currentSlide}
-          participants={Object.values(ongoingQuiz.participants || {})}
-          removeParticipant={removeParticipant}
-          slide={slide as never}
-          onNextSlide={nextSlide}
-          quizCode={ongoingQuiz.id}
-          slideNumber={ongoingQuiz.currentSlide}
-          changeTurn={changeTurn}
-          updateSlideUsedAnswers={updateSlideUsedAnswers}
-          
-        />
+        <>
+          <SlideComponent.Host
+            slides={ongoingQuiz.quiz.slides}
+            currentSlide={ongoingQuiz.currentSlide}
+            participants={Object.values(ongoingQuiz.participants || {})}
+            removeParticipant={removeParticipant}
+            slide={slide as never}
+            onNextSlide={nextSlide}
+            quizCode={ongoingQuiz.id}
+            slideNumber={ongoingQuiz.currentSlide}
+            changeTurn={changeTurn}
+            updateSlideUsedAnswers={updateSlideUsedAnswers}
+
+          />
+          {ongoingQuiz.currentSlide > 1 && (
+            <ParticipantAnswers
+              participants={Object.values(ongoingQuiz.participants || {})}
+              removeParticipant={removeParticipant}
+            />
+          )}
+        </>
       ) : (
         <SlideComponent.HostAnswer
           participants={Object.values(ongoingQuiz.participants)}
