@@ -6,6 +6,7 @@ import Countdown from 'react-countdown';
 import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
+import Spinner from '@/components/Spinner';
 
 function HostLogic() {
   const { id } = useParams();
@@ -20,7 +21,7 @@ function HostLogic() {
     removeParticipant,
   } = useHostLogic(id);
 
-  if (!ongoingQuiz) return <div>Loading Quiz...</div>;
+  if (!ongoingQuiz) return <Spinner />;
 
   const slide = getCurrentSlide();
 
