@@ -4,7 +4,7 @@ import { avatarCollections, collectionNames } from '@/utils'; // Assuming these 
 
 interface AvatarProps {
   avatarString: string;
-  collectionName: string;
+  collectionName?: string;
   // Add className prop to control conditional behavior
 }
 
@@ -22,7 +22,7 @@ export const findCollectionIndexByName = (name: string) => {
   return collectionIndex !== -1 ? collectionIndex : null; // Returns the index or null if not found
 };
 
-const Avatar = ({ avatarString, collectionName }: AvatarProps) => {
+const Avatar = ({ avatarString, collectionName = "micah" }: AvatarProps) => {
   // Find the corresponding collection style
   const selectedCollectionStyle = findCollectionByName(collectionName);
 

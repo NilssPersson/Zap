@@ -13,6 +13,45 @@ interface ParticipantTotal {
   score: number[];
 }
 
+const DisplayPlacement = ({
+  participants,
+}: {
+  participants: ParticipantTotal[];
+}) => {
+  const size =
+    participants.length === 1
+      ? 'w-32 h-32'
+      : participants.length === 2
+        ? 'w-24 h-24'
+        : 'w-20 h-20';
+
+  const textSize =
+    participants.length === 1
+      ? 'text-4xl'
+      : participants.length === 2
+        ? 'text-3xl'
+        : 'text-2xl';
+  return (
+    <div className="flex flex-row gap-8 items-center justify-center">
+      {participants.slice(0, 3).map((participant) => (
+        <div key={participant.participantId} className="flex flex-col items-center">
+          <Avatar 
+            className={`${size}`}
+            {...genConfig(participant.avatar)}
+          />
+          <div className="flex flex-col items-center">
+            <span className={`font-display ${textSize}`}>{participant.name}</span>
+          </div>
+        </div>
+      ))}
+      {participants.length > 3 && (
+        <Ellipsis className="items-start self-center justify-start w-12 h-12" />
+      )}
+    </div>
+  );
+};
+
+
 export default function Results({
   participants,
 }: {
@@ -55,30 +94,10 @@ export default function Results({
     return result;
   };
 
-  const DisplayPlacement = ({
-    participants,
-  }: {
-    participants: ParticipantTotal[];
-  }) => {
-    return (
-      <div className="flex flex-col gap-3 items-left">
-        {participants.slice(0, 3).map((participant, index) => (
-          <div key={index} className="flex flex-col items-center ">
-            <Avatar className="w-20 h-20" {...genConfig(participant.avatar)} />
-            <div className="flex flex-col items-center">
-              <span className="font-display text-3xl">{participant.name}</span>
-            </div>
-          </div>
-        ))}
-        {participants.length > 3 && (
-          <Ellipsis className="items-start self-center justify-start w-12 h-12" />
-        )}
-      </div>
-    );
-  };
-
+ 
   // Returns a list with a list of the placements
   const placement = getTopThree(participantsWithTotal);
+
   const firstPlace = placement[0];
 
   const secondPlace = placement[1];
@@ -86,7 +105,7 @@ export default function Results({
   const thirdPlace = placement[2];
   // Rest of the participants
   const forthPlace = placement[3];
-  const showFourthPlace = forthPlace.length>0 && firstPlace.length <3 && secondPlace.length <3 && thirdPlace.length <3
+  const showFourthPlace = forthPlace.length > 0;
 
   return (
     <div className="flex-1 flex flex-col">
@@ -99,7 +118,7 @@ export default function Results({
             <span className="font-semibold text-3xl text-gray-600">
               {secondPlace[0].total} pts
             </span>
-            <div className="w-24 bg-silver h-32 rounded-t-lg flex items-center justify-center text-2xl font-bold font-display">
+            <div className="w-32 bg-silver h-40 rounded-t-lg flex items-center justify-center text-4xl font-bold font-display">
               2
             </div>
           </div>
@@ -112,7 +131,7 @@ export default function Results({
             <span className="font-semibold text-3xl text-gray-600">
               {firstPlace[0].total} pts
             </span>
-            <div className="w-24 bg-gold h-40 rounded-t-lg flex items-center justify-center text-3xl font-bold font-display">
+            <div className="w-32 bg-gold h-52 rounded-t-lg flex items-center justify-center text-5xl font-bold font-display">
               1
             </div>
           </div>
@@ -125,7 +144,7 @@ export default function Results({
             <span className="font-semibold text-3xl text-gray-600">
               {thirdPlace[0].total} pts
             </span>
-            <div className="w-24 bg-bronze h-24 rounded-t-lg flex items-center justify-center text-2xl font-bold font-display">
+            <div className="w-32 bg-bronze h-24 rounded-t-lg flex items-center justify-center text-4xl font-bold font-display">
               3
             </div>
           </div>
@@ -134,7 +153,7 @@ export default function Results({
 
       {/* Rest of Participants List */}
       {showFourthPlace && (
-        <div className="flex-1 w-full max-w-2xl mx-auto overflow-y-auto max-h-52 border rounded-lg">
+        <div className="flex-1 w-full max-w-4xl mx-auto overflow-y-auto max-h-80 border rounded-lg">
           {forthPlace.map((participant, index) => (
             <div
               key={participant.name}
@@ -145,8 +164,8 @@ export default function Results({
                 className="w-10 h-10"
                 {...genConfig(participant.avatar)}
               />
-              <span className="flex-grow">{participant.name}</span>
-              <span className="font-semibold">{participant.total} pts</span>
+              <span className="flex-grow text-2xl font-semibold">{participant.name}</span>
+              <span className="font-semibold text-2xl">{participant.total} pts</span>
             </div>
           ))}
         </div>

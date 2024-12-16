@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Settings from '@/components/Settings';
 
 export function Header() {
   const location = useLocation();
@@ -77,18 +78,22 @@ export function Header() {
               <span className="fancy-wrap">Zap!</span>
             </Link>
             <div className="flex items-center font-display gap-1">
-              {location.pathname !== '/' && (
-                <Link to="/play">
-                  <Button
-                    variant={
-                      location.pathname === '/play' ? 'default' : 'ghost'
-                    }
-                    className="text-lg"
-                  >
-                    {t('general:play')}
-                  </Button>
-                </Link>
-              )}
+              <Link to="/play">
+                <Button
+                  variant={location.pathname === '/play' ? 'default' : 'ghost'}
+                  className="text-lg"
+                >
+                  {t('general:play')}
+                </Button>
+              </Link>
+              <Link to="/">
+                <Button
+                  variant={location.pathname === '/' ? 'default' : 'ghost'}
+                  className="text-lg"
+                >
+                  {t('general:home')}
+                </Button>
+              </Link>
               <Link to="/about">
                 <Button
                   variant={location.pathname === '/about' ? 'default' : 'ghost'}
@@ -114,6 +119,7 @@ export function Header() {
                   </Button>
                 </>
               )}
+              <Settings />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-lg">

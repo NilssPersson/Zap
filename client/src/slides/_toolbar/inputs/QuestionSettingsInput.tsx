@@ -73,7 +73,7 @@ export function QuestionSettingsInput({
       <div className="space-y-1">
         <div className="flex flex-row items-center">
           <Timer size={17} />
-          <Label>Time Limit</Label>
+          <Label>{t('timeLimit')}</Label>
         </div>
         <Input
           type="number"

@@ -1,10 +1,13 @@
 {
-  "selectSlide": "Välj en slide för att redigera",
+  "selectSlide": "Välj en bild för att redigera",
   "quizName": "Quiz Namn",
+  "slides": "Bilder",
+  "questionTypes": "Frågetyper",
   "colorScheme": "Färgschema",
   "backgroundColor": "Bakgrundsfärg",
   "primary": "Primär",
   "secondary": "Sekundär",
+  "timeLimit": "Tidsbegränsning",
   "showCorrect": "Visa rätt svar (automatiskt)",
   "showCorrectAuto": "Visar automatiskt svaret när alla har svarat eller tiden tar slut.",
   "showCorrect.auto": "Automatiskt",
@@ -18,5 +21,11 @@
   "image": "Bild",
   "addImage": "Lägg till bild",
   "changeImage": "Byt bild",
-  "imageScale": "Skala"
+  "imageScale": "Skala",
+  "addCategory": "Lägg till kategori",
+  "del": "Del",
+  "addOption": "Lägg till alternativ",
+  "newOption": "Nytt alternativ",
+  "availableOptions": "Tillgängliga alternativ",
+  "points": "Poäng"
 }
