@@ -26,6 +26,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     optimisticCreate: createQuiz,
     optimisticDelete: deleteQuiz,
     optimisticUpdate: updateQuiz,
+    enrichResource: enrichQuiz,
   } = useQuizzes();
 
   const { resources: users, isLoading: usersLoading } = useUsers();
@@ -70,6 +71,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           optimisticCreate: createQuiz,
           optimisticDelete: deleteQuiz,
           optimisticUpdate: updateQuiz,
+          enrichResource: enrichQuiz,
         },
         user: {
           user,

@@ -17,7 +17,7 @@ import { nanoid } from 'nanoid';
 
 const DEFAULT_TIME_LIMIT = 0;
 const SAVE_ON_N_ACTIONS = 50;
-const SAVE_ON_LAST_ACTION = 60000; // 1 minute
+const SAVE_ON_LAST_ACTION = 30000; // 30 seconds
 
 export function useQuizEditor(quizId: string | undefined) {
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +25,7 @@ export function useQuizEditor(quizId: string | undefined) {
   const [showSettings, setShowSettings] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const {
-    quizzes: { optimisticUpdate, resources: quizzes, isLoading },
+    quizzes: { optimisticUpdate, resources: quizzes, isLoading, enrichResource },
   } = useAppContext();
 
   // Local state
@@ -34,12 +34,20 @@ export function useQuizEditor(quizId: string | undefined) {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const globalQuiz = quizzes.find((q) => q.id === quizId);
 
-  // Initialize local quiz from global state
+  // Initialize local quiz from global state and fetch full quiz data
   useEffect(() => {
-    if (globalQuiz && !localQuiz) {
+
+
+    const enrichQuiz = async () => {
+      if (!globalQuiz) return;
+      await enrichResource(globalQuiz.id);
       setLocalQuiz(globalQuiz);
+    };
+
+    if (globalQuiz && quizId && !localQuiz) {
+      enrichQuiz();
     }
-  }, [globalQuiz]);
+  }, [quizId, globalQuiz, localQuiz]);
 
   // Auto-save timer
   useEffect(() => {
