@@ -34,10 +34,6 @@ function useQuizzesPage() {
   const [userQuizzes, setUserQuizzes] = useState<UserQuizzes[]>([]);
   const [userQuizzesLoading, setUserQuizzesLoading] = useState(false);
 
-  console.log('Shared quizzes:', sharedQuizzes);
-  console.log('My quizzes:', userQuizzes);
-  console.log('Ongoing quizzes:', ongoingQuizzes);
-
   useEffect(() => {
     if (user) {
       setSharedQuizzesLoading(true);
