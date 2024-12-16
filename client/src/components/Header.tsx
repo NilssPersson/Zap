@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Settings from '@/components/Settings';
 
 export function Header() {
   const location = useLocation();
@@ -118,6 +119,7 @@ export function Header() {
                   </Button>
                 </>
               )}
+              <Settings />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-lg">
