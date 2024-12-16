@@ -43,19 +43,16 @@ export function SharedQuizCard({
         </CardTitle>
         <div className="aspect-video w-full rounded overflow text-white relative">
           <SlidePreview slide={mockInfo as InfoSlide} />
-
-          <div className="absolute bottom-[-10px] left-[-10px] z-50 bg-primary p-1 px-2 rounded text-white flex flex-row items-center gap-2">
-            <span className="text-sm font-bold">By:</span>
+          <div className="font-display absolute bottom-[-10px] left-[-10px] z-50 bg-primary p-1 px-2 rounded text-black flex flex-row items-center gap-1 border">
+            <span className="text-lg ">By:</span>
             <ReactNiceAvatar
               style={{
-                width: '28px',
-                height: '28px',
+                width: '25px',
+                height: '25px',
               }}
               {...genConfig(quiz.userAvatar)}
             />
-            <span className="text-sm rounded p-1 bg-primary-foreground">
-              {quiz.userName}
-            </span>
+            <span className="text-sm">{quiz.userName}</span>
           </div>
         </div>
       </CardContent>
