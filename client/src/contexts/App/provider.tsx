@@ -4,7 +4,6 @@ import { useOngoingQuizzes } from '@/hooks/useOngoingQuizzes';
 import { AppContext } from './context';
 import { useQuizzes } from '@/hooks/useQuizzes';
 import { useCallback } from 'react';
-import { useUsers } from '@/hooks/useUsers';
 import { useNavigate } from 'react-router-dom';
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
@@ -28,8 +27,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     optimisticUpdate: updateQuiz,
     enrichResource: enrichQuiz,
   } = useQuizzes();
-
-  const { resources: users, isLoading: usersLoading } = useUsers();
 
   const endQuiz = useCallback(
     async (quizCode: string) => {
@@ -76,10 +73,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         user: {
           user,
           updateUser,
-        },
-        users: {
-          resources: users,
-          isLoading: usersLoading,
         },
       }}
     >

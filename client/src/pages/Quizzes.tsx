@@ -15,13 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 function useQuizzesPage() {
   const {
-    quizzes: {
-      resources: quizzes,
-      isLoading: quizzesLoading,
-      optimisticCreate,
-      optimisticDelete,
-      optimisticUpdate,
-    },
+    quizzes: { resources: quizzes, isLoading: quizzesLoading, optimisticCreate, optimisticDelete, optimisticUpdate },
     user: { user },
     ongoingQuizzes: { resources: ongoingQuizzes },
   } = useAppContext();

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   type Slide,
   type SlideType,
@@ -32,22 +32,22 @@ export function useQuizEditor(quizId: string | undefined) {
   const [localQuiz, setLocalQuiz] = useState<Quiz | null>(null);
   const [, setActionCount] = useState(0);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const globalQuiz = quizzes.find((q) => q.id === quizId);
+  const [enriched, setEnriched] = useState(false);
 
-  // Initialize local quiz from global state and fetch full quiz data
   useEffect(() => {
-
-
-    const enrichQuiz = async () => {
-      if (!globalQuiz) return;
-      await enrichResource(globalQuiz.id);
-      setLocalQuiz(globalQuiz);
-    };
-
-    if (globalQuiz && quizId && !localQuiz) {
-      enrichQuiz();
+    if (quizId) {
+      enrichResource(quizId).then(() => setEnriched(true));
     }
-  }, [quizId, globalQuiz, localQuiz]);
+  }, [quizId]);
+
+  useEffect(() => {
+    if (quizId && enriched) {
+      const globalQuiz = quizzes.find((q) => q.id === quizId)
+      if (globalQuiz) {
+        setLocalQuiz(globalQuiz);
+      }
+    }
+  }, [quizId, enriched]);
 
   // Auto-save timer
   useEffect(() => {

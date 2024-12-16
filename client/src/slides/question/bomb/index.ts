@@ -13,7 +13,7 @@ import { Bomb } from 'lucide-react';
 export const Info: SlideInfo = {
     value: "question:BOMB",
     icon: Bomb,
-    label: "Bomb Question",
+    label: "Ticking time bomb",
     slideType: SlideTypes.question,
     questionType: QuestionTypes.BOMB,
     interactivePreview: true,
