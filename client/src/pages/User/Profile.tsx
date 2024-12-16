@@ -1,24 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+
+import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, CircleX, ArrowBigRight, ArrowBigLeft } from 'lucide-react';
+import { ArrowBigRight, ArrowBigLeft } from 'lucide-react';
 import { useAppContext } from '@/contexts/App/context';
 import { useTranslation } from 'react-i18next';
-import { Dices } from 'lucide-react';
+
 import { avatarCollections, collectionNames } from '@/utils'; // Import the collections and names
 import Avatar, { findCollectionIndexByName } from '@/Avatar'; // Import the Avatar component
-
-function makeid(length: number) {
-  let result = '';
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
 function Profile() {
   const {
@@ -26,13 +17,11 @@ function Profile() {
   } = useAppContext();
   const { t } = useTranslation();
   const [avatarString, setAvatarString] = useState(user?.avatar || '');
-  const [username, setUsername] = useState(user?.username || '');
-  const [updateStatus, setUpdateStatus] = useState<'success' | 'error' | null>(
-    null
+  const [avatarStrings, setAvatarStrings] = useState<string[]>(
+    user?.avatar ? [user.avatar] : []
   );
-  const [statusMessage, setStatusMessage] = useState('');
-
-  // Track the selected collection index
+  const [username, setUsername] = useState(user?.username || '');
+  const [avatarIndex, setAvatarIndex] = useState(0); // To keep track of the current avatar index
   const [collectionIndex, setCollectionIndex] = useState(0);
 
   useEffect(() => {
@@ -47,10 +36,52 @@ function Profile() {
     }
   }, [user]);
 
-  const changeAvatarClick = () => {
-    setAvatarString(makeid(10)); // Generate a new random avatar string
-    setUpdateStatus(null);
+  // Function to generate a random avatar ID
+  const makeid = (length: number): string => {
+    let result = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   };
+
+  // Right Arrow Click (Next Avatar)
+  const rightAvatarChange = () => {
+    if (avatarIndex < avatarStrings.length - 1) {
+      // Move to the next avatar if within bounds
+      setAvatarIndex(avatarIndex + 1);
+    } else {
+      // If the index goes out of bounds, create a new avatar ID and add it to the list
+      const newId = makeid(10);
+      setAvatarStrings((prev) => [...prev, newId]);
+      setAvatarIndex((prev) => prev + 1); // Set the index to the new avatar
+    }
+  };
+
+  // Left Arrow Click (Previous Avatar)
+  const leftAvatarChange = () => {
+    if (avatarIndex > 0) {
+      // Move to the previous avatar if within bounds
+      setAvatarIndex(avatarIndex - 1);
+    } else {
+      // If the index goes below 0, return to the first avatar instead of generating a new one
+      console.warn('You are at the first avatar.');
+    }
+  };
+
+  // Initialize the avatarStrings array and avatarIndex on load
+  useEffect(() => {
+    if (user?.avatar) {
+      setAvatarStrings([user.avatar]); // Ensure the user's avatar is the initial value
+      setAvatarIndex(0); // Start at the first index
+    }
+  }, [user]);
+
+  // Update the avatar string based on the current index
+  const currentAvatarString = avatarStrings[avatarIndex];
 
   const handleUpdate = async () => {
     if (!user || !user.id) return;
@@ -64,12 +95,11 @@ function Profile() {
 
     try {
       await updateUser(updatedUser);
-      setUpdateStatus('success');
-      setStatusMessage('Profile updated!');
+
+      toast.success('Profile updated!');
     } catch (error) {
       console.error('Failed to update profile:', error);
-      setUpdateStatus('error');
-      setStatusMessage('Something went wrong. Please try again.');
+      toast.error('Something went wrong');
     }
   };
 
@@ -93,63 +123,59 @@ function Profile() {
   const selectedCollectionName = collectionNames[collectionIndex];
 
   return (
-    <div className="flex-1 w-full flex-col flex items-center justify-center overflow-hidden">
-      <h1 className="mt-5 font-display text-3xl mb-5">
-        {t('general:profile')}
-      </h1>
-      <Card className="mb-10">
+    <div className="rounded-lg flex-1 w-full flex-col flex items-center justify-center overflow-hidden">
+      <Card className="bg-[#FBF6E9] mb-10">
         <CardContent className="flex flex-col items-center gap-4 py-6">
           {/* Use the Avatar component */}
-          <Avatar
-            avatarString={avatarString}
-            collectionName={selectedCollectionName}
-          />
+          <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
+            <ArrowBigLeft
+              fill="true"
+              size={'48'}
+              onClick={leftAvatarChange}
+              className="mx-5"
+            ></ArrowBigLeft>
+            <Avatar
+              avatarString={currentAvatarString}
+              collectionName={selectedCollectionName}
+            />
+            <ArrowBigRight
+              fill="true"
+              size={'48'}
+              onClick={rightAvatarChange}
+              className="mx-5"
+            ></ArrowBigRight>
+          </div>
 
-          <div className="flex-1 w-full flex-col flex items-center justify-center overflow-hidden">
-            <Button onClick={changeAvatarClick} className="mx-5">
-              <Dices className="size-20" />
-              {t('general:randomize')}
-            </Button>
-            <h1  className='font-display mt-4'>{t('homepage:collection')}!</h1>
-            <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
-              <ArrowBigLeft size={"48"} onClick={goToPreviousCollection} className="mx-5">
-                Previous Collection
-              </ArrowBigLeft>
-              <ArrowBigRight size={"48"} onClick={goToNextCollection} className="mx-5">
-                Next Collection
-              </ArrowBigRight>
+          <div className="flex-1 w-full flex-col flex items-center justify-center">
+            <div className="flex-1 w-full flex items-center justify-center">
+              <ArrowBigLeft
+                fill="true"
+                size={'48'}
+                onClick={goToPreviousCollection}
+                className="mx-5"
+              ></ArrowBigLeft>
+              <h1 className="font-display">{t('homepage:collection')}!</h1>
+              <ArrowBigRight
+                fill="true"
+                size={'48'}
+                onClick={goToNextCollection}
+                className="mx-5"
+              ></ArrowBigRight>
             </div>
           </div>
 
           <Input
             placeholder={t('general:username')}
-            className="text-[#333333] text-center border-gray-400 rounded-md font-display text-lg md:text-lg py-8 px-12 w-full shadow-lg"
+            className="text-[#333333] text-center w-100 border-gray-400 rounded-md font-display text-lg md:text-lg py-4 px-6  shadow-lg"
             value={username}
             maxLength={15}
             onChange={(e) => {
               setUsername(e.target.value);
-              setUpdateStatus(null);
             }}
           />
-          <Button onClick={handleUpdate} className="w-full h-12 bg-green-500">
+          <Button onClick={handleUpdate} className="bg-green-500">
             {t('general:update')}
           </Button>
-
-          {updateStatus && (
-            <div className="mt-4 flex flex-col items-center justify-center h-full">
-              {updateStatus === 'success' ? (
-                <div className="flex flex-col items-center justify-center">
-                  <Check className="mr-4 text-green-500 size-20" />
-                  <p className="font-display mt-2 text-2xl">{statusMessage}</p>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center">
-                  <CircleX className="text-red-500 size-20" />
-                  <p className="font-display mt-2 text-lg">{statusMessage}</p>
-                </div>
-              )}
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
