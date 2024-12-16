@@ -12,7 +12,7 @@ import { SlideInfo } from '../..';
 export const Info: SlideInfo = {
   value: 'question:FA',
   icon: Timer,
-  label: 'Fastest Finger First',
+  label: 'Fastest Finger',
   slideType: SlideTypes.question,
   questionType: QuestionTypes.FA,
   defaults: {
