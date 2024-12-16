@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { SidebarHeader } from './SidebarHeader';
 import { SlideActions } from './SlideActions';
 import { getSlideComponents } from '@/slides/utils';
+import { useTranslation } from 'react-i18next';
 
 interface SlideSidebarProps {
   quizName: string;
@@ -44,6 +45,8 @@ export function SlideSidebar({
   secondaryColor,
 }: SlideSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { t } = useTranslation(['questions']);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -97,7 +100,7 @@ export function SlideSidebar({
             return (
               <div key={slide.id}>
                 <h1 className="font-bold text-black text-sm">
-                  {index + 1}. {slideComponent.Info.label}
+                  {index + 1}. {t(slideComponent.Info.label)}
                 </h1>
                 <h1></h1>
                 <div
