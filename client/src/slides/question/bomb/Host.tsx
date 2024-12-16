@@ -159,7 +159,7 @@ export function Host({
           setIsCorrect('true');
 
           setUsedAnswers((prev) => {
-            const updatedAnswers = [...prev, lastTempAnswer];
+            const updatedAnswers = [...prev, lastTempAnswer.toUpperCase()];
 
             if (answers.length === updatedAnswers.length) {
               console.log('inne I FKNIN LOOPEN');

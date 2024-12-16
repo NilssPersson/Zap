@@ -9,12 +9,17 @@ interface AvatarProps {
 }
 
 // Function to find the corresponding collection style based on the collection name
-const findCollectionByName = (name: string) => {
+export const findCollectionByName = (name: string) => {
   const collectionIndex = collectionNames.indexOf(name);
   if (collectionIndex !== -1) {
     return avatarCollections[collectionIndex];
   }
-  return null; // If no matching collection is found
+  return avatarCollections[2]; //Collection with index 2 is "micah"
+};
+
+export const findCollectionIndexByName = (name: string) => {
+  const collectionIndex = collectionNames.indexOf(name);
+  return collectionIndex !== -1 ? collectionIndex : null; // Returns the index or null if not found
 };
 
 const Avatar = ({ avatarString, collectionName = "micah" }: AvatarProps) => {
