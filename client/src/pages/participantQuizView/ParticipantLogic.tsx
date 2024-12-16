@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ParticipantService, useGameStatus } from '@/services/participant';
 import TeamInfo from './components/ParticipantInfo';
 import CreateParticipant from './components/CreateParticipant';
-import {LogOut, Zap } from 'lucide-react';
+import { LogIn, LogOut, Zap } from 'lucide-react';
 import { useCookies } from 'react-cookie';
 import LobbyView from '@/pages/participantQuizView/components/LobbyView';
 import HasAnsweredView from '@/pages/participantQuizView/components/HasAnsweredView';
@@ -27,14 +27,13 @@ function QuizView({
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
   answerTempQuestion: (answer: string) => Promise<void>;
-  isTurn: string
+  isTurn: string;
 
   showAnswer: boolean;
 }) {
   if (!questions || !participantData) return <div>Loading Questions...</div>;
   if (currentSlide === 0) return <LobbyView />;
   if (currentSlide > questions.length) return <QuizEndedView />;
-
 
   const currentQuestion = questions[currentSlide - 1];
   const SlideComponent = getSlideComponents(currentQuestion);
@@ -64,7 +63,6 @@ function QuizView({
       answerTempQuestion={answerTempQuestion as never}
       participantData={participantData}
       isTurn={isTurn}
-      
     />
   );
 }
@@ -77,14 +75,11 @@ export default function ParticipantLogic() {
   const [cookies, setCookie, removeCookie] = useCookies(['participantId']);
   const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
- 
 
   const { currentSlide, participantData, showAnswer, isTurn } = useGameStatus(
     quizCode as string,
     participantId as string
   );
-
-  
 
   // Fetch quiz and participant data
   useEffect(() => {
@@ -201,8 +196,12 @@ export default function ParticipantLogic() {
       {/* Top: Leave functionality */}
       <div className="flex p-2 w-full bg-[#F4F3F2] text-[#333333]">
         <div className="flex-1 flex items-center justify-start">
-          <Button variant="outline" onClick={handleRemoveParticipant}>
-            <LogOut />
+          <Button
+            className="gap-1"
+            variant="outline"
+            onClick={handleRemoveParticipant}
+          >
+            <LogIn transform="rotate(180)" />
             Leave
           </Button>
         </div>
@@ -225,7 +224,7 @@ export default function ParticipantLogic() {
           participantData={participantData}
           answerQuestion={answerQuestion}
           showAnswer={showAnswer}
-          answerTempQuestion={answerTempQuestion} 
+          answerTempQuestion={answerTempQuestion}
           isTurn={isTurn}
         />
       </div>
