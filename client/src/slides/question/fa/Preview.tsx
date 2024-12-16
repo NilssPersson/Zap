@@ -54,7 +54,7 @@ export function Preview({ slide }: { slide: FASlide }) {
 
   return (
     <div>
-      <BaseQuestionRender slide={slide} participants={participants} />
+      <BaseQuestionRender slide={slide} />
       <div className="flex flex-col items-center m-16 gap-10">
         <h1 className="text-6xl font-display">{t('nextUp')}</h1>
         {participants.map((participant, index) => (

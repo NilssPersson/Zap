@@ -21,5 +21,11 @@
   "availableAnswers": "Tillgängliga svar",
   "del": "Del",
   "noAnswer": "Inga svar har lagts till",
-  "addAnswer": "Lägg till svar"
+  "addAnswer": "Lägg till svar",
+  "lookAtYourScreen": "Kolla på din skräm och ranka alternativen",
+  "rankAnswers": "Ranka svaren",
+  "add": "Lägg till",
+  "embededYT": "YouTube Video",
+  "embeded": "Inbyggd",
+  "remove": "Ta bort"
 }

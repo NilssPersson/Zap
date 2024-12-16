@@ -7,6 +7,7 @@ import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
+import EndQuizButton from '@/components/EndQuizButton';
 
 function HostLogic() {
   const { id } = useParams();
@@ -60,6 +61,8 @@ function HostLogic() {
     );
   };
 
+  const inLobby = ongoingQuiz.currentSlide <= 1;
+
   return (
     <>
       {!ongoingQuiz.isShowingCorrectAnswer ? (
@@ -77,7 +80,7 @@ function HostLogic() {
             updateSlideUsedAnswers={updateSlideUsedAnswers}
 
           />
-          {ongoingQuiz.currentSlide > 1 && (
+          {!inLobby && (
             <ParticipantAnswers
               participants={Object.values(ongoingQuiz.participants || {})}
               removeParticipant={removeParticipant}
@@ -93,6 +96,7 @@ function HostLogic() {
           handleAddPoints={handleAddPoints}
         />
       )}
+      {!inLobby && <EndQuizButton onClick={() => endQuiz(ongoingQuiz.id)} />}
       <RenderButtons />
     </>
   );

@@ -16,10 +16,16 @@
   "MCQSA": "Single Answer",
   "RANK": "Rank it Right",
   "addSlide": "Add slide",
-  "hearts":"Hearts",
+  "hearts": "Hearts",
   "initialTime": "Initial Time (Seconds)",
   "availableAnswers": "Available Answers",
   "del": "Del",
-  "noAnswer":"No answers available",
-  "addAnswer": "Add Answer"
+  "noAnswer": "No answers available",
+  "addAnswer": "Add Answer",
+  "lookAtYourScreen": "Look at your screen and rank the options",
+  "rankAnswers": "Rank Answers",
+  "add":"Add",
+  "embededYT":"Embed YouTube Video",
+  "embeded":"Embed",
+  "remove":"Remove"
 }
