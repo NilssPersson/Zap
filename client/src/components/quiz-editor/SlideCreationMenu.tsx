@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { Separator } from "@/components/ui/separator";
-import { PopoverContent } from "@/components/ui/popover";
-import { type SlideType, type QuestionType, SlideTypes } from "@/models/Quiz";
-import * as Slides from "@/slides";
-import { SlideOption } from "./SlideOption";
-import { SlideInfo } from "@/slides";
+import { useEffect, useRef, useState } from 'react';
+import { Separator } from '@/components/ui/separator';
+import { PopoverContent } from '@/components/ui/popover';
+import { type SlideType, type QuestionType, SlideTypes } from '@/models/Quiz';
+import * as Slides from '@/slides';
+import { SlideOption } from './SlideOption';
+import { SlideInfo } from '@/slides';
+import { useTranslation } from 'react-i18next';
 
 interface SlideCreationMenuProps {
   onAddSlide: (type: SlideType, questionType?: QuestionType) => void;
@@ -14,22 +15,20 @@ interface SlideCreationMenuProps {
 // Replace existing slides and questions arrays with optionGroups
 const optionGroups = [
   {
-    label: "Slides",
+    label: 'Slides',
     options: Object.values(Slides)
       .filter(
         (slide) =>
-          slide.Info.slideType !== SlideTypes.question &&
-          !slide.Info.uneditable,
+          slide.Info.slideType !== SlideTypes.question && !slide.Info.uneditable
       )
       .map((slide) => slide.Info),
   },
   {
-    label: "Question Types",
+    label: 'Question Types',
     options: Object.values(Slides)
       .filter(
         (slide) =>
-          slide.Info.slideType === SlideTypes.question &&
-          !slide.Info.uneditable,
+          slide.Info.slideType === SlideTypes.question && !slide.Info.uneditable
       )
       .map((slide) => slide.Info),
   },
@@ -46,11 +45,13 @@ function RenderOptions({
   onAddSlide,
   onCloseMenu,
 }: RenderOptionsProps) {
+  const { t } = useTranslation(['questions']);
+
   return options.map((option) => {
     return (
       <SlideOption
         key={option.value}
-        label={option.label}
+        label={t(option.label)}
         icon={option.icon}
         onClick={() => {
           onAddSlide(option.slideType, option.questionType);

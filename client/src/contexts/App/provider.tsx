@@ -25,6 +25,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     optimisticCreate: createQuiz,
     optimisticDelete: deleteQuiz,
     optimisticUpdate: updateQuiz,
+    enrichResource: enrichQuiz,
   } = useQuizzes();
 
   const endQuiz = useCallback(
@@ -67,6 +68,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           optimisticCreate: createQuiz,
           optimisticDelete: deleteQuiz,
           optimisticUpdate: updateQuiz,
+          enrichResource: enrichQuiz,
         },
         user: {
           user,

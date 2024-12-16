@@ -14,7 +14,7 @@ export function Participant({
     if (time <= 0) return;
     const timer = setInterval(() => {
       setTime((prevTime) => prevTime - 1);
-    }, 1000);
+    }, 900);
 
     return () => clearInterval(timer);
   }, [time]);

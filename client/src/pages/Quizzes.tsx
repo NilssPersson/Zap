@@ -6,39 +6,29 @@ import SharedQuizList from '@/components/quizzes/SharedQuizList';
 import { useCallback, useEffect, useState } from 'react';
 import { Loader2, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { SharedQuizzes, UserQuizzes } from '@/models/Quiz';
+import { SharedQuizzes } from '@/models/Quiz';
 import { useAppContext } from '@/contexts/App/context';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { quizService } from '@/services/quizzes';
 import { useTranslation } from 'react-i18next';
-import { database } from '@/firebase';
-import { ref, remove, set, update, get } from 'firebase/database';
-import { nanoid } from 'nanoid';
 
 function useQuizzesPage() {
   const {
-    quizzes: { optimisticCreate, optimisticDelete, optimisticUpdate },
+    quizzes: { resources: quizzes, isLoading: quizzesLoading, optimisticCreate, optimisticDelete, optimisticUpdate },
     user: { user },
     ongoingQuizzes: { resources: ongoingQuizzes },
   } = useAppContext();
 
   const [sharedQuizzes, setSharedQuizzes] = useState<SharedQuizzes[]>([]);
   const [sharedQuizzesLoading, setSharedQuizzesLoading] = useState(false);
-  const [userQuizzes, setUserQuizzes] = useState<UserQuizzes[]>([]);
-  const [userQuizzesLoading, setUserQuizzesLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
       setSharedQuizzesLoading(true);
-      setUserQuizzesLoading(true);
       quizService.listShared(user.id).then(({ data }) => {
         setSharedQuizzes(data || []);
         setSharedQuizzesLoading(false);
-      });
-      quizService.listUserQuizzes(user.id).then(({ data }) => {
-        setUserQuizzes(data || []);
-        setUserQuizzesLoading(false);
       });
     }
   }, [user]);
@@ -47,41 +37,41 @@ function useQuizzesPage() {
     async (name: string) => {
       if (!user) return;
 
-      const { data } = await quizService.createQuiz({
+      const { data: userQuiz } = await quizService.createQuiz({
         quiz_name: name,
         user_id: user.id,
       });
 
-      if (!data) {
+      if (!userQuiz) {
         toast.error('Failed to create quiz');
         return;
       }
 
-      setUserQuizzes((userQuizzes) => [...userQuizzes, data]);
+      // Create optimistic quiz from userQuiz data
+      optimisticCreate({
+        id: userQuiz.quizId,
+        quiz_name: userQuiz.quizName,
+        user_id: userQuiz.userId,
+        isHosted: userQuiz.isHosted,
+        isShared: userQuiz.isShared,
+        created_at: userQuiz.createdAt,
+        updated_at: userQuiz.updatedAt,
+      });
     },
     [user, optimisticCreate]
   );
 
   const handleDeleteQuiz = useCallback(
     async (quizId: string) => {
-      const userQuizRef = ref(database, `userQuizzes/${quizId}`);
-      const quizRef = ref(database, `quizzes/${quizId}`);
-      const sharedQuizRef = ref(database, `sharedQuizzes/${quizId}`);
+      const { error } = await quizService.deleteQuiz(quizId);
+      
+      if (error) {
+        toast.error('Failed to delete quiz');
+        return;
+      }
 
-      await Promise.all([
-        remove(userQuizRef),
-        remove(quizRef),
-        remove(sharedQuizRef),
-      ])
-        .then(() => {
-          toast.success('Quiz deleted successfully');
-          setUserQuizzes((userQuizzes) =>
-            userQuizzes.filter((quiz) => quiz.quizId !== quizId)
-          );
-        })
-        .catch(() => {
-          toast.error('Failed to delete quiz');
-        });
+      optimisticDelete(quizId);
+      toast.success('Quiz deleted successfully');
     },
     [optimisticDelete]
   );
@@ -89,93 +79,44 @@ function useQuizzesPage() {
   const handleShareQuiz = useCallback(
     async (quizId: string, quizName: string) => {
       if (!user) return;
-      console.log('Sharing quiz:', quizId);
-      console.log(user);
 
-      const sharedQuizRef = ref(database, `sharedQuizzes/${quizId}`);
-
-      const sharedQuizSnap = await get(sharedQuizRef);
-
-      if (sharedQuizSnap.exists()) {
-        await remove(sharedQuizRef);
-        const userQuizRef = ref(database, `userQuizzes/${quizId}`);
-        await update(userQuizRef, { isShared: false });
-        setUserQuizzes((userQuizzes) =>
-          userQuizzes.map((quiz) =>
-            quiz.quizId === quizId ? { ...quiz, isShared: false } : quiz
-          )
-        );
+      const { data: isShared, error } = await quizService.shareQuiz(quizId, user, quizName);
+      
+      if (error) {
+        toast.error('Failed to share quiz');
         return;
       }
 
-      const newShared: SharedQuizzes = {
-        userId: user.id,
-        userName: user.username || 'NoName',
-        userAvatar: user.avatar || 'NoAvatar',
-        quizId: quizId,
-        quizName: quizName,
-        sharedAt: new Date().toLocaleString(),
-      };
-
-      await set(sharedQuizRef, newShared);
-
-      const userQuizRef = ref(database, `userQuizzes/${quizId}`);
-      await update(userQuizRef, { isShared: true });
-      setUserQuizzes((userQuizzes) =>
-        userQuizzes.map((quiz) =>
-          quiz.quizId === quizId ? { ...quiz, isShared: true } : quiz
-        )
-      );
-      toast.success(`Quiz ${quizName} was successfully shared`);
+      optimisticUpdate(quizId, { isShared: isShared ?? false });
+      if (isShared) {
+        toast.success(`Quiz ${quizName} was successfully shared`);
+      }
     },
-    [optimisticUpdate]
+    [optimisticUpdate, user]
   );
 
   const handleCopyQuiz = useCallback(
     async (quiz: SharedQuizzes) => {
       if (!user) return;
 
-      const quizRef = ref(database, `quizzes/${quiz.quizId}`);
+      const { data: newQuiz, error } = await quizService.copyQuiz(quiz, user.id);
 
-      const quizData = await get(quizRef);
-
-      if (!quizData.exists()) {
+      if (error || !newQuiz) {
         toast.error('Failed to copy quiz');
         return;
       }
 
-      const newQuizId = nanoid();
-      const newQuizRef = ref(database, `quizzes/${newQuizId}`);
-      await set(newQuizRef, {
-        ...quizData.val(),
-        id: newQuizId,
-        quiz_name: `${quizData.val().quiz_name} (Copy)`,
-        user_id: user.id,
-        isShared: false,
-        updated_at: new Date().toLocaleString(),
-      });
-
-      const userQuizRef = ref(database, `userQuizzes/${newQuizId}`);
-      const newQuizData = {
-        userId: user.id,
-        quizId: newQuizId,
-        quizName: `${quizData.val().quiz_name} (Copy)`,
-        isHosted: false,
-        isShared: false,
-        createdAt: new Date().toLocaleString(),
-        updatedAt: new Date().toLocaleString(),
-      };
-      await set(userQuizRef, newQuizData);
-      setUserQuizzes((userQuizzes) => [...userQuizzes, newQuizData]);
-
+      optimisticCreate(newQuiz);
       toast.success('Quiz copied successfully');
     },
-    [user, optimisticCreate, optimisticUpdate]
+    [user, optimisticCreate]
   );
 
   const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.quizHost !== user?.id);
 
   return {
+    quizzes,
+    quizzesLoading,
     sharedQuizzes,
     sharedQuizzesLoading,
     handleCreateQuiz,
@@ -183,13 +124,13 @@ function useQuizzesPage() {
     handleShareQuiz,
     handleCopyQuiz,
     ongoingQuiz,
-    userQuizzes,
-    userQuizzesLoading,
   };
 }
 
 function Quizzes() {
   const {
+    quizzes,
+    quizzesLoading,
     sharedQuizzes,
     sharedQuizzesLoading,
     handleCreateQuiz,
@@ -197,8 +138,6 @@ function Quizzes() {
     handleShareQuiz,
     handleCopyQuiz,
     ongoingQuiz,
-    userQuizzes,
-    userQuizzesLoading,
   } = useQuizzesPage();
 
   const navigate = useNavigate();
@@ -223,13 +162,21 @@ function Quizzes() {
           </CardTitle>
         </CardHeader>
         <CardContent className="min-h-[300px]">
-          {userQuizzesLoading ? (
+          {quizzesLoading ? (
             <div className="flex justify-center items-center h-[300px] w-full">
               <Loader2 className="animate-spin" />
             </div>
           ) : (
             <QuizList
-              quizzes={userQuizzes}
+              quizzes={quizzes.map(quiz => ({
+                quizId: quiz.id,
+                quizName: quiz.quiz_name,
+                userId: quiz.user_id,
+                isHosted: quiz.isHosted,
+                isShared: quiz.isShared,
+                createdAt: quiz.created_at,
+                updatedAt: quiz.updated_at,
+              }))}
               onDeleteQuiz={handleDeleteQuiz}
               onShareQuiz={handleShareQuiz}
             />
