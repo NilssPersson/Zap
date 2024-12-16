@@ -1,12 +1,10 @@
 import { RankSlide, Participant } from '@/models/Quiz';
 import NextSlide from '@/slides/_components/NextSlide';
-import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import SlideTitleSpecial from '@/slides/_components/SlideTitleSpecial';
 import { getSlideComponents } from '@/slides/utils';
 
 export function Host({
   slide,
-  participants = [],
   onNextSlide,
 }: {
   slide: RankSlide;
@@ -34,7 +32,6 @@ export function Host({
           </div>
         )}
       </div>
-      <ParticipantAnswers participants={participants} />
       <NextSlide onClick={onNextSlide} />
     </div>
   );

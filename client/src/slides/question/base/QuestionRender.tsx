@@ -1,15 +1,12 @@
-import { Participant, QuestionSlide } from '@/models/Quiz';
+import { QuestionSlide } from '@/models/Quiz';
 import { SlideTitle } from '@/slides/_components/SlideTitle';
 import { SlideContent } from '@/slides/_components/SlideContent';
-import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 export function BaseQuestionRender({
   slide,
   children,
-  participants,
 }: {
   slide: QuestionSlide;
   children?: React.ReactNode;
-  participants: Participant[];
 }) {
   return (
     <div className="flex-1 flex flex-col space-y-12 w-full justify-center mb-10">
@@ -17,9 +14,6 @@ export function BaseQuestionRender({
         <div className="space-y-8">
           <div className="flex flex-row justify-center pt-32 ">
             <SlideTitle title={slide.title} />
-            <div className="mr-1">
-              <ParticipantAnswers participants={participants} />
-            </div>
           </div>
 
           {slide.imageUrl && (

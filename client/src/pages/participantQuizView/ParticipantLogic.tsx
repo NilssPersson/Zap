@@ -11,6 +11,7 @@ import HasAnsweredView from '@/pages/participantQuizView/components/HasAnsweredV
 import QuizEndedView from '@/pages/participantQuizView/components/QuizEndedView';
 import { Participant, QuestionTypes, Slide } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
+import Spinner from '@/components/Spinner';
 
 function QuizView({
   questions,
@@ -31,7 +32,7 @@ function QuizView({
 
   showAnswer: boolean;
 }) {
-  if (!questions || !participantData) return <div>Loading Questions...</div>;
+  if (!questions || !participantData) return <Spinner />;
   if (currentSlide === 0) return <LobbyView />;
   if (currentSlide > questions.length) return <QuizEndedView />;
 
