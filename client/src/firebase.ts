@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getPerformance } from "firebase/performance";
 import { getDatabase } from "firebase/database";
 import type { Database } from "firebase/database";
 
@@ -15,5 +16,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const database:Database = getDatabase(app);
-export { database };
+const database: Database = getDatabase(app);
+const perf = getPerformance(app);
+export { database, perf };
