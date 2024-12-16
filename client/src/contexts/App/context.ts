@@ -23,10 +23,6 @@ interface AppContextType {
     user: User | null;
     updateUser: (user: User) => Promise<void>;
   };
-  users: {
-    resources: User[];
-    isLoading: boolean;
-  };
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);

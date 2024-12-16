@@ -31,8 +31,6 @@ class QuizService extends BaseService<Quiz> {
       id: quizId,
       created_at: new Date().toISOString().toLocaleString(),
       updated_at: new Date().toISOString().toLocaleString(),
-      isHosted: false,
-      isShared: false,
       settings: {
         ...quizDefaults
       }

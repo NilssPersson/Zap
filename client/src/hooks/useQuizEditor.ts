@@ -33,9 +33,10 @@ export function useQuizEditor(quizId: string | undefined) {
   const [, setActionCount] = useState(0);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const globalQuiz = quizzes.find((q) => q.id === quizId);
-
+  console.log(quizzes)
   // Initialize local quiz from global state
   useEffect(() => {
+    
     if (globalQuiz && !localQuiz) {
       setLocalQuiz(globalQuiz);
     }
