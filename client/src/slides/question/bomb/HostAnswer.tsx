@@ -3,6 +3,7 @@ import NextSlide from '@/slides/_components/NextSlide';
 import { BombIcon } from 'lucide-react';
 import Avatar, { genConfig } from 'react-nice-avatar';
 import type { Participant } from '@/models/Quiz';
+import { useTranslation } from 'react-i18next';
 
 export function HostAnswer({
   participants,
@@ -14,6 +15,7 @@ export function HostAnswer({
   onNextSlide: () => void;
 }) {
   // Find the highest answer and collect participants with that answer
+  const { t } = useTranslation();
   let highestAnswer = -Infinity;
   let winningParticipants: Participant[] = [];
 
@@ -63,7 +65,9 @@ export function HostAnswer({
               key={participant.participantId}
             >
               <h1 className="m-4 text-3xl font-display">
-                {winningParticipants.includes(participant) ? 'Winner!' : '💀'}
+                {winningParticipants.includes(participant)
+                  ? t('question:winner')
+                  : '💀'}
               </h1>
               <Avatar
                 style={{

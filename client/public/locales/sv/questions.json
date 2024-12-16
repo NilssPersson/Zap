@@ -2,6 +2,8 @@
   "correctAnswer": "Det rätta svaret är",
   "correctAnswers": "De rätta svaren är",
   "answer": "Svara",
+  "answering":"Svarar",
+  "winner":"Vinnare",
   "rightAnswer": "Rätt svar",
   "wrongAnswer": "Fel svar",
   "nextUp": "Nästa persons tur att svara:",
