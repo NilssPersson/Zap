@@ -1,4 +1,4 @@
-import { MCQSASlide, Participant } from '@/models/Quiz';
+import { MCQSASlide } from '@/models/Quiz';
 import { BaseQuestionRender } from '../base/QuestionRender';
 import { getColor } from '../base/QuizColors';
 import NextSlide from '@/slides/_components/NextSlide';
@@ -6,15 +6,13 @@ import { cn } from '@/lib/utils';
 
 export function Host({
   slide,
-  participants,
   onNextSlide,
 }: {
   slide: MCQSASlide;
-  participants: Participant[];
   onNextSlide: () => void;
 }) {
   return (
-    <BaseQuestionRender slide={slide} participants={participants}>
+    <BaseQuestionRender slide={slide}>
       <div className="flex flex-col items-center justify-center p-10">
         <div
           className={cn(

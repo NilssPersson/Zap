@@ -1,5 +1,5 @@
 import { Participant } from "@/models/Quiz";
-import { Line, LineChart, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { Line, LineChart, XAxis, YAxis, CartesianGrid } from "recharts";
 
 // Import the correct components and types
 import { ChartContainer, ChartLegend, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";

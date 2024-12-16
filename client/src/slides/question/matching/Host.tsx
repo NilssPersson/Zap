@@ -1,20 +1,18 @@
-import { Participant, MatchingSlide } from '@/models/Quiz';
+import { MatchingSlide } from '@/models/Quiz';
 import { BaseQuestionRender } from '../base/QuestionRender';
 import { getColor } from '../base/QuizColors';
 import NextSlide from '@/slides/_components/NextSlide';
 
 export function Host({
   slide,
-  participants,
   onNextSlide,
 }: {
   slide: MatchingSlide;
-  participants: Participant[];
   onNextSlide: () => void;
 }) {
   return (
     <>
-      <BaseQuestionRender participants={participants} slide={slide}>
+      <BaseQuestionRender slide={slide}>
         <div className="flex flex-col flex-1 justify-center items-center px-64 gap-8">
           {slide.labels.map((label, idx) => (
             <div
