@@ -13,9 +13,9 @@ import { Bomb } from 'lucide-react';
 export const Info: SlideInfo = {
   value: 'question:BOMB',
   icon: Bomb,
-  label: QuestionTypes.BOMB,
+  label: 'Ticking time bomb',
   slideType: SlideTypes.question,
   questionType: QuestionTypes.BOMB,
   interactivePreview: true,
-  defaults: { points: 1000 } as Partial<BombSlide>, // Default to an empty object or provide appropriate defaults
+  defaults: { points: 1000, initialTime: 30, hearts: 3 } as Partial<BombSlide>, // Default to an empty object or provide appropriate defaults
 } as const;
