@@ -30,6 +30,7 @@ i18n
       'questions',
       'slides',
       'contentDescriptions',
+      'participants'
     ],
     defaultNS: 'translation',
     load: 'languageOnly',
