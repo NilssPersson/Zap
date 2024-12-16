@@ -9,7 +9,7 @@ import {
 } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
 import { MatchingSlide } from "@/models/Quiz";
-import { DraggableItem, DroppableContainer } from "@/slides/_components/dnd";
+import { DroppableContainer } from "@/slides/_components/dnd";
 import { getColor } from "../base/QuizColors";
 
 interface MatchingViewProps {
