@@ -106,7 +106,7 @@ export function BombOptionsInput({
           />
           <Button
             onClick={() => {
-              if (newAnswer.trim() !== '') {
+              if (newAnswer.trim().toUpperCase() !== '') {
                 addAnswers(newAnswer);
                 setNewAnswer('');
               }
