@@ -152,7 +152,7 @@ export function Host({
 
         if (
           lastTempAnswer &&
-          answers.includes(lastTempAnswer) &&
+          answers.includes(lastTempAnswer.toUpperCase()) &&
           !usedAnswers.includes(lastTempAnswer.toUpperCase()) &&
           currentParticipant.participantId == isTurn
         ) {
@@ -209,13 +209,13 @@ export function Host({
             setIsTransitioning(false); // Unlock transitions
             setUserAnswer('');
           }, 1200);
-        } else if (lastTempAnswer && !answers.includes(lastTempAnswer)) {
+        } else if (lastTempAnswer && !answers.includes(lastTempAnswer.toUpperCase())) {
           setIsCorrect('false');
           setUserAnswer(lastTempAnswer);
         } else if (
           lastTempAnswer &&
-          answers.includes(lastTempAnswer) &&
-          usedAnswers.includes(lastTempAnswer)
+          answers.includes(lastTempAnswer.toUpperCase()) &&
+          usedAnswers.includes(lastTempAnswer.toUpperCase())
         ) {
           setIsCorrect('used');
           setUserAnswer(lastTempAnswer);

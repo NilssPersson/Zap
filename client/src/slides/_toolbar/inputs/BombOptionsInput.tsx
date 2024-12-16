@@ -74,7 +74,7 @@ export function BombOptionsInput({
               <Input
                 value={answer}
                 onChange={(e) => {
-                  const updatedAnswer = e.target.value.trim();
+                  const updatedAnswer = e.target.value.trim().toUpperCase();
                   if (!updatedAnswer) return;
 
                   updateSlide({
@@ -106,8 +106,8 @@ export function BombOptionsInput({
           />
           <Button
             onClick={() => {
-              if (newAnswer.trim().toUpperCase() !== '') {
-                addAnswers(newAnswer);
+              if (newAnswer.trim() !== '') {
+                addAnswers(newAnswer.toUpperCase());
                 setNewAnswer('');
               }
             }}

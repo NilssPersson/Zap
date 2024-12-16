@@ -37,7 +37,7 @@ export function HostAnswer({
         <h1 className="p-4">{slide.title}</h1>
       </div>
 
-      <div className="mt-10 text-black grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+      <div className="mt-10 text-black grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full overflow-y-auto max-h-96">
         {slide.answers.map((answer, index) => (
           <div
             key={index}

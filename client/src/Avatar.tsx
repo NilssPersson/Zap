@@ -51,7 +51,6 @@ const Avatar = ({ avatarString, collectionName }: AvatarProps) => {
           dangerouslySetInnerHTML={{ __html: sanitizedSvg }}
         />
       </div>
-      <p className="text-center mt-2">{collectionName}</p>
     </div>
   );
 };
