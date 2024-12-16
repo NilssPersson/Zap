@@ -5,6 +5,8 @@ import { getSlideComponents } from '@/slides/utils';
 import Countdown from 'react-countdown';
 import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
+import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
+import Spinner from '@/components/Spinner';
 
 function HostLogic() {
   const { id } = useParams();
@@ -16,9 +18,10 @@ function HostLogic() {
     updateSlideUsedAnswers,
     endQuiz,
     handleAddPoints,
+    removeParticipant,
   } = useHostLogic(id);
 
-  if (!ongoingQuiz) return <div>Loading Quiz...</div>;
+  if (!ongoingQuiz) return <Spinner />;
 
   const slide = getCurrentSlide();
 
@@ -60,18 +63,27 @@ function HostLogic() {
   return (
     <>
       {!ongoingQuiz.isShowingCorrectAnswer ? (
-        <SlideComponent.Host
-          slides={ongoingQuiz.quiz.slides}
-          currentSlide={ongoingQuiz.currentSlide}
-          participants={Object.values(ongoingQuiz.participants || {})}
-          slide={slide as never}
-          onNextSlide={nextSlide}
-          quizCode={ongoingQuiz.id}
-          slideNumber={ongoingQuiz.currentSlide}
-          changeTurn={changeTurn}
-          updateSlideUsedAnswers={updateSlideUsedAnswers}
-          
-        />
+        <>
+          <SlideComponent.Host
+            slides={ongoingQuiz.quiz.slides}
+            currentSlide={ongoingQuiz.currentSlide}
+            participants={Object.values(ongoingQuiz.participants || {})}
+            removeParticipant={removeParticipant}
+            slide={slide as never}
+            onNextSlide={nextSlide}
+            quizCode={ongoingQuiz.id}
+            slideNumber={ongoingQuiz.currentSlide}
+            changeTurn={changeTurn}
+            updateSlideUsedAnswers={updateSlideUsedAnswers}
+
+          />
+          {ongoingQuiz.currentSlide > 1 && (
+            <ParticipantAnswers
+              participants={Object.values(ongoingQuiz.participants || {})}
+              removeParticipant={removeParticipant}
+            />
+          )}
+        </>
       ) : (
         <SlideComponent.HostAnswer
           participants={Object.values(ongoingQuiz.participants)}
@@ -79,7 +91,6 @@ function HostLogic() {
           onNextSlide={nextSlide}
           quizCode={ongoingQuiz.id}
           handleAddPoints={handleAddPoints}
-
         />
       )}
       <RenderButtons />

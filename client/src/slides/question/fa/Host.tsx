@@ -8,6 +8,7 @@ import { usePathOnValue } from '@/hooks/usePathOnValue';
 import { BaseQuestionRender } from '../base/QuestionRender';
 import { useTranslation } from 'react-i18next';
 import NextSlide from '@/slides/_components/NextSlide';
+import Spinner from '@/components/Spinner';
 
 export function Host({
   slide,
@@ -39,7 +40,7 @@ export function Host({
     () => ongoingQuizzes.find((quiz) => quiz.id === quizCode),
     [ongoingQuizzes, quizCode]
   );
-  if (!ongoingQuiz) return <h1>Loading quiz</h1>;
+  if (!ongoingQuiz) return <Spinner />;
   const updateParticipants = useCallback(
     (id: string, participants: { [key: string]: Participant }) => {
       optimisticUpdate(
@@ -161,7 +162,7 @@ export function Host({
   } else {
     return (
       <div>
-        <BaseQuestionRender slide={slide} participants={participants} />
+        <BaseQuestionRender slide={slide} />
         <div className="flex flex-col items-center m-16 gap-10">
           <h1 className="text-6xl font-display">{t('nextUp')}</h1>
           {participantsQueue.slice(0, 3).map((participant, index) => (

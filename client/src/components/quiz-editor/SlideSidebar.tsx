@@ -154,7 +154,7 @@ export function SlideSidebar({
                 onMouseEnter={() => setIsOpen(true)}
               >
                 <PlusCircle className="w-4 h-4 text-muted-foreground " />
-                <h1 className="text-muted-foreground pl-1">Add Slide</h1>
+                <h1 className="text-muted-foreground pl-1">{t('addSlide')}</h1>
               </div>
             </PopoverTrigger>
             <SlideCreationMenu

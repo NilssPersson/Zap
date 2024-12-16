@@ -6,7 +6,7 @@
   "wrongAnswer": "Wrong Answer",
   "nextUp": "Next up to answer:",
   "getReady": "Get ready in ",
-  "knowTheAnswer": "Know the answer? Press the button!",
+  "knowTheAnswer": "Know the answer to the next question? Press the button!",
   "BOMB": "Ticking Time Bomb",
   "FA": "Fastest Finger",
   "FTA": "Free Text Answer",
@@ -14,5 +14,12 @@
   "MATCHING": "Meet Your Match",
   "MCQMA": "Multiple Choice",
   "MCQSA": "Single Answer",
-  "RANK": "Rank it Right"
+  "RANK": "Rank it Right",
+  "addSlide": "Add slide",
+  "hearts":"Hearts",
+  "initialTime": "Initial Time (Seconds)",
+  "availableAnswers": "Available Answers",
+  "del": "Del",
+  "noAnswer":"No answers available",
+  "addAnswer": "Add Answer"
 }

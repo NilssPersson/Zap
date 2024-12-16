@@ -15,7 +15,7 @@ interface SlideCreationMenuProps {
 // Replace existing slides and questions arrays with optionGroups
 const optionGroups = [
   {
-    label: 'Slides',
+    label: 'slides',
     options: Object.values(Slides)
       .filter(
         (slide) =>
@@ -24,7 +24,7 @@ const optionGroups = [
       .map((slide) => slide.Info),
   },
   {
-    label: 'Question Types',
+    label: 'questionTypes',
     options: Object.values(Slides)
       .filter(
         (slide) =>
@@ -68,6 +68,7 @@ export function SlideCreationMenu({
 }: SlideCreationMenuProps) {
   const [closeTimeout, setCloseTimeout] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation(['quizEditor']);
 
   const handleMouseLeave = () => {
     const timeoutId = window.setTimeout(() => {
@@ -104,7 +105,7 @@ export function SlideCreationMenu({
         {optionGroups.map((group, index) => (
           <div key={group.label} className="flex flex-col gap-2">
             {index > 0 && <Separator className="my-2" />}
-            <h4 className="font-medium leading-none mb-3">{group.label}</h4>
+            <h4 className="font-medium leading-none mb-3">{t(group.label)}</h4>
             <RenderOptions
               options={group.options}
               onAddSlide={onAddSlide}

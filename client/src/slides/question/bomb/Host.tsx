@@ -36,7 +36,6 @@ export function Host({
   slideNumber,
   changeTurn,
   updateSlideUsedAnswers,
-  
 }: HostProps) {
   const [time, setTime] = useState(1000000000);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -59,7 +58,6 @@ export function Host({
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const [gameStarted, setGameStarted] = useState(false);
-  const [showQuestion, setShowQuestion] = useState(false);
 
   const initializeHeartsAndTime = () => {
     const newParticipantHearts = participants.map((participant) => {
@@ -154,8 +152,8 @@ export function Host({
 
         if (
           lastTempAnswer &&
-          answers.includes(lastTempAnswer) &&
-          !usedAnswers.includes(lastTempAnswer) &&
+          answers.includes(lastTempAnswer.toUpperCase()) &&
+          !usedAnswers.includes(lastTempAnswer.toUpperCase()) &&
           currentParticipant.participantId == isTurn
         ) {
           setIsCorrect('true');
@@ -211,13 +209,13 @@ export function Host({
             setIsTransitioning(false); // Unlock transitions
             setUserAnswer('');
           }, 1200);
-        } else if (lastTempAnswer && !answers.includes(lastTempAnswer)) {
+        } else if (lastTempAnswer && !answers.includes(lastTempAnswer.toUpperCase())) {
           setIsCorrect('false');
           setUserAnswer(lastTempAnswer);
         } else if (
           lastTempAnswer &&
-          answers.includes(lastTempAnswer) &&
-          usedAnswers.includes(lastTempAnswer)
+          answers.includes(lastTempAnswer.toUpperCase()) &&
+          usedAnswers.includes(lastTempAnswer.toUpperCase())
         ) {
           setIsCorrect('used');
           setUserAnswer(lastTempAnswer);
@@ -419,26 +417,18 @@ export function Host({
   if (!gameStarted) {
     return (
       <div className="h-screen flex flex-col items-center justify-center gap-16">
-        {showQuestion && (
-          <div className="mt-10 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center max-w-[60%] break-words text-center">
-            <BombIcon size={32} className="ml-4"></BombIcon>
-            <h1 className="p-4">{slide.title}</h1>
-          </div>
-        )}
+        <div className="mt-10 rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center break-words text-center">
+          <BombIcon size={32} className="ml-4"></BombIcon>
+          <h1 className="p-8 text-5xl max-w-screen-lg">{slide.title} </h1>
+        </div>
+
         <div className="space-y-10 mx-10">
           <Button
             size={'lg'}
-            className="text-3xl p-8 mx-10"
+            className="text-5xl p-20 mx-10 rounded-lg"
             onClick={initializeHeartsAndTime}
           >
             Start game
-          </Button>
-          <Button
-            size={'lg'}
-            className="text-3xl p-8 mx-10"
-            onClick={() => setShowQuestion(true)}
-          >
-            Show question
           </Button>
         </div>
       </div>

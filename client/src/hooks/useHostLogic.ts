@@ -29,6 +29,24 @@ export const useHostLogic = (id: string | undefined) => {
     [ongoingQuizzes, id]
   );
 
+  const removeParticipant = useCallback(
+    (participantId: string) => {
+      if (!ongoingQuiz) return;
+      optimisticUpdate(ongoingQuiz.id, {
+        participants: Object.entries(ongoingQuiz.participants || {}).reduce((acc, [id, participant]) => {
+          if (id === participantId) {
+            return acc;
+          }
+          return {
+            ...acc,
+            [id]: participant,
+          };
+        }, {} as { [key: string]: Participant }),
+      });
+    },
+    [optimisticUpdate, ongoingQuiz]
+  );
+
   const updateParticipants = useCallback(
     (id: string, participants: { [key: string]: Participant }) => {
       optimisticUpdate(
@@ -350,5 +368,6 @@ export const useHostLogic = (id: string | undefined) => {
     changeTurn,
     updateSlideUsedAnswers,
     endQuiz,
+    removeParticipant,
   };
 };
