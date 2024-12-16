@@ -5,11 +5,18 @@
   "backgroundColor": "Bakgrundsfärg",
   "primary": "Primär",
   "secondary": "Sekundär",
-  "showCorrect": "Visa rätt svar (default)",
+  "showCorrect": "Visa rätt svar (automatiskt)",
+  "showCorrectAuto": "Visar automatiskt svaret när alla har svarat eller tiden tar slut.",
   "showCorrect.auto": "Automatiskt",
+  "showCorrectManual": "Skapar en knapp där användaren manuellt kan visa svaret.",
   "showCorrect.manual": "Manuellt",
+  "showCorrectNever": "Visa inte svaret efter frågan.",
   "showCorrect.never": "Aldrig",
   "backgroundStyle": "Bakgrundstil",
   "resetSettings": "Återställ inställningar",
-  "resetSettings.description": "Återställer färgschema och bakgrundstil till standardvärden"
+  "resetSettings.description": "Återställer färgschema och bakgrundstil till standardvärden",
+  "image": "Bild",
+  "addImage": "Lägg till bild",
+  "changeImage": "Byt bild",
+  "imageScale": "Skala"
 }

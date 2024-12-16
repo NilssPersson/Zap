@@ -7,7 +7,8 @@ export function Participant({
 }: {
   answerTempQuestion: (answer: string) => void;
 }) {
-  const { t } = useTranslation(['questions']);
+  const { t } = useTranslation(['participants']);
+
   const [time, setTime] = useState(10);
 
   useEffect(() => {
@@ -21,13 +22,13 @@ export function Participant({
 
   if (time > 0) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <h1>read the question carefully</h1>
+      <div className="flex flex-1 flex-col items-center justify-center font-display">
+        <h1>{t('dontPress')}</h1>
       </div>
     );
   } else {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center">
+      <div className="flex flex-1 flex-col items-center justify-center font-display">
         <Button
           className="w-80 h-80 rounded-full text-4xl bg-red-600 text-white"
           onClick={() => {
