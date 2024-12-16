@@ -26,7 +26,6 @@ const mockData: Participant[] = [
       },
     ],
     tempAnswer: { tempAnswer: 'hej', time: '0' },
-    isTurn: false,
     score: [0],
     hasAnswered: true,
   },
@@ -43,7 +42,6 @@ const mockData: Participant[] = [
     ],
     score: [2000],
     tempAnswer: { tempAnswer: 'hej', time: '0' },
-    isTurn: false,
     hasAnswered: false,
   },
 ];

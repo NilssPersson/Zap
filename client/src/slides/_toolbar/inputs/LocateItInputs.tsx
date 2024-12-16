@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export function LocateItInputs({
   slide,
@@ -40,6 +41,8 @@ export function LocateItInputs({
     onSlideUpdate(updatedSlide);
   };
 
+  const { t } = useTranslation(['quizEditor']);
+
   const handleSelectChange = (type: 'map' | 'points', value: string) => {
     if (type === 'map') {
       const updatedSlide = {
@@ -58,12 +61,14 @@ export function LocateItInputs({
 
   return (
     <div className="space-y-2">
-      <Label className="block text-lg font-semibold">LocateIt Settings</Label>
+      <Label className="block text-lg font-semibold">
+        {t('locateitSettings')}
+      </Label>
       <div className="flex flex-col space-y-2">
         <div className="space-y-1">
           <div className="flex flex-row items-center space-x-1">
             <Map size={17} />
-            <Label>Map Details</Label>
+            <Label>{t('mapDetails')}</Label>
           </div>
           <Select
             value={slide.mapDetails}
@@ -87,18 +92,16 @@ export function LocateItInputs({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="NONE">
-                <h1 className="font-bold">None</h1>
-                <h1>This map shows no details at all.</h1>
+                <h1 className="font-bold">{t('none')}</h1>
+                <h1>{t('noneDescription')}</h1>
               </SelectItem>
               <SelectItem value="MEDIUM">
-                <h1 className="font-bold">Medium</h1>
-                <h3>This map shows some details, such as land borders.</h3>
+                <h1 className="font-bold">{t('medium')}</h1>
+                <h3>{t('mediumDescription')}</h3>
               </SelectItem>
               <SelectItem value="HIGH">
-                <h1 className="font-bold">High</h1>
-                <h3>
-                  This map has high details, showing borders and large roads.
-                </h3>
+                <h1 className="font-bold">{t('high')}</h1>
+                <h3>{t('highDescription')}</h3>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -106,7 +109,7 @@ export function LocateItInputs({
         <div className="space-y-1">
           <div className="flex flex-row items-center space-x-1">
             <Trophy size={17} />
-            <Label>Award Points</Label>
+            <Label>{t('awardPoints')}</Label>
           </div>
           <Select
             value={slide.awardPointsLocation}
@@ -130,25 +133,16 @@ export function LocateItInputs({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="DISTANCE">
-                <h1 className="font-bold">Distance Based</h1>
-                <h3>
-                  Participants will be awarded 0-100% of the points based on
-                  their distance from the location.
-                </h3>
+                <h1 className="font-bold">{t('distance')}</h1>
+                <h3>{t('distanceDescription')}</h3>
               </SelectItem>
               <SelectItem value="RADIUS">
-                <h1 className="font-bold">Inside Radius</h1>
-                <h3>
-                  Every participant within the radius will be awarded the
-                  selected points.
-                </h3>
+                <h1 className="font-bold">{t('insideRadius')}</h1>
+                <h3>{t('insideRadiusDescription')}</h3>
               </SelectItem>
               <SelectItem value="CLOSEST">
-                <h1 className="font-bold">Closest Wins</h1>
-                <h3>
-                  Only the closest player to the correct location will be
-                  awarded points.
-                </h3>
+                <h1 className="font-bold">{t('closestWins')}</h1>
+                <h3>{t('closestWinsDescription')}</h3>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -159,7 +153,8 @@ export function LocateItInputs({
           className="justify-start p-2 "
           onClick={() => setShowAdvanced(!showAdvanced)}
         >
-          {showAdvanced ? <ChevronDown /> : <ChevronUp />}Show Advanced
+          {showAdvanced ? <ChevronDown /> : <ChevronUp />}
+          {t('showAdvanced')}
         </Button>
         {showAdvanced && (
           <div className="px-2 bg-white rounded-md pb-2">
@@ -167,7 +162,7 @@ export function LocateItInputs({
               <div className="flex flex-col space-y-1 ">
                 <div className="flex flex-row items-center pt-2 space-x-1">
                   <Radius size={15} />
-                  <Label>Radius</Label>
+                  <Label>{t('radius')}</Label>
                 </div>
                 <Input
                   value={slide.radius}
@@ -187,7 +182,7 @@ export function LocateItInputs({
 
             <div className="flex flex-row items-center pt-2 space-x-1 pb-1">
               <MoveHorizontal size={15} />
-              <Label>Latitude</Label>
+              <Label>{t('latitude')}</Label>
             </div>
             <Input
               type="number"
@@ -197,7 +192,7 @@ export function LocateItInputs({
             />
             <div className="flex flex-row items-center pt-2 space-x-1 pb-1">
               <MoveVertical size={15} />
-              <Label>Longitude</Label>
+              <Label>{t('longitude')}</Label>
             </div>
             <Input
               type="number"
