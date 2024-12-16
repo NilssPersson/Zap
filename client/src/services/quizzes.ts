@@ -1,6 +1,6 @@
 import { quizDefaults } from "@/components/quiz-editor/utils/quiz-defaults";
 import { BaseService, FirebaseResponse } from "./base";
-import Quiz, { SharedQuizzes } from "@/models/Quiz";
+import Quiz, { SharedQuizzes, UserQuizzes } from "@/models/Quiz";
 import { query, orderByChild, equalTo, get,ref, set, limitToFirst } from "firebase/database";
 import { database } from "@/firebase";
 import { nanoid } from 'nanoid';
@@ -10,13 +10,12 @@ class QuizService extends BaseService<Quiz> {
     super("quizzes");
   }
 
-  async create(quiz: Quiz): Promise<FirebaseResponse<Quiz>> {
-
+  async createQuiz(quiz: Partial<Quiz>): Promise<FirebaseResponse<UserQuizzes>> {
+    if(!quiz.user_id || !quiz.quiz_name) return { data: null, error: new Error('User ID is required') };
     const quizId = nanoid();
 
     const userQuizRef = ref(database, `userQuizzes/${quizId}`);
-    
-    await set(userQuizRef, {
+    const userQuiz = {
       userId: quiz.user_id,
       quizId: quizId,
       quizName: quiz.quiz_name,
@@ -24,10 +23,10 @@ class QuizService extends BaseService<Quiz> {
       isShared: false,
       createdAt: new Date().toISOString().toLocaleString(),
       updatedAt: new Date().toISOString().toLocaleString(),
-    });
+    }
     
     const quizRef = ref(database, `quizzes/${quizId}`);
-    return await set(quizRef, {
+    await set(quizRef, {
       ...quiz,
       id: quizId,
       created_at: new Date().toISOString().toLocaleString(),
@@ -37,8 +36,10 @@ class QuizService extends BaseService<Quiz> {
       settings: {
         ...quizDefaults
       }
-    }).then(() => {
-      return { data: { ...quiz, id: quizId }, error: null };
+    })
+    
+    return await set(userQuizRef, userQuiz).then(() => {
+      return { data: { ...userQuiz }, error: null };
     }).catch((error) => {
       return { data: null, error: error as Error };
     });
@@ -66,12 +67,34 @@ class QuizService extends BaseService<Quiz> {
         return { data: null, error: null }; 
       }
       const data = snapshot.val();
-      const quizzes = Object.values(data) as SharedQuizzes[]; // Convert snapshot data into an array of quizzes
+      const quizzes = Object.values(data) as SharedQuizzes[]; 
 
       // Filter out quizzes belonging to the user
-      const filteredQuizzes = quizzes.filter(quiz => quiz.userId === userId);
+      const filteredQuizzes = quizzes.filter(quiz => quiz.userId !== userId);
   
       return { data: filteredQuizzes, error: null };
+    } catch (error) {
+      return { data: null, error: error as Error };
+    }
+  }
+
+  async listUserQuizzes(userId: string): Promise<FirebaseResponse<UserQuizzes[]>> {
+    const userQuizzesRef = query(
+      ref(database, 'userQuizzes'),
+      orderByChild("userId"),
+      equalTo(userId),
+    );
+    
+    try {
+      const snapshot = await get(userQuizzesRef); 
+      if (!snapshot.exists()) {
+        console.log('No data found')
+        return { data: null, error: null }; 
+      }
+      const data = snapshot.val();
+      const quizzes = Object.values(data) as UserQuizzes[]; 
+  
+      return { data: quizzes, error: null };
     } catch (error) {
       return { data: null, error: error as Error };
     }
