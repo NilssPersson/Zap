@@ -143,6 +143,7 @@ export function useQuizEditor(quizId: string | undefined) {
               quizDefaults.showCorrectAnswerDefault,
           }
         : {}),
+      title: SlideInfo.label,
     } as Slide;
 
     setLocalQuiz((prev) =>
