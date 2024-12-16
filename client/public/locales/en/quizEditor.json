@@ -1,14 +1,17 @@
 {
   "selectSlide": "Select a slide to edit",
+  "slides": "slides",
+  "questionTypes": "Question Types",
   "quizName": "Quiz Name",
   "colorScheme": "Color Scheme",
   "backgroundColor": "Background Color",
   "primary": "Primary",
   "secondary": "Secondary",
+  "timeLimit": "Time Limit",
   "showCorrect": "Show correct answer (default)",
   "showCorrectAuto": "Shows the correct answers when everyone has answered or the time runs out.",
   "showCorrect.auto": "Auto",
-  "showCorrectManual":"Renders a button that allows the presenter to show the correct answers.",
+  "showCorrectManual": "Renders a button that allows the presenter to show the correct answers.",
   "showCorrect.manual": "Manual",
   "showCorrectNever": "Never show the correct answers.",
   "showCorrect.never": "Never",
@@ -18,5 +21,11 @@
   "image": "Image",
   "addImage": "Add Image",
   "changeImage": "Change Image",
-  "imageScale": "Image Scale"
+  "imageScale": "Image Scale",
+  "addCategory": "Add Category",
+  "del": "Del",
+  "addOption": "Add Option",
+  "newOption": "New Option",
+  "availableOptions": "Available Options",
+  "points": "Points"
 }

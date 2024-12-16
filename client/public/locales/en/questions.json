@@ -15,5 +15,11 @@
   "MCQMA": "Multiple Choice",
   "MCQSA": "Single Answer",
   "RANK": "Rank it Right",
-  "addSlide": "Add slide"
+  "addSlide": "Add slide",
+  "hearts":"Hearts",
+  "initialTime": "Initial Time (Seconds)",
+  "availableAnswers": "Available Answers",
+  "del": "Del",
+  "noAnswer":"No answers available",
+  "addAnswer": "Add Answer"
 }
