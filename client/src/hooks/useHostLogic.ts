@@ -102,7 +102,8 @@ export const useHostLogic = (id: string | undefined) => {
 
   const handleAddPoints = async (
     pointsData: { participantId: string; awardPoints: number }[],
-    showAnswer: boolean
+    showAnswer: boolean,
+    changeSlide?: boolean 
   ) => {
     const participants = { ...ongoingQuiz!.participants };
 
@@ -116,12 +117,23 @@ export const useHostLogic = (id: string | undefined) => {
         hasAnswered: false,
       };
     });
-
+    console.log('changeSlide', changeSlide);
+    if(changeSlide) {
+      console.log('changeSlide');
+      await optimisticUpdate(ongoingQuiz!.id, {
+        ...ongoingQuiz,
+        participants,
+        currentSlide: ongoingQuiz!.currentSlide + 1,
+        isShowingCorrectAnswer: false,
+      });
+    } else {
     await optimisticUpdate(ongoingQuiz!.id, {
       ...ongoingQuiz,
       participants,
       isShowingCorrectAnswer: showAnswer,
     });
+  }
+    
     return participants;
   };
 
