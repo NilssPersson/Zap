@@ -14,6 +14,7 @@ import {
 import { getSlideComponentsFromType } from '@/slides/utils';
 import { useAppContext } from '@/contexts/App/context';
 import { nanoid } from 'nanoid';
+import { useTranslation } from 'react-i18next';
 
 const DEFAULT_TIME_LIMIT = 0;
 const SAVE_ON_N_ACTIONS = 50;
@@ -28,15 +29,16 @@ export function useQuizEditor(quizId: string | undefined) {
     quizzes: { optimisticUpdate, resources: quizzes, isLoading },
   } = useAppContext();
 
+  const { t } = useTranslation(['questions']);
+
   // Local state
   const [localQuiz, setLocalQuiz] = useState<Quiz | null>(null);
   const [, setActionCount] = useState(0);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const globalQuiz = quizzes.find((q) => q.id === quizId);
-  console.log(quizzes)
+  console.log(quizzes);
   // Initialize local quiz from global state
   useEffect(() => {
-    
     if (globalQuiz && !localQuiz) {
       setLocalQuiz(globalQuiz);
     }
@@ -144,7 +146,7 @@ export function useQuizEditor(quizId: string | undefined) {
               quizDefaults.showCorrectAnswerDefault,
           }
         : {}),
-      title: SlideInfo.label,
+      title: t(SlideInfo.label),
     } as Slide;
 
     setLocalQuiz((prev) =>
