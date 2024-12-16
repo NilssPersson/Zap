@@ -145,7 +145,7 @@ export function Confetti({ delayProp = 0 }: { delayProp?: number }) {
             },
             rate: {
               delay: 0.2,
-              quantity: 800,
+              quantity: 200,
             },
             size: {
               width: 1,
