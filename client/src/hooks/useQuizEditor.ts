@@ -50,7 +50,7 @@ export function useQuizEditor(quizId: string | undefined) {
         setLocalQuiz(globalQuiz);
       }
     }
-  }, [quizId, enriched]);
+  }, [quizId, enriched, quizzes]);
 
   // Auto-save timer
   useEffect(() => {
