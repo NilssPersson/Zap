@@ -6,7 +6,7 @@ import SharedQuizList from '@/components/quizzes/SharedQuizList';
 import { useCallback, useEffect, useState } from 'react';
 import { Loader2, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { SharedQuizzes } from '@/models/Quiz';
+import { SharedQuizzes, UserQuizzes } from '@/models/Quiz';
 import { useAppContext } from '@/contexts/App/context';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -31,16 +31,24 @@ function useQuizzesPage() {
 
   const [sharedQuizzes, setSharedQuizzes] = useState<SharedQuizzes[]>([]);
   const [sharedQuizzesLoading, setSharedQuizzesLoading] = useState(false);
+  const [userQuizzes, setUserQuizzes] = useState<UserQuizzes[]>([]);
+  const [userQuizzesLoading, setUserQuizzesLoading] = useState(false);
 
   console.log('Shared quizzes:', sharedQuizzes);
-  console.log('My quizzes:', quizzes);
+  console.log('My quizzes:', userQuizzes);
+  console.log('Ongoing quizzes:', ongoingQuizzes);
 
   useEffect(() => {
     if (user) {
       setSharedQuizzesLoading(true);
+      setUserQuizzesLoading(true);
       quizService.listShared(user.id).then(({ data }) => {
         setSharedQuizzes(data || []);
         setSharedQuizzesLoading(false);
+      });
+      quizService.listUserQuizzes(user.id).then(({ data }) => {
+        setUserQuizzes(data || []);
+        setUserQuizzesLoading(false);
       });
     }
   }, [user]);
@@ -49,17 +57,17 @@ function useQuizzesPage() {
     async (name: string) => {
       if (!user) return;
 
-      const { error } = await optimisticCreate({
+      const { data } = await quizService.createQuiz({
         quiz_name: name,
         user_id: user.id,
       });
 
-      if (error) {
+      if (!data) {
         toast.error('Failed to create quiz');
         return;
       }
 
-      toast.success('Quiz created successfully');
+      setUserQuizzes((userQuizzes) => [...userQuizzes, data]);
     },
     [user, optimisticCreate]
   );
@@ -70,9 +78,20 @@ function useQuizzesPage() {
       const quizRef = ref(database, `quizzes/${quizId}`);
       const sharedQuizRef = ref(database, `sharedQuizzes/${quizId}`);
 
-      await remove(userQuizRef);
-      await remove(quizRef);
-      await remove(sharedQuizRef);
+      await Promise.all([
+        remove(userQuizRef),
+        remove(quizRef),
+        remove(sharedQuizRef),
+      ])
+        .then(() => {
+          toast.success('Quiz deleted successfully');
+          setUserQuizzes((userQuizzes) =>
+            userQuizzes.filter((quiz) => quiz.quizId !== quizId)
+          );
+        })
+        .catch(() => {
+          toast.error('Failed to delete quiz');
+        });
     },
     [optimisticDelete]
   );
@@ -84,6 +103,20 @@ function useQuizzesPage() {
       console.log(user);
 
       const sharedQuizRef = ref(database, `sharedQuizzes/${quizId}`);
+
+      const sharedQuizSnap = await get(sharedQuizRef);
+
+      if (sharedQuizSnap.exists()) {
+        await remove(sharedQuizRef);
+        const userQuizRef = ref(database, `userQuizzes/${quizId}`);
+        await update(userQuizRef, { isShared: false });
+        setUserQuizzes((userQuizzes) =>
+          userQuizzes.map((quiz) =>
+            quiz.quizId === quizId ? { ...quiz, isShared: false } : quiz
+          )
+        );
+        return;
+      }
 
       const newShared: SharedQuizzes = {
         userId: user.id,
@@ -98,7 +131,11 @@ function useQuizzesPage() {
 
       const userQuizRef = ref(database, `userQuizzes/${quizId}`);
       await update(userQuizRef, { isShared: true });
-
+      setUserQuizzes((userQuizzes) =>
+        userQuizzes.map((quiz) =>
+          quiz.quizId === quizId ? { ...quiz, isShared: true } : quiz
+        )
+      );
       toast.success(`Quiz ${quizName} was successfully shared`);
     },
     [optimisticUpdate, quizzes]
@@ -146,7 +183,7 @@ function useQuizzesPage() {
     [user, optimisticCreate, optimisticUpdate]
   );
 
-  const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.quizHost === user?.id);
+  const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.quizHost !== user?.id);
 
   return {
     quizzes,
@@ -158,13 +195,13 @@ function useQuizzesPage() {
     handleShareQuiz,
     handleCopyQuiz,
     ongoingQuiz,
+    userQuizzes,
+    userQuizzesLoading,
   };
 }
 
 function Quizzes() {
   const {
-    quizzes,
-    quizzesLoading,
     sharedQuizzes,
     sharedQuizzesLoading,
     handleCreateQuiz,
@@ -172,6 +209,8 @@ function Quizzes() {
     handleShareQuiz,
     handleCopyQuiz,
     ongoingQuiz,
+    userQuizzes,
+    userQuizzesLoading,
   } = useQuizzesPage();
 
   const navigate = useNavigate();
@@ -196,14 +235,13 @@ function Quizzes() {
           </CardTitle>
         </CardHeader>
         <CardContent className="min-h-[300px]">
-          {quizzesLoading ? (
+          {userQuizzesLoading ? (
             <div className="flex justify-center items-center h-[300px] w-full">
               <Loader2 className="animate-spin" />
             </div>
           ) : (
             <QuizList
-              quizzes={quizzes}
-              variant="my-quizzes"
+              quizzes={userQuizzes}
               onDeleteQuiz={handleDeleteQuiz}
               onShareQuiz={handleShareQuiz}
             />
