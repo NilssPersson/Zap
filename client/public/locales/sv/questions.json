@@ -6,5 +6,13 @@
   "wrongAnswer": "Fel svar",
   "nextUp": "Nästa persons tur att svara:",
   "getReady": "Var dig redo om ",
-  "knowTheAnswer": "Vet du svaret? Tryck på knappen!"
+  "knowTheAnswer": "Vet du svaret? Tryck på knappen!",
+  "BOMB": "Tickande bomb",
+  "FA": "Snabbast på knappen",
+  "FTA": "Fri text",
+  "LOCATEIT": "Närmast vinner",
+  "MATCHING": "Matcha",
+  "MCQMA": "Flervalsfråga",
+  "MCQSA": "Ett svar gäller",
+  "RANK": "Ranka rätt"
 }
