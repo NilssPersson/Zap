@@ -18,13 +18,7 @@ import { nanoid } from 'nanoid';
 
 function useQuizzesPage() {
   const {
-    quizzes: {
-      resources: quizzes,
-      isLoading: quizzesLoading,
-      optimisticCreate,
-      optimisticDelete,
-      optimisticUpdate,
-    },
+    quizzes: { optimisticCreate, optimisticDelete, optimisticUpdate },
     user: { user },
     ongoingQuizzes: { resources: ongoingQuizzes },
   } = useAppContext();
@@ -134,14 +128,12 @@ function useQuizzesPage() {
       );
       toast.success(`Quiz ${quizName} was successfully shared`);
     },
-    [optimisticUpdate, quizzes]
+    [optimisticUpdate]
   );
 
   const handleCopyQuiz = useCallback(
     async (quiz: SharedQuizzes) => {
       if (!user) return;
-
-      console.log('Copying quiz:', quiz);
 
       const quizRef = ref(database, `quizzes/${quiz.quizId}`);
 
@@ -164,7 +156,7 @@ function useQuizzesPage() {
       });
 
       const userQuizRef = ref(database, `userQuizzes/${newQuizId}`);
-      await set(userQuizRef, {
+      const newQuizData = {
         userId: user.id,
         quizId: newQuizId,
         quizName: `${quizData.val().quiz_name} (Copy)`,
@@ -172,7 +164,9 @@ function useQuizzesPage() {
         isShared: false,
         createdAt: new Date().toLocaleString(),
         updatedAt: new Date().toLocaleString(),
-      });
+      };
+      await set(userQuizRef, newQuizData);
+      setUserQuizzes((userQuizzes) => [...userQuizzes, newQuizData]);
 
       toast.success('Quiz copied successfully');
     },
@@ -182,8 +176,6 @@ function useQuizzesPage() {
   const ongoingQuiz = ongoingQuizzes.find((quiz) => quiz.quizHost !== user?.id);
 
   return {
-    quizzes,
-    quizzesLoading,
     sharedQuizzes,
     sharedQuizzesLoading,
     handleCreateQuiz,
