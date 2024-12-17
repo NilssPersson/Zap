@@ -5,6 +5,8 @@ import { avatarCollections, collectionNames } from '@/utils'; // Assuming these 
 interface AvatarProps {
   avatarString: string;
   collectionName?: string;
+  width?: string;
+  height?: string;
   // Add className prop to control conditional behavior
 }
 
@@ -22,7 +24,12 @@ export const findCollectionIndexByName = (name: string) => {
   return collectionIndex !== -1 ? collectionIndex : null; // Returns the index or null if not found
 };
 
-const Avatar = ({ avatarString, collectionName = "micah" }: AvatarProps) => {
+const Avatar = ({
+  avatarString,
+  collectionName = 'micah',
+  width,
+  height,
+}: AvatarProps) => {
   // Find the corresponding collection style
   const selectedCollectionStyle = findCollectionByName(collectionName);
 
@@ -43,7 +50,7 @@ const Avatar = ({ avatarString, collectionName = "micah" }: AvatarProps) => {
     <div className="flex flex-col items-center">
       <div
         className="rounded-full overflow-hidden" // Ensures the avatar is clipped to a circle
-        style={{ width: '8rem', height: '8rem' }}
+        style={{ width: width || "8rem", height: height || "8rem"}}
       >
         <div
           className="avatar-svg"

@@ -129,37 +129,40 @@ function Profile() {
           {/* Use the Avatar component */}
           <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
             <ArrowBigLeft
-              fill="true"
+              fill="gray"
               size={'48'}
               onClick={leftAvatarChange}
-              className="mx-5"
+              className="mx-5 cursor-pointer"
             ></ArrowBigLeft>
             <Avatar
               avatarString={currentAvatarString}
               collectionName={selectedCollectionName}
             />
             <ArrowBigRight
-              fill="true"
+              fill="gray"
               size={'48'}
               onClick={rightAvatarChange}
-              className="mx-5"
+              className="mx-5 cursor-pointer"
             ></ArrowBigRight>
           </div>
 
           <div className="flex-1 w-full flex-col flex items-center justify-center">
             <div className="flex-1 w-full flex items-center justify-center">
               <ArrowBigLeft
-                fill="true"
+                fill="gray"
                 size={'48'}
                 onClick={goToPreviousCollection}
-                className="mx-5"
+                className="mx-5 cursor-pointer"
               ></ArrowBigLeft>
-              <h1 className="font-display">{t('homepage:collection')}!</h1>
+              <h1 className="font-display select-none">
+                {t('homepage:collection')}!
+              </h1>
+
               <ArrowBigRight
-                fill="true"
+                fill="gray"
                 size={'48'}
                 onClick={goToNextCollection}
-                className="mx-5"
+                className="mx-5 cursor-pointer"
               ></ArrowBigRight>
             </div>
           </div>
