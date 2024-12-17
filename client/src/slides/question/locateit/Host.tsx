@@ -30,8 +30,8 @@ export function Host({
         {slide.awardPointsLocation == AwardPointsLocation.CLOSEST
           ? t('closestWinsDescription')
           : slide.awardPointsLocation == AwardPointsLocation.DISTANCE
-            ? t('closestWinsDescription')
-            : t('insideRadius')}
+            ? t('distanceDescription')
+            : t('insideRadiusDescription')}
       </p>
       {slide.imageUrl && (
         <div className="flex justify-center">
