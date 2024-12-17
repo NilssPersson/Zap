@@ -1,6 +1,8 @@
 {
   "correctAnswer": "The correct answer is",
   "correctAnswers": "The correct answers are",
+  "presentedByTheHost": "Presented by the host",
+  "winner": "Winner",
   "answer": "Answer",
   "rightAnswer": "Right Answer",
   "wrongAnswer": "Wrong Answer",
@@ -24,8 +26,8 @@
   "addAnswer": "Add Answer",
   "lookAtYourScreen": "Look at your screen and rank the options",
   "rankAnswers": "Rank Answers",
-  "add":"Add",
-  "embededYT":"Embed YouTube Video",
-  "embeded":"Embed",
-  "remove":"Remove"
+  "add": "Add",
+  "embededYT": "Embed YouTube Video",
+  "embeded": "Embed",
+  "remove": "Remove"
 }
