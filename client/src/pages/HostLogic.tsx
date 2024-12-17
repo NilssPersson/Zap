@@ -8,6 +8,12 @@ import { useHostLogic } from '@/hooks/useHostLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
 import EndQuizButton from '@/components/EndQuizButton';
+import {
+  getLocalStorageValue,
+  setLocalStorageValue,
+  removeLocalStorageValue,
+} from '@/utils/localstorage';
+import { useState, useEffect } from 'react';
 
 function HostLogic() {
   const { id } = useParams();
@@ -21,6 +27,45 @@ function HostLogic() {
     handleAddPoints,
     removeParticipant,
   } = useHostLogic(id);
+
+  const [countdownEndDate, setCountdownEndDate] = useState<number | null>(null);
+  const [currentSlideId, setCurrentSlideId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!ongoingQuiz || !ongoingQuiz.quiz.slides) return;
+
+    const slide = getCurrentSlide();
+
+    if (!slide || slide.type !== SlideTypes.question || slide.timeLimit <= 0) {
+      setCountdownEndDate(null);
+      return;
+    }
+
+    if (currentSlideId !== slide.id) {
+      removeLocalStorageValue('quiz_timer');
+      setCurrentSlideId(slide.id);
+    }
+
+    const storedEndDate = Number(getLocalStorageValue('quiz_timer'));
+    const currentTime = Date.now();
+
+    if (storedEndDate && !isNaN(storedEndDate)) {
+      const delta = storedEndDate - currentTime;
+      if (delta > 0) {
+        setCountdownEndDate(storedEndDate);
+        return;
+      }
+    }
+    // If no valid stored end date, set a new one
+    const newEndDate = currentTime + slide.timeLimit * 1000;
+    setCountdownEndDate(newEndDate);
+    setLocalStorageValue('quiz_timer', newEndDate);
+  }, [ongoingQuiz, getCurrentSlide]);
+
+  const handleComplete = () => {
+    const complete = removeLocalStorageValue('quiz_timer');
+    if (complete) nextSlide();
+  };
 
   if (!ongoingQuiz) return <Spinner />;
 
@@ -43,16 +88,30 @@ function HostLogic() {
 
     return (
       <div className="flex flex-col">
-        {!ongoingQuiz.isShowingCorrectAnswer && slide.timeLimit > 0 && (
-          <div>
-            <Countdown
-              date={Date.now() + slide.timeLimit * 1000}
-              onComplete={nextSlide}
-            />
-          </div>
-        )}
         {!ongoingQuiz.isShowingCorrectAnswer &&
-          slide.showCorrectAnswer == ShowCorrectAnswerTypes.manual && (
+          slide.timeLimit > 0 &&
+          countdownEndDate && (
+            <div>
+              <Countdown
+                date={countdownEndDate}
+                onComplete={handleComplete}
+                renderer={({ minutes, seconds, completed }) => {
+                  if (completed) {
+                    return <span>Time's up!</span>;
+                  } else {
+                    return (
+                      <span>
+                        {minutes.toString().padStart(2, '0')}:
+                        {seconds.toString().padStart(2, '0')}
+                      </span>
+                    );
+                  }
+                }}
+              />
+            </div>
+          )}
+        {!ongoingQuiz.isShowingCorrectAnswer &&
+          slide.showCorrectAnswer === ShowCorrectAnswerTypes.manual && (
             <Button onClick={nextSlide} className="m-5">
               Show Answer
             </Button>
@@ -78,7 +137,6 @@ function HostLogic() {
             slideNumber={ongoingQuiz.currentSlide}
             changeTurn={changeTurn}
             updateSlideUsedAnswers={updateSlideUsedAnswers}
-
           />
           {!inLobby && (
             <ParticipantAnswers
