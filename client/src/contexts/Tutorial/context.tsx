@@ -94,13 +94,12 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
 
   // Sync completed tutorials from user state
   useEffect(() => {
-    if (user?.completedTutorials) {
-      dispatch({
-        type: 'SYNC_COMPLETED_TUTORIALS',
-        payload: user.completedTutorials,
-      });
-    }
-  }, [user?.completedTutorials]);
+    if (!user) return;
+    dispatch({
+      type: 'SYNC_COMPLETED_TUTORIALS',
+      payload: user.completedTutorials || [],
+    });
+  }, [user]);
 
   const startTutorial = useCallback(
     (tutorial: Tutorial) => {
