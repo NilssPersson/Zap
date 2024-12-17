@@ -162,7 +162,7 @@ export function useQuizEditor(quizId: string | undefined) {
       prev
         ? {
           ...prev,
-          slides: index ? [...prev.slides?.slice(0, index), newSlide, ...prev.slides?.slice(index)] : [...prev?.slides, newSlide],
+          slides: index ? [...prev.slides?.slice(0, index), newSlide, ...prev.slides?.slice(index)] : [...(prev?.slides || []), newSlide],
         }
         : null
     );
