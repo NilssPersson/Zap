@@ -24,9 +24,12 @@
   "imageScale": "Image Scale",
   "addCategory": "Add Category",
   "del": "Del",
+  "options": "Options",
+  "optionText": "Option text",
   "addOption": "Add Option",
   "newOption": "New Option",
   "availableOptions": "Available Options",
+  "maxOptionsReached": "Max options reached",
   "points": "Points",
   "locateitSettings": "LocateIt Settings",
   "mapDetails": "Map Details",
@@ -53,5 +56,11 @@
   "select": "Select",
   "enterCorrectAnswer": "Enter the correct answer",
   "correctAnswer": "Correct Answer",
-  "noAnswer": "Inget svar"
+  "noAnswer": "Inget svar",
+  "newAnswer": "Nytt svar",
+  "answer": "Svar",
+  "enterTitle": "Lägg till titel",
+  "title": "Titel",
+  "enterContent": "Lägg till innehåll",
+  "content": "Innehåll"
 }

@@ -43,7 +43,7 @@ export function RankOptionsInput({
               updatedRanking[index] = e.target.value;
               updateSlide(updatedRanking);
             }}
-            placeholder="New answer"
+            placeholder={t('newAnswer')}
           />
           <Button
             variant="destructive"
@@ -65,7 +65,7 @@ export function RankOptionsInput({
             <Input
               value={newRank}
               onChange={(e) => setNewRank(e.target.value)}
-              placeholder="Answer"
+              placeholder={t('answer')}
             />
             <Button
               onClick={() => {

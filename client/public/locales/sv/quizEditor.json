@@ -24,9 +24,12 @@
   "imageScale": "Skala",
   "addCategory": "Lägg till kategori",
   "del": "Del",
+  "options": "Alternativ",
+  "optionText": "Alternativ",
   "addOption": "Lägg till alternativ",
   "newOption": "Nytt alternativ",
   "availableOptions": "Tillgängliga alternativ",
+  "maxOptionsReached": "Max antal alternativ nått",
   "points": "Poäng",
   "locateitSettings": "Inställningar",
   "mapDetails": "Detaljer på kartan",
@@ -53,5 +56,11 @@
   "select": "Välj",
   "enterCorrectAnswer": "Lägg till rätt svar",
   "correctAnswer": "Rätt svar",
-  "noAnswer": "No answer"
+  "noAnswer": "No answer",
+  "newAnswer": "New Answer",
+  "answer":"Answer",
+  "enterTitle": "Enter title",
+  "title": "Title",
+  "enterContent": "Enter Content",
+  "content": "Content"
 }
