@@ -9,9 +9,10 @@ import {
 import React, { useEffect, useState } from 'react';
 import { LocateItSlide, Participant } from '@/models/Quiz';
 import { Circle } from './_circle';
-import Avatar, { genConfig } from 'react-nice-avatar';
+import Avatar from '@/Avatar';
 import { Polyline } from './_polyline';
 import NextSlide from '@/slides/_components/NextSlide';
+
 
 const mockData: Participant[] = [
   {
@@ -28,6 +29,7 @@ const mockData: Participant[] = [
     tempAnswer: { tempAnswer: 'hej', time: '0' },
     score: [0],
     hasAnswered: true,
+    collectionName: 'micah',
   },
   {
     participantId: 'LKFJJSD',
@@ -43,6 +45,7 @@ const mockData: Participant[] = [
     score: [2000],
     tempAnswer: { tempAnswer: 'hej', time: '0' },
     hasAnswered: false,
+    collectionName: 'micah',
   },
 ];
 
@@ -74,6 +77,7 @@ export function HostAnswer({
     return {
       name: participant.name,
       avatar: participant.avatar,
+      collectionName:participant.collectionName,
       id: participant.participantId,
       lat: Number(latestAnswer[0]),
       lng: Number(latestAnswer[1]),
@@ -145,10 +149,7 @@ export function HostAnswer({
                       </p>
                     </div>
                   </InfoWindow>
-                  <Avatar
-                    style={{ width: '3rem', height: '3rem' }}
-                    {...genConfig(participant.avatar)}
-                  />
+                  <Avatar avatarString={participant.avatar} collectionName={participant.collectionName}></Avatar>
                 </AdvancedMarker>
                 <Polyline
                   path={[
