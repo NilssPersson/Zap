@@ -1,9 +1,9 @@
 // import the Genkit and Google AI plugin libraries
 import { gemini15Flash, googleAI } from '@genkit-ai/googleai';
-import { genkit } from 'genkit';
+import { Genkit } from 'genkit';
 
 // configure a Genkit instance
-const ai = genkit({
+const ai = new Genkit({
   plugins: [googleAI()],
   model: gemini15Flash, // set default model
 });
