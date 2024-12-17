@@ -46,6 +46,7 @@ function QuizEdit() {
 
   return (
     <div className="flex-1 flex overflow-hidden">
+      <div id="quiz-editor-container" />
       <QuizBackground
         primaryColor={quiz.primary_color}
         secondaryColor={quiz.secondary_color}

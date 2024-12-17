@@ -25,14 +25,17 @@ export function Editor({
 
   if (!slide) {
     return (
-      <div className="h-full flex items-center justify-center text-muted font-medium">
+      <div
+        id="quiz-preview"
+        className="h-full flex items-center justify-center text-muted font-medium"
+      >
         {t('quizEditor:selectSlide')}
       </div>
     );
   }
 
   return (
-    <div className="p-4 h-full flex flex-col">
+    <div id="quiz-preview" className="p-4 h-full flex flex-col">
       <div className="flex items-center justify-center space-x-4">
         <Tabs
           value={whichPreview}

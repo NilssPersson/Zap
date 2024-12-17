@@ -58,30 +58,20 @@ export const quizEditorTutorial: Tutorial = {
         'Use the sidebar to add new slides to your quiz. Click the "Add Slide" button to get started.',
       targetId: 'slide-sidebar',
       placement: 'right',
-      nextTrigger: 'add-slide-button',
-    },
-    {
-      id: 'slide-types',
-      title: 'Choose a Slide Type',
-      content:
-        'Select "Info Slide" to create your first slide. Info slides are great for introducing topics or providing context.',
-      targetId: 'slide-type-menu',
-      placement: 'right',
-      nextTrigger: 'info-slide-button',
     },
     {
       id: 'editor',
       title: 'Slide Editor',
       content:
         'This is where you can edit your slide content. Try adding some text or images!',
-      targetId: 'slide-editor',
-      placement: 'left',
+      targetId: 'quiz-preview',
+      placement: 'bottom',
     },
     {
       id: 'toolbar',
       title: 'Slide Settings',
       content: 'Use the toolbar to customize your slide settings and styling.',
-      targetId: 'slide-toolbar',
+      targetId: 'quiz-toolbar',
       placement: 'left',
     },
   ],

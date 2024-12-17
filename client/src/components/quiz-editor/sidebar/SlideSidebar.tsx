@@ -6,7 +6,11 @@ import { SlideSidebarProvider } from './SlideSidebarContext';
 interface SlideSidebarProps {
   quizName: string;
   slides: Slide[];
-  onAddSlide: (type: SlideTypes, questionType?: QuestionTypes, index?: number) => void;
+  onAddSlide: (
+    type: SlideTypes,
+    questionType?: QuestionTypes,
+    index?: number
+  ) => void;
   activeSlideId: string | null;
   onSlideSelect: (slideId: string) => void;
   onSlideDelete: (slideId: string) => void;
@@ -25,10 +29,13 @@ interface SlideSidebarProps {
 export function SlideSidebar(props: SlideSidebarProps) {
   return (
     <SlideSidebarProvider {...props}>
-      <aside className="min-w-[200px] bg-card/90 h-full border-r shadow-md flex flex-col overflow-hidden">
+      <aside
+        id="slide-sidebar"
+        className="min-w-[200px] bg-card/90 h-full border-r shadow-md flex flex-col overflow-hidden"
+      >
         <SidebarHeader />
         <SlideList />
       </aside>
     </SlideSidebarProvider>
   );
-} 
+}
