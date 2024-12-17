@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Participant } from '@/models/Quiz';
-import Avatar, { genConfig } from 'react-nice-avatar';
+import Avatar from '@/Avatar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from 'lucide-react';
 import { BombSlide } from '@/models/Quiz';
@@ -429,7 +429,7 @@ export function Host({
         <div className="space-y-10 mx-10">
           <Button
             size={'lg'}
-            className="text-5xl p-20 mx-10 rounded-lg font-display"
+            className="text-5xl p-16 mx-10 rounded-full font-display"
             onClick={initializeHeartsAndTime}
           >
             Start
@@ -450,7 +450,6 @@ export function Host({
 
         <motion.div
           style={{
-            
             position: 'relative',
             display: 'flex',
             flexDirection: 'column',
@@ -517,12 +516,10 @@ export function Host({
                       transition={{ duration: 0.35, ease: 'easeInOut' }}
                     >
                       <Avatar
-                        style={{
-                          width: '8rem',
-
-                          height: '8rem', // Ensure avatar size is big
-                        }}
-                        {...genConfig(currentParticipants[0].avatar)}
+                        avatarString={currentParticipants[0].avatar}
+                        collectionName={currentParticipants[0].collectionName}
+                        width="2rem"
+                        height="2rem"
                       />
                     </motion.div>
                   </div>
@@ -545,10 +542,24 @@ export function Host({
                 </motion.div>
               )}
           </AnimatePresence>
+          <div
+            className="absolute flex flex-col justify-center items-center"
+            style={{
+              left: '25%',
+              top: '45%',
+              transform: 'translate(-90%, -50%)',
+            }}
+          >
+            <h1 className="text-3xl font-display">
+              {t('questions:used')} / {t('questions:total')}
+            </h1>
+            <h1 className="text-6xl font-display">
+              {usedAnswers.length}/{answers.length}
+            </h1>
+          </div>
 
           <motion.div
             style={{
-              
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -580,11 +591,10 @@ export function Host({
                   }}
                 >
                   <Avatar
-                    style={{
-                      width: '6rem',
-                      height: '6rem',
-                    }}
-                    {...genConfig(participant.avatar)}
+                    avatarString={participant.avatar}
+                    collectionName={participant.collectionName}
+                    width="2rem"
+                    height="2rem"
                   />
                   <h3 className="font-display">{participant.name}</h3>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>

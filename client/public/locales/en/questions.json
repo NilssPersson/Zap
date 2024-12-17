@@ -2,8 +2,8 @@
   "correctAnswer": "The correct answer is",
   "correctAnswers": "The correct answers are",
   "answer": "Answer",
-  "answering":"Answering",
-  "winner":"Winner",
+  "answering": "Answering",
+  "winner": "Winner",
   "rightAnswer": "Right Answer",
   "wrongAnswer": "Wrong Answer",
   "nextUp": "Next up to answer:",
@@ -26,8 +26,10 @@
   "addAnswer": "Add Answer",
   "lookAtYourScreen": "Look at your screen and rank the options",
   "rankAnswers": "Rank Answers",
-  "add":"Add",
-  "embededYT":"Embed YouTube Video",
-  "embeded":"Embed",
-  "remove":"Remove"
+  "add": "Add",
+  "embededYT": "Embed YouTube Video",
+  "embeded": "Embed",
+  "remove": "Remove",
+  "used": "Used",
+  "total": "Total"
 }

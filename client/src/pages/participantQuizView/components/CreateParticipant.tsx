@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-//import Avatar, { genConfig } from 'react-nice-avatar';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useGetAuthenticatedUser from '@/hooks/useGetAuthenticatedUser';
 import { userService } from '@/services/users';
@@ -9,7 +9,7 @@ import { InfoIcon, Dices } from 'lucide-react';
 import Avatar from '@/Avatar';
 
 interface CreateParticipantProps {
-  handleAddParticipant: (name: string, avatar: string) => void;
+  handleAddParticipant: (name: string, avatar: string, collectionName: string) => void;
 }
 
 function createRandomId() {
@@ -70,6 +70,7 @@ export default function CreateParticipant({
   const handleSubmit = (userType: 'me' | 'guest') => {
     const nameToUse = userType === 'me' ? user.username : guestName;
     const avatarToUse = userType === 'me' ? user.avatar : guestAvatar;
+    const collectiontoUse = userType ==="me" ? user.collectionName: "micah"
 
     if (!nameToUse) {
       setShowError(true);
@@ -81,7 +82,7 @@ export default function CreateParticipant({
     }
 
     setAddingUser(true);
-    handleAddParticipant(nameToUse, avatarToUse);
+    handleAddParticipant(nameToUse, avatarToUse,collectiontoUse );
 
     setTimeout(() => {
       setAddingUser(false);

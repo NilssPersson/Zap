@@ -2,8 +2,8 @@
   "correctAnswer": "Det rätta svaret är",
   "correctAnswers": "De rätta svaren är",
   "answer": "Svara",
-  "answering":"Svarar",
-  "winner":"Vinnare",
+  "answering": "Svarar",
+  "winner": "Vinnare",
   "rightAnswer": "Rätt svar",
   "wrongAnswer": "Fel svar",
   "nextUp": "Nästa persons tur att svara:",
@@ -29,5 +29,7 @@
   "add": "Lägg till",
   "embededYT": "YouTube Video",
   "embeded": "Inbyggd",
-  "remove": "Ta bort"
+  "remove": "Ta bort",
+  "used": "Använda",
+  "total": "Totala"
 }
