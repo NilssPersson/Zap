@@ -5,26 +5,36 @@ import { allTutorials } from '@/data/tutorials';
 export function useTutorialTrigger() {
   const { startTutorial, state } = useTutorial();
 
-  const startTriggers = allTutorials.map(tutorial => tutorial.startTriggerId);
+  const startTriggers = allTutorials.map((tutorial) => tutorial.startTriggerId);
 
-  const attachTutorialListener = useCallback((triggerId: string) => {
-    const element = document.getElementById(triggerId);
-    if (element) {
-      startTutorial(allTutorials.find(tutorial => tutorial.startTriggerId === triggerId)!);
-    }
-  }, [startTutorial]);
+  const attachTutorialListener = useCallback(
+    (triggerId: string) => {
+      const element = document.getElementById(triggerId);
+      if (element) {
+        const tutorial = allTutorials.find(
+          (tutorial) => tutorial.startTriggerId === triggerId
+        );
+
+        // Only start the tutorial if it exists and hasn't been completed
+        if (tutorial && !state.completedTutorials.includes(tutorial.id)) {
+          startTutorial(tutorial);
+        }
+      }
+    },
+    [startTutorial, state.completedTutorials]
+  );
 
   useEffect(() => {
     if (state.activeTutorial) return;
     // Create a MutationObserver to watch for DOM changes
-    const observer = new MutationObserver((mutations) => {
-      startTriggers.forEach(triggerId => {
+    const observer = new MutationObserver(() => {
+      startTriggers.forEach((triggerId) => {
         attachTutorialListener(triggerId);
       });
     });
 
     // Initial check for elements
-    startTriggers.forEach(triggerId => {
+    startTriggers.forEach((triggerId) => {
       attachTutorialListener(triggerId);
     });
 
@@ -38,14 +48,19 @@ export function useTutorialTrigger() {
     return () => {
       observer.disconnect();
       // Remove event listeners if needed
-      startTriggers.forEach(triggerId => {
+      startTriggers.forEach((triggerId) => {
         const element = document.getElementById(triggerId);
         if (element) {
-          element.removeEventListener('click', () => 
-            startTutorial(allTutorials.find(tutorial => tutorial.startTriggerId === triggerId)!)
-          );
+          element.removeEventListener('click', () => {
+            const tutorial = allTutorials.find(
+              (tutorial) => tutorial.startTriggerId === triggerId
+            );
+            if (tutorial && !state.completedTutorials.includes(tutorial.id)) {
+              startTutorial(tutorial);
+            }
+          });
         }
       });
     };
-  }, [startTriggers, attachTutorialListener]);
-} 
+  }, [startTriggers, attachTutorialListener, state.completedTutorials]);
+}

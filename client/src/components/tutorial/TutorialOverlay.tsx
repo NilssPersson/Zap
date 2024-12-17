@@ -1,12 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useTutorial } from '@/contexts/Tutorial/context';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-export function TutorialOverlay() {
+interface TutorialOverlayProps {
+  disabled?: boolean;
+}
+
+export function TutorialOverlay({ disabled }: TutorialOverlayProps) {
+  if (disabled) return null;
   const { state, nextStep, skipTutorial } = useTutorial();
   const { activeStep, activeTutorial } = state;
+  const { targetId } = activeStep || { targetId: null };
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const [overlayStyle, setOverlayStyle] = useState({
     top: 0,
@@ -16,9 +28,10 @@ export function TutorialOverlay() {
   });
 
   useEffect(() => {
-    if (activeStep?.targetId) {
-      const element = document.getElementById(activeStep.targetId);
-      console.log(element)
+    if (!targetId || targetElement?.id === targetId) return;
+
+    const intervalId = setInterval(() => {
+      const element = document.getElementById(targetId);
       if (element) {
         setTargetElement(element);
         const rect = element.getBoundingClientRect();
@@ -29,37 +42,39 @@ export function TutorialOverlay() {
           height: rect.height,
         });
       }
+    }, 25);
+
+    return () => clearInterval(intervalId);
+  }, [targetId, targetElement]);
+
+  useEffect(() => {
+    if (!activeStep?.nextTrigger || !targetElement) return;
+
+    const triggerElement = document.getElementById(activeStep.nextTrigger);
+    if (triggerElement) {
+      const handleTriggerClick = (e: MouseEvent) => {
+        const originalClick = triggerElement.onclick;
+        if (originalClick) {
+          originalClick.call(triggerElement, e);
+        }
+        nextStep();
+      };
+
+      triggerElement.addEventListener('click', handleTriggerClick);
+      return () => {
+        triggerElement.removeEventListener('click', handleTriggerClick);
+      };
     }
-  }, [activeStep]);
+  }, [activeStep, targetElement, nextStep]);
 
   if (!activeStep || !activeTutorial) return null;
 
-  const handleNext = () => {
-    if (activeStep.nextTrigger) {
-      // If there's a next trigger, wait for it to be clicked
-      const element = document.getElementById(activeStep.nextTrigger);
-      if (element) {
-        const originalClick = element.onclick;
-        element.onclick = (e) => {
-          if (originalClick) {
-            originalClick.call(element, e);
-          }
-          nextStep();
-        };
-      }
-    } else {
-      // If no next trigger, proceed immediately
-      nextStep();
-    }
-  };
-
   return (
     <>
-
       {/* Highlight cutout */}
       {targetElement && (
         <div
-          className="absolute z-50 pointer-events-none"
+          className="absolute z-50"
           style={{
             top: overlayStyle.top,
             left: overlayStyle.left,
@@ -68,35 +83,71 @@ export function TutorialOverlay() {
             boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.75)',
             borderRadius: '4px',
           }}
-        />
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              pointerEvents: 'all',
+              cursor: 'inherit',
+            }}
+            onClick={() => {
+              const clickEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+              });
+              targetElement.dispatchEvent(clickEvent);
+            }}
+            onMouseEnter={() =>
+              targetElement.dispatchEvent(new MouseEvent('mouseenter'))
+            }
+            onMouseLeave={() =>
+              targetElement.dispatchEvent(new MouseEvent('mouseleave'))
+            }
+          />
+        </div>
       )}
 
       {/* Tutorial dialog */}
-      <Dialog open={true} onOpenChange={() => {}} >
+      <Dialog open={true} modal={false} onOpenChange={() => {}}>
         <DialogContent
-        overlay={false}
+          overlay={false}
           className={cn(
             'absolute z-50',
-            activeStep.placement === 'top' && 'bottom-3/4 left-1/2 -translate-x-1/2',
-            activeStep.placement === 'bottom' && 'top-3/4 left-1/2 -translate-x-1/2',
-            activeStep.placement === 'left' && 'right-3/4 top-1/2 -translate-y-1/2',
-            activeStep.placement === 'right' && 'left-3/4 top-1/2 -translate-y-1/2'
+            activeStep.placement === 'top' &&
+              'bottom-3/4 left-1/2 -translate-x-1/2',
+            activeStep.placement === 'bottom' &&
+              'top-3/4 left-1/2 -translate-x-1/2',
+            activeStep.placement === 'left' &&
+              'right-3/4 top-1/2 -translate-y-1/2',
+            activeStep.placement === 'right' &&
+              'left-3/4 top-1/2 -translate-y-1/2'
           )}
         >
           <DialogHeader>
             <DialogTitle>{activeStep.title}</DialogTitle>
           </DialogHeader>
           <div className="py-4">{activeStep.content}</div>
-          <DialogFooter>
+          <DialogFooter className="flex items-center">
             <Button variant="outline" onClick={skipTutorial}>
               Skip Tutorial
             </Button>
-            <Button onClick={handleNext}>
-              {activeStep.nextTrigger ? 'Got it' : 'Next'}
-            </Button>
+            {!activeStep.nextTrigger && (
+              <Button onClick={nextStep}>
+                {activeTutorial.steps[activeTutorial.steps.length - 1].id ===
+                activeStep.id
+                  ? 'Finish Tutorial'
+                  : 'Next'}
+              </Button>
+            )}
+            {activeStep.nextTrigger && (
+              <span className="text-sm text-muted-foreground">
+                Interact with the highlighted element to continue
+              </span>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
   );
-} 
+}

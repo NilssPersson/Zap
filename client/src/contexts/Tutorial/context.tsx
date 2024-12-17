@@ -1,5 +1,15 @@
-import React, { createContext, useContext, useReducer, useCallback } from 'react';
-import { Tutorial, TutorialContextType, TutorialState, TutorialStep } from '@/models/types/tutorial';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+} from 'react';
+import {
+  Tutorial,
+  TutorialContextType,
+  TutorialState,
+  TutorialStep,
+} from '@/models/types/tutorial';
 
 const initialState: TutorialState = {
   activeTutorial: null,
@@ -16,14 +26,17 @@ type TutorialAction =
   | { type: 'ADD_TO_QUEUE'; payload: Tutorial }
   | { type: 'CLEAR_QUEUE' };
 
-function tutorialReducer(state: TutorialState, action: TutorialAction): TutorialState {
+function tutorialReducer(
+  state: TutorialState,
+  action: TutorialAction
+): TutorialState {
   switch (action.type) {
     case 'START_TUTORIAL':
       return {
         ...state,
         activeTutorial: action.payload,
         activeStep: action.payload.steps[0],
-        queue: state.queue.filter(t => t.id !== action.payload.id),
+        queue: state.queue.filter((t) => t.id !== action.payload.id),
       };
     case 'SET_ACTIVE_STEP':
       return {
@@ -60,7 +73,9 @@ function tutorialReducer(state: TutorialState, action: TutorialAction): Tutorial
   }
 }
 
-const TutorialContext = createContext<TutorialContextType | undefined>(undefined);
+const TutorialContext = createContext<TutorialContextType | undefined>(
+  undefined
+);
 
 export function TutorialProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(tutorialReducer, initialState);
@@ -73,7 +88,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     if (!state.activeTutorial || !state.activeStep) return;
 
     const currentStepIndex = state.activeTutorial.steps.findIndex(
-      step => step.id === state.activeStep?.id
+      (step) => step.id === state.activeStep?.id
     );
 
     if (currentStepIndex < state.activeTutorial.steps.length - 1) {
@@ -125,4 +140,4 @@ export function useTutorial() {
     throw new Error('useTutorial must be used within a TutorialProvider');
   }
   return context;
-} 
+}

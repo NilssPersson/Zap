@@ -15,7 +15,13 @@ import { useTranslation } from 'react-i18next';
 
 function useQuizzesPage() {
   const {
-    quizzes: { resources: quizzes, isLoading: quizzesLoading, optimisticCreate, optimisticDelete, optimisticUpdate },
+    quizzes: {
+      resources: quizzes,
+      isLoading: quizzesLoading,
+      optimisticCreate,
+      optimisticDelete,
+      optimisticUpdate,
+    },
     user: { user },
     ongoingQuizzes: { resources: ongoingQuizzes },
   } = useAppContext();
@@ -56,7 +62,7 @@ function useQuizzesPage() {
   const handleDeleteQuiz = useCallback(
     async (quizId: string) => {
       const { error } = await quizService.deleteQuiz(quizId);
-      
+
       if (error) {
         toast.error('Failed to delete quiz');
         return;
@@ -72,8 +78,12 @@ function useQuizzesPage() {
     async (quizId: string, quizName: string) => {
       if (!user) return;
 
-      const { data: isShared, error } = await quizService.shareQuiz(quizId, user, quizName);
-      
+      const { data: isShared, error } = await quizService.shareQuiz(
+        quizId,
+        user,
+        quizName
+      );
+
       if (error) {
         toast.error('Failed to share quiz');
         return;
@@ -91,7 +101,10 @@ function useQuizzesPage() {
     async (quiz: SharedQuizzes) => {
       if (!user) return;
 
-      const { data: newQuiz, error } = await quizService.copyQuiz(quiz, user.id);
+      const { data: newQuiz, error } = await quizService.copyQuiz(
+        quiz,
+        user.id
+      );
 
       if (error || !newQuiz) {
         toast.error('Failed to copy quiz');
@@ -160,7 +173,7 @@ function Quizzes() {
             </div>
           ) : (
             <QuizList
-              quizzes={quizzes.map(quiz => ({
+              quizzes={quizzes.map((quiz) => ({
                 quizId: quiz.id,
                 quizName: quiz.quiz_name,
                 userId: quiz.user_id,
