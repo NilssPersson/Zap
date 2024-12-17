@@ -179,7 +179,7 @@ function Profile() {
           />
         </div>
 
-        <Button onClick={handleUpdate} className=" w-[160px]">
+        <Button onClick={handleUpdate} className="font-display w-[160px]">
           {t('general:update')}
         </Button>
       </div>
