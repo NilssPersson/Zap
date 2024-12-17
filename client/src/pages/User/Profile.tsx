@@ -146,24 +146,22 @@ function Profile() {
           ></ArrowBigRight>
         </div>
 
-        <div className="flex-1 w-full flex-col flex items-center justify-center">
-          <div className="flex-1 w-full flex items-center justify-center">
-            <ArrowBigLeft
-              fill="gray"
-              size={'40'}
-              onClick={goToPreviousCollection}
-              className="fixed left-8 cursor-pointer"
-            ></ArrowBigLeft>
-            <h1 className="font-display select-none">
-              {t('general:' + selectedCollectionName)}
-            </h1>
-            <ArrowBigRight
-              fill="gray"
-              size={'40'}
-              onClick={goToNextCollection}
-              className="fixed right-8 cursor-pointer"
-            ></ArrowBigRight>
-          </div>
+        <div className="flex-1 w-full flex-row flex items-center justify-center">
+          <ArrowBigLeft
+            fill="gray"
+            size={'40'}
+            onClick={goToPreviousCollection}
+            className=" left-8 cursor-pointer"
+          ></ArrowBigLeft>
+          <h1 className="w-[70px] text-center font-display select-none">
+            {t('general:' + selectedCollectionName)}
+          </h1>
+          <ArrowBigRight
+            fill="gray"
+            size={'40'}
+            onClick={goToNextCollection}
+            className=" cursor-pointer"
+          ></ArrowBigRight>
         </div>
 
         <Input
