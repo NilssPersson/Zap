@@ -78,9 +78,10 @@ export const quizEditorTutorial: Tutorial = {
 };
 
 export const questionSlideTutorial: Tutorial = {
-  id: 'question-slide',
-  name: 'Creating Question Slides',
-  startTriggerId: 'add-slide-button',
+  id: 'first-slide-tutorial',
+  prerequisites: ['quiz-editor-intro'],
+  name: 'Editing your first slide',
+  startTriggerId: 'first-slide',
   steps: [
     {
       id: 'question-intro',
