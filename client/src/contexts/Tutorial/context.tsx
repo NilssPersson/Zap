@@ -152,8 +152,8 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
   }, [user, state.activeTutorial, updateUser]);
 
   const skipTutorial = useCallback(() => {
-    dispatch({ type: 'SKIP_TUTORIAL' });
     completeTutorial();
+    dispatch({ type: 'SKIP_TUTORIAL' });
   }, [completeTutorial]);
 
   const addToQueue = useCallback(
