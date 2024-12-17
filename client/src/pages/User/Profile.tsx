@@ -1,9 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
 import { ArrowBigRight, ArrowBigLeft } from 'lucide-react';
 import { useAppContext } from '@/contexts/App/context';
 import { useTranslation } from 'react-i18next';
@@ -58,6 +56,7 @@ function Profile() {
       const newId = makeid(10);
       setAvatarStrings((prev) => [...prev, newId]);
       setAvatarIndex((prev) => prev + 1); // Set the index to the new avatar
+      setAvatarString(newId); // Set the avatar string to the new ID
     }
   };
 
@@ -123,64 +122,63 @@ function Profile() {
   const selectedCollectionName = collectionNames[collectionIndex];
 
   return (
-    <div className="rounded-lg flex-1 w-full flex-col flex items-center justify-center overflow-hidden">
-      <Card className="bg-[#FBF6E9] mb-10">
-        <CardContent className="flex flex-col items-center gap-4 py-6">
-          {/* Use the Avatar component */}
-          <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
+    <div className="rounded-lg flex w-full flex-col items-center justify-center overflow-hidden">
+      <div className="flex flex-col items-center gap-3 py-4">
+        {/* Use the Avatar component */}
+        <div className="flex-1 h-[200px] w-full flex items-center justify-center">
+          <ArrowBigLeft
+            fill="gray"
+            size={'48'}
+            onClick={leftAvatarChange}
+            className="cursor-pointer"
+          ></ArrowBigLeft>
+          <Avatar
+            avatarString={currentAvatarString}
+            collectionName={selectedCollectionName}
+            width="5rem"
+            height="5rem"
+          />
+          <ArrowBigRight
+            fill="gray"
+            size={'48'}
+            onClick={rightAvatarChange}
+            className="cursor-pointer"
+          ></ArrowBigRight>
+        </div>
+
+        <div className="flex-1 w-full flex-col flex items-center justify-center">
+          <div className="flex-1 w-full flex items-center justify-center">
             <ArrowBigLeft
               fill="gray"
-              size={'48'}
-              onClick={leftAvatarChange}
-              className="mx-5 cursor-pointer"
+              size={'40'}
+              onClick={goToPreviousCollection}
+              className="fixed left-8 cursor-pointer"
             ></ArrowBigLeft>
-            <Avatar
-              avatarString={currentAvatarString}
-              collectionName={selectedCollectionName}
-            />
+            <h1 className="font-display select-none">
+              {t('general:' + selectedCollectionName)}
+            </h1>
             <ArrowBigRight
               fill="gray"
-              size={'48'}
-              onClick={rightAvatarChange}
-              className="mx-5 cursor-pointer"
+              size={'40'}
+              onClick={goToNextCollection}
+              className="fixed right-8 cursor-pointer"
             ></ArrowBigRight>
           </div>
+        </div>
 
-          <div className="flex-1 w-full flex-col flex items-center justify-center">
-            <div className="flex-1 w-full flex items-center justify-center">
-              <ArrowBigLeft
-                fill="gray"
-                size={'48'}
-                onClick={goToPreviousCollection}
-                className="mx-5 cursor-pointer"
-              ></ArrowBigLeft>
-              <h1 className="font-display select-none">
-                {t('homepage:collection')}!
-              </h1>
-
-              <ArrowBigRight
-                fill="gray"
-                size={'48'}
-                onClick={goToNextCollection}
-                className="mx-5 cursor-pointer"
-              ></ArrowBigRight>
-            </div>
-          </div>
-
-          <Input
-            placeholder={t('general:username')}
-            className="text-[#333333] text-center w-100 border-gray-400 rounded-md font-display text-lg md:text-lg py-4 px-6  shadow-lg"
-            value={username}
-            maxLength={15}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-          />
-          <Button onClick={handleUpdate} className="bg-green-500">
-            {t('general:update')}
-          </Button>
-        </CardContent>
-      </Card>
+        <Input
+          placeholder={t('general:username')}
+          className="text-[#333333] text-center w-[160px] border-gray-400 rounded-md font-display mt-2 text-lg md:text-lg  shadow-lg"
+          value={username}
+          maxLength={15}
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
+        />
+        <Button onClick={handleUpdate} className=" w-[160px]">
+          {t('general:update')}
+        </Button>
+      </div>
     </div>
   );
 }
