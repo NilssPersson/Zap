@@ -1,7 +1,7 @@
 import type { Slide, SlideTypes, QuestionTypes } from '@/models/Quiz';
 import { SidebarHeader } from './SidebarHeader';
 import { SlideList } from './SlideList';
-import { useSlideSidebar } from './useSlideSidebar';
+import { SlideSidebarProvider } from './SlideSidebarContext';
 
 interface SlideSidebarProps {
   quizName: string;
@@ -22,68 +22,13 @@ interface SlideSidebarProps {
   onSlideSwap: (activeId: string, overId: string) => void;
 }
 
-export function SlideSidebar({
-  quizName,
-  slides,
-  onAddSlide,
-  activeSlideId,
-  onSlideSelect,
-  onSlideDelete,
-  onSlideDuplicate,
-  onSlideMove,
-  onSettingsClick,
-  onSaveClick,
-  hasUnsavedChanges,
-  isSaving,
-  backgroundColor,
-  primaryColor,
-  secondaryColor,
-  onSlideSwap,
-}: SlideSidebarProps) {
-  const {
-    isOpen,
-    setIsOpen,
-    insertIndex,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleMenuMouseEnter,
-    handleMenuMouseLeave,
-  } = useSlideSidebar({
-    slides,
-    activeSlideId,
-    onSlideSelect,
-  });
-
+export function SlideSidebar(props: SlideSidebarProps) {
   return (
-    <aside className="min-w-[200px] bg-card/90 h-full border-r shadow-md flex flex-col overflow-hidden">
-      <SidebarHeader
-        quizName={quizName}
-        onSettingsClick={onSettingsClick}
-        onSaveClick={onSaveClick}
-        hasUnsavedChanges={hasUnsavedChanges}
-        isSaving={isSaving}
-      />
-
-      <SlideList
-        slides={slides}
-        activeSlideId={activeSlideId}
-        onSlideSelect={onSlideSelect}
-        onSlideDelete={onSlideDelete}
-        onSlideDuplicate={onSlideDuplicate}
-        onSlideMove={onSlideMove}
-        onAddSlide={onAddSlide}
-        backgroundColor={backgroundColor}
-        primaryColor={primaryColor}
-        secondaryColor={secondaryColor}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        insertIndex={insertIndex}
-        handleMouseEnter={handleMouseEnter}
-        handleMouseLeave={handleMouseLeave}
-        handleMenuMouseEnter={handleMenuMouseEnter}
-        handleMenuMouseLeave={handleMenuMouseLeave}
-        onSlideSwap={onSlideSwap}
-      />
-    </aside>
+    <SlideSidebarProvider {...props}>
+      <aside className="min-w-[200px] bg-card/90 h-full border-r shadow-md flex flex-col overflow-hidden">
+        <SidebarHeader />
+        <SlideList />
+      </aside>
+    </SlideSidebarProvider>
   );
 } 

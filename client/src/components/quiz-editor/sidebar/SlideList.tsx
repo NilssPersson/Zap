@@ -1,4 +1,3 @@
-import type { Slide, SlideTypes, QuestionTypes } from '@/models/Quiz';
 import { SlideListItem } from './SlideListItem';
 import { SlideInsertArea } from './SlideInsertArea';
 import {
@@ -15,48 +14,22 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { useSlideSidebarContext } from './SlideSidebarContext';
 
-interface SlideListProps {
-  slides: Slide[];
-  activeSlideId: string | null;
-  onSlideSelect: (slideId: string) => void;
-  onSlideDelete: (slideId: string) => void;
-  onSlideDuplicate: (slideId: string) => void;
-  onSlideMove: (slideId: string, direction: 'up' | 'down') => void;
-  onAddSlide: (type: SlideTypes, questionType?: QuestionTypes, index?: number) => void;
-  backgroundColor: string;
-  primaryColor: string;
-  secondaryColor: string;
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  insertIndex: number | null;
-  handleMouseEnter: (index: number | null) => void;
-  handleMouseLeave: () => void;
-  handleMenuMouseEnter: () => void;
-  handleMenuMouseLeave: () => void;
-  onSlideSwap: (activeId: string, overId: string) => void;
-}
+export function SlideList() {
+  const {
+    slides,
+    onAddSlide,
+    isOpen,
+    setIsOpen,
+    insertIndex,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleMenuMouseEnter,
+    handleMenuMouseLeave,
+    onSlideSwap,
+  } = useSlideSidebarContext();
 
-export function SlideList({
-  slides,
-  activeSlideId,
-  onSlideSelect,
-  onSlideDelete,
-  onSlideDuplicate,
-  onSlideMove,
-  onAddSlide,
-  backgroundColor,
-  primaryColor,
-  secondaryColor,
-  isOpen,
-  setIsOpen,
-  insertIndex,
-  handleMouseEnter,
-  handleMouseLeave,
-  handleMenuMouseEnter,
-  handleMenuMouseLeave,
-  onSlideSwap,
-}: SlideListProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -72,13 +45,6 @@ export function SlideList({
     const { active, over } = event;
     
     if (!active || !over) return;
-
-    console.log('Drag end:', {
-      activeId: active.id,
-      overId: over.id,
-      active,
-      over
-    });
     
     if (active.id !== over.id) {
       onSlideSwap(String(active.id), String(over.id));
@@ -116,14 +82,6 @@ export function SlideList({
                   slide={slide}
                   index={index}
                   totalSlides={slides.length}
-                  activeSlideId={activeSlideId}
-                  onSlideSelect={onSlideSelect}
-                  onSlideDelete={onSlideDelete}
-                  onSlideDuplicate={onSlideDuplicate}
-                  onSlideMove={onSlideMove}
-                  backgroundColor={backgroundColor}
-                  primaryColor={primaryColor}
-                  secondaryColor={secondaryColor}
                 />
 
                 {/* Insert area after each slide */}

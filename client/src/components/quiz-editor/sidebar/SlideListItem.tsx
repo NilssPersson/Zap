@@ -5,36 +5,28 @@ import { getSlideComponents } from '@/slides/utils';
 import { useTranslation } from 'react-i18next';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useSlideSidebarContext } from './SlideSidebarContext';
 
 interface SlideListItemProps {
   slide: Slide;
   index: number;
   totalSlides: number;
-  activeSlideId: string | null;
-  onSlideSelect: (slideId: string) => void;
-  onSlideDelete: (slideId: string) => void;
-  onSlideDuplicate: (slideId: string) => void;
-  onSlideMove: (slideId: string, direction: 'up' | 'down') => void;
-  backgroundColor: string;
-  primaryColor: string;
-  secondaryColor: string;
 }
 
 export function SlideListItem({
   slide,
   index,
   totalSlides,
-  activeSlideId,
-  onSlideSelect,
-  onSlideDelete,
-  onSlideDuplicate,
-  onSlideMove,
-  backgroundColor,
-  primaryColor,
-  secondaryColor,
 }: SlideListItemProps) {
   const { t } = useTranslation(['questions']);
   const slideComponent = getSlideComponents(slide);
+  const {
+    activeSlideId,
+    onSlideSelect,
+    backgroundColor,
+    primaryColor,
+    secondaryColor,
+  } = useSlideSidebarContext();
 
   const {
     attributes,
@@ -88,9 +80,6 @@ export function SlideListItem({
       <SlideActions
         index={index}
         totalSlides={totalSlides}
-        onSlideMove={onSlideMove}
-        onSlideDuplicate={onSlideDuplicate}
-        onSlideDelete={onSlideDelete}
         slideId={slide.id}
       />
     </div>
