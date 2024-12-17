@@ -8,6 +8,7 @@ import { ParticipantService } from '@/services/participant';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { BombIcon } from 'lucide-react';
+import NextSlide from '@/slides/_components/NextSlide';
 
 type HostProps = {
   participants: Participant[];
@@ -34,6 +35,7 @@ export function Host({
   slide,
   quizCode,
   slideNumber,
+  onNextSlide,
   changeTurn,
   updateSlideUsedAnswers,
 }: HostProps) {
@@ -564,7 +566,7 @@ export function Host({
                 justifyContent: 'center',
                 alignItems: 'center',
                 gap: '4rem',
-                width: 'fit-content',
+                width: '100%',
                 overflow: 'hidden',
               }}
             >
@@ -616,6 +618,7 @@ export function Host({
             </motion.div>
           </div>
         </motion.div>
+        <NextSlide onClick={onNextSlide} />
       </div>
     );
   }
