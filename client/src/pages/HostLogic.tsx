@@ -83,7 +83,7 @@ function HostLogic() {
 
   const SlideComponent = getSlideComponents(slide);
 
-  const RenderButtons = () => {
+  const RenderTimer = () => {
     if (slide.type !== SlideTypes.question) return null;
 
     return (
@@ -91,61 +91,61 @@ function HostLogic() {
         {!ongoingQuiz.isShowingCorrectAnswer &&
           slide.timeLimit > 0 &&
           countdownEndDate && (
-            <div>
-              <Countdown
-                date={countdownEndDate}
-                onComplete={handleComplete}
-                renderer={({ completed, total }) => {
-                  if (completed) {
-                    return (
-                      <span className="text-red-500 font-bold">Time's up!</span>
-                    );
-                  } else {
-                    // Calculate total seconds remaining
-                    const totalSeconds = Math.ceil(total / 1000);
-                    const displayMinutes = Math.floor(totalSeconds / 60);
-                    const displaySeconds = totalSeconds % 60;
+            <Countdown
+              date={countdownEndDate}
+              onComplete={handleComplete}
+              renderer={({ completed, total }) => {
+                if (completed) {
+                  return (
+                    <span className="text-red-500 font-bold">Time's up!</span>
+                  );
+                } else {
+                  // Calculate total seconds remaining
+                  const totalSeconds = Math.ceil(total / 1000);
+                  const displayMinutes = Math.floor(totalSeconds / 60);
+                  const displaySeconds = totalSeconds % 60;
 
-                    // Format the display string
-                    const formattedTime =
-                      displayMinutes > 0
-                        ? `${displayMinutes}:${displaySeconds}`
-                        : `${displaySeconds}`;
+                  // Format the display string
+                  const formattedTime =
+                    displayMinutes > 0
+                      ? `${displayMinutes}:${displaySeconds}`
+                      : `${displaySeconds}`;
 
-                    return (
-                      <div
+                  return (
+                    <div
+                      style={{
+                        width: '90px',
+                        height: '90px',
+                        position: 'relative',
+                        bottom: '4',
+                        left: '4',
+                      }}
+                    >
+                      <motion.div
+                        key={totalSeconds} // Triggers re-animation each second
+                        animate={{ rotate: 90 }}
+                        transition={{ duration: 1, ease: 'backIn' }}
                         style={{
-                          width: '80px',
-                          height: '80px',
-                          position: 'relative',
-                          bottom: '5',
-                          left: '5',
+                          width: '90px',
+                          height: '90px',
+                          backgroundColor: '#45b6fe',
+                          borderColor: '#F4F3F2',
+                          borderWidth: '3px',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          margin: '0 auto',
                         }}
-                      >
-                        <motion.div
-                          key={totalSeconds} // Triggers re-animation each second
-                          animate={{ rotate: 90 }}
-                          transition={{ duration: 1, ease: 'backIn' }}
-                          style={{
-                            width: '80px',
-                            height: '80px',
-                            backgroundColor: '#45b6fe',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: '0 auto',
-                          }}
-                        ></motion.div>
-                        <span className="text-xl font-display absolute inset-0 flex items-center justify-center">
-                          {formattedTime}
-                        </span>
-                      </div>
-                    );
-                  }
-                }}
-              />
-            </div>
+                      ></motion.div>
+                      <span className="text-4xl font-display absolute inset-0 flex items-center justify-center">
+                        {formattedTime}
+                      </span>
+                    </div>
+                  );
+                }
+              }}
+            />
           )}
       </div>
     );
@@ -186,7 +186,7 @@ function HostLogic() {
         />
       )}
       {!inLobby && <EndQuizButton onClick={() => endQuiz(ongoingQuiz.id)} />}
-      <RenderButtons />
+      <RenderTimer />
     </>
   );
 }
