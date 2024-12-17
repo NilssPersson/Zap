@@ -1,9 +1,10 @@
 {
   "correctAnswer": "Det rätta svaret är",
   "correctAnswers": "De rätta svaren är",
+  "presentedByTheHost": "Presenterat av er värd",
+  "winner": "Vinnare",
   "answer": "Svara",
   "answering": "Svarar",
-  "winner": "Vinnare",
   "rightAnswer": "Rätt svar",
   "wrongAnswer": "Fel svar",
   "nextUp": "Nästa persons tur att svara:",

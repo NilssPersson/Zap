@@ -46,6 +46,7 @@ export interface SharedQuizzes {
   userId: string;
   userName: string;
   userAvatar: string;
+  collectionName: string;
   quizId: string;
   quizName: string;
   sharedAt: string;
