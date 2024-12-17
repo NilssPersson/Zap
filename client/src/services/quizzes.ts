@@ -30,7 +30,6 @@ class QuizService extends BaseService<Quiz> {
     
     const quizRef = ref(database, `quizzes/${quizId}`);
     await set(quizRef, {
-      ...quiz,
       id: quizId,
       created_at: new Date().toISOString().toLocaleString(),
       updated_at: new Date().toISOString().toLocaleString(),
