@@ -1,4 +1,4 @@
-import type { Slide } from '@/models/Quiz';
+import type { Slide, SlideTypes, QuestionTypes } from '@/models/Quiz';
 import { SidebarHeader } from './SidebarHeader';
 import { SlideList } from './SlideList';
 import { useSlideSidebar } from './useSlideSidebar';
@@ -6,7 +6,7 @@ import { useSlideSidebar } from './useSlideSidebar';
 interface SlideSidebarProps {
   quizName: string;
   slides: Slide[];
-  onAddSlide: (type: string, questionType?: string, index?: number) => void;
+  onAddSlide: (type: SlideTypes, questionType?: QuestionTypes, index?: number) => void;
   activeSlideId: string | null;
   onSlideSelect: (slideId: string) => void;
   onSlideDelete: (slideId: string) => void;
@@ -19,6 +19,7 @@ interface SlideSidebarProps {
   backgroundColor: string;
   primaryColor: string;
   secondaryColor: string;
+  onSlideSwap: (activeId: string, overId: string) => void;
 }
 
 export function SlideSidebar({
@@ -37,6 +38,7 @@ export function SlideSidebar({
   backgroundColor,
   primaryColor,
   secondaryColor,
+  onSlideSwap,
 }: SlideSidebarProps) {
   const {
     isOpen,
@@ -80,6 +82,7 @@ export function SlideSidebar({
         handleMouseLeave={handleMouseLeave}
         handleMenuMouseEnter={handleMenuMouseEnter}
         handleMenuMouseLeave={handleMenuMouseLeave}
+        onSlideSwap={onSlideSwap}
       />
     </aside>
   );
