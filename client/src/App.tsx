@@ -4,6 +4,8 @@ import { AppRoutes } from "./routes/AppRoutes";
 import { Toaster } from "sonner";
 import { AppProvider } from "./contexts/App/provider";
 import OngoingQuizHandler from "./components/OngoingQuizHandler";
+import { TutorialProvider } from "./contexts/Tutorial/context";
+import { TutorialOverlay } from "./components/tutorial/TutorialOverlay";
 
 const environment = import.meta.env.VITE_ENVIRONMENT;
 
@@ -23,10 +25,13 @@ function App() {
           logoutUri={uri}
         >
           <AppProvider>
-            <Header />
-            <AppRoutes />
-            <OngoingQuizHandler />
-            <Toaster />
+            <TutorialProvider>
+              <Header />
+              <AppRoutes />
+              <OngoingQuizHandler />
+              <Toaster />
+              <TutorialOverlay />
+            </TutorialProvider>
           </AppProvider>
         </KindeProvider>
       </main>
