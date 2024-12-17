@@ -12,12 +12,13 @@ import {
   TutorialStep,
 } from '@/models/types/tutorial';
 import { useAppContext } from '../App/context';
+import { allTutorials } from '@/data/tutorials';
 
 const initialState: TutorialState = {
   activeTutorial: null,
   activeStep: null,
   queue: [],
-  completedTutorials: [],
+  completedTutorials: allTutorials.map((tutorial) => tutorial.id),
 };
 
 type TutorialAction =
