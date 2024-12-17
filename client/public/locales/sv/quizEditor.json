@@ -46,5 +46,12 @@
   "showAdvanced": "Visa avancerat",
   "radius": "Radie",
   "latitude": "Latitud",
-  "longitude": "Longitud"
+  "longitude": "Longitud",
+  "noPoints": "Inga poäng",
+  "default": "Förinställt",
+  "doublePoints": "Dubbla poäng",
+  "select": "Välj",
+  "enterCorrectAnswer": "Lägg till rätt svar",
+  "correctAnswer": "Rätt svar",
+  "noAnswer": "No answer"
 }

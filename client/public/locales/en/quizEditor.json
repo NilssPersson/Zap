@@ -46,5 +46,12 @@
   "showAdvanced": "Show Advanced",
   "radius": "Radius",
   "latitude": "Latitude",
-  "longitude": "Longitude"
+  "longitude": "Longitude",
+  "noPoints": "No Points",
+  "default": "Default",
+  "doublePoints": "doublePoints",
+  "select": "Select",
+  "enterCorrectAnswer": "Enter the correct answer",
+  "correctAnswer": "Correct Answer",
+  "noAnswer": "Inget svar"
 }
