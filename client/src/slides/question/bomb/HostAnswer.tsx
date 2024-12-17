@@ -1,7 +1,7 @@
 import { BombSlide } from '@/models/Quiz';
 import NextSlide from '@/slides/_components/NextSlide';
 import { BombIcon } from 'lucide-react';
-import Avatar, { genConfig } from 'react-nice-avatar';
+import Avatar from '@/Avatar';
 import type { Participant } from '@/models/Quiz';
 import { useTranslation } from 'react-i18next';
 
@@ -70,12 +70,11 @@ export function HostAnswer({
                   : '💀'}
               </h1>
               <Avatar
-                style={{
-                  width: '8rem',
-                  height: '8rem', // Ensure avatar size is big
-                }}
-                {...genConfig(participant.avatar)} // Use avatar of the winning participant
-              />
+                width={'8rem'}
+                height={'8rem'}
+                avatarString={participant.avatar}
+                collectionName={participant.collectionName}
+              ></Avatar>
               <h1 className="font-display text-2xl mt-2">
                 + {participant.score.at(-1)}
               </h1>
