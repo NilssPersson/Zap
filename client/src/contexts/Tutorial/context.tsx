@@ -3,6 +3,7 @@ import React, {
   useContext,
   useReducer,
   useCallback,
+  useEffect,
 } from 'react';
 import {
   Tutorial,
@@ -10,6 +11,7 @@ import {
   TutorialState,
   TutorialStep,
 } from '@/models/types/tutorial';
+import { useAppContext } from '../App/context';
 
 const initialState: TutorialState = {
   activeTutorial: null,
@@ -24,7 +26,8 @@ type TutorialAction =
   | { type: 'COMPLETE_TUTORIAL' }
   | { type: 'SKIP_TUTORIAL' }
   | { type: 'ADD_TO_QUEUE'; payload: Tutorial }
-  | { type: 'CLEAR_QUEUE' };
+  | { type: 'CLEAR_QUEUE' }
+  | { type: 'SYNC_COMPLETED_TUTORIALS'; payload: string[] };
 
 function tutorialReducer(
   state: TutorialState,
@@ -68,6 +71,11 @@ function tutorialReducer(
         ...state,
         queue: [],
       };
+    case 'SYNC_COMPLETED_TUTORIALS':
+      return {
+        ...state,
+        completedTutorials: action.payload,
+      };
     default:
       return state;
   }
@@ -79,10 +87,28 @@ const TutorialContext = createContext<TutorialContextType | undefined>(
 
 export function TutorialProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(tutorialReducer, initialState);
+  const {
+    user: { user, updateUser },
+  } = useAppContext();
 
-  const startTutorial = useCallback((tutorial: Tutorial) => {
-    dispatch({ type: 'START_TUTORIAL', payload: tutorial });
-  }, []);
+  // Sync completed tutorials from user state
+  useEffect(() => {
+    if (user?.completedTutorials) {
+      dispatch({
+        type: 'SYNC_COMPLETED_TUTORIALS',
+        payload: user.completedTutorials,
+      });
+    }
+  }, [user?.completedTutorials]);
+
+  const startTutorial = useCallback(
+    (tutorial: Tutorial) => {
+      if (user?.tutorialsDisabled) return;
+      if (user?.completedTutorials?.includes(tutorial.id)) return;
+      dispatch({ type: 'START_TUTORIAL', payload: tutorial });
+    },
+    [user?.tutorialsDisabled, user?.completedTutorials]
+  );
 
   const nextStep = useCallback(() => {
     if (!state.activeTutorial || !state.activeStep) return;
@@ -98,20 +124,46 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
       });
     } else {
       dispatch({ type: 'COMPLETE_TUTORIAL' });
+      // Update user's completed tutorials
+      if (user && state.activeTutorial) {
+        updateUser({
+          ...user,
+          completedTutorials: [
+            ...(user.completedTutorials || []),
+            state.activeTutorial.id,
+          ],
+        });
+      }
     }
-  }, [state.activeTutorial, state.activeStep]);
+  }, [state.activeTutorial, state.activeStep, user, updateUser]);
 
   const completeTutorial = useCallback(() => {
     dispatch({ type: 'COMPLETE_TUTORIAL' });
-  }, []);
+    // Update user's completed tutorials
+    if (user && state.activeTutorial) {
+      updateUser({
+        ...user,
+        completedTutorials: [
+          ...(user.completedTutorials || []),
+          state.activeTutorial.id,
+        ],
+      });
+    }
+  }, [user, state.activeTutorial, updateUser]);
 
   const skipTutorial = useCallback(() => {
     dispatch({ type: 'SKIP_TUTORIAL' });
-  }, []);
+    completeTutorial();
+  }, [completeTutorial]);
 
-  const addToQueue = useCallback((tutorial: Tutorial) => {
-    dispatch({ type: 'ADD_TO_QUEUE', payload: tutorial });
-  }, []);
+  const addToQueue = useCallback(
+    (tutorial: Tutorial) => {
+      if (user?.tutorialsDisabled) return;
+      if (user?.completedTutorials?.includes(tutorial.id)) return;
+      dispatch({ type: 'ADD_TO_QUEUE', payload: tutorial });
+    },
+    [user?.tutorialsDisabled, user?.completedTutorials]
+  );
 
   const clearQueue = useCallback(() => {
     dispatch({ type: 'CLEAR_QUEUE' });

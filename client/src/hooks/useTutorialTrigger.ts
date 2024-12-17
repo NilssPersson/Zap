@@ -1,8 +1,12 @@
 import { useCallback, useEffect } from 'react';
 import { useTutorial } from '@/contexts/Tutorial/context';
 import { allTutorials } from '@/data/tutorials';
+import { useAppContext } from '@/contexts/App/context';
 
 export function useTutorialTrigger() {
+  const {
+    user: { user },
+  } = useAppContext();
   const { startTutorial, state } = useTutorial();
 
   const startTriggers = allTutorials.map((tutorial) => tutorial.startTriggerId);
@@ -26,6 +30,7 @@ export function useTutorialTrigger() {
 
   useEffect(() => {
     if (state.activeTutorial) return;
+    if (!user || user?.tutorialsDisabled) return;
     // Create a MutationObserver to watch for DOM changes
     const observer = new MutationObserver(() => {
       startTriggers.forEach((triggerId) => {
@@ -62,5 +67,10 @@ export function useTutorialTrigger() {
         }
       });
     };
-  }, [startTriggers, attachTutorialListener, state.completedTutorials]);
+  }, [
+    startTriggers,
+    attachTutorialListener,
+    state.completedTutorials,
+    user?.tutorialsDisabled,
+  ]);
 }
