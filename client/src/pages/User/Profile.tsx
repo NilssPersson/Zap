@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { avatarCollections, collectionNames } from '@/utils'; // Import the collections and names
 import Avatar, { findCollectionIndexByName } from '@/Avatar'; // Import the Avatar component
+import { Label } from '@/components/ui/label';
 
 function Profile() {
   const {
@@ -164,15 +165,20 @@ function Profile() {
           ></ArrowBigRight>
         </div>
 
-        <Input
-          placeholder={t('general:username')}
-          className="text-[#333333] text-center w-[160px] border-gray-400 rounded-md font-display mt-2 text-lg md:text-lg  shadow-lg"
-          value={username}
-          maxLength={15}
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-        />
+        <div className="grid w-full items-center justify-center items-center gap-1">
+          <Label htmlFor="username">{t('general:username')}</Label>
+          <Input
+            placeholder={t('general:username')}
+            className="text-[#333333] text-center w-[160px] border-gray-400 rounded-md font-display text-lg md:text-lg shadow-lg"
+            value={username}
+            id="username"
+            maxLength={15}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+          />
+        </div>
+
         <Button onClick={handleUpdate} className=" w-[160px]">
           {t('general:update')}
         </Button>
