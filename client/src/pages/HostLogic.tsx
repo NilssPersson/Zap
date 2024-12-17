@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { SlideTypes, ShowCorrectAnswerTypes } from '@/models/Quiz';
+import { SlideTypes } from '@/models/Quiz';
 import { getSlideComponents } from '@/slides/utils';
 import Countdown from 'react-countdown';
 import EndScreen from '@/slides/_specials/endscreen/EndScreen';
@@ -14,6 +13,7 @@ import {
   removeLocalStorageValue,
 } from '@/utils/localstorage';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 function HostLogic() {
   const { id } = useParams();
@@ -87,7 +87,7 @@ function HostLogic() {
     if (slide.type !== SlideTypes.question) return null;
 
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col absolute bottom-5 left-5 m-5">
         {!ongoingQuiz.isShowingCorrectAnswer &&
           slide.timeLimit > 0 &&
           countdownEndDate && (
@@ -95,26 +95,57 @@ function HostLogic() {
               <Countdown
                 date={countdownEndDate}
                 onComplete={handleComplete}
-                renderer={({ minutes, seconds, completed }) => {
+                renderer={({ completed, total }) => {
                   if (completed) {
-                    return <span>Time's up!</span>;
-                  } else {
                     return (
-                      <span>
-                        {minutes.toString().padStart(2, '0')}:
-                        {seconds.toString().padStart(2, '0')}
-                      </span>
+                      <span className="text-red-500 font-bold">Time's up!</span>
+                    );
+                  } else {
+                    // Calculate total seconds remaining
+                    const totalSeconds = Math.ceil(total / 1000);
+                    const displayMinutes = Math.floor(totalSeconds / 60);
+                    const displaySeconds = totalSeconds % 60;
+
+                    // Format the display string
+                    const formattedTime =
+                      displayMinutes > 0
+                        ? `${displayMinutes}:${displaySeconds}`
+                        : `${displaySeconds}`;
+
+                    return (
+                      <div
+                        style={{
+                          width: '80px',
+                          height: '80px',
+                          position: 'relative',
+                          bottom: '5',
+                          left: '5',
+                        }}
+                      >
+                        <motion.div
+                          key={totalSeconds} // Triggers re-animation each second
+                          animate={{ rotate: 90 }}
+                          transition={{ duration: 1, ease: 'backIn' }}
+                          style={{
+                            width: '80px',
+                            height: '80px',
+                            backgroundColor: '#45b6fe',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: '0 auto',
+                          }}
+                        ></motion.div>
+                        <span className="text-xl font-display absolute inset-0 flex items-center justify-center">
+                          {formattedTime}
+                        </span>
+                      </div>
                     );
                   }
                 }}
               />
             </div>
-          )}
-        {!ongoingQuiz.isShowingCorrectAnswer &&
-          slide.showCorrectAnswer === ShowCorrectAnswerTypes.manual && (
-            <Button onClick={nextSlide} className="m-5">
-              Show Answer
-            </Button>
           )}
       </div>
     );
