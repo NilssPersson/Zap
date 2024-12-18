@@ -6,7 +6,6 @@ import useGetAuthenticatedUser from '@/hooks/useGetAuthenticatedUser';
 import { userService } from '@/services/users';
 import { InfoIcon, Dices } from 'lucide-react';
 import Avatar from '@/Avatar';
-import { motion } from 'framer-motion';
 
 interface CreateParticipantProps {
   handleAddParticipant: (
@@ -132,15 +131,15 @@ export default function CreateParticipant({
               className="flex flex-col items-center justify-center space-y-4"
             >
               <Avatar avatarString={guestAvatar} collectionName="micah" />
-              <motion.button
+              <Button
                 onClick={() => setGuestAvatar(createRandomId())}
                 className="m-2 bg-yellow-300 hover:bg-yellow-400 flex items-center justify-center p-2 rounded-lg"
                 title="Randomize Avatar"
-                whileTap={{ scale: 0.8 }}
+                isInteractive
               >
                 <p className="font-display text-black">New Avatar</p>
                 <Dices className="w-6 h-6 text-black ml-1" />
-              </motion.button>
+              </Button>
               <Input
                 placeholder="Guest Name"
                 className="text-[#333333] text-center font-display md:text-lg text-2xl py-8 px-12 w-full shadow-lg"
@@ -167,15 +166,15 @@ export default function CreateParticipant({
       ) : (
         <div className="bg-component-background w-full mx-auto rounded-lg flex flex-col items-center justify-center p-6  space-y-4">
           <Avatar avatarString={guestAvatar} collectionName="micah" />
-          <motion.button
+          <Button
             onClick={() => setGuestAvatar(createRandomId())}
             className="m-2 bg-yellow-300 hover:bg-yellow-400 flex items-center justify-center p-2 rounded-lg"
             title="Randomize Avatar"
-            whileTap={{ scale: 0.8 }}
+            isInteractive
           >
             <p className="font-display text-black">New Avatar</p>
             <Dices className="w-6 h-6 text-black ml-1" />
-          </motion.button>
+          </Button>
           <Input
             placeholder="Enter Name"
             className="text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg"

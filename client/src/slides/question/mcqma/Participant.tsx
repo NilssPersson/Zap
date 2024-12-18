@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MCQMASlide } from '@/models/Quiz';
 import { getColor } from '@/slides/question/base/QuizColors';
-import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 interface Options {
   id: string;
@@ -37,22 +37,22 @@ export function Participant({ slide, answerQuestion }: McqmaViewProps) {
       <h1 className="text-5xl font-display font-bold text-center mb-8 ">
         {slide.title}
       </h1>
-      <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
+      <div className="grid grid-cols-2 gap-6 w-full overflow-visible">
         {slide.options.map((option: Options, index: number) => (
-          <motion.div
+          <Button
             key={option.id}
-            whileTap={{ scale: 0.8 }}
+            isInteractive
+            inGrid
             onClick={() => toggleOption(index)}
             style={{
               backgroundColor: getColor(index),
-              cursor: 'pointer',
             }}
             className={`flex items-center justify-center text-2xl text-white font-display h-24 rounded-lg ${
               selectedIndexes.includes(index) ? 'ring-4 ring-white' : ''
             }`}
           >
             {option.text}
-          </motion.div>
+          </Button>
         ))}
       </div>
       <button
