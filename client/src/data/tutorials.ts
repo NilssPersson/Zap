@@ -56,14 +56,14 @@ export const quizEditorTutorial: Tutorial = {
       title: 'Adding Slides',
       content:
         'Use the sidebar to add new slides to your quiz. Click the "Add Slide" button to get started.',
-      targetId: 'slide-sidebar',
+      targetId: 'quiz-sidebar',
       placement: 'right',
     },
     {
       id: 'editor',
-      title: 'Slide Editor',
+      title: 'Slide Preview',
       content:
-        'This is where you can edit your slide content. Try adding some text or images!',
+        'This is where you can preview your slide content. Try adding some text or images!',
       targetId: 'quiz-preview',
       placement: 'bottom',
     },
@@ -77,34 +77,39 @@ export const quizEditorTutorial: Tutorial = {
   ],
 };
 
-export const questionSlideTutorial: Tutorial = {
+export const firstSlideTutorial: Tutorial = {
   id: 'first-slide-tutorial',
   prerequisites: ['quiz-editor-intro'],
   name: 'Editing your first slide',
-  startTriggerId: 'first-slide',
+  startTriggerId: 'title-input',
   steps: [
     {
-      id: 'question-intro',
-      title: 'Adding Questions',
-      content: 'Let\'s create a question slide. Click the "Add Slide" button.',
-      targetId: 'add-slide-button',
-      placement: 'right',
-      nextTrigger: 'add-slide-button',
-    },
-    {
-      id: 'question-types',
-      title: 'Question Types',
+      id: 'edit-intro',
+      title: 'Editing your first slide',
       content:
-        'Choose from different question types like Multiple Choice, True/False, or Open Ended.',
-      targetId: 'question-type-menu',
+        "Let's edit your first slide. Were going to start with the most simple settings.",
+      targetId: 'quiz-toolbar',
       placement: 'right',
     },
     {
-      id: 'question-settings',
-      title: 'Question Settings',
-      content:
-        'Configure time limits, points, and other question-specific settings here.',
-      targetId: 'question-settings',
+      id: 'title-input',
+      title: 'Title',
+      content: 'Enter a title for your slide.',
+      targetId: 'title-input',
+      placement: 'right',
+    },
+    {
+      id: 'content-input',
+      title: 'Content',
+      content: 'Enter some content for your slide.',
+      targetId: 'content-input',
+      placement: 'left',
+    },
+    {
+      id: 'image-input',
+      title: 'Image',
+      content: 'Add an image to your slide.',
+      targetId: 'image-input',
       placement: 'left',
     },
   ],
@@ -113,5 +118,5 @@ export const questionSlideTutorial: Tutorial = {
 export const allTutorials = [
   quizManagerTutorial,
   quizEditorTutorial,
-  questionSlideTutorial,
+  firstSlideTutorial,
 ];

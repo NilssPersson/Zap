@@ -54,7 +54,12 @@ function QuizEdit() {
         className="absolute inset-0 -z-10"
       />
       <ResizablePanelGroup direction="horizontal" style={{ height: 'inherit' }}>
-        <ResizablePanel defaultSize={20} minSize={12} maxSize={20}>
+        <ResizablePanel
+          defaultSize={20}
+          minSize={12}
+          maxSize={20}
+          id="quiz-sidebar"
+        >
           <SlideSidebar
             quizName={quiz.quiz_name}
             slides={slides}
@@ -80,7 +85,7 @@ function QuizEdit() {
 
         <ResizableHandle withHandle />
 
-        <ResizablePanel defaultSize={60}>
+        <ResizablePanel id="quiz-preview" defaultSize={60}>
           <Editor
             slide={activeSlide}
             onSlideUpdate={handleSlideUpdate}
@@ -92,7 +97,7 @@ function QuizEdit() {
 
         <ResizableHandle withHandle />
 
-        <ResizablePanel defaultSize={20} minSize={15}>
+        <ResizablePanel defaultSize={20} minSize={15} id="quiz-toolbar">
           {showSettings ? (
             <QuizSettingsToolbar quiz={quiz} onUpdate={handleQuizUpdate} />
           ) : activeSlide ? (
