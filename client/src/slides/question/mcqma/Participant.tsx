@@ -34,26 +34,42 @@ export function Participant({ slide, answerQuestion }: McqmaViewProps) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-10 select-none">
-      <h1 className="text-5xl font-display font-bold text-center mb-8 ">
+      <h1 className="text-5xl font-display font-bold text-center justify-center mb-8">
         {slide.title}
       </h1>
-      <div className="grid grid-cols-2 gap-6 w-full overflow-visible">
-        {slide.options.map((option: Options, index: number) => (
-          <Button
-            key={option.id}
-            isInteractive
-            inGrid
-            onClick={() => toggleOption(index)}
-            style={{
-              backgroundColor: getColor(index),
-            }}
-            className={`flex items-center justify-center text-2xl text-white font-display h-24 rounded-lg ${
-              selectedIndexes.includes(index) ? 'ring-4 ring-white' : ''
-            }`}
-          >
-            {option.text}
-          </Button>
-        ))}
+      <div className="grid grid-cols-2 gap-6 w-full">
+        {slide.options.map((option: Options, index: number) => {
+          const isShortText = option.text.length < 10;
+
+          return (
+            <Button
+              key={option.id}
+              isInteractive
+              inGrid
+              onClick={() => toggleOption(index)}
+              style={{
+                backgroundColor: getColor(index),
+              }}
+              className={`flex items-center justify-center text-white font-display h-32 w-full rounded-lg ${
+                selectedIndexes.includes(index) ? 'ring-4 ring-white' : ''
+              }`}
+            >
+              <span
+                className="overflow-hidden whitespace-normal break-words text-center px-2"
+                style={{
+                  fontSize: isShortText ? '1.5rem' : '1rem', // Bigger font for shorter text
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2, // Limits to 2 lines
+                  WebkitBoxOrient: 'vertical',
+                  wordBreak: 'break-word', // Handle long unbreakable words
+                  hyphens: 'auto', // Add hyphenation if supported
+                }}
+              >
+                {option.text}
+              </span>
+            </Button>
+          );
+        })}
       </div>
       <button
         onClick={handleSubmit}
