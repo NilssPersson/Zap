@@ -15,6 +15,7 @@ import rankitright from '../utils/images/rankitright.png';
 import locateit from '../utils/images/locateit.png';
 import Avatar from '@/Avatar';
 import { Separator } from '@/components/ui/separator';
+import { useState, useEffect } from 'react';
 
 interface AvatarData {
   avatarString: string;
@@ -85,25 +86,44 @@ function Home() {
     'Match It Right',
   ];
 
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024); // Assuming 1024px is the breakpoint for large screens
+
+  // Effect hook to listen for window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024); // Update state based on window width
+    };
+
+    // Listen to the resize event
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="flex-1 flex flex-col items-center justify-start mt-10 overflow-y-scroll">
+    <div className="flex-1 flex flex-col items-center justify-start mt-10 overflow-y-scroll overflow-hidden ">
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      ></meta>
       {/* "Zap!" text */}
       <WiggleText
         text="Zap!"
         className="text-9xl font-bold font-display fancy-wrap mb-10 mt-10"
       />
-      <div className="flex-1 flex flex-row items-center justify-center space-x-40 mt-10">
-        <div className="flex-1 flex flex-col items-center justify-center gap-12 ">
+      <div className="flex-1 flex flex-col lg:flex-row items-center justify-center lg:space-x-40  lg:space-y-0 mt-10">
+        <div className="flex-1 flex flex-col items-center justify-center lg:gap-8 gap-0">
           <Button
-            className="font-display text-7xl outline outline-3 p-16 bg-green-500 text-white hover:bg-white hover:text-black"
+            className="font-display text-7xl outline outline-3  p-12 lg:p-16 bg-green-500 text-white hover:bg-white hover:text-black "
             size="lg"
             onClick={handlePlay}
           >
             Play Now
           </Button>
-          <div className="flex-1 flex flex-row items-center justify-center space-x-4">
+          <div className="flex-1 flex flex-row items-center justify-center space-x-4 ">
             <Button
-              className="font-display text-5xl outline outline-3 p-8"
+              className="font-display text-3xl outline outline-3 p-6 lg:p-8 "
               size="lg"
               onClick={() => login()}
             >
@@ -111,7 +131,7 @@ function Home() {
             </Button>
 
             <Button
-              className="font-display text-5xl outline outline-3 p-8"
+              className="font-display text-3xl outline outline-3 p-6 lg:p-8 "
               size="lg"
               onClick={() => register()}
             >
@@ -121,122 +141,124 @@ function Home() {
         </div>
 
         {/* Container for Title and Carousel */}
-        <div className="flex flex-col justify-center items-center">
-          <h1 className="text-4xl font-display mb-4">
-            Explore 20 different question types!
+        {isLargeScreen && (
+          <div className="flex flex-col justify-center items-center m-4">
+            <h1 className="lg:text4xl text-3xl  font-display mb-4 text-center m-4">
+              Explore 20 different question types!
+            </h1>
+
+            <div className="text-center flex max-w-4xl items-center justify-center lg:w-[400px]">
+              {/* Control carousel's width */}
+              <Carousel increment={1} rotateTime={5} buttons={false}>
+                <CarouselContent>
+                  {images.map((image, index) => (
+                    <CarouselItem className="border-white" key={index}>
+                      {/* Container for Title and Image */}
+                      <div className="p-2">
+                        {/* Title above the image */}
+                        <h2 className="text-3xl font-display mb-2">
+                          {titles[index]}
+                        </h2>
+                        <div className="rounded-lg border-4 border-white ">
+                          <img src={image} alt={`Slide ${index + 1}`} />
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            </div>
+          </div>
+        )}
+      </div>
+      {isLargeScreen && <Separator className="mt-10 mb-10" />}
+      {isLargeScreen && (
+        <div className="w-full flex flex-col items-center text-center">
+          <h1 className="font-display lg:text4xl text-3xl">
+            Register to choose from over 100 different avatars!
           </h1>
-
-          <div className="text-center flex max-w-4xl items-center justify-center w-[400px]">
-            {/* Control carousel's width */}
-            <Carousel increment={1} rotateTime={5} buttons={false}>
-              <CarouselContent>
-                {images.map((image, index) => (
-                  <CarouselItem className="border-white" key={index}>
-                    {/* Container for Title and Image */}
-                    <div className="p-2">
-                      {/* Title above the image */}
-                      <h2 className="text-3xl font-display mb-2">
-                        {titles[index]}
-                      </h2>
-                      <div className="rounded-lg border-4 border-white overflow-hidden">
-                        <img src={image} alt={`Slide ${index + 1}`} />
+          <div className="mt-10 flex flex-col items-center justify-center">
+            <div className="w-full max-w-4xl">
+              <Carousel increment={1} buttons={true}>
+                <CarouselContent>
+                  {avatarData.map((avatar, index) => (
+                    <CarouselItem
+                      key={avatar.avatarString}
+                      className="flex justify-center items-center p-4"
+                    >
+                      <div className="flex space-x-16">
+                        {/* Display 3 different avatars in a row */}
+                        <div className="flex flex-col items-center">
+                          <Avatar
+                            avatarString={avatar?.avatarString || ''}
+                            collectionName={avatar?.collectionName || ''}
+                          />
+                        </div>
+                        <div className="flex flex-col items-center">
+                          {/* Render a different avatar for this item */}
+                          <Avatar
+                            avatarString={
+                              avatarData[(3 * index + 1) % avatarData.length]
+                                ?.avatarString || ''
+                            }
+                            collectionName={
+                              avatarData[(3 * index + 1) % avatarData.length]
+                                ?.collectionName || ''
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col items-center">
+                          {/* Render another different avatar */}
+                          <Avatar
+                            avatarString={
+                              avatarData[(3 * index + 2) % avatarData.length]
+                                ?.avatarString || ''
+                            }
+                            collectionName={
+                              avatarData[(3 * index + 2) % avatarData.length]
+                                ?.collectionName || ''
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col items-center">
+                          {/* Render another different avatar */}
+                          <Avatar
+                            avatarString={
+                              avatarData[(3 * index + 3) % avatarData.length]
+                                ?.avatarString || ''
+                            }
+                            collectionName={
+                              avatarData[(3 * index + 3) % avatarData.length]
+                                ?.collectionName || ''
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col items-center">
+                          {/* Render another different avatar */}
+                          <Avatar
+                            avatarString={
+                              avatarData[(3 * index + 4) % avatarData.length]
+                                ?.avatarString || ''
+                            }
+                            collectionName={
+                              avatarData[(3 * index + 4) % avatarData.length]
+                                ?.collectionName || ''
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            </div>
           </div>
         </div>
-      </div>
-
-      <Separator className="mt-10 mb-10" />
-
-      <div>
-        <h1 className="font-display text-5xl">
-          Register to choose from over 100 different avatars!
-        </h1>
-        <div className="mt-10 flex flex-col items-center justify-center">
-          <div className="w-full max-w-4xl">
-            <Carousel increment={1} buttons={true}>
-              <CarouselContent>
-                {avatarData.map((avatar, index) => (
-                  <CarouselItem
-                    key={avatar.avatarString}
-                    className="flex justify-center items-center p-4"
-                  >
-                    <div className="flex space-x-16">
-                      {/* Display 3 different avatars in a row */}
-                      <div className="flex flex-col items-center">
-                        <Avatar
-                          avatarString={avatar?.avatarString || ''}
-                          collectionName={avatar?.collectionName || ''}
-                        />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        {/* Render a different avatar for this item */}
-                        <Avatar
-                          avatarString={
-                            avatarData[(3 * index + 1) % avatarData.length]
-                              ?.avatarString || ''
-                          }
-                          collectionName={
-                            avatarData[(3 * index + 1) % avatarData.length]
-                              ?.collectionName || ''
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        {/* Render another different avatar */}
-                        <Avatar
-                          avatarString={
-                            avatarData[(3 * index + 2) % avatarData.length]
-                              ?.avatarString || ''
-                          }
-                          collectionName={
-                            avatarData[(3 * index + 2) % avatarData.length]
-                              ?.collectionName || ''
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        {/* Render another different avatar */}
-                        <Avatar
-                          avatarString={
-                            avatarData[(3 * index + 3) % avatarData.length]
-                              ?.avatarString || ''
-                          }
-                          collectionName={
-                            avatarData[(3 * index + 3) % avatarData.length]
-                              ?.collectionName || ''
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        {/* Render another different avatar */}
-                        <Avatar
-                          avatarString={
-                            avatarData[(3 * index + 4) % avatarData.length]
-                              ?.avatarString || ''
-                          }
-                          collectionName={
-                            avatarData[(3 * index + 4) % avatarData.length]
-                              ?.collectionName || ''
-                          }
-                        />
-                      </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
