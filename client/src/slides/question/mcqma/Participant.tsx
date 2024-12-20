@@ -44,8 +44,6 @@ export function Participant({ slide, answerQuestion }: McqmaViewProps) {
           return (
             <Button
               key={option.id}
-              isInteractive
-              inGrid
               onClick={() => toggleOption(index)}
               style={{
                 backgroundColor: getColor(index),
