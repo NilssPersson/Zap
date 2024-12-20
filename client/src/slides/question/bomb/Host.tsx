@@ -441,7 +441,12 @@ export function Host({
     );
   }
 
-  if (currentParticipants && currentParticipants.length > 0 && gameStarted) {
+  if (
+    currentParticipants &&
+    currentParticipants.length > 0 &&
+    gameStarted &&
+    slide.answers
+  ) {
     return (
       <div className="h-screen flex flex-col items-center justify-start gap-16">
         {/* Title moved outside of the motion.div */}
