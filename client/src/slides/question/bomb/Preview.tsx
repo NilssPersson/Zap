@@ -351,7 +351,7 @@ export function Preview({
               avatarString={participant.avatar}
               collectionName={participant.collectionName}
             ></Avatar>
-            <h3 className="font-display">{participant.name}</h3>
+            <h3 className="font-display text-2xl">{participant.name}</h3>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               {participantHearts[participant.name] > 0 ? (
                 Array.from({ length: participantHearts[participant.name] }).map(
