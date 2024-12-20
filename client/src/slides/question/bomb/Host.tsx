@@ -600,7 +600,7 @@ export function Host({
                     width="6rem"
                     height="6rem"
                   />
-                  <h3 className="font-display">{participant.name}</h3>
+                  <h3 className="font-display text-2xl">{participant.name}</h3>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     {(participantHearts.find(
                       (ph) => ph.participantId === participant.participantId
