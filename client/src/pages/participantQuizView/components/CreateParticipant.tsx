@@ -92,8 +92,8 @@ export default function CreateParticipant({
     }, 1000);
   };
 
-  return (
-    <div className="flex-1 w-full flex items-center justify-center overflow-hidden p-8">
+    return (
+      <div className="flex items-center justify-center min-h-screen  p-8">
       {user.isLoggedIn ? (
         <Tabs defaultValue="me">
           <div className="bg-component-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
@@ -164,7 +164,7 @@ export default function CreateParticipant({
           </div>
         </Tabs>
       ) : (
-        <div className="bg-component-background w-full mx-auto rounded-lg flex flex-col items-center justify-center p-6  space-y-4">
+        <div className="bg-component-background  mx-auto rounded-lg flex flex-col items-center justify-center p-6  space-y-4">
           <Avatar avatarString={guestAvatar} collectionName="micah" />
           <Button
             onClick={() => setGuestAvatar(createRandomId())}

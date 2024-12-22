@@ -43,6 +43,8 @@ export function Header() {
   const inLobby = location.pathname.endsWith('/lobby');
   const inGame = location.pathname.startsWith('/play');
 
+  const [isLargeScreen] = useState(window.innerWidth >= 1024); // Assuming 1024px is the breakpoint for large screens
+
   if (inLobby && !showHeader) {
     return null;
   }
@@ -50,7 +52,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        'bg-black/40 md:block transition-opacity duration-200 border-b-2 border-b-primary shadow shadow-black/20 z-50',
+        'bg-black/40 md:block transition-opacity duration-200 border-b-2  border-b-primary shadow shadow-black/20 z-50',
         inLobby && 'absolute top-0 left-0 right-0',
         inGame && 'hidden'
       )}
@@ -74,6 +76,7 @@ export function Header() {
                   {t('general:play')}
                 </Button>
               </Link>
+              { isLargeScreen && (
               <Link to="/">
                 <Button
                   variant={location.pathname === '/' ? 'default' : 'ghost'}
@@ -82,6 +85,7 @@ export function Header() {
                   {t('general:home')}
                 </Button>
               </Link>
+              )}
               <Link to="/about">
                 <Button
                   variant={location.pathname === '/about' ? 'default' : 'ghost'}
@@ -90,7 +94,7 @@ export function Header() {
                   {t('general:about')}
                 </Button>
               </Link>
-              {!isAuthenticated && (
+              {!isAuthenticated && isLargeScreen && (
                 <>
                   <Button
                     variant="ghost"
