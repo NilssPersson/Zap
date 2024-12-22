@@ -25,10 +25,7 @@ interface AvatarData {
   collectionName: string;
 }
 
-interface AvatarData {
-  avatarString: string;
-  collectionName: string;
-}
+
 
 const generateRandomString = (length: number): string => {
   const characters =
@@ -119,7 +116,7 @@ function Home() {
         <div className="flex-1 flex flex-col lg:flex-row items-center justify-center lg:space-x-40  lg:space-y-0 mt-10">
           <div className="flex-1 flex flex-col items-center justify-center lg:gap-8 gap-0">
             <Button
-              className="font-display text-7xl outline outline-3  p-12 lg:p-16 bg-green-500 text-white hover:bg-white hover:text-black "
+              className="font-display text-7xl outline outline-3 w-5/6  p-12 lg:p-16 bg-green-500 text-white hover:bg-white hover:text-black "
               size="lg"
               onClick={handlePlay}
             >
