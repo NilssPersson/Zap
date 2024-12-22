@@ -57,7 +57,7 @@ export function Header() {
         inGame && 'hidden'
       )}
     >
-      <div className="container flex h-16 items-center px-1">
+      <div className="container flex h-16 items-center px-1 overflow-hidden">
         <div className={cn('mr-0 md:flex w-full', inGame && 'hidden')}>
           <nav className="flex items-center space-x-6 font-medium w-full justify-between">
             <Link
@@ -67,6 +67,7 @@ export function Header() {
               <Zap className="text-yellow-400" size={32} />
               <span className="fancy-wrap">Zap!</span>
             </Link>
+
             <div className="flex items-center font-display gap-1">
               <Link to="/play">
                 <Button
@@ -76,15 +77,15 @@ export function Header() {
                   {t('general:play')}
                 </Button>
               </Link>
-              { isLargeScreen && (
-              <Link to="/">
-                <Button
-                  variant={location.pathname === '/' ? 'default' : 'ghost'}
-                  className="text-lg"
-                >
-                  {t('general:home')}
-                </Button>
-              </Link>
+              {isLargeScreen && (
+                <Link to="/">
+                  <Button
+                    variant={location.pathname === '/' ? 'default' : 'ghost'}
+                    className="text-lg"
+                  >
+                    {t('general:home')}
+                  </Button>
+                </Link>
               )}
               <Link to="/about">
                 <Button
@@ -92,6 +93,14 @@ export function Header() {
                   className="text-lg"
                 >
                   {t('general:about')}
+                </Button>
+              </Link>
+              <Link to="/team">
+                <Button
+                  variant={location.pathname === '/team' ? 'default' : 'ghost'}
+                  className="text-lg"
+                >
+                  {t('general:team')}
                 </Button>
               </Link>
               {!isAuthenticated && isLargeScreen && (

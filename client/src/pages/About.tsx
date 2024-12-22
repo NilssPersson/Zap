@@ -27,9 +27,11 @@ export default function About() {
           <h1 className="text-4xl md:text-5xl font-bold font-display mb-6">
             {t('about:who')}
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 font-display">
-            {t('about:introText')}
-          </p>
+          <div className="bg-white/10 p-6 rounded-lg shadow-lg mb-10">
+            <p className="text-lg md:text-xl text-gray-300 font-display">
+              {t('about:introText')}
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 w-full max-w-7xl items-start">
@@ -117,7 +119,7 @@ export default function About() {
         {/* Inner container (scrollable) */}
         <div
           className="overflow-y-auto from-gray-800 to-bg bg-gradient-to-b"
-          style={{ maxHeight: 'calc(90vh - 200px)' }}
+          style={{ maxHeight: 'calc(85vh - 200px)' }}
         >
           {/* Photos Section */}
           <div className="bg-white/5 p-4 rounded-lg shadow-lg w-full mb-4">
