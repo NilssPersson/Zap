@@ -111,16 +111,18 @@ export default function About() {
           <h1 className="text-3xl font-bold font-display mb-4">
             {t('about:who')}
           </h1>
-          <p className="text-base text-gray-300 font-display">
-            {t('about:introText')}
-          </p>
         </div>
 
         {/* Inner container (scrollable) */}
         <div
           className="overflow-y-auto from-gray-800 to-bg bg-gradient-to-b"
-          style={{ maxHeight: 'calc(85vh - 200px)' }}
+          style={{ maxHeight: 'calc(100vh - 200px)' }}
         >
+          <div className="bg-white/10 p-4 rounded-lg shadow-lg w-full mb-4">
+            <p className="text-base text-gray-300 font-display">
+              {t('about:introText')}
+            </p>
+          </div>
           {/* Photos Section */}
           <div className="bg-white/5 p-4 rounded-lg shadow-lg w-full mb-4">
             <h2 className="text-center text-2xl font-bold font-display mb-4">
