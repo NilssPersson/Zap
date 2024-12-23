@@ -27,12 +27,11 @@ function App() {
           <AppProvider>
             <TutorialProvider>
               <Header />
-              <div>
-                <AppRoutes />
-                <OngoingQuizHandler />
-                <Toaster />
-                <TutorialOverlay disabled={false} />
-              </div>
+
+              <AppRoutes />
+              <OngoingQuizHandler />
+              <Toaster />
+              <TutorialOverlay disabled={false} />
             </TutorialProvider>
           </AppProvider>
         </KindeProvider>

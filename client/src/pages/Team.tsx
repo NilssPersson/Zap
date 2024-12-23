@@ -155,7 +155,7 @@ export default function Team() {
                   </DialogDescription>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setOpen(false)}>
-                      Cancel
+                      {t("general:cancel")}
                     </Button>
                     <Button onClick={handleClear}>
                       {t('general:confirm')}
