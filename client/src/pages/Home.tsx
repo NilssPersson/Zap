@@ -15,17 +15,12 @@ import rankitright from '../utils/images/rankitright.png';
 import locateit from '../utils/images/locateit.png';
 import Avatar from '@/Avatar';
 import { Separator } from '@/components/ui/separator';
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-
-
 
 interface AvatarData {
   avatarString: string;
   collectionName: string;
 }
-
-
 
 const generateRandomString = (length: number): string => {
   const characters =
@@ -87,8 +82,6 @@ function Home() {
     navigate('/play');
   };
 
-
-
   return (
     <div
       className="flex-1 flex flex-col items-center justify-start overflow-auto"
@@ -97,7 +90,9 @@ function Home() {
       <div className="flex-1 flex flex-col items-center justify-start mt-10">
         {/* "Zap!" text */}
         <div className="flex items-center justify-center gap-4">
-          <span className="text-center text-6xl font-bold font-display">Welcome to </span>
+          <span className="text-center text-6xl font-bold font-display">
+            Welcome to{' '}
+          </span>
           <WiggleText
             text="Zap!"
             className="text-center text-8xl font-bold font-display fancy-wrap "
@@ -110,7 +105,7 @@ function Home() {
               size="lg"
               onClick={handlePlay}
             >
-              {t("homepage:playNow")}
+              {t('homepage:playNow')}
             </Button>
             <div className="flex-1 flex flex-row items-center justify-center space-x-4 ">
               <Button
@@ -118,7 +113,7 @@ function Home() {
                 size="lg"
                 onClick={() => login()}
               >
-                {t("homepage:signIn")}
+                {t('homepage:signIn')}
               </Button>
 
               <Button
@@ -126,7 +121,7 @@ function Home() {
                 size="lg"
                 onClick={() => register()}
               >
-                {t("homepage:signUp")}
+                {t('homepage:signUp')}
               </Button>
             </div>
           </div>
@@ -134,7 +129,7 @@ function Home() {
           {/* Container for Title and Carousel */}
           <div className="hidden lg:flex flex-col justify-center items-center m-4">
             <h1 className="lg:text4xl text-3xl font-semibold tracking-tight mb-4 text-center m-4">
-              {t("homepage:questionTypes")}
+              {t('homepage:questionTypes')}
             </h1>
 
             <div className="text-center flex max-w-4xl items-center justify-center lg:w-[400px]">
@@ -166,8 +161,7 @@ function Home() {
 
         <div className="w-full hidden lg:flex flex-col items-center text-center">
           <h1 className="font-display lg:text4xl text-3xl">
-            {t("homepage:avatarText")}
-
+            {t('homepage:avatarText')}
           </h1>
           <div className="my-10 flex flex-col items-center justify-center">
             <div className="w-full max-w-4xl">

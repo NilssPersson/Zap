@@ -226,6 +226,7 @@ export const useHostLogic = (id: string | undefined) => {
         ? ongoingQuiz.currentSlide
         : ongoingQuiz.currentSlide + 1,
       participants: updatedParticipants,
+      currentSlideTime: showAnswer ? ongoingQuiz.currentSlideTime : new Date().toISOString(),
     });
   };
 
