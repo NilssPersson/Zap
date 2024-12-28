@@ -71,5 +71,9 @@
   "timelimit.60": "1 minut",
   "timelimit.90": "1.5 minuter",
   "timelimit.120": "2 minuter",
-  "timelimit.180": "3 minuter"
+  "timelimit.180": "3 minuter",
+  "time": "Tidsbaserat",
+  "timeDescription": "Deltagare får poäng mellan 0-100% baserat på tiden det tog att svara på frågan.",
+  "correct": "Rätt",
+  "correctDescription": "Deltagare får den valda poängen om de svarade rätt."
 }
