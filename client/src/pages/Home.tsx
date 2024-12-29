@@ -63,7 +63,6 @@ const generateRandomAvatarData = (): AvatarData[] => {
 };
 
 const avatarData = generateRandomAvatarData();
-console.log(avatarData); // Output the generated avatar data
 
 const images = [bombpicture, locateit, fff, rankitright];
 const titles: string[] = [

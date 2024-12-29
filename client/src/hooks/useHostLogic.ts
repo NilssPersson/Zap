@@ -86,6 +86,7 @@ export const useHostLogic = (id: string | undefined) => {
       const points = slidecomponent.CalculateScore({
         slide: slide as never,
         participants,
+        currentSlideTime: ongoingQuiz?.currentSlideTime,
       });
 
       const updateParticipants = await handleAddPoints(
