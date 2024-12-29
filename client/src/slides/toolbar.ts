@@ -23,7 +23,6 @@ import { LocateItInputs } from './_toolbar/inputs/LocateItInputs';
 import { MatchingOptionsInput } from './_toolbar/inputs/MatchingOptionsInput';
 import { MCQSAPoints } from './_toolbar/inputs/MCQSAPoints';
 import { BombOptionsInput } from './_toolbar/inputs/BombOptionsInput';
-import { BulletPointsInput } from './_toolbar/inputs/BulletPointsInput';
 import { ImagePositionInput } from './_toolbar/inputs/ImagePositionInput';
 import { BulletPointSlideInput } from './_toolbar/inputs/BulletPointSlideInput';
 import { BulletPointStyleInput } from './_toolbar/inputs/BulletPointStyleInput';
