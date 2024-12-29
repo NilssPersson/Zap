@@ -73,7 +73,8 @@
   "timelimit.120": "2 minutes",
   "timelimit.180": "3 minutes",
   "time": "Time based",
-  "timeDescription": "Participants will be awarded 0-100% of the points based on the time it took to answer the question.",
-  "correct": "Correct",
+  "time.noLimit": "No time limit selected, will be played like a default mode.",
+  "timeDescription": "Participants will be awarded 50-100% of the points based on the time it took to answer the question.",
+  "correct": "Default",
   "correctDescription": "Participants will be awarded the selected points if they answer correctly."
 }

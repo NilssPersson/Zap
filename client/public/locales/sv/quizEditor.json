@@ -73,7 +73,8 @@
   "timelimit.120": "2 minuter",
   "timelimit.180": "3 minuter",
   "time": "Tidsbaserat",
-  "timeDescription": "Deltagare får poäng mellan 0-100% baserat på tiden det tog att svara på frågan.",
-  "correct": "Rätt",
+  "time.noLimit": "Ingen tidsbegränsning vald, kommer spelas som standard läge.",
+  "timeDescription": "Deltagare får poäng mellan 50-100% baserat på tiden det tog att svara på frågan.",
+  "correct": "Standard",
   "correctDescription": "Deltagare får den valda poängen om de svarade rätt."
 }
