@@ -44,16 +44,18 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
   const [lastCorrectPlayer, setLastCorrectPlayer] = useState<Participant | null>(null);
 
   const mainTimer = useTimer({
-    duration: slide.timeLimit,
+    duration: slide.mainTimeLimit,
     onComplete: () => {
       if (gameState.type === 'WAITING_FOR_BUZZER') {
+        mainTimer.stop();
         setGameState({ type: 'SHOWING_ANSWER' });
+        clearTempAnswers();
       }
     },
   });
 
   const answerTimer = useTimer({
-    duration: 5, // 5 seconds to answer
+    duration: slide.answerTimeLimit,
     onComplete: () => {
       if (gameState.type === 'PLAYER_ANSWERING') {
         handleIncorrectAnswer(gameState.participant);
@@ -216,7 +218,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
         <div className="flex gap-4">
           {scores.map(score => (
             <div key={score.participantId} className="text-xl">
-              {participants.find(p => p.participantId === score.participantId)?.name}: ${score.score}
+              {participants.find(p => p.participantId === score.participantId)?.name}: {score.score}
             </div>
           ))}
         </div>
@@ -243,7 +245,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
                       !isAnswered && "hover:bg-black/90 cursor-pointer"
                     )}
                   >
-                    ${calculateQuestionValue(index)}
+                    {calculateQuestionValue(index)}
                   </button>
                 );
               })}
@@ -254,36 +256,27 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
 
       {/* Question Display */}
       {(gameState.type === 'SHOWING_QUESTION' || gameState.type === 'WAITING_FOR_BUZZER' || gameState.type === 'PLAYER_ANSWERING') && selectedQuestion && (
-        <div className="flex-1 flex flex-col items-center justify-center text-4xl">
-          <div className="mb-8">
+        <div className="flex-1 flex flex-col items-center justify-center text-8xl text-center px-16">
+          <div className="mb-8 font-display">
             {slide.categories.find(c => c.id === selectedQuestion.categoryId)
               ?.questions[selectedQuestion.questionIndex].question}
           </div>
           {gameState.type === 'SHOWING_QUESTION' && (
-            <Button size="lg" onClick={startBuzzerPhase}>Start</Button>
+            <Button className='mt-16 text-4xl py-8' size="lg" onClick={startBuzzerPhase}>Start</Button>
           )}
-        </div>
-      )}
-
-      {/* Buzzer Phase */}
-      {gameState.type === 'WAITING_FOR_BUZZER' && (
-        <div className="fixed bottom-4 left-4 right-4 flex justify-center gap-4">
-          {participants.map(participant => (
-            <Button
-              key={participant.participantId}
-              size="lg"
-              onClick={() => handleBuzzer(participant)}
-            >
-              {participant.name}
-            </Button>
-          ))}
+          {gameState.type === 'WAITING_FOR_BUZZER' && (
+            <div className="mt-16 text-6xl font-bold text-primary">
+              {mainTimer.timeLeft}s
+            </div>
+          )}
         </div>
       )}
 
       {/* Player Answering */}
       {gameState.type === 'PLAYER_ANSWERING' && (
-        <div className="fixed bottom-4 left-4 right-4 flex justify-center gap-4">
+        <div className="mt-16 flex justify-center gap-4">
           <Button
+            className='text-4xl py-8'
             size="lg"
             variant="destructive"
             onClick={() => handleIncorrectAnswer(gameState.participant)}
@@ -291,6 +284,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
             Incorrect
           </Button>
           <Button
+            className='text-4xl py-8'
             size="lg"
             variant="default"
             onClick={() => handleCorrectAnswer(gameState.participant)}

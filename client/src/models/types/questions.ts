@@ -150,6 +150,8 @@ export interface JeopardySlide extends QuestionSlideBase {
   categories: JeopardyCategory[];
   minScore: number;
   maxScore: number;
+  mainTimeLimit: number;
+  answerTimeLimit: number;
 }
 
 export type QuestionSlide =

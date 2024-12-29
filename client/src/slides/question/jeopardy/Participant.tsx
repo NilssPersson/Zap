@@ -19,15 +19,17 @@ function BuzzerButton({ disabled, onClick }: { disabled: boolean, onClick: () =>
 
 export function Participant({ participantData, isTurn, answerTempQuestion }: Props) {
 
+  if (!isTurn) return null;
+
   const isMyTurn = isTurn === participantData.participantId;
 
-  const isBuzzerOn = isTurn === "PRE_BUZZER" || isTurn === "BUZZER" || isTurn.startsWith("BUZZER_");
+  const isBuzzerOn = isTurn === "PRE_BUZZER" || isTurn === "BUZZER" || isTurn?.startsWith("BUZZER_");
 
   const isPreBuzzer = isTurn === "PRE_BUZZER";
 
-  const playerAnswering = isTurn.startsWith("BUZZER_");
+  const playerAnswering = isTurn?.startsWith("BUZZER_");
 
-  const isMyBuzzerTurn = isBuzzerOn && isTurn.endsWith(participantData.participantId);
+  const isMyBuzzerTurn = isBuzzerOn && isTurn?.endsWith(participantData.participantId);
 
   return (
     <div className="flex-1 h-full flex flex-col items-center justify-center gap-4 p-4">

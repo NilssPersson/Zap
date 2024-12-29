@@ -28,6 +28,7 @@ import { BulletPointSlideInput } from './_toolbar/inputs/BulletPointSlideInput';
 import { BulletPointStyleInput } from './_toolbar/inputs/BulletPointStyleInput';
 import { JeopardyInput } from './_toolbar/inputs/JeopardyInput';
 import { JeopardyScoreInput } from './_toolbar/inputs/JeopardyScoreInput';
+import { JeopardyTimeLimits } from './_toolbar/inputs/JeopardyTimeLimits';
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -261,6 +262,11 @@ export const toolbarConfigs = {
       field: 'minScore',
       label: 'Scores',
       component: JeopardyScoreInput,
+    },
+    {
+      field: 'mainTimeLimit',
+      label: 'Time Limits',
+      component: JeopardyTimeLimits,
     },
     {
       field: 'backgroundStyle',
