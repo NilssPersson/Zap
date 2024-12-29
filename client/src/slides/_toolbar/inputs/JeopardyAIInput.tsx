@@ -8,27 +8,39 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Copy, Plus } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Switch } from '@/components/ui/switch';
 
 interface Props {
   slide: JeopardySlide;
   onSlideUpdate: (slide: JeopardySlide) => void;
 }
 
-const EXAMPLE_PROMPT = `Create a Jeopardy category about [TOPIC] with 5 questions of increasing difficulty. Format it exactly like this:
+const getExamplePrompt = (strictFormat: boolean) => `Create a Jeopardy category about [TOPIC] with 5 questions of increasing difficulty. Format it exactly like this:
 
 Category: [Category Name]
-Q1: [Easiest Question] | A: [Answer in 'What/Who is' format]
-Q2: [Easy Question] | A: [Answer]
-Q3: [Medium Question] | A: [Answer]
-Q4: [Hard Question] | A: [Answer]
-Q5: [Hardest Question] | A: [Answer]
+Q1: [Easiest Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
+Q2: [Easy Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
+Q3: [Medium Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
+Q4: [Hard Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
+Q5: [Hardest Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
 
-Make sure each question follows Jeopardy style where the answer must be phrased as a question.`;
+${strictFormat ? 'Make sure each answer is phrased as a question starting with "What/Who/Where/When is/was".' : 'Answers can be in any format.'}`;
 
 export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [parsedCategory, setParsedCategory] = useState<JeopardyCategory | null>(null);
+  const [strictAnswerFormat, setStrictAnswerFormat] = useState(true);
+
+  const validAnswerStarts = [
+    'what is',
+    'who is',
+    'where is',
+    'when is',
+    'where was',
+    'who was',
+    'what was'
+  ];
 
   const parseAIString = (input: string): JeopardyCategory | null => {
     try {
@@ -45,27 +57,21 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
         return null;
       }
 
-      const validAnswerStarts = [
-        'what is',
-        'who is',
-        'where is',
-        'when is',
-        'where was',
-        'who was',
-        'what was'
-      ];
-
       const questions = lines.slice(1).map((line, index) => {
         const match = line.match(/Q\d+:\s*(.+?)\s*\|\s*A:\s*(.+)/);
         if (!match) {
           setError(`Invalid format on question ${index + 1}. Must be "Q${index + 1}: [Question] | A: [Answer]"`);
           return null;
         }
+
+        console.log(strictAnswerFormat)
         
-        const answerStart = match[2].trim().toLowerCase();
-        if (!validAnswerStarts.some(start => answerStart.startsWith(start))) {
-          setError(`Answer ${index + 1} must start with "What is/was", "Who is/was", "Where is/was", or "When is"`);
-          return null;
+        if (strictAnswerFormat) {
+          const answerStart = match[2].trim().toLowerCase();
+          if (!validAnswerStarts.some(start => answerStart.startsWith(start))) {
+            setError(`Answer ${index + 1} must start with "What is/was", "Who is/was", "Where is/was", or "When is"`);
+            return null;
+          }
         }
 
         return {
@@ -119,7 +125,7 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
   };
 
   const copyPrompt = () => {
-    navigator.clipboard.writeText(EXAMPLE_PROMPT);
+    navigator.clipboard.writeText(getExamplePrompt(strictAnswerFormat));
   };
 
   return (
@@ -131,6 +137,16 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pt-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    checked={strictAnswerFormat}
+                    onCheckedChange={setStrictAnswerFormat}
+                  />
+                  <Label>Require "What/Who/Where/When is/was" format</Label>
+                </div>
+              </div>
+
               <Card className="p-4 bg-muted/50">
                 <div className="flex items-center justify-between mb-2">
                   <Label className="text-sm">Example Prompt</Label>
@@ -140,7 +156,7 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                   </Button>
                 </div>
                 <div className="text-sm text-muted-foreground whitespace-pre-wrap">
-                  {EXAMPLE_PROMPT}
+                  {getExamplePrompt(strictAnswerFormat)}
                 </div>
               </Card>
 
