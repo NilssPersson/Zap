@@ -27,6 +27,8 @@ import { BulletPointsInput } from './_toolbar/inputs/BulletPointsInput';
 import { ImagePositionInput } from './_toolbar/inputs/ImagePositionInput';
 import { BulletPointSlideInput } from './_toolbar/inputs/BulletPointSlideInput';
 import { BulletPointStyleInput } from './_toolbar/inputs/BulletPointStyleInput';
+import { JeopardyInput } from './_toolbar/inputs/JeopardyInput';
+import { JeopardyScoreInput } from './_toolbar/inputs/JeopardyScoreInput';
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -243,5 +245,29 @@ export const toolbarConfigs = {
       label: 'Background',
       component: BackgroundInput,
     },
+  ],
+
+  JEOPARDY: [
+    {
+      field: 'title',
+      label: 'Title',
+      component: TitleInput,
+    },
+    {
+      field: 'categories',
+      label: 'Categories',
+      component: JeopardyInput,
+    },
+    {
+      field: 'minScore',
+      label: 'Scores',
+      component: JeopardyScoreInput,
+    },
+    {
+      field: 'backgroundStyle',
+      label: 'Background',
+      component: BackgroundInput,
+    },
+    ...baseQuestionToolbarConfig,
   ],
 } as const;

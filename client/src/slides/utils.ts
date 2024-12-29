@@ -11,6 +11,7 @@ import {
   FA,
   LocateIt, Bomb,
   BulletPoint,
+  Jeopardy,
 } from "./";
 import { toolbarConfigs } from "./toolbar";
 
@@ -51,10 +52,10 @@ export function getSlideComponentsFromType(
         case "LOCATEIT":
           return LocateIt;
         case "BOMB":
-          return Bomb;
+          return Bomb;  
+        case "JEOPARDY":
+          return Jeopardy;
         default:
-        
-        
           throw new Error(`Unknown question type: ${questionType}`);
       }
     default:

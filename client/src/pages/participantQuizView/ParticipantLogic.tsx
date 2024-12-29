@@ -62,7 +62,8 @@ function QuizView({
     participantData.hasAnswered ||
     (participantData.tempAnswer &&
       'questionType' in currentQuestion &&
-      currentQuestion.questionType !== QuestionTypes.BOMB)
+      currentQuestion.questionType !== QuestionTypes.BOMB &&
+      currentQuestion.questionType !== QuestionTypes.JEOPARDY)
   )
     return <HasAnsweredView />;
 

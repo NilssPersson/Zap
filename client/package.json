@@ -21,6 +21,7 @@
     "@genkit-ai/googleai": "^0.9.12",
     "@kinde-oss/kinde-auth-react": "^4.0.4",
     "@prisma/client": "^5.22.0",
+    "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-collapsible": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
