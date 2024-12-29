@@ -29,6 +29,7 @@ import { BulletPointStyleInput } from './_toolbar/inputs/BulletPointStyleInput';
 import { JeopardyInput } from './_toolbar/inputs/JeopardyInput';
 import { JeopardyScoreInput } from './_toolbar/inputs/JeopardyScoreInput';
 import { JeopardyTimeLimits } from './_toolbar/inputs/JeopardyTimeLimits';
+import { JeopardyAIInput } from './_toolbar/inputs/JeopardyAIInput';
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -257,6 +258,11 @@ export const toolbarConfigs = {
       field: 'categories',
       label: 'Categories',
       component: JeopardyInput,
+    },
+    {
+      field: 'categories',
+      label: 'AI Category Generator',
+      component: JeopardyAIInput,
     },
     {
       field: 'minScore',

@@ -19,25 +19,29 @@ export const JeopardyScoreInput: React.FC<Props> = ({ slide, onSlideUpdate }) =>
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>Minimum Score</Label>
-        <Input
-          type="number"
-          value={slide.minScore}
-          onChange={(e) => updateScore('minScore', e.target.value)}
-          min={0}
-          step={100}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label>Maximum Score</Label>
-        <Input
-          type="number"
-          value={slide.maxScore}
-          onChange={(e) => updateScore('maxScore', e.target.value)}
-          min={slide.minScore}
-          step={100}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Minimum Score</Label>
+          <Input
+            type="number"
+            value={slide.minScore}
+            onChange={(e) => updateScore('minScore', e.target.value)}
+            min={100}
+            max={2000}
+            step={100}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Maximum Score</Label>
+          <Input
+            type="number"
+            value={slide.maxScore}
+            onChange={(e) => updateScore('maxScore', e.target.value)}
+            min={slide.minScore}
+            max={2000}
+            step={100}
+          />
+        </div>
       </div>
     </div>
   );
