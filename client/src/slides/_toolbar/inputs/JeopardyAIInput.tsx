@@ -22,6 +22,15 @@ interface Props {
   onSlideUpdate: (slide: JeopardySlide) => void;
 }
 
+// Define difficulty colors from easiest to hardest
+const difficultyColors = [
+  'from-green-800 to-green-700',
+  'from-green-700 to-lime-600',
+  'from-yellow-600 to-yellow-500',
+  'from-orange-700 to-orange-600',
+  'from-red-800 to-red-700'
+];
+
 export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
   const { t } = useTranslation('jeopardy');
   const [input, setInput] = useState('');
@@ -197,9 +206,13 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                   <div className="space-y-2">
                     {parsedCategory.questions.map((q, i) => (
                       <div key={q.id} className="text-sm">
-                        <div className="font-semibold">${slide.minScore + i * ((slide.maxScore - slide.minScore) / 4)}</div>
-                        <div>Q: {q.question}</div>
-                        <div>A: {q.answer}</div>
+                        <div className={`bg-gradient-to-r ${difficultyColors[i]} text-white p-2 rounded-t-md font-semibold`}>
+                          ${slide.minScore + i * ((slide.maxScore - slide.minScore) / 4)}
+                        </div>
+                        <div className="p-2 bg-white rounded-b-md border border-t-0">
+                          <div>Q: {q.question}</div>
+                          <div>A: {q.answer}</div>
+                        </div>
                       </div>
                     ))}
                   </div>

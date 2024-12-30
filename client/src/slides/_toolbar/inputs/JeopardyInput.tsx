@@ -16,6 +16,15 @@ interface Props {
   onSlideUpdate: (slide: JeopardySlide) => void;
 }
 
+// Define difficulty colors from easiest to hardest
+const difficultyColors = [
+  'from-green-800 to-green-700',
+  'from-green-700 to-lime-600',
+  'from-yellow-600 to-yellow-500',
+  'from-orange-700 to-orange-600',
+  'from-red-800 to-red-700'
+];
+
 export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
   const { t } = useTranslation('jeopardy');
 
@@ -93,8 +102,8 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
       <Accordion type="multiple" className="space-y-2">
         {slide.categories.map((category) => (
           <AccordionItem key={category.id} value={category.id}>
-            <Card className="p-4">
-              <div className="space-y-2 mb-2">
+            <Card className="p-3">
+              <div className="space-y-2 mb-1">
                 <Label className="flex items-center gap-2">
                   <Folder className="w-4 h-4" />
                   {t('category')}
@@ -127,38 +136,48 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                 </span>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="space-y-4 mt-4 ml-2">
+                <div className="space-y-2 mt-4">
                   {category.questions.map((question, index) => (
-                    <div key={question.id} className="space-y-2 bg-secondary/10 rounded-lg">
-                      {index !== 0 && <Separator className="mb-4" />}
-                      <Label className="flex items-center gap-2">
-                        <MessageCircle className="w-4 h-4" />
-                        {t('question')} ${calculateQuestionValue(index)}
-                      </Label>
-                      <Textarea
-                        value={question.question}
-                        onChange={(e) =>
-                          updateQuestion(
-                            category.id,
-                            question.id,
-                            "question",
-                            e.target.value
-                          )
-                        }
-                        placeholder={t('question')}
-                      />
-                      <Input
-                        value={question.answer}
-                        onChange={(e) =>
-                          updateQuestion(
-                            category.id,
-                            question.id,
-                            "answer",
-                            e.target.value
-                          )
-                        }
-                        placeholder={t('answer')}
-                      />
+                    <div key={question.id}>
+                      <div className={`bg-gradient-to-r ${difficultyColors[index]} text-white p-2 rounded-t-md`}>
+                        <Label className="flex items-center gap-2 text-white">
+                          <MessageCircle className="w-4 h-4" />
+                          ${calculateQuestionValue(index)} {t('question')}
+                        </Label>
+                      </div>
+                      <div className="p-2 bg-secondary/10 rounded-b-md border border-t-0">
+                        <Textarea
+                          value={question.question}
+                          onChange={(e) => {
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                            updateQuestion(
+                              category.id,
+                              question.id,
+                              "question", 
+                              e.target.value
+                            );
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          placeholder={t('question')}
+                          className="mb-1 resize-none overflow-hidden"
+                        />
+                        <Input
+                          value={question.answer}
+                          onChange={(e) =>
+                            updateQuestion(
+                              category.id,
+                              question.id,
+                              "answer",
+                              e.target.value
+                            )
+                          }
+                          placeholder={t('answer')}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
