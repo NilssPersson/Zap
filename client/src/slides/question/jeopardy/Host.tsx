@@ -161,6 +161,7 @@ export function Host({
     setAnsweredQuestions(prev => new Set([...prev, `${selectedQuestion.categoryId}-${selectedQuestion.questionIndex}`]));
     setLastCorrectPlayer(participant);
     setGameState({ type: 'SHOWING_ANSWER' });
+    changeTurn("POST_QUESTION", quizCode);
   };
 
   const handleIncorrectAnswer = async (participant: Participant) => {
@@ -182,21 +183,26 @@ export function Host({
   };
 
   const moveToNextQuestion = async () => {
+    await clearTempAnswers();
     if (answeredQuestions.size === slide.categories.length * 5) {
       // Game is complete, store final scores in participant.answers
-      participants.forEach(participant => {
-        const finalScore = scores.find(s => s.participantId === participant.participantId)?.score || 0;
-        participant.answers.push({
-          slideNumber,
-          answer: [finalScore.toString()],
-          time: new Date().toISOString()
-        });
+      optimisticUpdate(quizCode, {
+        participants: participants.reduce((acc, participant) => {
+          const finalScore = scores.find(s => s.participantId === participant.participantId)?.score || 0;
+          acc[participant.participantId] = {
+            ...participant,
+            answers: [...(participant.answers || []), {
+              slideNumber,
+              answer: [finalScore.toString()],
+              time: new Date().toISOString()
+            }]
+          };
+          return acc;
+        }, {} as { [key: string]: Participant })
       });
       onNextSlide();
       return;
     }
-
-    await clearTempAnswers();
     const nextPlayer = lastCorrectPlayer ? lastCorrectPlayer : participants[Math.floor(Math.random() * participants.length)];
     setGameState({
       type: 'CATEGORY_SELECTION',
