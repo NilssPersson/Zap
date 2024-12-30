@@ -7,6 +7,8 @@ import { usePathOnValue } from '@/hooks/usePathOnValue';
 import { useAppContext } from '@/contexts/App/context';
 import { useTranslation } from 'react-i18next';
 import { SquareTimer } from '@/components/ui/square-timer';
+import { getParticipants } from '@/mock/participants';
+import Avatar from '@/Avatar';
 
 interface Props {
   slide: JeopardySlide;
@@ -17,7 +19,7 @@ interface Props {
   changeTurn: (participantId: string, quizCode: string) => void;
 }
 
-type GameState = 
+type GameState =
   | { type: 'CATEGORY_SELECTION'; currentPlayer: Participant }
   | { type: 'SHOWING_QUESTION'; categoryId: string; questionIndex: number }
   | { type: 'WAITING_FOR_BUZZER' }
@@ -29,15 +31,24 @@ interface PlayerScore {
   score: number;
 }
 
-export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, slideNumber }: Props) {
+const mockParticipants = getParticipants(8);
+
+export function Host({
+  slide,
+  participants = mockParticipants,
+  onNextSlide = () => { },
+  changeTurn = () => { },
+  quizCode,
+  slideNumber
+}: Props) {
   const { t } = useTranslation('jeopardy');
   const {
     ongoingQuizzes: { optimisticUpdate },
   } = useAppContext();
   const initialTurnSet = useRef(false);
-  const [gameState, setGameState] = useState<GameState>({ 
-    type: 'CATEGORY_SELECTION', 
-    currentPlayer: participants[Math.floor(Math.random() * participants.length)] 
+  const [gameState, setGameState] = useState<GameState>({
+    type: 'CATEGORY_SELECTION',
+    currentPlayer: participants[Math.floor(Math.random() * participants.length)]
   });
   const [scores, setScores] = useState<PlayerScore[]>(
     participants.map(p => ({ participantId: p.participantId, score: 0 }))
@@ -137,10 +148,10 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     if (!selectedQuestion) return;
     await clearTempAnswers();
     answerTimer.stop();
-    
+
     const questionValue = calculateQuestionValue(selectedQuestion.questionIndex);
-    setScores(prev => prev.map(score => 
-      score.participantId === participant.participantId 
+    setScores(prev => prev.map(score =>
+      score.participantId === participant.participantId
         ? { ...score, score: score.score + questionValue }
         : score
     ));
@@ -154,10 +165,10 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     if (!selectedQuestion) return;
     await clearTempAnswers();
     answerTimer.stop();
-    
+
     const questionValue = calculateQuestionValue(selectedQuestion.questionIndex);
-    setScores(prev => prev.map(score => 
-      score.participantId === participant.participantId 
+    setScores(prev => prev.map(score =>
+      score.participantId === participant.participantId
         ? { ...score, score: score.score - questionValue }
         : score
     ));
@@ -184,8 +195,8 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
 
     await clearTempAnswers();
     const nextPlayer = lastCorrectPlayer ? lastCorrectPlayer : participants[Math.floor(Math.random() * participants.length)];
-    setGameState({ 
-      type: 'CATEGORY_SELECTION', 
+    setGameState({
+      type: 'CATEGORY_SELECTION',
       currentPlayer: nextPlayer
     });
     changeTurn(nextPlayer.participantId, quizCode);
@@ -205,9 +216,16 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     <div className="flex-1 flex flex-col w-full h-full text-white p-8">
       {/* Game Status */}
       <div className="mb-4 flex justify-between items-center">
-        <div className="text-2xl font-bold">
+        <div className="text-5xl font-bold w-full text-center">
           {gameState.type === 'CATEGORY_SELECTION' && (
-            <span>{gameState.currentPlayer.name}'s turn to choose</span>
+            <span className="flex items-center justify-center gap-4">
+              <Avatar
+                width='52px'
+                height='52px'
+                avatarString={gameState.currentPlayer.avatar}
+              />
+              <span className="font-black">{gameState.currentPlayer.name}'s</span> turn to choose
+            </span>
           )}
           {gameState.type === 'WAITING_FOR_BUZZER' && mainTimer.timeLeft > 0 && (
             <span>Time remaining: {mainTimer.timeLeft}s</span>
@@ -216,45 +234,56 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
             <span>{gameState.participant.name} is answering... ({answerTimer.timeLeft}s)</span>
           )}
         </div>
-        
-        {/* Score Display */}
-        <div className="flex gap-4">
-          {scores.map(score => (
-            <div key={score.participantId} className="text-xl">
-              {participants.find(p => p.participantId === score.participantId)?.name}: {score.score}
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Jeopardy Board */}
       {gameState.type === 'CATEGORY_SELECTION' && (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5 flex-1">
-          {slide.categories.map((category) => (
-            <div key={category.id} className="grid grid-rows-[auto_repeat(5,1fr)] gap-2.5">
-              <div className="bg-black text-center text-4xl font-bold uppercase p-2.5 border-2 rounded-lg border-white min-h-[60px] flex items-center justify-center h-36">
-                {category.name}
+        <>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5 flex-1">
+            {slide.categories.map((category) => (
+              <div key={category.id} className="grid grid-rows-[auto_repeat(5,1fr)] gap-2.5">
+                <div className="bg-black text-center text-4xl font-bold uppercase p-2.5 border-2 rounded-lg border-white min-h-[60px] flex items-center justify-center h-36">
+                  {category.name}
+                </div>
+                {category.questions.map((_, index) => {
+                  const isAnswered = answeredQuestions.has(`${category.id}-${index}`);
+                  return (
+                    <button
+                      key={index}
+                      disabled={isAnswered || gameState.type !== 'CATEGORY_SELECTION'}
+                      onClick={() => handleQuestionSelect(category.id, index)}
+                      className={cn(
+                        "bg-black/75 border-2 border-white flex items-center justify-center text-6xl font-bold text-primary rounded-lg",
+                        isAnswered && "opacity-50 cursor-not-allowed",
+                        !isAnswered && "hover:bg-black/90 cursor-pointer"
+                      )}
+                    >
+                      {calculateQuestionValue(index)}
+                    </button>
+                  );
+                })}
               </div>
-              {category.questions.map((_, index) => {
-                const isAnswered = answeredQuestions.has(`${category.id}-${index}`);
-                return (
-                  <button
-                    key={index}
-                    disabled={isAnswered || gameState.type !== 'CATEGORY_SELECTION'}
-                    onClick={() => handleQuestionSelect(category.id, index)}
-                    className={cn(
-                      "bg-black/75 border-2 border-white flex items-center justify-center text-6xl font-bold text-primary rounded-lg",
-                      isAnswered && "opacity-50 cursor-not-allowed",
-                      !isAnswered && "hover:bg-black/90 cursor-pointer"
-                    )}
-                  >
-                    {calculateQuestionValue(index)}
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+          {/* Score Display */}
+          <div className="flex flex-wrap justify-center gap-4 mt-4">
+            {participants.map(participant => (
+              <div key={participant.participantId} className="flex-1 bg-card rounded-lg p-4 text-black min-w-[280px]">
+                <div className="flex items-center justify-center gap-2 text-3xl">
+                  <Avatar
+                    width='32px'
+                    height='32px'
+                    avatarString={participant.avatar}
+                  />
+                  <span className="font-black">{participant.name}</span>
+                </div>
+                <div className="text-4xl font-bold mt-1 text-center">
+                  {scores.find(s => s.participantId === participant.participantId)?.score || 0}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Question Display */}
@@ -281,8 +310,8 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
           <div className="text-4xl font-bold">
             {gameState.participant.name} {t('answering')}
           </div>
-          <SquareTimer 
-            progress={(answerTimer.timeLeft / slide.answerTimeLimit) * 100} 
+          <SquareTimer
+            progress={(answerTimer.timeLeft / slide.answerTimeLimit) * 100}
             className="scale-150 mb-8"
           />
           <div className="flex justify-center gap-4">
@@ -308,7 +337,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
 
       {/* Answer Display */}
       {gameState.type === 'SHOWING_ANSWER' && selectedQuestion && (
-        <div 
+        <div
           className="flex-1 flex flex-col items-center justify-center text-4xl cursor-pointer"
           onClick={moveToNextQuestion}
         >
