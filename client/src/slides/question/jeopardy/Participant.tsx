@@ -16,9 +16,29 @@ function BuzzerButton({ disabled, onClick }: { disabled: boolean, onClick: () =>
   const { t } = useTranslation('jeopardy');
   return (
     <button
-      className={cn('text-white p-2 rounded-full w-[50vw] aspect-square bg-green-500', disabled && 'bg-gray-500')}
-      disabled={disabled} onClick={onClick}>
-      {disabled ? t('participant.waitForHost') : t('participant.answer')}
+      className={cn(
+        'text-white p-2 rounded-full w-[50vw] aspect-square relative',
+        'transform transition-transform active:scale-95',
+        'shadow-[inset_0px_-8px_20px_rgba(0,0,0,0.3)]',
+        disabled ? (
+          'bg-gradient-to-b from-gray-400 to-gray-600 shadow-gray-700'
+        ) : (
+          [
+          'bg-gradient-to-b from-green-400 to-green-600',
+          'hover:from-green-300 hover:to-green-500',
+          'shadow-[0_10px_30px_-10px_rgba(34,197,94,0.5)]',
+          'before:absolute before:inset-[3%] before:rounded-full',
+          'before:bg-gradient-to-b before:from-green-300/80 before:to-transparent',
+          'before:pointer-events-none'
+          ].join(' ')
+        )
+      )}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      <span className="relative z-10 text-xl font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]">
+        {disabled ? t('participant.waitForHost') : t('participant.answer')}
+      </span>
     </button>
   )
 }
@@ -75,13 +95,13 @@ export function Participant({ slide, participantData, isTurn, answerTempQuestion
 
       {/* If this player is currently answering */}
       {isAnswering && (
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col items-center gap-8 px-8">
           <div className="text-4xl font-bold">
             {t('participant.yourAnswer')}
           </div>
           <SquareTimer 
             progress={(timeLeft / answerTimeLimit) * 100} 
-            className="scale-150"
+            className="scale-120"
           />
         </div>
       )}

@@ -8,17 +8,10 @@ interface Props {
 }
 
 export const SquareTimer: React.FC<Props> = ({ progress, className }) => {
-  // Calculate which squares should be filled based on progress
-  // We want the squares to fill from the outside towards the center
   const squareOrder = useMemo(() => [
-    0, 8,
-    1, 7,
-    2, 6,
-    3, 5,
-    4
+    0, 8, 1, 7, 2, 6, 3, 5, 4
   ], []);
 
-  // Calculate how many squares should be filled
   const filledSquares = Math.floor((progress / 100) * 9);
 
   return (
@@ -31,8 +24,26 @@ export const SquareTimer: React.FC<Props> = ({ progress, className }) => {
           <motion.div
             key={index}
             className={cn(
-              "w-8 h-8 rounded-sm border-2 border-white",
-              shouldBeFilled ? "bg-white" : "bg-transparent"
+              "w-8 h-8 rounded-sm relative",
+              // 3D border effect
+              "border-2 border-white/50",
+              "shadow-[inset_1px_1px_1px_rgba(255,255,255,0.4),inset_-1px_-1px_1px_rgba(0,0,0,0.4)]",
+              shouldBeFilled ? [
+                // Lit state
+                "bg-gradient-to-br from-white via-white/90 to-white/80",
+                // Glow effect
+                "after:absolute after:inset-[-8px] after:rounded-md after:bg-white/30",
+                "after:blur-[8px] after:z-[-1]",
+                // Inner light reflection
+                "before:absolute before:inset-[2px] before:rounded-[2px]",
+                "before:bg-gradient-to-br before:from-white before:to-transparent",
+                "before:opacity-60"
+              ].join(' ') : [
+                // Unlit state
+                "bg-transparent",
+                "backdrop-blur-sm",
+                "bg-white/5"
+              ].join(' ')
             )}
             initial={false}
             animate={{

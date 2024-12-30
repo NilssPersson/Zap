@@ -223,6 +223,7 @@ export function Host({
                 width='52px'
                 height='52px'
                 avatarString={gameState.currentPlayer.avatar}
+                collectionName={gameState.currentPlayer.collectionName}
               />
               <span className="font-black">{gameState.currentPlayer.name}'s</span> turn to choose
             </span>
@@ -274,6 +275,7 @@ export function Host({
                     width='32px'
                     height='32px'
                     avatarString={participant.avatar}
+                    collectionName={participant.collectionName}
                   />
                   <span className="font-black">{participant.name}</span>
                 </div>
