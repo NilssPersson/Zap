@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Plus, Minus, HelpCircle, MessageCircle } from 'lucide-react';
+import { Plus, Minus, HelpCircle, MessageCircle, X, Folder } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 
 interface Props {
   slide: JeopardySlide;
@@ -92,40 +94,48 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
         {slide.categories.map((category) => (
           <AccordionItem key={category.id} value={category.id}>
             <Card className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Input
-                  value={category.name}
-                  onChange={(e) =>
-                    updateCategory(category.id, "name", e.target.value)
-                  }
-                  placeholder={t('categoryName')}
-                  className="flex-1"
-                />
-                <Button
-                  onClick={() => removeCategory(category.id)}
-                  size="sm"
-                  variant="destructive"
-                  disabled={slide.categories.length <= 1}
-                >
-                  <Minus className="w-4 h-4" />
-                </Button>
+              <div className="space-y-2 mb-2">
+                <Label className="flex items-center gap-2">
+                  <Folder className="w-4 h-4" />
+                  {t('category')}
+                </Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    value={category.name}
+                    onChange={(e) =>
+                      updateCategory(category.id, "name", e.target.value)
+                    }
+                    placeholder={t('categoryName')}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={() => removeCategory(category.id)}
+                    size="icon"
+                    variant="destructive"
+                    disabled={slide.categories.length <= 1}
+                    className="flex-shrink-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
-              <AccordionTrigger className="hover:no-underline">
+              <AccordionTrigger className="hover:no-underline py-1">
                 <span className="text-sm font-medium flex items-center gap-2">
                   <HelpCircle className="w-4 h-4" />
                   {t('questions')}
                 </span>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="space-y-4 mt-4">
+                <div className="space-y-4 mt-4 ml-2">
                   {category.questions.map((question, index) => (
-                    <div key={question.id} className="space-y-2 p-4 bg-secondary/10 rounded-lg">
+                    <div key={question.id} className="space-y-2 bg-secondary/10 rounded-lg">
+                      {index !== 0 && <Separator className="mb-4" />}
                       <Label className="flex items-center gap-2">
                         <MessageCircle className="w-4 h-4" />
                         {t('question')} ${calculateQuestionValue(index)}
                       </Label>
-                      <Input
+                      <Textarea
                         value={question.question}
                         onChange={(e) =>
                           updateQuestion(
