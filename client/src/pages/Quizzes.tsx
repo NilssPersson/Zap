@@ -111,7 +111,7 @@ function useQuizzesPage() {
         return;
       }
 
-      optimisticCreate(newQuiz);
+      optimisticCreate(newQuiz, newQuiz.id);
       toast.success('Quiz copied successfully');
     },
     [user, optimisticCreate]

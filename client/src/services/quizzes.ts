@@ -241,6 +241,7 @@ class QuizService extends BaseService<Quiz> {
         user_id: userId,
         isShared: false,
         updated_at: new Date().toLocaleString(),
+        id: nanoid(),
       }, error: null };
     } catch (error) {
       return { data: null, error: error as Error };
