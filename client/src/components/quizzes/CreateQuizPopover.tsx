@@ -42,8 +42,8 @@ function CreateQuizPopover({ onCreateQuiz }: CreateQuizPopoverProps) {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button id="create-quiz-button">
-          <span className="flex items-center gap-2 py-4 text-xl">
+        <Button id="create-quiz-button" className='shadow-lg outline'>
+          <span className="flex items-center gap-2 py-4 text-lg">
             {t('homepage:createQuiz')}
             <Plus />
           </span>
