@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { nanoid } from 'nanoid';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Copy, Plus, Brain, CheckSquare } from 'lucide-react';
+import { Copy, Plus, Brain } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Switch } from '@/components/ui/switch';
