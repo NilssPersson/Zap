@@ -5,11 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { nanoid } from 'nanoid';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Copy, Plus, Brain } from 'lucide-react';
+import { Copy, Plus, Brain, HelpCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Switch } from '@/components/ui/switch';
 import { useTranslation } from 'react-i18next';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Props {
   slide: JeopardySlide;
@@ -143,31 +149,41 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                 </div>
               </div>
 
-              <Card className="p-4 bg-muted/50">
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm">{t('examplePrompt')}</Label>
-                  <Button variant="ghost" size="sm" onClick={copyPrompt}>
-                    <Copy className="w-4 h-4 mr-2" />
-                    {t('copy')}
-                  </Button>
-                </div>
-                <div className="text-sm text-muted-foreground whitespace-pre-wrap">
-                  {getExamplePrompt(strictAnswerFormat)}
-                </div>
-              </Card>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center justify-between p-1 px-3 rounded hover:bg-muted cursor-help">
+                      <Label className="flex items-center gap-2">
+                        <HelpCircle className="w-4 h-4" />
+                        {t('examplePrompt')}
+                      </Label>
+                      <Button variant="ghost" size="sm" onClick={copyPrompt}>
+                        <Copy className="w-4 h-4 mr-2" />
+                        {t('copy')}
+                      </Button>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="left" className="max-w-[600px] p-4">
+                    <div className="text-sm whitespace-pre-wrap">
+                      {getExamplePrompt(strictAnswerFormat)}
+                    </div>
+                    <div className="text-sm mt-4">
+                      {t('format')}:<br />
+                      {t('aiInput.prompt.formatExample')}
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
 
-              <div className="text-sm text-muted-foreground mb-2 whitespace-pre-wrap">
-                {t('format')}:<br />
-                {t('aiInput.prompt.formatExample')}
+              <div className="p-2">
+                <Textarea
+                  placeholder={t('pasteAiCategory')}
+                  className="font-mono text-sm p-2"
+                  rows={8}
+                  value={input}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                />
               </div>
-
-              <Textarea
-                placeholder={t('pasteAiCategory')}
-                className="font-mono text-sm"
-                rows={8}
-                value={input}
-                onChange={(e) => handleInputChange(e.target.value)}
-              />
 
               {error && (
                 <Alert variant="destructive">

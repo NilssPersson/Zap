@@ -256,7 +256,7 @@ export const toolbarConfigs = {
       component: JeopardyInput,
     },
     {
-      field: 'categories',
+      field: 'AIcategories',
       label: 'AI Category Generator',
       component: JeopardyAIInput,
     },
