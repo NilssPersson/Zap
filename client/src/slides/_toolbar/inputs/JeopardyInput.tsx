@@ -74,7 +74,7 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div key={slide.id} className="space-y-4">
       <div className="flex justify-between items-center">
         <Label>{t('categories')} ({slide.categories.length}/6)</Label>
         <Button

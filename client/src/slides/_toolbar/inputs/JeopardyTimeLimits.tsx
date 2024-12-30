@@ -3,7 +3,7 @@ import { JeopardySlide } from '@/models/Quiz';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
-import { Bell, Timer } from 'lucide-react';
+import { Bell, Hourglass } from 'lucide-react';
 
 interface Props {
   slide: JeopardySlide;
@@ -40,7 +40,7 @@ export const JeopardyTimeLimits: React.FC<Props> = ({ slide, onSlideUpdate }) =>
         </div>
         <div className="space-y-2">
           <Label className="flex items-center gap-2">
-            <Timer className="w-4 h-4" />
+            <Hourglass className="w-4 h-4" />
             {t('answerTimeLimit')}
           </Label>
           <Input

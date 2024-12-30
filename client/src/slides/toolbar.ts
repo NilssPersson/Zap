@@ -250,11 +250,6 @@ export const toolbarConfigs = {
 
   JEOPARDY: [
     {
-      field: 'title',
-      label: 'Title',
-      component: TitleInput,
-    },
-    {
       field: 'categories',
       label: 'Categories',
       component: JeopardyInput,
@@ -279,6 +274,5 @@ export const toolbarConfigs = {
       label: 'Background',
       component: BackgroundInput,
     },
-    ...baseQuestionToolbarConfig,
   ],
 } as const;
