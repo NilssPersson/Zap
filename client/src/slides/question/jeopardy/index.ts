@@ -109,7 +109,7 @@ export const Info: SlideInfo = {
     type: SlideTypes.question,
     questionType: QuestionTypes.JEOPARDY,
     answerType: AnswerTypes.jeopardy,
-    mainTimeLimit: 30,
+    mainTimeLimit: 10,
     answerTimeLimit: 5,
     points: 100,
     showCorrectAnswer: ShowCorrectAnswerTypes.auto,
