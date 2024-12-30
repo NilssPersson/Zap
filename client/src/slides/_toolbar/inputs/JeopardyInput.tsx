@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Plus, Minus, Grid, HelpCircle, MessageCircle } from 'lucide-react';
+import { Plus, Minus, HelpCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
