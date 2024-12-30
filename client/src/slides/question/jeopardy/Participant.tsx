@@ -1,8 +1,12 @@
 import { cn } from '@/lib/utils';
-import type { Participant } from '@/models/Quiz';
+import type { JeopardySlide, Participant } from '@/models/Quiz';
 import { useTranslation } from 'react-i18next';
+import { SquareTimer } from '@/components/ui/square-timer';
+import { useTimer } from '@/hooks';
+import { useEffect } from 'react';
 
 interface Props {
+  slide: JeopardySlide;
   participantData: Participant;
   isTurn: string;
   answerTempQuestion: (answer: string) => boolean;
@@ -19,8 +23,14 @@ function BuzzerButton({ disabled, onClick }: { disabled: boolean, onClick: () =>
   )
 }
 
-export function Participant({ participantData, isTurn, answerTempQuestion }: Props) {
+export function Participant({ slide, participantData, isTurn, answerTempQuestion }: Props) {
   const { t } = useTranslation('jeopardy');
+
+  const { answerTimeLimit } = slide;
+
+  const { start, stop, timeLeft, isRunning } = useTimer({
+    duration: answerTimeLimit
+  });
 
   if (!isTurn) return null;
 
@@ -33,6 +43,16 @@ export function Participant({ participantData, isTurn, answerTempQuestion }: Pro
   const playerAnswering = isTurn?.startsWith("BUZZER_");
 
   const isMyBuzzerTurn = isBuzzerOn && isTurn?.endsWith(participantData.participantId);
+
+  const isAnswering = isMyBuzzerTurn && playerAnswering
+
+  useEffect(() => {
+    if (isAnswering && !isRunning) {
+      start();
+    } else if (!isAnswering && isRunning) {
+      stop();
+    }
+  }, [isAnswering, start, stop]);
 
   return (
     <div className="flex-1 h-full flex flex-col items-center justify-center gap-4 p-4">
@@ -49,8 +69,21 @@ export function Participant({ participantData, isTurn, answerTempQuestion }: Pro
       )}
 
       {/* If it is time to answer a question */}
-      {isBuzzerOn && (
+      {isBuzzerOn && !isAnswering && (
         <BuzzerButton disabled={isPreBuzzer || (playerAnswering && !isMyBuzzerTurn)} onClick={() => answerTempQuestion('')} />
+      )}
+
+      {/* If this player is currently answering */}
+      {isAnswering && (
+        <div className="flex flex-col items-center gap-8">
+          <div className="text-4xl font-bold">
+            {t('participant.yourAnswer')}
+          </div>
+          <SquareTimer 
+            progress={(timeLeft / answerTimeLimit) * 100} 
+            className="scale-150"
+          />
+        </div>
       )}
     </div>
   );

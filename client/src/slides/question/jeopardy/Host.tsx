@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { usePathOnValue } from '@/hooks/usePathOnValue';
 import { useAppContext } from '@/contexts/App/context';
 import { useTranslation } from 'react-i18next';
+import { SquareTimer } from '@/components/ui/square-timer';
 
 interface Props {
   slide: JeopardySlide;
@@ -49,9 +50,9 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     duration: slide.mainTimeLimit,
     onComplete: () => {
       if (gameState.type === 'WAITING_FOR_BUZZER') {
+        clearTempAnswers();
         mainTimer.stop();
         setGameState({ type: 'SHOWING_ANSWER' });
-        clearTempAnswers();
       }
     },
   });
@@ -86,8 +87,8 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     }
   );
 
-  const clearTempAnswers = useCallback(() => {
-    optimisticUpdate(quizCode, {
+  const clearTempAnswers = useCallback(async () => {
+    await optimisticUpdate(quizCode, {
       participants: participants.reduce((acc, p) => {
         acc[p.participantId] = { ...p, tempAnswer: undefined };
         return acc;
@@ -132,8 +133,9 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     });
   }, [participants, handleBuzzer])
 
-  const handleCorrectAnswer = (participant: Participant) => {
+  const handleCorrectAnswer = async (participant: Participant) => {
     if (!selectedQuestion) return;
+    await clearTempAnswers();
     answerTimer.stop();
     
     const questionValue = calculateQuestionValue(selectedQuestion.questionIndex);
@@ -146,11 +148,11 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     setAnsweredQuestions(prev => new Set([...prev, `${selectedQuestion.categoryId}-${selectedQuestion.questionIndex}`]));
     setLastCorrectPlayer(participant);
     setGameState({ type: 'SHOWING_ANSWER' });
-    clearTempAnswers();
   };
 
-  const handleIncorrectAnswer = (participant: Participant) => {
+  const handleIncorrectAnswer = async (participant: Participant) => {
     if (!selectedQuestion) return;
+    await clearTempAnswers();
     answerTimer.stop();
     
     const questionValue = calculateQuestionValue(selectedQuestion.questionIndex);
@@ -161,12 +163,11 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
     ));
 
     setGameState({ type: 'WAITING_FOR_BUZZER' });
-    clearTempAnswers();
     changeTurn("BUZZER", quizCode);
     mainTimer.resume();
   };
 
-  const moveToNextQuestion = () => {
+  const moveToNextQuestion = async () => {
     if (answeredQuestions.size === slide.categories.length * 5) {
       // Game is complete, store final scores in participant.answers
       participants.forEach(participant => {
@@ -181,13 +182,13 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
       return;
     }
 
+    await clearTempAnswers();
     const nextPlayer = lastCorrectPlayer ? lastCorrectPlayer : participants[Math.floor(Math.random() * participants.length)];
     setGameState({ 
       type: 'CATEGORY_SELECTION', 
       currentPlayer: nextPlayer
     });
     changeTurn(nextPlayer.participantId, quizCode);
-    clearTempAnswers();
     setSelectedQuestion(null);
   };
 
@@ -276,23 +277,32 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
 
       {/* Player Answering */}
       {gameState.type === 'PLAYER_ANSWERING' && (
-        <div className="mt-16 flex justify-center gap-4">
-          <Button
-            className='text-4xl py-8'
-            size="lg"
-            variant="destructive"
-            onClick={() => handleIncorrectAnswer(gameState.participant)}
-          >
-            {t('host.incorrect')}
-          </Button>
-          <Button
-            className='text-4xl py-8'
-            size="lg"
-            variant="default"
-            onClick={() => handleCorrectAnswer(gameState.participant)}
-          >
-            {t('host.correct')}
-          </Button>
+        <div className="mt-16 flex flex-col items-center gap-8">
+          <div className="text-4xl font-bold">
+            {gameState.participant.name} {t('answering')}
+          </div>
+          <SquareTimer 
+            progress={(answerTimer.timeLeft / slide.answerTimeLimit) * 100} 
+            className="scale-150 mb-8"
+          />
+          <div className="flex justify-center gap-4">
+            <Button
+              className='text-4xl py-8'
+              size="lg"
+              variant="destructive"
+              onClick={() => handleIncorrectAnswer(gameState.participant)}
+            >
+              {t('host.incorrect')}
+            </Button>
+            <Button
+              className='text-4xl py-8'
+              size="lg"
+              variant="default"
+              onClick={() => handleCorrectAnswer(gameState.participant)}
+            >
+              {t('host.correct')}
+            </Button>
+          </div>
         </div>
       )}
 
