@@ -20,6 +20,7 @@
   "answerTimeLimit": "Svartid (sekunder)",
   "newCategory": "Ny kategori",
   "clickToContinue": "Klicka var som helst för att fortsätta",
+  "aiGeneratorDescription": "Detta verktyg gör att du kan klistra in en kategori och frågor genererade av en AI. Den kommer sedan att parsa inmatningen och lägga till den i presentationen.",
   "participant": {
     "yourTurn": "Det är din tur! Välj en kategori.",
     "waitingForSelection": "Väntar på att en spelare ska välja kategori.",

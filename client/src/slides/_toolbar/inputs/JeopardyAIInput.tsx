@@ -138,7 +138,7 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
     <div className="space-y-4">
       <Accordion type="single" collapsible>
         <AccordionItem value="ai-generator">
-          <AccordionTrigger>
+          <AccordionTrigger className='py-2'>
             <Label className="hover:no-underline flex items-center gap-2">
               <Brain className="w-4 h-4" />
               {t('aiGenerator')}
@@ -146,17 +146,9 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pt-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    checked={strictAnswerFormat}
-                    onCheckedChange={setStrictAnswerFormat}
-                  />
-                  <Label className="flex items-center gap-2">
-                    {t('strictAnswerFormat')}
-                  </Label>
-                </div>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                {t('aiGeneratorDescription')}
+              </p>
 
               <TooltipProvider>
                 <Tooltip>
@@ -183,6 +175,18 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+
+              <div className="flex items-center justify-between px-3">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    checked={strictAnswerFormat}
+                    onCheckedChange={setStrictAnswerFormat}
+                  />
+                  <Label className="flex items-center gap-2">
+                    {t('strictAnswerFormat')}
+                  </Label>
+                </div>
+              </div>
 
               <div className="p-2">
                 <Textarea
