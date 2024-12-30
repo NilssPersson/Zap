@@ -56,6 +56,7 @@ export function Host({
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(new Set());
   const [selectedQuestion, setSelectedQuestion] = useState<{ categoryId: string; questionIndex: number } | null>(null);
   const [lastCorrectPlayer, setLastCorrectPlayer] = useState<Participant | null>(null);
+  const [showFlash, setShowFlash] = useState(false);
 
   const mainTimer = useTimer({
     duration: slide.mainTimeLimit,
@@ -72,7 +73,8 @@ export function Host({
     duration: slide.answerTimeLimit,
     onComplete: () => {
       if (gameState.type === 'PLAYER_ANSWERING') {
-        handleIncorrectAnswer(gameState.participant);
+        setShowFlash(true);
+        setTimeout(() => setShowFlash(false), 200);
       }
     },
   });
@@ -164,6 +166,7 @@ export function Host({
   const handleIncorrectAnswer = async (participant: Participant) => {
     if (!selectedQuestion) return;
     await clearTempAnswers();
+    changeTurn("POST_QUESTION", quizCode);
     answerTimer.stop();
 
     const questionValue = calculateQuestionValue(selectedQuestion.questionIndex);
@@ -349,6 +352,13 @@ export function Host({
           </div>
           <div className="text-xl mt-4">({t('clickToContinue')})</div>
         </div>
+      )}
+
+      {showFlash && (
+        <div 
+          className="fixed inset-0 bg-white/30 pointer-events-none transition-opacity duration-200"
+          style={{ zIndex: 50 }}
+        />
       )}
     </div>
   );

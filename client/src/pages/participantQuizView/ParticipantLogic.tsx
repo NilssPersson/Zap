@@ -30,7 +30,7 @@ function QuizView({
   participantData,
   answerQuestion,
   answerTempQuestion,
-  isTurn,
+  turn,
   showAnswer,
   currentSlideTime,
 }: {
@@ -39,7 +39,7 @@ function QuizView({
   participantData: Participant;
   answerQuestion: (answer: string[]) => Promise<void>;
   answerTempQuestion: (answer: string) => Promise<void>;
-  isTurn: string;
+  turn: string;
   showAnswer: boolean;
   currentSlideTime: string;
 }) {
@@ -89,7 +89,7 @@ function QuizView({
         answerQuestion={answerQuestion as never}
         answerTempQuestion={answerTempQuestion as never}
         participantData={participantData}
-        isTurn={isTurn}
+        turn={turn}
         currentSlideTime={currentSlideTime}
       />
     </>
@@ -110,7 +110,7 @@ export default function ParticipantLogic() {
     currentSlide,
     participantData,
     showAnswer,
-    isTurn,
+    turn,
     currentSlideTime,
   } = useGameStatus(quizCode as string, participantId as string);
 
@@ -295,7 +295,7 @@ export default function ParticipantLogic() {
           answerQuestion={answerQuestion}
           showAnswer={showAnswer}
           answerTempQuestion={answerTempQuestion}
-          isTurn={isTurn}
+          turn={turn}
           currentSlideTime={currentSlideTime}
         />
       </div>
