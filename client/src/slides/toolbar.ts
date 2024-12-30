@@ -30,6 +30,7 @@ import { JeopardyInput } from './_toolbar/inputs/JeopardyInput';
 import { JeopardyScoreInput } from './_toolbar/inputs/JeopardyScoreInput';
 import { JeopardyTimeLimits } from './_toolbar/inputs/JeopardyTimeLimits';
 import { JeopardyAIInput } from './_toolbar/inputs/JeopardyAIInput';
+import { ClosestInput } from "./_toolbar/inputs/ClosestInput";
 
 export interface ToolbarProps<T extends Slide> {
   slide: T;
@@ -274,5 +275,15 @@ export const toolbarConfigs = {
       label: 'Background',
       component: BackgroundInput,
     },
+  ],
+
+  CLOSEST: [
+    ...baseToolbarConfig,
+    {
+      field: 'correctAnswer',
+      label: 'Correct Answer',
+      component: ClosestInput,
+    },
+    ...baseQuestionToolbarConfig,
   ],
 } as const;
