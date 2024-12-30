@@ -49,7 +49,7 @@ function CreateQuizPopover({ onCreateQuiz }: CreateQuizPopoverProps) {
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-80 mt-1">
         <div className="flex flex-col gap-4" id="create-quiz-input">
           <Input
             placeholder={t('homepage:quizName')}
