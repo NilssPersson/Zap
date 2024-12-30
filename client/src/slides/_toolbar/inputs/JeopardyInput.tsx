@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Plus, Minus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   slide: JeopardySlide;
@@ -14,12 +15,14 @@ interface Props {
 }
 
 export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
+  const { t } = useTranslation('jeopardy');
+
   const addCategory = () => {
     if (slide.categories.length >= 6) return;
 
     const newCategory = {
       id: nanoid(),
-      name: "New Category",
+      name: t('newCategory'),
       questions: Array(5).fill(null).map(() => ({
         id: nanoid(),
         question: "",
@@ -73,7 +76,7 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <Label>Categories ({slide.categories.length}/6)</Label>
+        <Label>{t('categories')} ({slide.categories.length}/6)</Label>
         <Button
           onClick={addCategory}
           disabled={slide.categories.length >= 6}
@@ -81,7 +84,7 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
           variant="outline"
         >
           <Plus className="w-4 h-4 mr-1" />
-          Add Category
+          {t('addCategory')}
         </Button>
       </div>
 
@@ -95,7 +98,7 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                   onChange={(e) =>
                     updateCategory(category.id, "name", e.target.value)
                   }
-                  placeholder="Category Name"
+                  placeholder={t('categoryName')}
                   className="flex-1"
                 />
                 <Button
@@ -109,13 +112,13 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
               </div>
 
               <AccordionTrigger className="hover:no-underline">
-                <span className="text-sm font-medium">Questions</span>
+                <span className="text-sm font-medium">{t('questions')}</span>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-4 mt-4">
                   {category.questions.map((question, index) => (
                     <div key={question.id} className="space-y-2 p-4 bg-secondary/10 rounded-lg">
-                      <Label>Question ${calculateQuestionValue(index)}</Label>
+                      <Label>{t('question')} ${calculateQuestionValue(index)}</Label>
                       <Input
                         value={question.question}
                         onChange={(e) =>
@@ -126,7 +129,7 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                             e.target.value
                           )
                         }
-                        placeholder="Question"
+                        placeholder={t('question')}
                       />
                       <Input
                         value={question.answer}
@@ -138,7 +141,7 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                             e.target.value
                           )
                         }
-                        placeholder="Answer"
+                        placeholder={t('answer')}
                       />
                     </div>
                   ))}

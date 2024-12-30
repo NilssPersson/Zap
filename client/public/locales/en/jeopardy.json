@@ -1,0 +1,50 @@
+{
+  "aiGenerator": "AI Generated Category",
+  "strictAnswerFormat": "Require 'What/Who/Where/When is/was' format",
+  "examplePrompt": "Example Prompt",
+  "copy": "Copy",
+  "format": "Format",
+  "pasteAiCategory": "Paste AI generated category here...",
+  "addCategory": "Add Category",
+  "replaceLastCategory": "Replace Last Category",
+  "categories": "Categories",
+  "questions": "Questions",
+  "categoryName": "Category Name",
+  "question": "Question",
+  "answer": "Answer",
+  "minScore": "Minimum Score",
+  "maxScore": "Maximum Score",
+  "mainTimeLimit": "Buzzer Time Limit (seconds)",
+  "answerTimeLimit": "Answer Time Limit (seconds)",
+  "newCategory": "New Category",
+  "clickToContinue": "Click anywhere to continue",
+  "participant": {
+    "yourTurn": "It's your turn! Select a category.",
+    "waitingForSelection": "Waiting for a player to select a category.",
+    "waitForHost": "WAIT FOR THE HOST",
+    "answer": "ANSWER"
+  },
+  "host": {
+    "start": "Start",
+    "incorrect": "Incorrect",
+    "correct": "Correct"
+  },
+  "errors": {
+    "sixLines": "Input must have exactly 6 non-empty lines (1 category + 5 questions)",
+    "categoryFormat": "First line must start with \"Category:\"",
+    "questionFormat": "Invalid format on question {{number}}. Must be \"Q{{number}}: [Question] | A: [Answer]\"",
+    "answerFormat": "Answer {{number}} must start with \"What is/was\", \"Who is/was\", \"Where is/was\", or \"When is\"",
+    "parseFailed": "Failed to parse input"
+  },
+  "aiInput": {
+    "prompt": {
+      "base": "Create a Jeopardy category about [TOPIC] with 5 questions of increasing difficulty. Format it exactly like this:\n\nCategory: [Category Name]\nQ1: [Easiest Question] | A: {{answerFormat}}\nQ2: [Easy Question] | A: {{answerFormat}}\nQ3: [Medium Question] | A: {{answerFormat}}\nQ4: [Hard Question] | A: {{answerFormat}}\nQ5: [Hardest Question] | A: {{answerFormat}}\n\n{{formatNote}}",
+      "strictAnswerFormat": "[Answer in \"What/Who/Where/When is/was\" format]",
+      "anyAnswerFormat": "[Answer]",
+      "strictFormatNote": "Make sure each answer is phrased as a question starting with \"What/Who/Where/When is/was\".",
+      "anyFormatNote": "Answers can be in any format.",
+      "formatExample": "Category: [Name]\nQ1: [Question] | A: [Answer]\nQ2: [Question] | A: [Answer]\nQ3: [Question] | A: [Answer]\nQ4: [Question] | A: [Answer]\nQ5: [Question] | A: [Answer]"
+    },
+    "validAnswerStarts": "what is,who is,where is,when is,where was,who was,what was"
+  }
+} 

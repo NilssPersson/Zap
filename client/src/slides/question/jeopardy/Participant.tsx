@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { Participant } from '@/models/Quiz';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   participantData: Participant;
@@ -8,16 +9,18 @@ interface Props {
 }
 
 function BuzzerButton({ disabled, onClick }: { disabled: boolean, onClick: () => void }) {
+  const { t } = useTranslation('jeopardy');
   return (
     <button
       className={cn('text-white p-2 rounded-full w-[50vw] aspect-square bg-green-500', disabled && 'bg-gray-500')}
       disabled={disabled} onClick={onClick}>
-      {disabled ? "WAIT FOR THE HOST" : "ANSWER"}
+      {disabled ? t('participant.waitForHost') : t('participant.answer')}
     </button>
   )
 }
 
 export function Participant({ participantData, isTurn, answerTempQuestion }: Props) {
+  const { t } = useTranslation('jeopardy');
 
   if (!isTurn) return null;
 
@@ -37,11 +40,11 @@ export function Participant({ participantData, isTurn, answerTempQuestion }: Pro
       {!isBuzzerOn && (
         isMyTurn ?
           <div className="text-xl font-bold text-green-500 mb-4">
-            It's your turn! Select a category.
+            {t('participant.yourTurn')}
           </div>
           :
           <div className="text-xl font-bold text-green-500 mb-4">
-            Waiting for a player to select a category.
+            {t('participant.waitingForSelection')}
           </div>
       )}
 

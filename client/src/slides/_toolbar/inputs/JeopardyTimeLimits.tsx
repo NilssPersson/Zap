@@ -2,6 +2,7 @@ import React from 'react';
 import { JeopardySlide } from '@/models/Quiz';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   slide: JeopardySlide;
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export const JeopardyTimeLimits: React.FC<Props> = ({ slide, onSlideUpdate }) => {
+  const { t } = useTranslation('jeopardy');
+
   const updateTimeLimit = (field: 'mainTimeLimit' | 'answerTimeLimit', value: string) => {
     const numValue = parseInt(value) || 0;
     onSlideUpdate({
@@ -20,7 +23,7 @@ export const JeopardyTimeLimits: React.FC<Props> = ({ slide, onSlideUpdate }) =>
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Buzzer Time Limit (seconds)</Label>
+        <Label>{t('mainTimeLimit')}</Label>
         <Input
           type="number"
           value={slide.mainTimeLimit}
@@ -30,7 +33,7 @@ export const JeopardyTimeLimits: React.FC<Props> = ({ slide, onSlideUpdate }) =>
         />
       </div>
       <div className="space-y-2">
-        <Label>Answer Time Limit (seconds)</Label>
+        <Label>{t('answerTimeLimit')}</Label>
         <Input
           type="number"
           value={slide.answerTimeLimit}

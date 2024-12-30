@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { usePathOnValue } from '@/hooks/usePathOnValue';
 import { useAppContext } from '@/contexts/App/context';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   slide: JeopardySlide;
@@ -28,6 +29,7 @@ interface PlayerScore {
 }
 
 export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, slideNumber }: Props) {
+  const { t } = useTranslation('jeopardy');
   const {
     ongoingQuizzes: { optimisticUpdate },
   } = useAppContext();
@@ -262,7 +264,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
               ?.questions[selectedQuestion.questionIndex].question}
           </div>
           {gameState.type === 'SHOWING_QUESTION' && (
-            <Button className='mt-16 text-4xl py-8' size="lg" onClick={startBuzzerPhase}>Start</Button>
+            <Button className='mt-16 text-4xl py-8' size="lg" onClick={startBuzzerPhase}>{t('host.start')}</Button>
           )}
           {gameState.type === 'WAITING_FOR_BUZZER' && (
             <div className="mt-16 text-6xl font-bold text-primary">
@@ -281,7 +283,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
             variant="destructive"
             onClick={() => handleIncorrectAnswer(gameState.participant)}
           >
-            Incorrect
+            {t('host.incorrect')}
           </Button>
           <Button
             className='text-4xl py-8'
@@ -289,7 +291,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
             variant="default"
             onClick={() => handleCorrectAnswer(gameState.participant)}
           >
-            Correct
+            {t('host.correct')}
           </Button>
         </div>
       )}
@@ -304,7 +306,7 @@ export function Host({ slide, participants, onNextSlide, changeTurn, quizCode, s
             {slide.categories.find(c => c.id === selectedQuestion.categoryId)
               ?.questions[selectedQuestion.questionIndex].answer}
           </div>
-          <div className="text-xl mt-4">(Click anywhere to continue)</div>
+          <div className="text-xl mt-4">({t('clickToContinue')})</div>
         </div>
       )}
     </div>

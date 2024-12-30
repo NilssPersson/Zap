@@ -9,67 +9,58 @@ import { Copy, Plus } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Switch } from '@/components/ui/switch';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   slide: JeopardySlide;
   onSlideUpdate: (slide: JeopardySlide) => void;
 }
 
-const getExamplePrompt = (strictFormat: boolean) => `Create a Jeopardy category about [TOPIC] with 5 questions of increasing difficulty. Format it exactly like this:
-
-Category: [Category Name]
-Q1: [Easiest Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
-Q2: [Easy Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
-Q3: [Medium Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
-Q4: [Hard Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
-Q5: [Hardest Question] | A: ${strictFormat ? '[Answer in "What/Who/Where/When is/was" format]' : '[Answer]'}
-
-${strictFormat ? 'Make sure each answer is phrased as a question starting with "What/Who/Where/When is/was".' : 'Answers can be in any format.'}`;
-
 export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
+  const { t } = useTranslation('jeopardy');
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [parsedCategory, setParsedCategory] = useState<JeopardyCategory | null>(null);
   const [strictAnswerFormat, setStrictAnswerFormat] = useState(true);
 
-  const validAnswerStarts = [
-    'what is',
-    'who is',
-    'where is',
-    'when is',
-    'where was',
-    'who was',
-    'what was'
-  ];
+  const validAnswerStarts = t('aiInput.validAnswerStarts').split(',');
+
+  const getExamplePrompt = (strictFormat: boolean) => {
+    const answerFormat = strictFormat ? t('aiInput.prompt.strictAnswerFormat') : t('aiInput.prompt.anyAnswerFormat');
+    const formatNote = strictFormat ? t('aiInput.prompt.strictFormatNote') : t('aiInput.prompt.anyFormatNote');
+    
+    return t('aiInput.prompt.base', {
+      answerFormat,
+      formatNote
+    });
+  };
 
   const parseAIString = (input: string): JeopardyCategory | null => {
     try {
       // Split by newlines and filter out empty lines
       const lines = input.trim().split('\n').filter(line => line.trim() !== '');
       if (lines.length !== 6) {
-        setError('Input must have exactly 6 non-empty lines (1 category + 5 questions)');
+        setError(t('errors.sixLines'));
         return null;
       }
 
       const categoryMatch = lines[0].match(/Category:\s*(.+)/);
       if (!categoryMatch) {
-        setError('First line must start with "Category:"');
+        setError(t('errors.categoryFormat'));
         return null;
       }
 
       const questions = lines.slice(1).map((line, index) => {
         const match = line.match(/Q\d+:\s*(.+?)\s*\|\s*A:\s*(.+)/);
         if (!match) {
-          setError(`Invalid format on question ${index + 1}. Must be "Q${index + 1}: [Question] | A: [Answer]"`);
+          setError(t('errors.questionFormat', { number: index + 1 }));
           return null;
         }
-
-        console.log(strictAnswerFormat)
         
         if (strictAnswerFormat) {
           const answerStart = match[2].trim().toLowerCase();
           if (!validAnswerStarts.some(start => answerStart.startsWith(start))) {
-            setError(`Answer ${index + 1} must start with "What is/was", "Who is/was", "Where is/was", or "When is"`);
+            setError(t('errors.answerFormat', { number: index + 1 }));
             return null;
           }
         }
@@ -90,7 +81,7 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
         questions: questions as { id: string; question: string; answer: string; }[]
       };
     } catch (error) {
-      setError('Failed to parse input');
+      setError(t('errors.parseFailed'));
       return null;
     }
   };
@@ -133,7 +124,7 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
       <Accordion type="single" collapsible>
         <AccordionItem value="ai-generator">
           <AccordionTrigger>
-            <Label className="hover:no-underline">AI Generated Category</Label>
+            <Label className="hover:no-underline">{t('aiGenerator')}</Label>
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pt-4">
@@ -143,16 +134,16 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                     checked={strictAnswerFormat}
                     onCheckedChange={setStrictAnswerFormat}
                   />
-                  <Label>Require "What/Who/Where/When is/was" format</Label>
+                  <Label>{t('strictAnswerFormat')}</Label>
                 </div>
               </div>
 
               <Card className="p-4 bg-muted/50">
                 <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm">Example Prompt</Label>
+                  <Label className="text-sm">{t('examplePrompt')}</Label>
                   <Button variant="ghost" size="sm" onClick={copyPrompt}>
                     <Copy className="w-4 h-4 mr-2" />
-                    Copy
+                    {t('copy')}
                   </Button>
                 </div>
                 <div className="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -160,18 +151,13 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                 </div>
               </Card>
 
-              <div className="text-sm text-muted-foreground mb-2">
-                Format:<br />
-                Category: [Name]<br />
-                Q1: [Question] | A: [Answer]<br />
-                Q2: [Question] | A: [Answer]<br />
-                Q3: [Question] | A: [Answer]<br />
-                Q4: [Question] | A: [Answer]<br />
-                Q5: [Question] | A: [Answer]
+              <div className="text-sm text-muted-foreground mb-2 whitespace-pre-wrap">
+                {t('format')}:<br />
+                {t('aiInput.prompt.formatExample')}
               </div>
 
               <Textarea
-                placeholder="Paste AI generated category here..."
+                placeholder={t('pasteAiCategory')}
                 className="font-mono text-sm"
                 rows={8}
                 value={input}
@@ -202,7 +188,7 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                     disabled={slide.categories.length >= 6}
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    {slide.categories.length >= 6 ? 'Replace Last Category' : 'Add Category'}
+                    {slide.categories.length >= 6 ? t('replaceLastCategory') : t('addCategory')}
                   </Button>
                 </Card>
               )}

@@ -1,0 +1,50 @@
+{
+  "aiGenerator": "AI-genererad kategori",
+  "strictAnswerFormat": "Kräv 'Vad/Vem/Var/När är/var' format",
+  "examplePrompt": "Exempel på prompt",
+  "copy": "Kopiera",
+  "format": "Format",
+  "pasteAiCategory": "Klistra in AI-genererad kategori här...",
+  "addCategory": "Lägg till kategori",
+  "replaceLastCategory": "Ersätt sista kategorin",
+  "categories": "Kategorier",
+  "questions": "Frågor",
+  "categoryName": "Kategorinamn",
+  "question": "Fråga",
+  "answer": "Svar",
+  "minScore": "Lägsta poäng",
+  "maxScore": "Högsta poäng",
+  "mainTimeLimit": "Buzzertid (sekunder)",
+  "answerTimeLimit": "Svartid (sekunder)",
+  "newCategory": "Ny kategori",
+  "clickToContinue": "Klicka var som helst för att fortsätta",
+  "participant": {
+    "yourTurn": "Det är din tur! Välj en kategori.",
+    "waitingForSelection": "Väntar på att en spelare ska välja kategori.",
+    "waitForHost": "VÄNTA PÅ VÄRDEN",
+    "answer": "SVARA"
+  },
+  "host": {
+    "start": "Starta",
+    "incorrect": "Fel",
+    "correct": "Rätt"
+  },
+  "errors": {
+    "sixLines": "Inmatningen måste ha exakt 6 icke-tomma rader (1 kategori + 5 frågor)",
+    "categoryFormat": "Första raden måste börja med \"Category:\"",
+    "questionFormat": "Ogiltigt format på fråga {{number}}. Måste vara \"Q{{number}}: [Fråga] | A: [Svar]\"",
+    "answerFormat": "Svar {{number}} måste börja med \"Vad är/var\", \"Vem är/var\", \"Var är/var\", eller \"När är\"",
+    "parseFailed": "Kunde inte tolka inmatningen"
+  },
+  "aiInput": {
+    "prompt": {
+      "base": "Skapa en Jeopardy-kategori om [ÄMNE] med 5 frågor av ökande svårighetsgrad. Formatera det exakt så här:\n\nCategory: [Kategorinamn]\nQ1: [Lättaste frågan] | A: {{answerFormat}}\nQ2: [Lätt fråga] | A: {{answerFormat}}\nQ3: [Medel fråga] | A: {{answerFormat}}\nQ4: [Svår fråga] | A: {{answerFormat}}\nQ5: [Svåraste frågan] | A: {{answerFormat}}\n\n{{formatNote}}",
+      "strictAnswerFormat": "[Svar i \"Vad/Vem/Var/När är/var\" format]",
+      "anyAnswerFormat": "[Svar]",
+      "strictFormatNote": "Se till att varje svar är formulerat som en fråga som börjar med \"Vad/Vem/Var/När är/var\".",
+      "anyFormatNote": "Svaren kan vara i valfritt format.",
+      "formatExample": "Category: [Namn]\nQ1: [Fråga] | A: [Svar]\nQ2: [Fråga] | A: [Svar]\nQ3: [Fråga] | A: [Svar]\nQ4: [Fråga] | A: [Svar]\nQ5: [Fråga] | A: [Svar]"
+    },
+    "validAnswerStarts": "vad är,vem är,var är,när är,var var,vem var,vad var"
+  }
+} 

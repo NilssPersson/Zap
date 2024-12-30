@@ -2,6 +2,7 @@ import React from 'react';
 import { JeopardySlide } from '@/models/Quiz';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   slide: JeopardySlide;
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export const JeopardyScoreInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
+  const { t } = useTranslation('jeopardy');
+
   const updateScore = (field: 'minScore' | 'maxScore', value: string) => {
     const numValue = parseInt(value) || 0;
     onSlideUpdate({
@@ -21,7 +24,7 @@ export const JeopardyScoreInput: React.FC<Props> = ({ slide, onSlideUpdate }) =>
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Minimum Score</Label>
+          <Label>{t('minScore')}</Label>
           <Input
             type="number"
             value={slide.minScore}
@@ -32,7 +35,7 @@ export const JeopardyScoreInput: React.FC<Props> = ({ slide, onSlideUpdate }) =>
           />
         </div>
         <div className="space-y-2">
-          <Label>Maximum Score</Label>
+          <Label>{t('maxScore')}</Label>
           <Input
             type="number"
             value={slide.maxScore}
