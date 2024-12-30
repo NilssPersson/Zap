@@ -3,6 +3,7 @@ import { JeopardySlide } from '@/models/Quiz';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
+import { Bell, Timer } from 'lucide-react';
 
 interface Props {
   slide: JeopardySlide;
@@ -22,25 +23,35 @@ export const JeopardyTimeLimits: React.FC<Props> = ({ slide, onSlideUpdate }) =>
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>{t('mainTimeLimit')}</Label>
-        <Input
-          type="number"
-          value={slide.mainTimeLimit}
-          onChange={(e) => updateTimeLimit('mainTimeLimit', e.target.value)}
-          min={1}
-          step={1}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label>{t('answerTimeLimit')}</Label>
-        <Input
-          type="number"
-          value={slide.answerTimeLimit}
-          onChange={(e) => updateTimeLimit('answerTimeLimit', e.target.value)}
-          min={1}
-          step={1}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <Bell className="w-4 h-4" />
+            {t('mainTimeLimit')}
+          </Label>
+          <Input
+            type="number"
+            value={slide.mainTimeLimit}
+            onChange={(e) => updateTimeLimit('mainTimeLimit', e.target.value)}
+            min={1}
+            max={60}
+            step={1}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <Timer className="w-4 h-4" />
+            {t('answerTimeLimit')}
+          </Label>
+          <Input
+            type="number"
+            value={slide.answerTimeLimit}
+            onChange={(e) => updateTimeLimit('answerTimeLimit', e.target.value)}
+            min={1}
+            max={60}
+            step={1}
+          />
+        </div>
       </div>
     </div>
   );

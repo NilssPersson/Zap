@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Grid, HelpCircle, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
@@ -112,13 +112,19 @@ export const JeopardyInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
               </div>
 
               <AccordionTrigger className="hover:no-underline">
-                <span className="text-sm font-medium">{t('questions')}</span>
+                <span className="text-sm font-medium flex items-center gap-2">
+                  <HelpCircle className="w-4 h-4" />
+                  {t('questions')}
+                </span>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-4 mt-4">
                   {category.questions.map((question, index) => (
                     <div key={question.id} className="space-y-2 p-4 bg-secondary/10 rounded-lg">
-                      <Label>{t('question')} ${calculateQuestionValue(index)}</Label>
+                      <Label className="flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4" />
+                        {t('question')} ${calculateQuestionValue(index)}
+                      </Label>
                       <Input
                         value={question.question}
                         onChange={(e) =>

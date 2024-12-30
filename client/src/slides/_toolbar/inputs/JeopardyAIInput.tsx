@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { nanoid } from 'nanoid';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Copy, Plus } from 'lucide-react';
+import { Copy, Plus, Brain, CheckSquare } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Switch } from '@/components/ui/switch';
@@ -21,7 +21,7 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [parsedCategory, setParsedCategory] = useState<JeopardyCategory | null>(null);
-  const [strictAnswerFormat, setStrictAnswerFormat] = useState(true);
+  const [strictAnswerFormat, setStrictAnswerFormat] = useState(false);
 
   const validAnswerStarts = t('aiInput.validAnswerStarts').split(',');
 
@@ -124,7 +124,10 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
       <Accordion type="single" collapsible>
         <AccordionItem value="ai-generator">
           <AccordionTrigger>
-            <Label className="hover:no-underline">{t('aiGenerator')}</Label>
+            <Label className="hover:no-underline flex items-center gap-2">
+              <Brain className="w-4 h-4" />
+              {t('aiGenerator')}
+            </Label>
           </AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 pt-4">
@@ -134,7 +137,9 @@ export const JeopardyAIInput: React.FC<Props> = ({ slide, onSlideUpdate }) => {
                     checked={strictAnswerFormat}
                     onCheckedChange={setStrictAnswerFormat}
                   />
-                  <Label>{t('strictAnswerFormat')}</Label>
+                  <Label className="flex items-center gap-2">
+                    {t('strictAnswerFormat')}
+                  </Label>
                 </div>
               </div>
 
