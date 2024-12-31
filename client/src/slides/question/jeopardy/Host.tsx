@@ -106,7 +106,7 @@ export function Host({
         acc[p.participantId] = { ...p, tempAnswer: undefined };
         return acc;
       }, {} as { [key: string]: Participant }),
-    }, true);
+    });
   }, [participants, quizCode, optimisticUpdate]);
 
   const calculateQuestionValue = useCallback((index: number) => {
