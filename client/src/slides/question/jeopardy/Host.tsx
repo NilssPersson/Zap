@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { SquareTimer } from '@/components/ui/square-timer';
 import { getParticipants } from '@/mock/participants';
 import Avatar from '@/Avatar';
+import { ParticipantService } from '@/services/participant';
 
 interface Props {
   slide: JeopardySlide;
@@ -106,7 +107,7 @@ export function Host({
         acc[p.participantId] = { ...p, tempAnswer: undefined };
         return acc;
       }, {} as { [key: string]: Participant }),
-    });
+    }, true);
   }, [participants, quizCode, optimisticUpdate]);
 
   const calculateQuestionValue = useCallback((index: number) => {
@@ -130,8 +131,9 @@ export function Host({
     mainTimer.start();
   };
 
-  const handleBuzzer = (participant: Participant) => {
+  const handleBuzzer = async (participant: Participant) => {
     if (gameState.type !== 'WAITING_FOR_BUZZER') return;
+    await clearTempAnswers();
     mainTimer.pause();
     answerTimer.start();
     setGameState({ type: 'PLAYER_ANSWERING', participant });
@@ -139,16 +141,18 @@ export function Host({
   };
 
   useEffect(() => {
+    if (gameState.type !== 'WAITING_FOR_BUZZER') return;
     participants.forEach((participant) => {
-      if (participant.tempAnswer?.time) {
+      if (!participant.tempAnswer) return;
+      if (participant.tempAnswer.tempAnswer === participant.participantId) {
+        console.log("Participant buzzed", participant.name);
         handleBuzzer(participant);
       }
     });
-  }, [participants, handleBuzzer])
+  }, [participants, handleBuzzer, clearTempAnswers])
 
   const handleCorrectAnswer = async (participant: Participant) => {
     if (!selectedQuestion) return;
-    await clearTempAnswers();
     answerTimer.stop();
 
     const questionValue = calculateQuestionValue(selectedQuestion.questionIndex);
@@ -166,7 +170,6 @@ export function Host({
 
   const handleIncorrectAnswer = async (participant: Participant) => {
     if (!selectedQuestion) return;
-    await clearTempAnswers();
     changeTurn("POST_QUESTION", quizCode);
     answerTimer.stop();
 
@@ -183,23 +186,13 @@ export function Host({
   };
 
   const moveToNextQuestion = async () => {
-    await clearTempAnswers();
     if (answeredQuestions.size === slide.categories.length * 5) {
       // Game is complete, store final scores in participant.answers
-      optimisticUpdate(quizCode, {
-        participants: participants.reduce((acc, participant) => {
-          const finalScore = scores.find(s => s.participantId === participant.participantId)?.score || 0;
-          acc[participant.participantId] = {
-            ...participant,
-            answers: [...(participant.answers || []), {
-              slideNumber,
-              answer: [finalScore.toString()],
-              time: new Date().toISOString()
-            }]
-          };
-          return acc;
-        }, {} as { [key: string]: Participant })
+      const updates = participants.map(async (participant) => {
+        const finalScore = scores.find(s => s.participantId === participant.participantId)?.score || 0;
+        await ParticipantService.addAnswer(quizCode, participant.participantId, [finalScore.toString()], slideNumber);
       });
+      await Promise.all(updates);
       onNextSlide();
       return;
     }
