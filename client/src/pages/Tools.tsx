@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Team from './Team';
 import SpinWheel from './SpinWheel';
+import RandomNumber from './RandomNumber';
 import { ToolsProvider } from '@/contexts/Tools/context';
 
 export default function Tools() {
@@ -33,12 +34,18 @@ export default function Tools() {
             <TabsTrigger value="spin-wheel">
               {t('general:spinWheel')}
             </TabsTrigger>
+            <TabsTrigger value="random-number">
+              {t('general:randomNumber')}
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="team-generator">
             <Team />
           </TabsContent>
           <TabsContent value="spin-wheel">
             <SpinWheel />
+          </TabsContent>
+          <TabsContent value="random-number">
+            <RandomNumber />
           </TabsContent>
         </Tabs>
       </div>
