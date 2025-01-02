@@ -21,6 +21,9 @@ interface ToolsContextType {
 
 const ToolsContext = createContext<ToolsContextType | undefined>(undefined);
 
+// Tools that share items between them
+const SHARED_TOOLS = ['team-generator', 'spin-wheel'];
+
 export function ToolsProvider({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -30,22 +33,37 @@ export function ToolsProvider({ children }: { children: React.ReactNode }) {
   const [previousPath, setPreviousPath] = useState<string>('');
   const location = useLocation();
 
+  // Helper to extract tool name from path
+  const getToolFromPath = (path: string) => {
+    const match = path.match(/\/tools\/([^/]+)/);
+    return match ? match[1] : '';
+  };
+
   // Monitor location changes to handle tool switching
   useEffect(() => {
     if (previousPath && previousPath !== location.pathname) {
+      const currentTool = getToolFromPath(location.pathname);
+      const previousTool = getToolFromPath(previousPath);
+      
+      // Only show dialog if switching between shared tools
+      const isSharedToolSwitch = SHARED_TOOLS.includes(currentTool) && SHARED_TOOLS.includes(previousTool);
       const hasValidItems = currentItems.length > 0 && currentItems.some(item => item.text !== '');
-      if (hasValidItems) {
+
+      if (isSharedToolSwitch && hasValidItems) {
         setPreviousItems([...currentItems]);
         setShowKeepItemsDialog(true);
-        // Clear current items to prevent them from showing up in the new tool immediately
         setCurrentItems([]);
+      } else if (!isSharedToolSwitch) {
+        // If switching to/from random number generator, just clear the items
+        const emptyItem = { id: Date.now().toString(), text: '' };
+        setCurrentItems([emptyItem]);
+        setPreviousItems([]);
       }
     }
     setPreviousPath(location.pathname);
   }, [location.pathname, currentItems, previousPath]);
 
   const handleKeepItems = () => {
-    // Keep the items from the previous tool
     setCurrentItems([...previousItems]);
     setPreviousItems([]);
     setShowKeepItemsDialog(false);
