@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { SquareTimer } from '@/components/ui/square-timer';
 import { getParticipants } from '@/mock/participants';
 import Avatar from '@/Avatar';
-import { ParticipantService } from '@/services/participant';
 
 interface Props {
   slide: JeopardySlide;

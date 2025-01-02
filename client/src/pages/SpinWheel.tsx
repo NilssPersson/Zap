@@ -369,7 +369,7 @@ export default function SpinWheel() {
               <svg viewBox="0 0 100 100" className="w-full h-full">
                 {wheelItems
                   .filter(item => item.text !== '' && !item.used)
-                  .map((item, index, filteredItems) => {
+                  .map((item, index) => {
                     const startAngle = calculateRotation(index);
                     const endAngle = startAngle + (item.percentage / 100) * 360;
                     const largeArcFlag = item.percentage > 50 ? 1 : 0;
