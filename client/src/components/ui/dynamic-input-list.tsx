@@ -85,7 +85,7 @@ export function DynamicInputList({
 
   return (
     <div className="space-y-4">
-      {onQuickAdd && (
+      {onQuickAdd && false && (
         <div className="space-y-2">
           {quickAddLabel && <Label>{quickAddLabel}</Label>}
           <div className="flex space-x-2">

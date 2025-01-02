@@ -24,7 +24,7 @@ export default function Tools() {
 
   return (
     <ToolsProvider>
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 flex-1 overflow-y-auto">
         <h1 className="text-4xl font-display mb-8">{t('general:tools')}</h1>
         <Tabs value={tool} onValueChange={handleTabChange}>
           <TabsList>
