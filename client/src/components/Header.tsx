@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import Settings from '@/components/Settings';
+import Tools from '@/components/Tools';
 
 export function Header() {
   const location = useLocation();
@@ -95,14 +96,7 @@ export function Header() {
                   {t('general:about')}
                 </Button>
               </Link>
-              <Link to="/team">
-                <Button
-                  variant={location.pathname === '/team' ? 'default' : 'ghost'}
-                  className="text-lg"
-                >
-                  {t('general:team')}
-                </Button>
-              </Link>
+              <Tools />
               {!isAuthenticated && isLargeScreen && (
                 <>
                   <Button

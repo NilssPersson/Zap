@@ -188,11 +188,22 @@ export function Host({
   const moveToNextQuestion = async () => {
     if (answeredQuestions.size === slide.categories.length * 5) {
       // Game is complete, store final scores in participant.answers
-      const updates = participants.map(async (participant) => {
-        const finalScore = scores.find(s => s.participantId === participant.participantId)?.score || 0;
-        await ParticipantService.addAnswer(quizCode, participant.participantId, [finalScore.toString()], slideNumber);
+      optimisticUpdate(quizCode, {
+        participants: participants.reduce((acc, p) => {
+          const score = scores.find(s => s.participantId === p.participantId)?.score || 0
+          console.log(score)
+          acc[p.participantId] = {
+            ...p,
+            score: [...(p.score || []), score],
+            answers: [...(p.answers || []), {
+              slideNumber,
+              answer: [score.toString()],
+              time: new Date().toISOString()
+            }]
+          };
+          return acc;
+        }, {} as { [key: string]: Participant }),
       });
-      await Promise.all(updates);
       onNextSlide();
       return;
     }
@@ -354,7 +365,7 @@ export function Host({
       )}
 
       {showFlash && (
-        <div 
+        <div
           className="fixed inset-0 bg-white/30 pointer-events-none transition-opacity duration-200"
           style={{ zIndex: 50 }}
         />
