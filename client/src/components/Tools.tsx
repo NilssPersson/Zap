@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { ChevronDown, Wrench, CircleDot } from 'lucide-react';
+import { ChevronDown, Wrench, CircleDot, DicesIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -52,6 +52,17 @@ export default function Tools() {
           >
             <CircleDot className="w-4 h-4 mr-2" strokeWidth={3} />
             {t('general:spinWheel')}
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start"
+            onClick={() => {
+              navigate('/tools/random-number');
+              setIsToolsOpen(false);
+            }}
+          >
+            <DicesIcon className="w-4 h-4 mr-2" strokeWidth={3} />
+            {t('general:randomNumber')}
           </Button>
         </div>
       </PopoverContent>
