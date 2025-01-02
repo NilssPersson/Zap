@@ -44,6 +44,7 @@
   "minNumber": "Minimum Number",
   "maxNumber": "Maximum Number",
   "roll": "Roll Dice!",
+  "randomizing": "Randomizing...",
   "spinWheel.title": "Enter items for the wheel",
   "spinWheel.items": "Wheel Items",
   "spinWheel.advancedSettings": "Advanced Settings",

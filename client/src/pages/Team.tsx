@@ -215,20 +215,7 @@ export default function Team() {
                 </div>
               </div>
 
-              <DynamicInputList
-                items={items}
-                showAdvanced={false}
-                showColors={false}
-                onItemChange={handleInputChange}
-                onItemRemove={removeItem}
-                inputPlaceholder={t('general:teamTitle')}
-                quickAddPlaceholder="Player1, Player2, Player3..."
-                onQuickAdd={handleQuickAdd}
-                listLabel={t('general:playerNames')}
-                quickAddLabel={t('general:spinWheel.quickAdd')}
-              />
-
-              <div className="mt-6 space-y-4">
+              <div className="my-6 space-y-4">
                 <div className="flex justify-between items-center">
                   <Label>{t('general:numberOfTeams')}</Label>
                   <span className="font-bold">{numberOfTeams}</span>
@@ -242,6 +229,19 @@ export default function Team() {
                   className="w-full"
                 />
               </div>
+
+              <DynamicInputList
+                items={items}
+                showAdvanced={false}
+                showColors={false}
+                onItemChange={handleInputChange}
+                onItemRemove={removeItem}
+                inputPlaceholder={t('general:teamTitle')}
+                quickAddPlaceholder="Player1, Player2, Player3..."
+                onQuickAdd={handleQuickAdd}
+                listLabel={t('general:playerNames')}
+                quickAddLabel={t('general:spinWheel.quickAdd')}
+              />
             </CardContent>
           </Card>
         </div>
@@ -269,7 +269,7 @@ export default function Team() {
                       {shuffledNames.map((name, index) => (
                         <motion.li
                           key={index}
-                          className="text-lg"
+                          className="text-xl"
                           initial={{ x: -20, opacity: 0 }}
                           animate={{ 
                             x: 0, 
@@ -311,7 +311,7 @@ export default function Team() {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: playerIndex * 0.1 }}
-                            className="text-lg truncate"
+                            className="text-2xl font-bold truncate"
                           >
                             {player}
                           </motion.li>
