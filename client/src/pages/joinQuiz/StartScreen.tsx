@@ -35,9 +35,9 @@ export default function StartScreen() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 ">
+    <div className="flex flex-col items-center justify-center h-screen p-8 ">
       {/* Centered Content */}
-      <GameShackTitle className='mb-10' />
+      <GameShackTitle className="mb-10" />
       <div>
         <Card className="pt-8 z-50">
           <CardContent className="flex flex-col gap-4">

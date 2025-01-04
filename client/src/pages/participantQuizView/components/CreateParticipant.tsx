@@ -73,7 +73,8 @@ export default function CreateParticipant({
   const handleSubmit = (userType: 'me' | 'guest') => {
     const nameToUse = userType === 'me' ? user.username : guestName;
     const avatarToUse = userType === 'me' ? user.avatar : guestAvatar;
-    const collectiontoUse = userType === 'me' ? user.collectionName : 'botttsNeutral';
+    const collectiontoUse =
+      userType === 'me' ? user.collectionName : 'botttsNeutral';
 
     if (!nameToUse) {
       setShowError(true);
@@ -92,8 +93,8 @@ export default function CreateParticipant({
     }, 1000);
   };
 
-    return (
-      <div className="flex items-center justify-center min-h-screen  p-8">
+  return (
+    <div className="flex items-center justify-center h-screen p-8">
       {user.isLoggedIn ? (
         <Tabs defaultValue="me">
           <div className="bg-component-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
@@ -130,7 +131,10 @@ export default function CreateParticipant({
               value="guest"
               className="flex flex-col items-center justify-center space-y-4"
             >
-              <Avatar avatarString={guestAvatar} collectionName="botttsNeutral" />
+              <Avatar
+                avatarString={guestAvatar}
+                collectionName="botttsNeutral"
+              />
               <Button
                 onClick={() => setGuestAvatar(createRandomId())}
                 className="m-2 bg-yellow-300 hover:bg-yellow-400 flex items-center justify-center p-2 rounded-lg"
