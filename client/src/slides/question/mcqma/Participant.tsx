@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { MCQMASlide } from '@/models/Quiz';
 import { getColor } from '@/slides/question/base/QuizColors';
 import { Button } from '@/components/ui/button';
+import { t } from 'i18next';
 
 interface Options {
   id: string;
@@ -76,7 +77,7 @@ export function Participant({ slide, answerQuestion }: McqmaViewProps) {
         disabled={selectedIndexes.length === 0}
         className="mt-8 py-4 px-6 text-2xl font-bold text-white bg-green-500 rounded-lg hover:bg-green-600 disabled:opacity-50"
       >
-        Submit Answer
+        {t('participants:submitAnswer')}
       </button>
     </div>
   );

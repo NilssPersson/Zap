@@ -19,6 +19,12 @@
   "menu": "Settings",
   "lobbyView.title": "Waiting for the quiz to start...",
   "endedView.title": "The quiz has ended, thank you for playing!",
+  "correct": "Correct!",
+  "wrong": "Wrong!",
+  "almost": "Almost!",
+  "answerStreak": "Answerstreak: ",
+  "lostStreak": "Lost a streak of: ",
+  "submitAnswer": "Submit answer",
   "answeredQuotes": {
     "0": "You’re fast! But are you right? 🤞",
     "1": "Well, that was fast. But was it right? 🤔",
@@ -36,5 +42,20 @@
     "13": "You didn’t even let your brain catch up. Respect. Kinda. 😏",
     "14": "Fast fingers, fast mind? We’ll find out! 🧠",
     "15": "Quick answer! But was it a quick decision? 🤔"
+  },
+  "insperationalQuotes": {
+    "0": "Failure isn't the end—it's just the beginning. 💥",
+    "1": "Even the brightest minds stumble. Don’t be afraid to fail. 💡",
+    "2": "Mistakes aren’t failures, they’re fuel for your fire. 🔥",
+    "3": "Perseverance isn’t just about winning; it’s about proving them wrong. 😈",
+    "4": "One misstep won’t define you—your comeback will. 💪",
+    "5": "Success is built on the ruins of failure. Rise from the ashes. 🔥",
+    "6": "Falling is easy. Getting back up? That’s where you become unstoppable. ⚡",
+    "7": "You've got to get back to the grind-set mindset 😈",
+    "8": "You've got to LOCK-IN 🔒"
+  },
+  "noStreakLost": {
+    "0": "At least you didn't have a streak to loose! 🤗",
+    "1": "No streak lost, no streak gained. 🤷"
   }
 }

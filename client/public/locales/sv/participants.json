@@ -19,6 +19,12 @@
   "menu": "Inställningar",
   "lobbyView.title": "Väntar på att quizzet ska starta...",
   "endedView.title": "Quizzet har slutat, tack för att du spelade!",
+  "correct": "Rätt!",
+  "wrong": "Fel!",
+  "almost": "Nästan!",
+  "answerStreak": "Svarstreak: ",
+  "lostStreak": "Förlorade en streak på: ",
+  "submitAnswer": "Skicka svar",
   "answeredQuotes": {
     "0": "Du är snabb! Men har du rätt? 🤞",
     "1": "Oj, det gick fort. Men var det rätt? 🤔",
@@ -36,5 +42,20 @@
     "13": "Du lät inte ens hjärnan hinna ifatt. Respekt. Typ. 😏",
     "14": "Snabba fingrar, snabbt sinne? Vi får se! 🧠",
     "15": "Snabbt svar! Men var det ett snabbt beslut? 🤔"
+  },
+  "insperationalQuotes": {
+    "0": "Ett misslyckande är inte slutet – det är bara början. 💥",
+    "1": "Även de skarpaste hjärnorna snubblar. Var inte rädd för att misslyckas. 💡",
+    "2": "Misstag är inte nederlag; de är bränslet för din eld. 🔥",
+    "3": "Uthållighet handlar inte bara om att vinna; det handlar om att bevisa att andra har fel. 😈",
+    "4": "Ett snedsteg avgör inte vem du är – din revansch gör det. 💪",
+    "5": "Framgång byggs på ruinerna av misslyckanden. Res dig ur askan. 🔥",
+    "6": "Att falla är enkelt. Att resa sig igen? Där blir du ostoppbar. ⚡",
+    "7": "Du måste tillbaka till ditt grindset-tänk. 😈",
+    "8": "Du måste LÅSA IN DIG. 🔒"
+  },
+  "noStreakLost": {
+    "0": "Du hade åtminstone ingen streak att förlora! 🤗",
+    "1": "Ingen streak förlorad, ingen streak vunnen. 🤷"
   }
 }
