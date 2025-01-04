@@ -7,5 +7,8 @@
   "waitYourTurn": "Wait for your turn!",
   "send": "Send",
   "enterAnswer": "Enter answer",
-  "questionWillStart": "Get ready!"
+  "questionWillStart": "Get ready!",
+  "quizCode": "Quiz code",
+  "joinQuiz": "Join",
+  "invalidCode": "Invalid code"
 }

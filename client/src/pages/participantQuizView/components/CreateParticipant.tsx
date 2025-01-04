@@ -152,7 +152,8 @@ export default function CreateParticipant({
                 </Button>
                 <Input
                   placeholder="Enter Name"
-                  className="text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg"
+                  className={`text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg 
+                    ${showError && 'border-red-500 animate-shake'}`}
                   value={guestName}
                   onChange={(e) => {
                     setGuestName(e.target.value);
@@ -162,7 +163,7 @@ export default function CreateParticipant({
                 />
                 {showError && (
                   <div className="flex justify-start items-center w-full text-red-500">
-                    <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
+                    <InfoIcon className="w-5 h-5 mr-1" />
                     <p className="font-display">Please enter a name</p>
                   </div>
                 )}
@@ -195,7 +196,8 @@ export default function CreateParticipant({
             </Button>
             <Input
               placeholder="Enter Name"
-              className="text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg"
+              className={`text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg 
+              ${showError && 'border-red-500 animate-shake'}`}
               value={guestName}
               onChange={(e) => {
                 setGuestName(e.target.value);
@@ -205,7 +207,7 @@ export default function CreateParticipant({
             />
             {showError && (
               <div className="flex justify-start items-center w-full text-red-500">
-                <InfoIcon className="w-5 h-5 mr-1 animate-shake" />
+                <InfoIcon className="w-5 h-5 mr-1" />
                 <p className="font-display">Please enter a name</p>
               </div>
             )}
