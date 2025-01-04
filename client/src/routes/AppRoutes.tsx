@@ -8,8 +8,7 @@ const About = React.lazy(() => import('../pages/About'));
 const Home = React.lazy(() => import('../pages/Home'));
 const Tools = React.lazy(() => import('../pages/Tools'));
 const Quizzes = React.lazy(() => import('../pages/Quizzes'));
-const StartScreen = React.lazy(() => import('@/pages/joinQuiz/StartScreen'));
-const QuizView = React.lazy(() => import('../pages/QuizView'));
+const JoinQuiz = React.lazy(() => import('@/pages/JoinQuiz'));
 const QuizEdit = React.lazy(() => import('../pages/QuizEdit'));
 const ParticipantLogic = React.lazy(
   () => import('@/pages/participantQuizView/ParticipantLogic')
@@ -27,8 +26,7 @@ export function AppRoutes() {
       <Routes>
         <Route path="/" element={isAuthenticated ? <Quizzes /> : <Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/play" element={<StartScreen />} />
-        <Route path="/quizzes/:id" element={<QuizView />} />
+        <Route path="/play" element={<JoinQuiz />} />
         <Route path="/quizzes/:id/edit" element={<QuizEdit />} />
         <Route path="/play/:quizCode/" element={<ParticipantLogic />} />
         <Route path="/quizzes/:id/lobby" element={<HostLogic />} />
