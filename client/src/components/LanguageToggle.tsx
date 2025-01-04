@@ -5,10 +5,10 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Globe } from 'lucide-react';
+import { Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function LanguageSelect() {
+export default function LanguageToggle() {
   const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['general']);
@@ -27,7 +27,7 @@ export default function LanguageSelect() {
           className="fixed top-4 right-4 z-50 bg-white text-black p-2 h-7"
         >
           {i18n.language.toUpperCase()}
-          <Globe className="h-4 w-4" />
+          <Languages className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
 

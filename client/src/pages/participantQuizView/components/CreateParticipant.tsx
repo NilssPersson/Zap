@@ -6,6 +6,8 @@ import useGetAuthenticatedUser from '@/hooks/useGetAuthenticatedUser';
 import { userService } from '@/services/users';
 import { InfoIcon, Dices, Play } from 'lucide-react';
 import Avatar from '@/Avatar';
+import { useTranslation } from 'react-i18next';
+import LanguageToggle from '@/components/LanguageToggle';
 
 interface CreateParticipantProps {
   handleAddParticipant: (
@@ -38,6 +40,7 @@ export default function CreateParticipant({
   const [addingUser, setAddingUser] = useState(false);
   const [activeTab, setActiveTab] = useState(user.isLoggedIn ? 'me' : 'guest');
   const { user: authenticatedUser } = useGetAuthenticatedUser();
+  const { t } = useTranslation(['participants']);
 
   useEffect(() => {
     async function initializeUser() {
@@ -112,7 +115,7 @@ export default function CreateParticipant({
           interactiveStyles="w-full"
           className="bg-green-500 text-3xl text-[#fefefe] hover:bg-green-300 py-8 px-12 font-display w-full [&_svg]:!size-5"
         >
-          Play
+          {t('play')}
           <Play strokeWidth={4} />
         </Button>
       </div>
@@ -121,15 +124,16 @@ export default function CreateParticipant({
 
   return (
     <div className="flex items-center justify-center h-screen w-full">
+      <LanguageToggle />
       {user.isLoggedIn ? (
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value)}>
           <div className="bg-component-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
             <TabsList className="flex-1 w-full pt-4 pb-8 rounded-lg">
               <TabsTrigger className="bg-white rounded w-full" value="me">
-                Play as {user.username}
+                {t('playAsUser')} {user.username}
               </TabsTrigger>
               <TabsTrigger className="bg-white rounded w-full" value="guest">
-                Play as Guest
+                {t('playAsGuest')}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="me">
@@ -151,7 +155,7 @@ export default function CreateParticipant({
                   <Dices className="w-6 h-6 text-black ml-1" />
                 </Button>
                 <Input
-                  placeholder="Enter Name"
+                  placeholder={t('enter')}
                   className={`text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg 
                     ${showError && 'border-red-500 animate-shake'}`}
                   value={guestName}
@@ -164,7 +168,7 @@ export default function CreateParticipant({
                 {showError && (
                   <div className="flex justify-start items-center w-full text-red-500">
                     <InfoIcon className="w-5 h-5 mr-1" />
-                    <p className="font-display">Please enter a name</p>
+                    <p className="font-display">{t('nameError')}</p>
                   </div>
                 )}
                 <Button
@@ -174,7 +178,7 @@ export default function CreateParticipant({
                   interactiveStyles="w-full"
                   className="bg-green-500 text-3xl text-[#fefefe] hover:bg-green-300 py-8 px-12 font-display w-full [&_svg]:!size-5"
                 >
-                  Play
+                  {t('play')}
                   <Play strokeWidth={4} />
                 </Button>
               </div>
@@ -195,7 +199,7 @@ export default function CreateParticipant({
               <Dices className="w-6 h-6 text-black ml-1" />
             </Button>
             <Input
-              placeholder="Enter Name"
+              placeholder={t('enter')}
               className={`text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg 
               ${showError && 'border-red-500 animate-shake'}`}
               value={guestName}
@@ -208,7 +212,7 @@ export default function CreateParticipant({
             {showError && (
               <div className="flex justify-start items-center w-full text-red-500">
                 <InfoIcon className="w-5 h-5 mr-1" />
-                <p className="font-display">Please enter a name</p>
+                <p className="font-display">{t('nameError')}</p>
               </div>
             )}
             <Button
@@ -218,7 +222,7 @@ export default function CreateParticipant({
               interactiveStyles="w-full"
               className="bg-green-500 text-3xl text-[#fefefe] hover:bg-green-300 py-8 px-12 font-display w-full [&_svg]:!size-5"
             >
-              Play
+              {t('play')}
               <Play strokeWidth={4} />
             </Button>
           </div>

@@ -10,5 +10,12 @@
   "questionWillStart": "Gör dig redo!",
   "quizCode": "Quiz kod",
   "joinQuiz": "Gå med",
-  "invalidCode": "Ogiltig kod"
+  "invalidCode": "Ogiltig kod",
+  "play": "Spela",
+  "playAsGuest": "Spela som gäst",
+  "playAsUser": "Spela som",
+  "enter": "Ange namn",
+  "nameError": "Vänligen ange ett namn",
+  "menu": "Inställningar",
+  "lobbyView.title": "Väntar på att quizzet ska starta..."
 }

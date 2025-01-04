@@ -10,5 +10,12 @@
   "questionWillStart": "Get ready!",
   "quizCode": "Quiz code",
   "joinQuiz": "Join",
-  "invalidCode": "Invalid code"
+  "invalidCode": "Invalid code",
+  "play": "Play",
+  "playAsGuest": "Play as guest",
+  "playAsUser": "Play as",
+  "enter": "Enter name",
+  "nameError": "Please enter a name",
+  "menu": "Settings",
+  "lobbyView.title": "Waiting for the quiz to start..."
 }
