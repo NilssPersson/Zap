@@ -2,14 +2,13 @@ import { Button } from '@/components/ui/button';
 import { WiggleText } from '@/components/WiggleText';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import QuestionCarousel from '@/pages/home/QuestionCarousel';
-
+import AvatarCarousel from './AvatarCarousel';
 import dallebomb from '@//utils/images/dalle/dallebomb.webp';
 import dallebutton from '@/utils/images/dalle/dallebutton.webp';
 import dalleflag1 from '@/utils/images/dalle/dalleflag1.webp';
-import Avatar from '@/Avatar';
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import HowItWorks from './HowItWorks';
+import HowItWorksPhone from './HowItWorksPhone';
 
 interface AvatarData {
   avatarString: string;
@@ -85,7 +84,7 @@ function Home() {
     <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-screen w-full bg-[#F8F8F8]">
       <div className="flex-1 flex flex-col items-center justify-start mt-10 w-full">
         {/* "Zap!" text */}
-        <div className="bg">
+        <div className='flex-1 w-full sm:w-4/5'>
           <div className="flex items-center justify-center gap-4">
             <WiggleText
               text="Zap!"
@@ -97,16 +96,16 @@ function Home() {
               Creative, Simple, Unique
             </h1>
 
-            <h3 className="text-gray-500 lg:w-1/2 sm:w-full  text-center text-2xl font-display m-2">
+            <h3 className="text-gray-500 lg:w-1/2 sm:w-4/5 text-center text-2xl font-display m-2">
               Create unforgettable quizzes and events with Zap! Whether it's
               online team building, live interactive games, icebreakers, or
               engaging lessons, Zap makes it easy to connect and excite your
               audience—anytime, anywhere.
             </h3>
           </div>
-          <div className="flex-1 flex flex-col items-center justify-center  mb-10 mt-10">
+          <div className="flex-1 flex flex-col items-center justify-center">
             <Button
-              className="font-display text-7xl outline outline-3  p-12  bg-green-500 text-white hover:bg-white hover:text-black"
+              className="font-display lg:text-7xl text-4xl outline outline-3 m-4  p-16  bg-green-500 text-white hover:bg-white hover:text-black"
               size="lg"
               onClick={() => register()}
             >
@@ -122,35 +121,21 @@ function Home() {
         </div>
 
         <div className="w-full bg-[#F8F8F8]">
-          <HowItWorks></HowItWorks>
-        </div>
+          {/* Render HowItWorks for larger devices */}
+          <div className="hidden lg:block">
+            <HowItWorks />
+          </div>
 
-        {/* Avatar Carousel */}
-        <div className="w-full flex flex-col items-center text-center text-black bg-[#F4F4F4]">
-          <h1 className="font-display lg:text-4xl text-3xl">
-            {t('homepage:avatarText')}
-          </h1>
-          <div className="my-10 flex flex-col items-center justify-center w-full overflow-hidden">
-            <motion.div
-              className="flex space-x-16 w-full"
-              animate={{ x: ['0%', '-100%'] }}
-              transition={{
-                repeat: Infinity,
-                duration: 40, // Slower scrolling by increasing duration
-                ease: 'linear',
-              }}
-            >
-              {avatarData.concat(avatarData).map((avatar, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <Avatar
-                    avatarString={avatar.avatarString}
-                    collectionName={avatar.collectionName}
-                  />
-                </div>
-              ))}
-            </motion.div>
+          {/* Render HowItWorksPhone for smaller devices */}
+          <div className="block lg:hidden">
+            <HowItWorksPhone />
           </div>
         </div>
+
+        <div>
+          <AvatarCarousel avatars={avatarData}></AvatarCarousel>
+        </div>
+        {/* Avatar Carousel */}
       </div>
       <div className="hidden lg:flex flex-col">
         <div className="flex-row"></div>
