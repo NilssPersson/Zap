@@ -19,6 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import LanguageToggle from '@/components/LanguageToggle';
 
 export function Header() {
   const location = useLocation();
@@ -166,26 +167,31 @@ export function Header() {
 
             <div className="flex items-center font-display gap-1">
               {isAuthenticated ? (
-                <Link to="/">
-                  <Button
-                    variant={location.pathname === '/' ? 'default' : 'ghost'}
-                    className="text-lg"
-                  >
-                    {t('general:home')}
-                  </Button>
-                </Link>
+                <>
+                  <Link to="/">
+                    <Button
+                      variant={location.pathname === '/' ? 'default' : 'ghost'}
+                      className="text-lg"
+                    >
+                      {t('general:home')}
+                    </Button>
+                  </Link>
+                  <Settings />
+                </>
               ) : (
-                <Link to="/play">
-                  <Button
-                    variant="ghost"
-                    className="text-lg bg-green-600"
-                    isInteractive
-                  >
-                    {t('general:play')}
-                  </Button>
-                </Link>
+                <>
+                  <Link to="/play">
+                    <Button
+                      variant="ghost"
+                      className="text-lg bg-green-600"
+                      isInteractive
+                    >
+                      {t('general:play')}
+                    </Button>
+                  </Link>
+                  <LanguageToggle fixed={false} />
+                </>
               )}
-              <Settings />
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger
                   className="ml-2 mr-3 text-2xl"
@@ -193,12 +199,12 @@ export function Header() {
                 >
                   <Menu />
                 </SheetTrigger>
-                <SheetContent className="w-full border-none font-display text-xl text-white">
+                <SheetContent className="w-full border-none font-display text-xl text-white overflow-y-auto">
                   <SheetHeader className="flex flex-row items-center justify-center space-x-1 pt-6">
                     <Zap className="text-yellow-400" size={25} />
                     <span className="fancy-wrap text-2xl">Zap!</span>
                   </SheetHeader>
-                  <SheetDescription className="flex flex-col space-y-3 text-left pt-6">
+                  <SheetDescription className="flex flex-col space-y-2 text-left pt-6">
                     <Link to="/">
                       <Button
                         className="text-2xl"
@@ -206,6 +212,15 @@ export function Header() {
                         onClick={() => setSheetOpen(false)}
                       >
                         {t('general:home')}
+                      </Button>
+                    </Link>
+                    <Link to="/play">
+                      <Button
+                        className="text-2xl"
+                        variant="link"
+                        onClick={() => setSheetOpen(false)}
+                      >
+                        {t('general:play')}
                       </Button>
                     </Link>
                     <Link to="/about">
@@ -221,7 +236,7 @@ export function Header() {
                       open={isToolsOpen}
                       onOpenChange={setIsToolsOpen}
                     >
-                      <CollapsibleTrigger className="text-primary text-2xl flex flex-row w-full items-center px-4 font-display rounded">
+                      <CollapsibleTrigger className="text-primary text-2xl flex flex-row w-full items-center px-4 pt-1 font-display rounded">
                         <div className="flex items-center pr-1">
                           {t('general:tools')}
                         </div>
