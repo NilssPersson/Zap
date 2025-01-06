@@ -13,7 +13,7 @@ const QuizEdit = React.lazy(() => import('../pages/QuizEdit'));
 const ParticipantLogic = React.lazy(
   () => import('@/pages/participantQuizView/ParticipantLogic')
 );
-const Profile = React.lazy(() => import('@/pages/User/Profile'));
+const Profile = React.lazy(() => import('@/components/Settings/Profile'));
 const HostLogic = React.lazy(() => import('@/pages/HostLogic'));
 
 export function AppRoutes() {
