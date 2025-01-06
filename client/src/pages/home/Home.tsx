@@ -1,17 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { WiggleText } from '@/components/WiggleText';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
+import QuestionCarousel from '@/pages/home/QuestionCarousel';
 
-import dallebomb from '../utils/images/dalle/dallebomb.webp';
-import dallebutton from '../utils/images/dalle/dallebutton.webp';
-import dalleflag1 from '../utils/images/dalle/dalleflag1.webp';
+import dallebomb from '@//utils/images/dalle/dallebomb.webp';
+import dallebutton from '@/utils/images/dalle/dallebutton.webp';
+import dalleflag1 from '@/utils/images/dalle/dalleflag1.webp';
 import Avatar from '@/Avatar';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -64,7 +58,7 @@ const generateRandomAvatarData = (): AvatarData[] => {
 
 const avatarData = generateRandomAvatarData();
 
-const images = [
+const imageData = [
   {
     img: dallebomb,
     text: 'In Ticking Timebomb, players take turns answering questions within a set time. If time runs out, you lose a life. The last player standing wins!',
@@ -122,65 +116,9 @@ function Home() {
         </div>
 
         {/* Container for Title and Carousel */}
-
-        <div className="flex flex-col justify-center items-center w-full bg-[#F4F4F4]">
-          <h1 className="text-3xl font-display  text-black mt-4 ">
-            Press the question types!
-          </h1>
-          <div className="text-center flex items-center justify-center w-full">
-            <Carousel increment={1} rotateTime={15} buttons={false}>
-              <CarouselContent>
-                {images.map((_, groupIndex) => {
-                  const imageGroup =
-                    window.innerWidth < 640
-                      ? images.slice(groupIndex, groupIndex + 1) // One item per slide on small screens
-                      : images.slice(groupIndex * 3, groupIndex * 3 + 3); // Three items per slide on larger screens
-
-                  if (imageGroup.length === 0) return null;
-
-                  return (
-                    <CarouselItem className="border-white m-4" key={groupIndex}>
-                      {/* Responsive flex container for images */}
-                      <div className="flex justify-center">
-                        {imageGroup.map((images, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-col items-center m-4 relative group"
-                          >
-                            <h2 className="text-xl font-display mb-2 text-black">
-                              {
-                                titles[
-                                  groupIndex *
-                                    (window.innerWidth < 640 ? 1 : 3) +
-                                    index
-                                ]
-                              }
-                            </h2>
-                            {/* Container for the image with hover effect */}
-                            <div className="rounded-lg border-4 border-white w-full max-w-xs sm:max-w-md mx-4 sm:mx-6 overflow-hidden relative">
-                              <img
-                                src={images.img}
-                                alt={`Slide ${groupIndex * (window.innerWidth < 640 ? 1 : 3) + index + 1}`}
-                                className="w-full h-auto object-cover transition-all duration-300 group-hover:blur-sm"
-                              />
-                              <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                <p className="text-lg font-medium text-center m-2">
-                                  {images.text}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
-
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
+        <div>
+          {' '}
+          <QuestionCarousel images={imageData} titles={titles} />;
         </div>
 
         <div className="w-full bg-[#F8F8F8]">
