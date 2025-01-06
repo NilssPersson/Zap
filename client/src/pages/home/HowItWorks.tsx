@@ -16,16 +16,16 @@ const HowItWorks = () => {
 
             <div className="flex-1 p-6 flex flex-col items-center justify-start ">
               {/* Number in a smaller circle */}
-              <div className="w-16 h-16 bg-primary text-white text-xl font-bold rounded-full mb-4 flex items-center justify-center">
+              <div className="w-16 h-16 bg-primary text-white text-xl font-display rounded-full mb-4 flex items-center justify-center">
                 1
               </div>
 
               {/* Card Box with Title and Text */}
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h1 className="text-2xl font-semibold text-gray-800">
+                <h1 className="text-2xl font-display text-black">
                   Build it, quiz it, win it!
                 </h1>
-                <p className="mt-4 text-gray-600">
+                <p className=" font-display mt-2 text-gray-600">
                   Get started with Zap by creating quiz and game night slides.
                   Add a variety of interactive challenges to keep your friends
                   engaged, all within one easy-to-use app.
@@ -56,16 +56,16 @@ const HowItWorks = () => {
             </div>
             <div className="flex-1 p-6 flex flex-col items-center justify-start ">
               {/* Number in a smaller circle */}
-              <div className="w-16 h-16 bg-primary text-white text-xl font-bold rounded-full mb-4 flex items-center justify-center">
+              <div className="w-16 h-16 bg-primary font-display text-white text-xl  rounded-full mb-4 flex items-center justify-center">
                 2
               </div>
 
               {/* Card Box with Title and Text */}
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h1 className="text-2xl font-semibold text-gray-800">
+                <h1 className="text-2xl font-display text-gray-800">
                   Invite your friends
                 </h1>
-                <p className="mt-4 text-gray-600">
+                <p className="mt-2 font-display text-gray-600">
                   Your friends can join the fun on any device, just by scanning
                   a QR code or using a link—no apps required!
                 </p>
@@ -83,16 +83,16 @@ const HowItWorks = () => {
 
             <div className="flex-1 p-6 flex flex-col items-center justify-start ">
               {/* Number in a smaller circle */}
-              <div className="w-16 h-16 bg-primary text-white text-xl font-bold rounded-full mb-4 flex items-center justify-center">
+              <div className="w-16 h-16 bg-primary font-display text-white text-xl  rounded-full mb-4 flex items-center justify-center">
                 3
               </div>
 
               {/* Card Box with Title and Text */}
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h1 className="text-2xl font-semibold text-gray-800">
+                <h1 className=" font-display text-2xl font-semibold text-black">
                   Watch the action unfold & enjoy the fun!
                 </h1>
-                <p className="mt-4 text-gray-600">
+                <p className="mt-2 font-display text-gray-600">
                   Follow the answers, points, and results as they unfold,
                   intensifying the excitement until a winner is crowned.
                 </p>
