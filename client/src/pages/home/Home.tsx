@@ -72,14 +72,11 @@ function Home() {
           </div>
           <div className="mt-5 flex flex-col justify-center items-center gap-y-3  ">
             <h1 className="text-5xl font-display text-center text-black ">
-              Creative, Simple, Unique
+              {t('homepage:slogan')}
             </h1>
 
             <h3 className="text-gray-500 lg:w-1/2 sm:w-4/5 text-center text-2xl font-display m-2">
-              Create unforgettable quizzes and events with Zap! Whether it's
-              online team building, live interactive games, icebreakers, or
-              engaging lessons, Zap makes it easy to connect and excite your
-              audience—anytime, anywhere.
+              {t('homepage:inspotext')}
             </h3>
           </div>
           <div className="flex-1 flex flex-col items-center justify-center">
