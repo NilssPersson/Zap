@@ -3,9 +3,6 @@ import { WiggleText } from '@/components/WiggleText';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import QuestionCarousel from '@/pages/home/QuestionCarousel';
 import AvatarCarousel from './AvatarCarousel';
-import dallebomb from '@//utils/images/dalle/dallebomb.webp';
-import dallebutton from '@/utils/images/dalle/dallebutton.webp';
-import dalleflag1 from '@/utils/images/dalle/dalleflag1.webp';
 import { useTranslation } from 'react-i18next';
 import HowItWorks from './HowItWorks';
 import HowItWorksPhone from './HowItWorksPhone';
@@ -57,24 +54,6 @@ const generateRandomAvatarData = (): AvatarData[] => {
 
 const avatarData = generateRandomAvatarData();
 
-const imageData = [
-  {
-    img: dallebomb,
-    text: 'In Ticking Timebomb, players take turns answering questions within a set time. If time runs out, you lose a life. The last player standing wins!',
-  },
-  {
-    img: dalleflag1,
-    text: 'Think you know geography? Pin the right location on the world map! Choose from various difficulty levels, ranging from landmarks to precise locations, and test your knowledge with different settings!',
-  },
-  { img: dallebutton, text: 'Know the answer? Press the button!' },
-  { img: 'anotherImageURL', text: 'Explanation for image 4' },
-];
-const titles: string[] = [
-  'Ticking Time Bomb',
-  'Locate It',
-  'Fastest Finger First',
-];
-
 function Home() {
   const { register } = useKindeAuth();
 
@@ -84,7 +63,7 @@ function Home() {
     <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-screen w-full bg-[#F8F8F8]">
       <div className="flex-1 flex flex-col items-center justify-start mt-10 w-full">
         {/* "Zap!" text */}
-        <div className='flex-1 w-full sm:w-4/5'>
+        <div className="flex-1 w-full sm:w-4/5">
           <div className="flex items-center justify-center gap-4">
             <WiggleText
               text="Zap!"
@@ -115,9 +94,9 @@ function Home() {
         </div>
 
         {/* Container for Title and Carousel */}
-        <div>
+        <div className="flex-1 w-full">
           {' '}
-          <QuestionCarousel images={imageData} titles={titles} />;
+          <QuestionCarousel />;
         </div>
 
         <div className="w-full bg-[#F8F8F8]">
