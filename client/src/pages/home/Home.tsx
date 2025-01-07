@@ -14,6 +14,8 @@ import jacob from '@/assets/photos/jacob.jpeg';
 import filip from '@/assets/photos/filip.jpeg';
 import { Card, CardContent } from '@/components/ui/card';
 
+import { FaLinkedin } from 'react-icons/fa';
+
 interface AvatarData {
   avatarString: string;
   collectionName: string;
@@ -123,7 +125,7 @@ function Home() {
       </div>
       <div className="hidden lg:flex flex-col mt-4 items-center justify-center">
         <div className="text-center mb-6 ">
-          <h1 className="text-3xl font-display mb-4 text-black">
+          <h1 className="text-3xl font-display mb-4 text-gray-800">
             {t('about:who')}
           </h1>
         </div>
@@ -132,30 +134,62 @@ function Home() {
             {t('about:introText')}
           </p>
         </div>
-        <h2 className="text-center text-3xl  font-display mb-6 text-black">
+        <h2 className="text-center text-3xl  font-display mb-6 text-gray-800">
           {t('about:team')}
         </h2>
-        <div className="flex-1 p-6 rounded-lg   bg-[#F8F8F8]">
+        <div className="flex-1 p-6 rounded-lg bg-[#F8F8F8]">
           <div className="flex flex-row gap-6 justify-center items-center w-full">
             {[
-              { src: lisa, name: 'Lisa Hansson' },
-              { src: nils, name: 'Nils Persson' },
-              { src: ramez, name: 'Ramez Shakarna' },
-              { src: filip, name: 'Filip von Knorring' },
-              { src: jacob, name: 'Jacob Dillström' },
+              {
+                src: lisa,
+                name: 'Lisa Hansson',
+                linkedin: 'https://www.linkedin.com/in/lisa-hansson/',
+              },
+              {
+                src: nils,
+                name: 'Nils Persson',
+                linkedin: 'https://www.linkedin.com/in/nils-albin-persson/',
+              },
+              {
+                src: ramez,
+                name: 'Ramez Shakarna',
+                linkedin: 'https://www.linkedin.com/in/ramezshakarna/',
+              },
+              {
+                src: filip,
+                name: 'Filip von Knorring',
+                linkedin: 'https://www.linkedin.com/in/filip-v-4b9976139/',
+              },
+              {
+                src: jacob,
+                name: 'Jacob Dillström',
+                linkedin: 'https://www.linkedin.com/in/jacob-dillstrom/',
+              },
             ].map((person, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center text-center bg-[#F9F8FE] p-8 rounded-lg shadow-md"
+                className="flex flex-col items-center text-center bg-[#F9F8FE] p-8 rounded-lg shadow-md w-[280px] h-[280px]" // Fixed width and height
               >
                 <img
                   src={person.src}
                   alt={person.name}
-                  className="w-32 h-32 rounded-full shadow-lg mb-4 object-cover"
+                  className="w-32 h-32 rounded-full shadow-lg mb-4 object-cover mx-auto"
                 />
-                <p className="text-lg font-medium font-display text-gray-700">
-                  {person.name}
-                </p>
+                <div className="flex flex-col justify-between items-center h-full">
+                  {' '}
+                  {/* Use full height for consistent spacing */}
+                  <a
+                    className="flex flex-row justify-between space-x-2 items-center"
+                    href={person.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaLinkedin size={32} color="#0A66C2" />
+                    <p className="text-xl font-medium font-display text-gray-700 hover:text-blue-500">
+                      {person.name}
+                    </p>
+                  </a>
+                </div>
               </div>
             ))}
           </div>
@@ -172,15 +206,15 @@ function Home() {
           </Link>
         </div>
       </div>
-      <div className="flex flex-col items-center w-full mt-10">
-        <h1 className="text-black font-display text-3xl text-center">
+      <div className="flex flex-col items-center w-full mt-10 mb-10">
+        <h1 className="text-gray-800 font-display text-3xl text-center">
           Try out our templates!
         </h1>
         <div className="w-full max-w-7xl mt-8">
           <Card className="bg-[#F9F8FE] shadow-lg">
             <CardContent className="min-h-[300px] flex items-center justify-center">
               {/* Add content here */}
-              <p className="text-gray-500">No shared quizzes available yet!</p>
+              <p className=" text-2xl text-gray-700 font-display">No shared quizzes available yet!</p>
             </CardContent>
           </Card>
         </div>
