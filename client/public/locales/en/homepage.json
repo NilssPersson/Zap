@@ -18,8 +18,8 @@
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "avatarText": "More than 100 avatars",
-  "slogan": "Creative, Simple, Unique",
-  "inspotext": "Create unforgettable quizzes and events with Zap! Whether it'sonline team building, live interactive games, icebreakers, orengaging lessons, Zap makes it easy to connect and excite youraudience—anytime, anywhere.",
+  "slogan": "Creative, Simple and Unique",
+  "inspotext": "Create unforgettable quizzes and events with Zap!",
   "getStarted": "Get Started!",
 
   "stepTitles": {
@@ -30,8 +30,8 @@
   },
 
   "stepText": {
-    "0": "Get started with Zap by creating quiz and game night slides. Add a variety of interactive challenges to keep your friendsengaged, all within one easy-to-use app.",
+    "0": "Get started with Zap by creating quiz and game night slides. Add a variety of interactive challenges to keep your friend sengaged, all within one easy-to-use app.",
     "1": "Your friends can join the fun on any device, just by scanning a QR code or using a link—no apps required!",
-    "2": "Follow the answers, points, and results as they unfold, intensifying the excitement until a winner is crowned."
+    "2": "Follow the action, track the scores, and watch as the tension builds, leading to a dramatic finish and the crowning of a winner."
   }
 }
