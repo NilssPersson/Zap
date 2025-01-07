@@ -67,15 +67,15 @@ function Home() {
           <div className="flex items-center justify-center gap-4">
             <WiggleText
               text="Zap!"
-              className="text-center text-8xl font-bold font-display fancy-wrap"
+              className="text-center text-6xl font-bold font-display fancy-wrap"
             />
           </div>
           <div className="mt-5 flex flex-col justify-center items-center gap-y-3  ">
-            <h1 className="text-5xl font-display text-center text-black ">
+            <h1 className="text-5xl font-display text-center text-gray-800 mx-4 ">
               {t('homepage:slogan')}
             </h1>
 
-            <h3 className="text-gray-500 lg:w-1/2 sm:w-4/5 text-center text-2xl font-display m-2">
+            <h3 className="text-gray-500 lg:w-1/2 sm:w-4/5 text-center text-2xl font-display mx-4">
               {t('homepage:inspotext')}
             </h3>
           </div>
