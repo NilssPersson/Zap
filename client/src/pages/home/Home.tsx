@@ -81,11 +81,12 @@ function Home() {
           </div>
           <div className="flex-1 flex flex-col items-center justify-center">
             <Button
-              className="font-display lg:text-7xl text-4xl outline outline-3 m-4  p-16  bg-green-500 text-white hover:bg-white hover:text-black"
+              className="font-display lg:text-4xl text-2xl m-4  p-8  bg-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2"
               size="lg"
+              isInteractive
               onClick={() => register()}
             >
-              {t('homepage:signUp')}
+              {t('general:register')}
             </Button>
           </div>
         </div>
