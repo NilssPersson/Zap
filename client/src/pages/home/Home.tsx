@@ -85,24 +85,24 @@ function Home() {
       <div className="flex-1 flex flex-col items-center justify-start mt-10 w-full">
         {/* "Zap!" text */}
         <div className="flex-1 w-full sm:w-4/5">
-          <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-4">
             <WiggleText
               text="Zap!"
-              className="text-center text-8xl font-bold font-display fancy-wrap"
+              className="text-center text-6xl font-bold font-display fancy-wrap"
             />
           </div>
           <div className="mt-5 flex flex-col justify-center items-center gap-y-3  ">
-            <h1 className="text-5xl font-display text-center text-black ">
+            <h1 className="text-5xl font-display text-center text-gray-800 mx-4 ">
               {t('homepage:slogan')}
             </h1>
 
-            <h3 className="text-gray-500 lg:w-1/2 sm:w-4/5 text-center text-2xl font-display m-2">
+            <h3 className="text-gray-500 lg:w-1/2 sm:w-4/5 text-center text-2xl font-display mx-4">
               {t('homepage:inspotext')}
             </h3>
           </div>
           <div className="flex-1 flex flex-col items-center justify-center">
             <Button
-              className="font-display lg:text-7xl text-4xl outline outline-3 m-4  p-16  bg-green-500 text-white hover:bg-white hover:text-black"
+              className="font-display lg:text-7xl text-4xl outline outline-3 m-4  lg:p-16 p-8  bg-green-500 text-white hover:bg-white hover:text-black"
               size="lg"
               onClick={() => register()}
             >
