@@ -65,12 +65,17 @@ export default function QuestionCarousel() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full bg-[#F4F4F4]">
-      <h1 className="text-3xl font-display text-gray-800 mt-4">
+      <h1 className="text-3xl font-display text-gray-700 mt-4">
         {t('homepage:questionCarouselText')}
       </h1>
 
       <div className="text-center flex items-center justify-center w-full">
-        <Carousel setApi={setApi} increment={1} rotateTime={25} buttons={false}>
+        <Carousel
+          setApi={setApi}
+          increment={1}
+          rotateTime={250}
+          buttons={false}
+        >
           <CarouselContent>
             {images.map((image, index) => {
               return (
@@ -80,13 +85,13 @@ export default function QuestionCarousel() {
                       <img
                         src={image.img}
                         alt={`Slide ${index + 1}`}
-                        className="w-full h-[180px] md:h-[280px] lg:h-[438px] object-fit"
+                        className="w-full h-[160px] md:h-[240px] lg:h-[370px] object-fit"
                       />
-                      <div className="flex flex-col bg-white h-[130px]">
-                        <p className="text-lg font-display text-left pl-2 text-black md:text-xl">
+                      <div className="flex flex-col bg-white h-[130px] md:h-[160px] lg:h-[180px] p-3 ">
+                        <p className="text-lg font-display text-left  text-black md:text-xl lg:text-2xl">
                           {image.title}
                         </p>
-                        <p className="text-sm font-display text-left pl-2 text-gray-600 md:text-lg">
+                        <p className="text-sm font-display text-left  text-gray-600 md:text-lg lg:text-xl pt-0">
                           {image.text}
                         </p>
                       </div>

@@ -214,7 +214,9 @@ function Home() {
           <Card className="bg-[#F9F8FE] shadow-lg">
             <CardContent className="min-h-[300px] flex items-center justify-center">
               {/* Add content here */}
-              <p className=" text-2xl text-gray-700 font-displayP">No shared quizzes available yet!</p>
+              <p className=" text-2xl text-gray-700 font-displayP">
+                No shared quizzes available yet!
+              </p>
             </CardContent>
           </Card>
         </div>
