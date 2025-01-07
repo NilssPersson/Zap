@@ -4,8 +4,15 @@ import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import QuestionCarousel from '@/pages/home/QuestionCarousel';
 import AvatarCarousel from './AvatarCarousel';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import HowItWorks from './HowItWorks';
 import HowItWorksPhone from './HowItWorksPhone';
+import nils from '@/assets/photos/nils.jpeg';
+import ramez from '@/assets/photos/ramez.jpeg';
+import lisa from '@/assets/photos/lisa.jpeg';
+import jacob from '@/assets/photos/jacob.jpeg';
+import filip from '@/assets/photos/filip.jpeg';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface AvatarData {
   avatarString: string;
@@ -97,7 +104,7 @@ function Home() {
           <QuestionCarousel />;
         </div>
 
-        <div className="w-full bg-[#F8F8F8]">
+        <div className="w-full">
           {/* Render HowItWorks for larger devices */}
           <div className="hidden lg:block">
             <HowItWorks />
@@ -114,8 +121,69 @@ function Home() {
         </div>
         {/* Avatar Carousel */}
       </div>
-      <div className="hidden lg:flex flex-col">
-        <div className="flex-row"></div>
+      <div className="hidden lg:flex flex-col mt-4 items-center justify-center">
+        <div className="text-center mb-6 ">
+          <h1 className="text-3xl font-display mb-4 text-black">
+            {t('about:who')}
+          </h1>
+        </div>
+        <div className="p-4  rounded-lg  w-3/5 mb-4 bg-[#F9F8FE]">
+          <p className="text-2xl text-gray-700 font-display">
+            {t('about:introText')}
+          </p>
+        </div>
+        <h2 className="text-center text-3xl  font-display mb-6 text-black">
+          {t('about:team')}
+        </h2>
+        <div className="flex-1 p-6 rounded-lg   bg-[#F8F8F8]">
+          <div className="flex flex-row gap-6 justify-center items-center w-full">
+            {[
+              { src: lisa, name: 'Lisa Hansson' },
+              { src: nils, name: 'Nils Persson' },
+              { src: ramez, name: 'Ramez Shakarna' },
+              { src: filip, name: 'Filip von Knorring' },
+              { src: jacob, name: 'Jacob Dillström' },
+            ].map((person, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center text-center bg-[#F9F8FE] p-8 rounded-lg shadow-md"
+              >
+                <img
+                  src={person.src}
+                  alt={person.name}
+                  className="w-32 h-32 rounded-full shadow-lg mb-4 object-cover"
+                />
+                <p className="text-lg font-medium font-display text-gray-700">
+                  {person.name}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-center mt-8">
+          <Link to="/about">
+            <Button
+              variant={location.pathname === '/about' ? 'default' : 'ghost'}
+              className=" mb-5 bg-primary p-4 text-2xl font-display text-gray-800"
+            >
+              {t('homepage:readmore')}
+            </Button>
+          </Link>
+        </div>
+      </div>
+      <div className="flex flex-col items-center w-full mt-10">
+        <h1 className="text-black font-display text-3xl text-center">
+          Try out our templates!
+        </h1>
+        <div className="w-full max-w-7xl mt-8">
+          <Card className="bg-[#F9F8FE] shadow-lg">
+            <CardContent className="min-h-[300px] flex items-center justify-center">
+              {/* Add content here */}
+              <p className="text-gray-500">No shared quizzes available yet!</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
