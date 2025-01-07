@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { quizService } from '@/services/quizzes';
 import { useTranslation } from 'react-i18next';
 
-
 function useQuizzesPage() {
   const {
     quizzes: {
@@ -151,16 +150,17 @@ function Quizzes() {
   const [searchTerm, setSearchTerm] = useState('');
 
   return (
-    <div className="h-screen overflow-y-auto bg-white">
+    <div className="h-screen overflow-y-auto bg-white p-10">
       <div className="flex flex-col items-center w-full bg-white px-4 py-8 h-full ">
         {/* My Quizzes Section */}
-        <div className="w-full max-w-7xl">
-          <div className="mb-6">
+        <div className="w-full flex-col ">
+          <div className="mb-2 flex flex-row items-center justify-between">
             <h1 className="font-display text-5xl text-black mb-4">
               {t('homepage:myQuizzes')}
             </h1>
             <CreateQuizPopover onCreateQuiz={handleCreateQuiz} />
           </div>
+
           <Card className="bg-[#F9F8FE] shadow-lg">
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
@@ -199,8 +199,8 @@ function Quizzes() {
         </div>
 
         {/* Shared Quizzes Section */}
-        <div className="w-full max-w-7xl mt-8">
-          <div className="mb-6">
+        <div className="w-full  mt-8">
+          <div className="mb-2 flex justify-between items-center flex-row">
             <h1 className="font-display text-5xl text-black mb-2">
               {t('homepage:sharedQuizzes')}
             </h1>
@@ -209,7 +209,7 @@ function Quizzes() {
               placeholder={t('homepage:searchShared')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-lg"
+              className="max-w-sm font-display text-black"
               aria-label={t('homepage:searchShared')}
             />
           </div>
@@ -230,19 +230,11 @@ function Quizzes() {
           </Card>
         </div>
 
-        <div className="w-full max-w-7xl mt-8">
-          <div className="mb-6">
+        <div className="w-full  mt-8 mb-8 pb-8">
+          <div className="mb-2">
             <h1 className="font-display text-5xl text-black mb-2">
               {t('homepage:templates')}
             </h1>
-            <Input
-              type="search"
-              placeholder={t('homepage:searchShared')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-lg"
-              aria-label={t('homepage:searchShared')}
-            />
           </div>
           <Card className="bg-[#F9F8FE] shadow-lg">
             <CardContent className="min-h-[300px]">
