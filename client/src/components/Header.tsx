@@ -136,7 +136,11 @@ export function Header() {
                     </Button>
                   </>
                 )}
-                <Settings />
+                {isAuthenticated ? (
+                  <Settings />
+                ) : (
+                  <LanguageToggle fixed={false} />
+                )}
               </div>
             </nav>
           </div>

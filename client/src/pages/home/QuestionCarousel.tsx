@@ -9,6 +9,7 @@ import dallebomb from '@//utils/images/dalle/dallebomb.webp';
 import dallebutton from '@/utils/images/dalle/dallebutton.webp';
 import dalleflag1 from '@/utils/images/dalle/dalleflag1.webp';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 const images = [
   {
@@ -37,6 +38,7 @@ export default function QuestionCarousel() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  const { t } = useTranslation(['homepage']);
 
   React.useEffect(() => {
     if (!api) return;
@@ -48,18 +50,19 @@ export default function QuestionCarousel() {
     });
   }, [api]);
 
-  const perSlide = window.innerWidth < 640 ? 1 : 3;
+  const perSlide = 1;
 
   return (
     <div className="flex flex-col justify-center items-center w-full bg-[#F4F4F4]">
       <h1 className="text-3xl font-display text-black mt-4">
-        Our question types
+        {t('questionCarouselText')}
       </h1>
 
       <div className="text-center flex items-center justify-center w-full">
         <Carousel setApi={setApi} increment={1} rotateTime={15} buttons={false}>
           <CarouselContent>
             {images.map((_, groupIndex) => {
+              // slice images for each "group" or "slide"
               const imageGroup =
                 window.innerWidth < 640
                   ? images.slice(groupIndex, groupIndex + 1)
@@ -71,7 +74,7 @@ export default function QuestionCarousel() {
               if (imageGroup.length === 0) return null;
 
               return (
-                <CarouselItem className="border-white" key={groupIndex}>
+                <CarouselItem key={groupIndex}>
                   <div className="flex justify-center">
                     {imageGroup.map((image, index) => (
                       <div
@@ -81,14 +84,19 @@ export default function QuestionCarousel() {
                         <h2 className="text-xl font-display mb-2 text-black">
                           {image.title}
                         </h2>
-                        <div className="rounded-lg border-4 border-white w-full max-w-xs sm:max-w-md mx-4 sm:mx-6 overflow-hidden relative">
+
+                        {/* Fixed-width container for each card */}
+                        <div className="rounded-lg shadow-md w-[300px] md:w-[500px] overflow-hidden relative">
                           <img
                             src={image.img}
                             alt={`Slide ${groupIndex * perSlide + index + 1}`}
-                            className="w-full h-auto object-cover transition-all duration-300 group-hover:blur-sm"
+                            className="w-full h-[200px] md:h-[300px] object-fit"
                           />
-                          <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                            <p className="text-lg font-medium text-center m-2">
+                          <div className="flex flex-col bg-white h-[130px]">
+                            <p className="text-lg font-display text-left pl-2 text-black">
+                              {image.title}
+                            </p>
+                            <p className="text-sm font-display text-left pl-2 text-gray-600">
                               {image.text}
                             </p>
                           </div>
@@ -102,12 +110,14 @@ export default function QuestionCarousel() {
           </CarouselContent>
         </Carousel>
       </div>
+
+      {/* Dot indicator */}
       <div className="pb-3">
         {count > 0 && (
           <div className="flex gap-2 my-2">
             {Array.from({ length: count }, (_, i) => {
               const slideIndex = i + 1;
-              const isActive = slideIndex === current; // current is 1-based
+              const isActive = slideIndex === current;
 
               return (
                 <span

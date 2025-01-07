@@ -64,7 +64,7 @@ function Home() {
       <div className="flex-1 flex flex-col items-center justify-start mt-10 w-full">
         {/* "Zap!" text */}
         <div className="flex-1 w-full sm:w-4/5">
-        <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-4">
             <WiggleText
               text="Zap!"
               className="text-center text-6xl font-bold font-display fancy-wrap"
@@ -81,11 +81,12 @@ function Home() {
           </div>
           <div className="flex-1 flex flex-col items-center justify-center">
             <Button
-              className="font-display lg:text-7xl text-4xl outline outline-3 m-4  lg:p-16 p-8  bg-green-500 text-white hover:bg-white hover:text-black"
+              className="font-display lg:text-4xl text-2xl m-4  p-8  bg-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2"
               size="lg"
+              isInteractive
               onClick={() => register()}
             >
-              {t('homepage:signUp')}
+              {t('general:register')}
             </Button>
           </div>
         </div>
