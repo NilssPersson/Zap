@@ -7,10 +7,14 @@ export function Host({
   slide,
   onNextSlide,
   onPrevSlide,
+  endQuiz,
+  quizCode,
 }: {
   slide: FTASlide;
   onNextSlide: () => void;
   onPrevSlide: () => void;
+  endQuiz: (quizCode: string) => Promise<boolean>;
+  quizCode: string;
 }) {
   return (
     <div className="flex flex-col items-center">
@@ -38,7 +42,12 @@ export function Host({
         </div>
       )}
 
-      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
+      <NextSlide
+        quizCode={quizCode}
+        endQuiz={() => endQuiz(quizCode)} // Corrected here
+        onPrev={onPrevSlide}
+        onNext={onNextSlide}
+      />
     </div>
   );
 }

@@ -8,11 +8,15 @@ export function HostAnswer({
   participants,
   onNextSlide,
   onPrevSlide,
+  endQuiz,
+  quizCode,
 }: {
   slide: FASlide;
   participants: Participant[];
   onNextSlide: () => void;
-  onPrevSlide: () => void
+  onPrevSlide: () => void;
+  endQuiz: (quizCode: string) => Promise<boolean>;
+  quizCode: string;
 }) {
   var winner;
   if (participants) {
@@ -54,7 +58,12 @@ export function HostAnswer({
         )}
       </div>
 
-      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
+      <NextSlide
+        quizCode={quizCode}
+        endQuiz={() => endQuiz(quizCode)} // Corrected here
+        onPrev={onPrevSlide}
+        onNext={onNextSlide}
+      />
     </div>
   );
 }

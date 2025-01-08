@@ -6,7 +6,7 @@ import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
-import EndQuizButton from '@/components/EndQuizButton';
+
 import {
   getLocalStorageValue,
   setLocalStorageValue,
@@ -178,6 +178,7 @@ function HostLogic() {
             slide={slide as never}
             onNextSlide={nextSlide}
             onPrevSlide={prevSlide}
+            endQuiz={endQuiz}
             quizCode={ongoingQuiz.id}
             slideNumber={ongoingQuiz.currentSlide}
             changeTurn={changeTurn}
@@ -196,13 +197,13 @@ function HostLogic() {
           participants={Object.values(ongoingQuiz.participants)}
           slide={slide as never}
           onNextSlide={nextSlide}
+          endQuiz={endQuiz}
           onPrevSlide={prevSlide}
           quizCode={ongoingQuiz.id}
           handleAddPoints={handleAddPoints}
-          
         />
       )}
-      {!inLobby && <EndQuizButton onClick={() => endQuiz(ongoingQuiz.id)} />}
+
       <RenderTimer />
     </>
   );

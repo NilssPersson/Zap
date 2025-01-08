@@ -52,12 +52,17 @@ export function HostAnswer({
   slide,
   onNextSlide,
   onPrevSlide,
+  endQuiz,
+  quizCode,
+
   participants = mockData,
 }: {
   slide: LocateItSlide;
   onNextSlide: () => void;
   onPrevSlide: () => void;
   participants: Participant[];
+  endQuiz: (quizCode: string) => Promise<boolean>;
+  quizCode: string;
 }) {
   const APIKEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const [mapCenter, setMapCenter] = useState<google.maps.LatLngLiteral>(
@@ -169,7 +174,12 @@ export function HostAnswer({
           })}
         </Map>
       </APIProvider>
-      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
+      <NextSlide
+        quizCode={quizCode}
+        endQuiz={() => endQuiz(quizCode)} // Corrected here
+        onPrev={onPrevSlide}
+        onNext={onNextSlide}
+      />
     </div>
   );
 }

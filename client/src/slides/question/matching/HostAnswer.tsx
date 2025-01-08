@@ -11,11 +11,15 @@ export function HostAnswer({
   participants,
   onNextSlide,
   onPrevSlide,
+  endQuiz,
+  quizCode,
 }: {
   slide: MatchingSlide;
   participants: Participant[];
   onNextSlide: () => void;
   onPrevSlide: () => void;
+  endQuiz: (quizCode: string) => Promise<boolean>;
+  quizCode: string;
 }) {
   const unAssignedOptions = slide.options.filter(
     (option) =>
@@ -68,7 +72,12 @@ export function HostAnswer({
           />
         )}
       </div>
-      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
+      <NextSlide
+        quizCode={quizCode}
+        endQuiz={() => endQuiz(quizCode)} // Corrected here
+        onPrev={onPrevSlide}
+        onNext={onNextSlide}
+      />
     </div>
   );
 }

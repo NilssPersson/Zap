@@ -9,11 +9,15 @@ export function Host({
   slide,
   onNextSlide,
   onPrevSlide,
+  endQuiz,
+  quizCode,
 }: {
   slide: RankSlide;
   participants: Participant[];
   onNextSlide: () => void;
   onPrevSlide: () => void;
+  endQuiz: (quizCode: string) => Promise<boolean>;
+  quizCode: string;
 }) {
   const SlideComponent = getSlideComponents(slide);
   const { t } = useTranslation(['questions']);
@@ -27,9 +31,7 @@ export function Host({
         />
       </div>
       <SlideContent content={slide.content} />
-      <div>
-        
-      </div>
+      <div></div>
       <span className="font-display text-6xl mt-32">
         {t('lookAtYourScreen')}
       </span>
@@ -48,7 +50,12 @@ export function Host({
           </div>
         </div>
       )}
-       <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
+      <NextSlide
+        quizCode={quizCode}
+        endQuiz={() => endQuiz(quizCode)} // Corrected here
+        onPrev={onPrevSlide}
+        onNext={onNextSlide}
+      />
     </div>
   );
 }

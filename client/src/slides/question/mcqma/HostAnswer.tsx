@@ -10,12 +10,16 @@ export function HostAnswer({
   isPreview = false, // Default to false
   onNextSlide,
   onPrevSlide,
+  endQuiz,
+  quizCode,
 }: {
   slide: MCQMASlide;
   participants: Participant[];
   isPreview?: boolean;
   onNextSlide: () => void;
   onPrevSlide: () => void;
+  endQuiz: (quizCode: string) => Promise<boolean>;
+  quizCode: string;
 }) {
   const AnswerCount = () => {
     const calculateAnswerCounts = () => {
@@ -118,8 +122,13 @@ export function HostAnswer({
         <AnswerCount />
         <CorrectAnswers />
       </div>
-      <div >
-        <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
+      <div>
+        <NextSlide
+          quizCode={quizCode}
+          endQuiz={() => endQuiz(quizCode)} // Corrected here
+          onPrev={onPrevSlide}
+          onNext={onNextSlide}
+        />
       </div>
     </div>
   );

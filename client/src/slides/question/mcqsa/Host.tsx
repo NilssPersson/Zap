@@ -14,11 +14,15 @@ export function Host({
   onNextSlide,
   onPrevSlide,
   currentSlideTime,
+  endQuiz,
+  quizCode,
 }: {
   slide: MCQSASlide;
   onNextSlide: () => void;
   onPrevSlide: () => void;
   currentSlideTime: string;
+  endQuiz: (quizCode: string) => Promise<boolean>;
+  quizCode: string;
 }) {
   const showQuestionTime =
     Number(currentSlideTime) + global_values.waiting_time;
@@ -107,7 +111,12 @@ export function Host({
             </div>
           ))}
         </div>
-        <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
+        <NextSlide
+          quizCode={quizCode}
+          endQuiz={() => endQuiz(quizCode)} // Corrected here
+          onPrev={onPrevSlide}
+          onNext={onNextSlide}
+        />
       </div>
     </BaseQuestionRender>
   );
