@@ -84,15 +84,15 @@ export default function Settings() {
               <Separator className=" w-full" />
             </>
           )}
-          <Collapsible
-            open={whichOpen === 'language'}
-            onClick={() =>
-              whichOpen === 'language'
-                ? setWhichOpen('')
-                : setWhichOpen('language')
-            }
-          >
-            <CollapsibleTrigger className="flex flex-row w-full items-center px-2 py-2 font-display hover:bg-primary/90 rounded justify-between">
+          <Collapsible open={whichOpen === 'language'}>
+            <CollapsibleTrigger
+              onClick={() =>
+                whichOpen === 'language'
+                  ? setWhichOpen('')
+                  : setWhichOpen('language')
+              }
+              className="flex flex-row w-full items-center px-2 py-2 font-display hover:bg-primary/90 rounded justify-between"
+            >
               <div className="flex items-center">
                 <Languages className="w-4 h-4 mr-2" strokeWidth={3} />
                 {t('general:language')}
@@ -138,15 +138,15 @@ export default function Settings() {
           </Collapsible>
           {isAuthenticated && (
             <>
-              <Collapsible
-                open={whichOpen === 'appearance'}
-                onClick={() =>
-                  whichOpen === 'appearance'
-                    ? setWhichOpen('')
-                    : setWhichOpen('appearance')
-                }
-              >
-                <CollapsibleTrigger className="flex flex-row w-full items-center px-2 py-2 font-display hover:bg-primary/90 rounded justify-between">
+              <Collapsible open={whichOpen === 'appearance'}>
+                <CollapsibleTrigger
+                  onClick={() =>
+                    whichOpen === 'appearance'
+                      ? setWhichOpen('')
+                      : setWhichOpen('appearance')
+                  }
+                  className="flex flex-row w-full items-center px-2 py-2 font-display hover:bg-primary/90 rounded justify-between"
+                >
                   <div className="flex items-center">
                     <UserPen className="w-4 h-4 mr-2" strokeWidth={3} />
                     {t('general:appearance')}
@@ -169,15 +169,15 @@ export default function Settings() {
                 </CollapsibleContent>
               </Collapsible>
 
-              <Collapsible
-                open={whichOpen === 'tutorial'}
-                onClick={() =>
-                  whichOpen === 'tutorial'
-                    ? setWhichOpen('')
-                    : setWhichOpen('tutorial')
-                }
-              >
-                <CollapsibleTrigger className="flex flex-row w-full items-center px-2 py-2 font-display hover:bg-primary/90 rounded justify-between">
+              <Collapsible open={whichOpen === 'tutorial'}>
+                <CollapsibleTrigger
+                  onClick={() =>
+                    whichOpen === 'tutorial'
+                      ? setWhichOpen('')
+                      : setWhichOpen('tutorial')
+                  }
+                  className="flex flex-row w-full items-center px-2 py-2 font-display hover:bg-primary/90 rounded justify-between"
+                >
                   <div className="flex items-center">
                     <MessageCircleQuestion
                       className="w-4 h-4 mr-2"
