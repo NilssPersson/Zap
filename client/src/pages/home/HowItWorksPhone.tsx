@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 const HowItWorksPhone = () => {
   const { t } = useTranslation();
   return (
-    <div className="py-8 w-full bg-gray-50">
+    <div className="py-6 w-full bg-gray-50">
       <h1 className="text-3xl font-display text-center text-gray-700 mb-6">
         {t('homepage:getStarted')}
       </h1>

@@ -72,7 +72,7 @@ export default function QuestionCarousel() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full bg-[#F4F4F4]">
-      <h1 className="text-3xl font-display text-gray-700 mt-4">
+      <h1 className="text-3xl font-display text-gray-700 mt-4 md:text-5xl">
         {t('homepage:questionCarouselText')}
       </h1>
 
