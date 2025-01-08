@@ -1,6 +1,6 @@
-import slideView from '@/assets/editorImages/slideView.png';
 import editor from '@/assets/editorImages/editor.png';
 import lobby from '@/assets/questionImages/lobby.png';
+import results from '@/assets/questionImages/results.png';
 import { useTranslation } from 'react-i18next';
 
 const HowItWorksPhone = () => {
@@ -66,7 +66,7 @@ const HowItWorksPhone = () => {
             3
           </div>
           <img
-            src={slideView}
+            src={results}
             alt="Placeholder 3"
             className="w-full h-auto rounded-lg shadow-md"
           />
