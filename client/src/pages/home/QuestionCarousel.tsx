@@ -87,7 +87,7 @@ export default function QuestionCarousel() {
               className={cn(
                 'p-2 rounded-full transition-colors duration-300',
                 current === i
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary text-white scale-110'
                   : 'bg-gray-200 text-black'
               )}
               aria-label={`Go to ${image.title}`}
@@ -98,7 +98,7 @@ export default function QuestionCarousel() {
         </div>
       )}
 
-      <div className="text-center flex items-center justify-center w-full pb-3">
+      <div className="w-full pb-3">
         <Carousel
           setApi={setApi}
           increment={1}
