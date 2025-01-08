@@ -21,24 +21,20 @@ import {
   UserPen,
 } from 'lucide-react';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useAppContext } from '@/contexts/App/context';
 import { Separator } from '@/components/ui/separator';
+import LanguageRadio from './LanguageRadio';
 
 export default function Settings() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [whichOpen, setWhichOpen] = useState('');
   const { isAuthenticated, logout } = useKindeAuth();
   const {
     user: { user, updateUser },
   } = useAppContext();
-
-  const handleLanguageChange = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
 
   const handleTutorialToggle = (enabled: boolean) => {
     if (user) {
@@ -111,28 +107,7 @@ export default function Settings() {
 
             <CollapsibleContent className="px-4 py-3 rounded bg-gray-200">
               <div className="grid gap-2 font-display ">
-                <RadioGroup defaultValue={i18n.language}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="sv"
-                      id="sv"
-                      onClick={() => handleLanguageChange('sv')}
-                    />
-                    <Label className="cursor-pointer" htmlFor="sv">
-                      {t('general:swedish')}
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="en"
-                      id="en"
-                      onClick={() => handleLanguageChange('en')}
-                    />
-                    <Label className="cursor-pointer" htmlFor="en">
-                      {t('general:english')}
-                    </Label>
-                  </div>
-                </RadioGroup>
+                <LanguageRadio setOpen={() => null} />
               </div>
             </CollapsibleContent>
           </Collapsible>
