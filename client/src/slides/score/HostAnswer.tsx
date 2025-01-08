@@ -6,15 +6,17 @@ import NextSlide from '../_components/NextSlide';
 export function HostAnswer({
   slide,
   onNextSlide,
+  onPrevSlide,
 }: {
   slide: ScoreSlide;
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }) {
   return (
     <div>
       <Confetti delayProp={5000} />
       <Preview slide={slide} />
-      <NextSlide onClick={onNextSlide} />
+       <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 }

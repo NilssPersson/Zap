@@ -6,9 +6,11 @@ import NextSlide from '@/slides/_components/NextSlide';
 export function Host({
   slide,
   onNextSlide,
+  onPrevSlide,
 }: {
   slide: MatchingSlide;
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }) {
   return (
     <>
@@ -25,7 +27,7 @@ export function Host({
           ))}
         </div>
       </BaseQuestionRender>
-      <NextSlide onClick={onNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </>
   );
 }

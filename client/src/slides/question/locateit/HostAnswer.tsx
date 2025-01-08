@@ -51,10 +51,12 @@ const mockData: Participant[] = [
 export function HostAnswer({
   slide,
   onNextSlide,
+  onPrevSlide,
   participants = mockData,
 }: {
   slide: LocateItSlide;
   onNextSlide: () => void;
+  onPrevSlide: () => void;
   participants: Participant[];
 }) {
   const APIKEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -167,7 +169,7 @@ export function HostAnswer({
           })}
         </Map>
       </APIProvider>
-      <NextSlide onClick={onNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 }

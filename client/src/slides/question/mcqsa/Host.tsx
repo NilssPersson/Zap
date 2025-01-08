@@ -12,10 +12,12 @@ import { global_values } from '@/config/values'; // Make sure you have waiting_t
 export function Host({
   slide,
   onNextSlide,
+  onPrevSlide,
   currentSlideTime,
 }: {
   slide: MCQSASlide;
   onNextSlide: () => void;
+  onPrevSlide: () => void;
   currentSlideTime: string;
 }) {
   const showQuestionTime =
@@ -105,7 +107,7 @@ export function Host({
             </div>
           ))}
         </div>
-        <NextSlide onClick={onNextSlide} />
+        <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
       </div>
     </BaseQuestionRender>
   );

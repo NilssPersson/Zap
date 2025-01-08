@@ -11,9 +11,12 @@ export function HostAnswer({
   slide,
   participants = [],
   handleAddPoints,
+  onPrevSlide
+
 }: {
   slide: FTASlide;
   participants: Participant[];
+  onPrevSlide: () => void;
   handleAddPoints: (
     pointsData: { participantId: string; awardPoints: number }[],
     showAnswer: boolean,
@@ -120,7 +123,7 @@ export function HostAnswer({
       </div>
 
       {/* Next Slide Button */}
-      <NextSlide onClick={handleAwardPointsNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={handleAwardPointsNextSlide} />
     </div>
   );
 }

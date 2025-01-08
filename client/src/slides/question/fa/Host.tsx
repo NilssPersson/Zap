@@ -14,11 +14,13 @@ export function Host({
   slide,
   participants,
   onNextSlide,
+  onPrevSlide,
   quizCode,
 }: {
   slide: FASlide;
   participants: Participant[];
   onNextSlide: () => void;
+  onPrevSlide: () => void;
   quizCode: string;
 }) {
   const [participantsQueue, setParticipantsQueue] = useState<Participant[]>([]);
@@ -223,7 +225,7 @@ export function Host({
             </div>
           ))}
         </div>
-        <NextSlide onClick={onNextSlide} />
+        <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
       </div>
     );
   }

@@ -7,9 +7,11 @@ import { cn } from '@/lib/utils';
 export function Host({
   slide,
   onNextSlide,
+  onPrevSlide
 }: {
   slide: MCQMASlide;
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }) {
   return (
     <BaseQuestionRender slide={slide}>
@@ -33,7 +35,7 @@ export function Host({
             </div>
           ))}
         </div>
-        <NextSlide onClick={onNextSlide} />
+        <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
       </div>
     </BaseQuestionRender>
   );

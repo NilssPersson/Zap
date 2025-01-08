@@ -7,10 +7,12 @@ export function HostAnswer({
   slide,
   participants,
   onNextSlide,
+  onPrevSlide,
 }: {
   slide: FASlide;
   participants: Participant[];
   onNextSlide: () => void;
+  onPrevSlide: () => void
 }) {
   var winner;
   if (participants) {
@@ -52,7 +54,7 @@ export function HostAnswer({
         )}
       </div>
 
-      <NextSlide onClick={onNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 }

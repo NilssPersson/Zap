@@ -8,10 +8,12 @@ import { useTranslation } from 'react-i18next';
 export function Host({
   slide,
   onNextSlide,
+  onPrevSlide,
 }: {
   slide: RankSlide;
   participants: Participant[];
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }) {
   const SlideComponent = getSlideComponents(slide);
   const { t } = useTranslation(['questions']);
@@ -46,7 +48,7 @@ export function Host({
           </div>
         </div>
       )}
-      <NextSlide onClick={onNextSlide} />
+       <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 }

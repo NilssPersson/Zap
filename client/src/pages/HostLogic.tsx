@@ -22,6 +22,7 @@ function HostLogic() {
     ongoingQuiz,
     getCurrentSlide,
     nextSlide,
+    prevSlide,
     changeTurn,
     updateSlideUsedAnswers,
     endQuiz,
@@ -176,6 +177,7 @@ function HostLogic() {
             removeParticipant={removeParticipant}
             slide={slide as never}
             onNextSlide={nextSlide}
+            onPrevSlide={prevSlide}
             quizCode={ongoingQuiz.id}
             slideNumber={ongoingQuiz.currentSlide}
             changeTurn={changeTurn}
@@ -194,8 +196,10 @@ function HostLogic() {
           participants={Object.values(ongoingQuiz.participants)}
           slide={slide as never}
           onNextSlide={nextSlide}
+          onPrevSlide={prevSlide}
           quizCode={ongoingQuiz.id}
           handleAddPoints={handleAddPoints}
+          
         />
       )}
       {!inLobby && <EndQuizButton onClick={() => endQuiz(ongoingQuiz.id)} />}

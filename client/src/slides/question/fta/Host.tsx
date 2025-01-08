@@ -6,9 +6,11 @@ import { SlideTitle } from '@/slides/_components/SlideTitle';
 export function Host({
   slide,
   onNextSlide,
+  onPrevSlide,
 }: {
   slide: FTASlide;
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }) {
   return (
     <div className="flex flex-col items-center">
@@ -36,7 +38,7 @@ export function Host({
         </div>
       )}
 
-      <NextSlide onClick={onNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 }

@@ -1,25 +1,57 @@
-import { cn } from "@/lib/utils";
-import { Play } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { cn } from '@/lib/utils';
+import {
+  VolumeX,
+  Volume2,
+  Settings,
+  StepBack,
+  StepForward,
+} from 'lucide-react';
 
-export default function NextSlide({ onClick }: { onClick: () => void }) {
-  const { t } = useTranslation();
+import { useState } from 'react';
+
+export default function NextSlide({
+  onNext,
+  onPrev,
+}: {
+  onNext: () => void;
+  onPrev: () => void;
+}) {
+  const [isMuted, setIsMuted] = useState(false);
+
+  const toggleMute = () => {
+    setIsMuted((prev) => !prev);
+  };
+
   return (
-    <button
-      onClick={onClick}
-      className={
-        cn(
-          "absolute bottom-5 right-5",
-          "border-2 border-primary px-6 py-2 text-4xl",
-          "bg-primary text-background transition-colors flex items-center gap-2 rounded-full",
-          "hover:bg-primary/10 hover:text-primary"
-        )
-      }
-    >
-      <span className="block h-10 overflow-hidden font-display" aria-hidden>
-        {t('general:nextSlide')}
-      </span>
-      <Play strokeWidth={3} className="w-8 h-8" />
-    </button>
+    <div className="absolute bottom-6 right-6 flex items-center gap-6 border-2 border-primary bg-primary text-background text-xl rounded-md p-2">
+      {/* Navigation Button */}
+      <button
+        onClick={onPrev}
+        className={cn(  
+          'flex items-center gap-3 ',
+
+          'transition-all'
+        )}
+        aria-label="Next Slide"
+      >
+        <StepBack size={32} />
+      </button>
+      <button>
+        <Settings size={32} />
+      </button>
+      <button onClick={onNext}>
+        {' '}
+        <StepForward size={32} />
+      </button>
+
+      {/* Volume Toggle */}
+      <button
+        onClick={toggleMute}
+        className={cn('flex items-center justify-center ')}
+        aria-label={isMuted ? 'Unmute' : 'Mute'}
+      >
+        {isMuted ? <VolumeX size={32} /> : <Volume2 size={32} />}
+      </button>
+    </div>
   );
 }

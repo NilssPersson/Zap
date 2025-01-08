@@ -8,11 +8,12 @@ interface HostAnswerProps {
   slide: ClosestSlide;
   participants: Participant[];
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }
 
 const mockParticipants = getParticipants(10);
 
-export function HostAnswer({ slide, participants = mockParticipants, onNextSlide }: HostAnswerProps) {
+export function HostAnswer({ slide, participants = mockParticipants, onNextSlide, onPrevSlide }: HostAnswerProps) {
   const { t } = useTranslation(['questions']);
 
   // Calculate differences and sort participants by closest guess
@@ -84,7 +85,7 @@ export function HostAnswer({ slide, participants = mockParticipants, onNextSlide
         )}
       </div>
 
-      <NextSlide onClick={onNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 } 

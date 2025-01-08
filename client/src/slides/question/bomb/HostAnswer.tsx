@@ -8,11 +8,13 @@ import { useTranslation } from 'react-i18next';
 export function HostAnswer({
   participants,
   onNextSlide,
+  onPrevSlide,
   slide,
 }: {
   slide: BombSlide;
   participants: Participant[];
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }) {
   // Find the highest answer and collect participants with that answer
   const { t } = useTranslation();
@@ -89,7 +91,7 @@ export function HostAnswer({
         </div>
       )}
 
-      <NextSlide onClick={onNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 }

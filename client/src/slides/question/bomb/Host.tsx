@@ -23,6 +23,7 @@ type HostProps = {
     usedAnswers: string[]
   ) => void;
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 };
 
 type ParticipantHearts = {
@@ -36,6 +37,7 @@ export function Host({
   quizCode,
   slideNumber,
   onNextSlide,
+  onPrevSlide,
   changeTurn,
   updateSlideUsedAnswers,
 }: HostProps) {
@@ -622,7 +624,7 @@ export function Host({
             </motion.div>
           </div>
         </motion.div>
-        <NextSlide onClick={onNextSlide} />
+        <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
       </div>
     );
   }

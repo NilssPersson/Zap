@@ -8,10 +8,12 @@ export function HostAnswer({
   slide,
   participants,
   onNextSlide,
+  onPrevSlide
 }: {
   slide: RankSlide;
   participants: Participant[];
   onNextSlide: () => void;
+  onPrevSlide: () => void;
 }) {
   const SlideComponent = getSlideComponents(slide);
 
@@ -49,7 +51,7 @@ export function HostAnswer({
         )}
       </div>
       <SlideRank ranking={slide.ranking} answers={answers} />
-      <NextSlide onClick={onNextSlide} />
+      <NextSlide onPrev={onPrevSlide} onNext={onNextSlide} />
     </div>
   );
 }
