@@ -223,28 +223,21 @@ export const useHostLogic = (id: string | undefined) => {
     await optimisticUpdate(ongoingQuiz.id ? ongoingQuiz.id : '', {
       ...ongoingQuiz,
       isShowingCorrectAnswer: showAnswer,
-      currentSlide: ongoingQuiz.currentSlide + 1,
-
+      currentSlide: showAnswer
+        ? ongoingQuiz.currentSlide
+        : ongoingQuiz.currentSlide + 1,
       participants: updatedParticipants,
-      currentSlideTime: showAnswer
-        ? ongoingQuiz.currentSlideTime
-        : (serverTimestamp() as unknown as string),
+      currentSlideTime: showAnswer ? ongoingQuiz.currentSlideTime : serverTimestamp() as unknown as string,
     });
 
-    if (!showAnswer) {
-      const timeRef = ref(
-        database,
-        `ongoingQuizzes/${ongoingQuiz.id}/currentSlideTime`
-      );
+    if(!showAnswer){
+      const timeRef = ref(database, `ongoingQuizzes/${ongoingQuiz.id}/currentSlideTime`);
       const timeSnap = await get(timeRef);
       const time = timeSnap.val();
-      optimisticUpdate(
-        ongoingQuiz.id,
-        {
-          currentSlideTime: time,
-        },
-        true
-      );
+      optimisticUpdate(ongoingQuiz.id, {
+        currentSlideTime: time,
+      },
+      true);
     }
   };
 

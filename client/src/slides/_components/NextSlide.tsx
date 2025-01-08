@@ -1,11 +1,5 @@
 import { cn } from '@/lib/utils';
-import {
-  VolumeX,
-  Volume2,
-  Settings,
-  StepBack,
-  StepForward,
-} from 'lucide-react';
+import { VolumeX, Volume2, StepBack, StepForward, X } from 'lucide-react';
 import { useState } from 'react';
 import {
   Dialog,
@@ -14,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
 export default function NextSlide({
   onNext,
@@ -54,11 +48,11 @@ export default function NextSlide({
   };
 
   return (
-    <div className="absolute bottom-6 right-6 flex items-center gap-6 border-2 border-primary bg-primary text-background text-xl rounded-md p-2">
+    <div className="absolute bottom-4 right-4 flex items-center gap-4 border-2 border-primary bg-primary text-background text-xl rounded-md p-2">
       {/* Navigation Button */}
       <button
         onClick={onPrev}
-        className={cn('flex items-center gap-3 ', 'transition-all')}
+        className={cn(' hidden  items-center gap-3 ', 'transition-all')}
         aria-label="Previous Slide"
       >
         <StepBack size={32} />
@@ -68,34 +62,30 @@ export default function NextSlide({
       <Dialog open={showSettings} onOpenChange={toggleSettings}>
         <DialogTrigger asChild>
           <button
-            className={cn('flex items-center gap-3 ', 'transition-all')}
+            className={cn(
+              'flex items-center gap-3 bg-red-500 p-1 rounded-lg ',
+              'transition-all'
+            )}
             aria-label="Settings"
           >
-            <Settings size={32} />
+            <X size={32} />
           </button>
         </DialogTrigger>
 
         {/* Settings Popup (Dialog) */}
         <DialogContent className="p-4 w-48 bg-background border border-primary shadow-lg rounded-md">
           <DialogHeader>
-            <DialogTitle>Settings</DialogTitle>
+            <DialogTitle className=" text-2xl font-display">
+              Settings
+            </DialogTitle>
           </DialogHeader>
 
           {/* Dialog Body with Buttons */}
           <button
             onClick={handleEndQuiz} // Open confirmation dialog
-            className="w-full text-left px-3 py-2 hover:bg-primary hover:text-background rounded-md"
+            className="w-full text-center font-display px-3 py-2 hover:bg-primary hover:text-background rounded-md "
           >
             End Quiz
-          </button>
-          <button
-            onClick={() => {
-              console.log('Redo question!');
-              
-            }}
-            className="w-full text-left px-3 py-2 hover:bg-primary hover:text-background rounded-md"
-          >
-            Redo Question
           </button>
 
           <DialogFooter>{/* Optional footer content */}</DialogFooter>
@@ -103,14 +93,14 @@ export default function NextSlide({
       </Dialog>
 
       {/* Next Slide Button */}
-      <button onClick={onNext}>
+      <button className="p-1" onClick={onNext}>
         <StepForward size={32} />
       </button>
 
       {/* Volume Toggle */}
       <button
         onClick={toggleMute}
-        className={cn('flex items-center justify-center')}
+        className={cn('flex items-center justify-center p-1')}
         aria-label={isMuted ? 'Unmute' : 'Mute'}
       >
         {isMuted ? <VolumeX size={32} /> : <Volume2 size={32} />}
