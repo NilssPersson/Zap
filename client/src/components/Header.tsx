@@ -19,7 +19,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import LanguageToggle from '@/components/LanguageToggle';
+import LanguageToggle from '@/components/Languages/LanguageToggle';
 
 export function Header() {
   const location = useLocation();
