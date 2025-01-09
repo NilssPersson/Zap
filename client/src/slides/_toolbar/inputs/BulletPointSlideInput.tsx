@@ -15,12 +15,13 @@ export function BulletPointSlideInput({
     if (!newPoint.trim()) return;
     onSlideUpdate({
       ...slide,
-      points: [...slide.points, newPoint.trim()],
+      points: [...(slide.points || []), newPoint.trim()],
     });
     setNewPoint('');
   };
 
   const removePoint = (index: number) => {
+    if (!slide.points) return; // Guard against undefined points
     onSlideUpdate({
       ...slide,
       points: slide.points.filter((_, i) => i !== index),
@@ -28,6 +29,7 @@ export function BulletPointSlideInput({
   };
 
   const movePoint = (index: number, direction: 'up' | 'down') => {
+    if (!slide.points) return; // Guard against undefined points
     const newPoints = [...slide.points];
     const newIndex = direction === 'up' ? index - 1 : index + 1;
 
@@ -63,40 +65,39 @@ export function BulletPointSlideInput({
         </Button>
       </div>
       <div className="space-y-2">
-        {slide.points &&
-          slide.points.map((point, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div className="w-8 h-8 flex items-center justify-center bg-muted rounded-full font-medium">
-                {index + 1}
-              </div>
-              <div className="flex-1 p-2 bg-muted rounded-md">{point}</div>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => movePoint(index, 'up')}
-                  disabled={index === 0}
-                >
-                  <ArrowUp className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => movePoint(index, 'down')}
-                  disabled={index === slide.points.length - 1}
-                >
-                  <ArrowDown className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removePoint(index)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+        {(slide.points || []).map((point, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <div className="w-8 h-8 flex items-center justify-center bg-muted rounded-full font-medium">
+              {index + 1}
             </div>
-          ))}
+            <div className="flex-1 p-2 bg-muted rounded-md">{point}</div>
+            <div className="flex gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => movePoint(index, 'up')}
+                disabled={index === 0}
+              >
+                <ArrowUp className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => movePoint(index, 'down')}
+                disabled={index === slide.points.length - 1}
+              >
+                <ArrowDown className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => removePoint(index)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
