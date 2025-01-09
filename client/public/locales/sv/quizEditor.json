@@ -1,5 +1,5 @@
 {
-  "selectSlide": "Välj en bild för att redigera",
+  "selectSlide": "Välj en slide för att redigera",
   "quizName": "Quiz Namn",
   "slides": "Presentera",
   "questionTypes": "Quizza",
@@ -10,7 +10,9 @@
   "timeLimit": "Tidsbegränsning",
   "slideContentPlaceholder": "Innehåll här...",
   "addBulletPoint": "Lägg till punkt",
+  "unsavedChanges": "(Kom ihåg att spara)",
   "showCorrect": "Visa rätt svar (automatiskt)",
+  "save": "Spara",
   "showCorrectAuto": "Visar automatiskt svaret när alla har svarat eller tiden tar slut.",
   "showCorrect.auto": "Automatiskt",
   "showCorrectManual": "Skapar en knapp där användaren manuellt kan visa svaret.",
