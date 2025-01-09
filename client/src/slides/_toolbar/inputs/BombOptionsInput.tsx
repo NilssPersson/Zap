@@ -61,15 +61,19 @@ export function BombOptionsInput({
 
         <Input
           type="number"
+          max={99}
           value={slide.initialTime}
-          onChange={(e) => updateSlide({ initialTime: Number(e.target.value) })}
+          onChange={(e) => {
+            const value = Math.min(Number(e.target.value), 99); // Clamp the value to 99
+            updateSlide({ initialTime: value });
+          }}
         />
       </div>
 
       <div className="space-y-2">
         <div className="flex items-center space-x-1">
           {/* Heart Icon and Label */}
-        
+
           <Label>{t('lives')}</Label>
         </div>
 
