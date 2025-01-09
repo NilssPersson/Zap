@@ -62,6 +62,7 @@ export default function QuizEditorHeader({
             size="sm"
             variant="outline"
             className={cn(
+              'text-lg',
               hasUnsavedChanges && 'text-primary hover:text-primary'
             )}
             onClick={onSaveClick}

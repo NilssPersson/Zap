@@ -31,7 +31,7 @@ export function Render({
   };
 
   const handleAddPoint = () => {
-    const updatedPoints = [...slide.points, ''];
+    const updatedPoints = [...(slide.points || []), ''];
     if (onSlideUpdate) {
       onSlideUpdate({ ...slide, points: updatedPoints });
     }

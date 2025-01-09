@@ -118,7 +118,11 @@ function QuizEdit() {
               id="quiz-toolbar"
             >
               {showSettings ? (
-                <QuizSettingsToolbar quiz={quiz} onUpdate={handleQuizUpdate} />
+                <QuizSettingsToolbar
+                  quiz={quiz}
+                  onUpdate={handleQuizUpdate}
+                  closeSettings={() => setShowSettings(false)}
+                />
               ) : activeSlide ? (
                 <Toolbar
                   slide={activeSlide}
