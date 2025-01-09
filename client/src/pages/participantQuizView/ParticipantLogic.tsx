@@ -64,7 +64,8 @@ function QuizView({
     (participantData.tempAnswer &&
       'questionType' in currentQuestion &&
       currentQuestion.questionType !== QuestionTypes.BOMB &&
-      currentQuestion.questionType !== QuestionTypes.JEOPARDY)
+      currentQuestion.questionType !== QuestionTypes.JEOPARDY
+    )
   )
     return <HasAnsweredView />;
 
@@ -86,7 +87,11 @@ function QuizView({
 }
 
 export default function ParticipantLogic() {
-  const { quizCode } = useParams();
+
+
+  var { quizCode } = useParams();
+  quizCode = quizCode?.toUpperCase();
+
   const [participantId, setParticipantId] = useState<string | undefined>(
     undefined
   );
@@ -94,7 +99,7 @@ export default function ParticipantLogic() {
   const [questions, setQuestions] = useState<Slide[]>();
   const navigate = useNavigate();
 
-  const { currentSlide, participantData, showAnswer, turn, currentSlideTime } =
+  const { currentSlide, participantData, showAnswer, turn, currentSlideTime,  } =
     useGameStatus(quizCode as string, participantId as string);
 
   // Fetch quiz and participant data

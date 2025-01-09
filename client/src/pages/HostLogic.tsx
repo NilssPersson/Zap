@@ -4,6 +4,7 @@ import { getSlideComponents } from '@/slides/utils';
 import Countdown from 'react-countdown';
 import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
+import answerTempQeustion from '@/pages/participantQuizView/ParticipantLogic'
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
 
@@ -16,6 +17,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { global_values } from '@/config/values';
 
+
 function HostLogic() {
   const { id } = useParams();
   const {
@@ -25,10 +27,13 @@ function HostLogic() {
     prevSlide,
     changeTurn,
     updateSlideUsedAnswers,
+
     endQuiz,
     handleAddPoints,
     removeParticipant,
   } = useHostLogic(id);
+
+
 
   const [countdownEndDate, setCountdownEndDate] = useState<number | null>(null);
   const [currentSlideId, setCurrentSlideId] = useState<string | null>(null);
@@ -171,6 +176,7 @@ function HostLogic() {
       {!ongoingQuiz.isShowingCorrectAnswer ? (
         <>
           <SlideComponent.Host
+            answerTempQuestion={answerTempQeustion}
             slides={ongoingQuiz.quiz.slides}
             currentSlide={ongoingQuiz.currentSlide}
             participants={Object.values(ongoingQuiz.participants || {})}
