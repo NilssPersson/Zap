@@ -9,6 +9,7 @@
   "secondary": "Sekundär",
   "timeLimit": "Tidsbegränsning",
   "slideContentPlaceholder": "Innehåll här...",
+  "addBulletPoint": "Lägg till punkt",
   "showCorrect": "Visa rätt svar (automatiskt)",
   "showCorrectAuto": "Visar automatiskt svaret när alla har svarat eller tiden tar slut.",
   "showCorrect.auto": "Automatiskt",

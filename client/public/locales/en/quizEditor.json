@@ -10,6 +10,7 @@
   "secondary": "Secondary",
   "timeLimit": "Time Limit",
   "slideContentPlaceholder": "Content here...",
+  "addBulletPoint": "Add bullet point",
   "showCorrect": "Show correct answer (default)",
   "showCorrectAuto": "Shows the correct answers when everyone has answered or the time runs out.",
   "showCorrect.auto": "Auto",
