@@ -39,7 +39,7 @@ export function ParticipantAnswer({
 
   return (
     <RenderCorrectIncorrect participant={participant}>
-      <div className="w-full">
+      <div className="w-full lg:w-1/5 ">
         <div>
           <div className="carousel-container w-full items-center justify-center overflow-hidden relative">
             {/* Carousel Content */}
