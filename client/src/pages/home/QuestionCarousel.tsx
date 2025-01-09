@@ -5,7 +5,6 @@ import {
   CarouselItem,
   type CarouselApi,
 } from '@/components/ui/carousel';
-import dallebomb from '@/assets/questionImagesAI/dallebomb.webp';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import jeopardy from '@/assets/questionImages/jeopardy.png';
@@ -13,7 +12,7 @@ import fa from '@/assets/questionImages/fa.png';
 import locateit from '@/assets/questionImages/locateit.png';
 import match from '@/assets/questionImages/match.png';
 import rank from '@/assets/questionImages/rank.png';
-import { LocateIt, Bomb, Matching, Rank, FA, Jeopardy } from '@/slides';
+import { LocateIt, Matching, Rank, FA, Jeopardy } from '@/slides';
 
 export default function QuestionCarousel() {
   const [api, setApi] = React.useState<CarouselApi>();
@@ -37,42 +36,48 @@ export default function QuestionCarousel() {
       title: t('questions:LOCATEIT'),
       text: t('homepage:questionDescriptions.locateit'),
       icon: LocateIt.Info.icon,
+      iconColor: LocateIt.Info.iconColor,
     },
     {
       img: fa,
       title: t('questions:FA'),
       text: t('homepage:questionDescriptions.fastest'),
       icon: FA.Info.icon,
+      iconColor: FA.Info.iconColor,
     },
     {
       img: match,
       title: t('questions:MATCHING'),
       text: t('homepage:questionDescriptions.matching'),
       icon: Matching.Info.icon,
+      iconColor: Matching.Info.iconColor,
     },
     {
       img: jeopardy,
       title: t('questions:JEOPARDY'),
       text: t('homepage:questionDescriptions.jeopardy'),
       icon: Jeopardy.Info.icon,
+      iconColor: Jeopardy.Info.iconColor,
     },
     {
       img: rank,
       title: t('questions:RANK'),
       text: t('homepage:questionDescriptions.rank'),
       icon: Rank.Info.icon,
+      iconColor: Rank.Info.iconColor,
     },
-    {
+    /*{
       img: dallebomb,
       title: t('questions:BOMB'),
       text: t('homepage:questionDescriptions.bomb'),
       icon: Bomb.Info.icon,
-    },
+      iconColor: Bomb.Info.iconColor,
+    },*/
   ];
 
   return (
     <div className="flex flex-col justify-center items-center w-full bg-[#F4F4F4]">
-      <h1 className="text-3xl font-display text-gray-700 mt-4">
+      <h1 className="text-3xl font-display text-gray-700 mt-4 md:text-5xl">
         {t('homepage:questionCarouselText')}
       </h1>
 
@@ -85,20 +90,26 @@ export default function QuestionCarousel() {
               key={i}
               onClick={() => api?.scrollTo(i)} // Navigate to the selected image
               className={cn(
-                'p-2 rounded-full transition-colors duration-300',
+                'p-2 rounded-full transition-colors duration-200 ease-in transform ',
                 current === i
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary text-white scale-110'
                   : 'bg-gray-200 text-black'
               )}
               aria-label={`Go to ${image.title}`}
             >
-              {<image.icon size={25} strokeWidth={2} />}
+              {
+                <image.icon
+                  size={25}
+                  strokeWidth={2}
+                  color={current === i ? 'white' : image.iconColor}
+                />
+              }
             </button>
           ))}
         </div>
       )}
 
-      <div className="text-center flex items-center justify-center w-full pb-3">
+      <div className="w-full pb-3">
         <Carousel
           setApi={setApi}
           increment={1}
