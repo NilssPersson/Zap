@@ -18,6 +18,12 @@ export function Render({
     }
   };
 
+  const handleContentChange = (newContent: string) => {
+    if (onSlideUpdate) {
+      onSlideUpdate({ ...slide, content: newContent });
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center space-y-8 p-8">
       <SlideTitle
@@ -40,7 +46,11 @@ export function Render({
           </div>
         </div>
       )}
-      <SlideContent content={slide.content} />
+      <SlideContent
+        content={slide.content}
+        isEditable={isEditable}
+        onContentChange={handleContentChange}
+      />
       {slide.embedVideoUrl && <EmbeddedVideo url={slide.embedVideoUrl} />}
     </div>
   );

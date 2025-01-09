@@ -8,6 +8,7 @@
   "primary": "Primär",
   "secondary": "Sekundär",
   "timeLimit": "Tidsbegränsning",
+  "slideContentPlaceholder": "Innehåll här...",
   "showCorrect": "Visa rätt svar (automatiskt)",
   "showCorrectAuto": "Visar automatiskt svaret när alla har svarat eller tiden tar slut.",
   "showCorrect.auto": "Automatiskt",

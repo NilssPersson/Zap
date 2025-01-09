@@ -17,19 +17,19 @@ export function SlideTitle({
 }: SlideTitleProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Auto-adjust the height of the textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto'; // Reset height to auto
-      textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
     }
-  }, [title]); // Recalculate on title change
+  }, [title]);
 
   const className = cn(
-    'font-display text-center leading-tight resize-none',
+    'font-display text-center leading-tight resize-none text-wrap whitespace-pre-wrap p-0',
     size === 'large' ? 'md:text-8xl text-4xl' : 'md:text-4xl text-2xl',
-    isEditable && 'bg-transparent border-dashed border-2 overflow-hidden'
+    isEditable && 'bg-transparent border-dashed border-2 overflow-hidden p-0',
+    !isEditable && 'border-2 border-transparent'
   );
 
   if (isEditable) {
@@ -39,11 +39,10 @@ export function SlideTitle({
         className={className}
         value={title}
         onChange={(e) => onTitleChange?.(e.target.value)}
-        rows={1} // Initial row count
+        rows={1}
       />
     );
   }
 
   return <h2 className={className}>{title}</h2>;
 }
-``;
