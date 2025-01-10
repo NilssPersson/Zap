@@ -8,28 +8,30 @@ export default function About() {
   return (
     <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-dvh w-full bg-[#F8F8F8]">
       {/* LinkedIn Component */}
-      <div className="flex-1 w-full  max-w-4xl">
+      <div className="flex-1 w-full">
         <LinkedInComponent readMore={false} />
       </div>
 
       {/* Goals Section */}
-      <div className="flex-1 w-full max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
-        <h3 className="text-3xl font-display mb-4 text-gray-800">
-          {t('about:goalsTitle')}
-        </h3>
-        <p className="text-xl text-gray-700 font-display">
-          {t('about:goalsText')}
-        </p>
-      </div>
+      <div className='flex flex-row'>
+        <div className="flex-1 w-full max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
+          <h3 className="text-center text-3xl font-display mb-4 text-gray-800">
+            {t('about:goalsTitle')}
+          </h3>
+          <p className="text-xl text-gray-700 font-display">
+            {t('about:goalsText')}
+          </p>
+        </div>
 
-      {/* Status Section */}
-      <div className="flex-1 w-full max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
-        <h3 className="text-3xl font-display mb-4 text-gray-800">
-          {t('about:statusTitle')}
-        </h3>
-        <p className="text-xl text-gray-700 font-display">
-          {t('about:statusText')}
-        </p>
+        {/* Status Section */}
+        <div className="flex-1 w-full max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
+          <h3 className=" text-center text-3xl font-display mb-4 text-gray-800">
+            {t('about:statusTitle')}
+          </h3>
+          <p className="text-xl text-gray-700 font-display">
+            {t('about:statusText')}
+          </p>
+        </div>
       </div>
 
       {/* GitHub Link */}

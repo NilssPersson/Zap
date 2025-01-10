@@ -118,7 +118,7 @@ function Home() {
       </div>
 
       <>
-        <div className="w-full hidden lg:block">
+        <div className="w-full overflow-x-auto hidden lg:block">
           <LinkedInComponent readMore={true} />
         </div>
 
