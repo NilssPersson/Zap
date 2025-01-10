@@ -50,18 +50,25 @@ export function QuizPreview({ isOpen, setIsOpen, quiz }: QuizPreviewProps) {
         <DialogHeader>
           <div className="flex justify-between items-center">
             <div>
-              <DialogTitle className=" text-2xl">{quiz.quiz_name}</DialogTitle>
-              <DialogDescription>{t('preview.description')}</DialogDescription>
+              <DialogTitle className="!font-normal font-display text-3xl">
+                {quiz.quiz_name}
+              </DialogTitle>
+              <DialogDescription className="font-display text-md">
+                {t('preview.description')}
+              </DialogDescription>
             </div>
             <div className="text-xl text-muted-foreground w-20 bg-gray-200 rounded-full p-1 text-center mr-4 flex items-center justify-center font-display">
               {currentSlideIndex + 1} / {quiz.slides.length}
             </div>
           </div>
         </DialogHeader>
-        <div className="grid gap-4 text-white">
+        <div className="grid gap-4 text-white pointer-events-none">
           <SlidePreview
             slide={quiz.slides[currentSlideIndex]}
             whichPreview="Host"
+            backgroundColor={quiz.settings.backgroundColor}
+            primaryColor={quiz.settings.primaryColor}
+            secondaryColor={quiz.settings.secondaryColor}
           />
         </div>
         <DialogFooter className="flex justify-between">
