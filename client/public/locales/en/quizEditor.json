@@ -11,6 +11,15 @@
   "timeLimit": "Time Limit",
   "quizSettings": "Quiz Settings",
   "goHome": "Return to homepage",
+  "preview": {
+    "text": "Preview",
+    "tooltip": "Preview the Quiz",
+    "description": "This shows a preview of the quiz as it will be displayed on the computer",
+    "back": "Back",
+    "next": "Next",
+    "leave": "Leave Preview"
+  },
+  "previewQuiz": "Preview the Quiz",
   "slideContentPlaceholder": "Content here...",
   "addBulletPoint": "Add bullet point",
   "unsavedChanges": "(Remember to save)",

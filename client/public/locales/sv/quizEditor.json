@@ -10,6 +10,14 @@
   "timeLimit": "Tidsbegränsning",
   "quizSettings": "Quiz Inställningar",
   "goHome": "Gå tillbaka till startsidan",
+  "preview": {
+    "text": "Förhandsgranska",
+    "tooltip": "Förhandsgranska Quizzet",
+    "description": "Här visas en förhandsgranskning av quizzet som det kommer att visas på datorn",
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "leave": "Lämna Förhandsgranskning"
+  },
   "slideContentPlaceholder": "Innehåll här...",
   "addBulletPoint": "Lägg till punkt",
   "unsavedChanges": "(Kom ihåg att spara)",

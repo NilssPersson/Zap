@@ -1,12 +1,14 @@
 import { type Quiz } from '@/models/Quiz';
 import { Link } from 'react-router-dom';
-import { Zap, WrenchIcon, SaveIcon, House, ZapIcon } from 'lucide-react';
+import { Zap, WrenchIcon, SaveIcon, House, ZapIcon, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { CustomTooltip } from '../ui/custom-tooltip';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
 import { useHostQuiz } from '@/hooks/useHostQuiz';
+import { useState } from 'react';
+import { QuizPreview } from './QuizPreview';
 
 interface QuizEditorHeaderProps {
   quiz: Quiz;
@@ -25,6 +27,7 @@ export default function QuizEditorHeader({
 }: QuizEditorHeaderProps) {
   const { t } = useTranslation();
   const { hostQuizEditor } = useHostQuiz();
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const handleHostGame = async () => {
     try {
@@ -37,6 +40,11 @@ export default function QuizEditorHeader({
 
   return (
     <div className="min-h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 text-black font-display">
+      <QuizPreview
+        quiz={quiz}
+        isOpen={previewOpen}
+        setIsOpen={setPreviewOpen}
+      />
       <div className="flex items-center gap-6">
         <Link
           to="/"
@@ -54,6 +62,17 @@ export default function QuizEditorHeader({
       </div>
 
       <div className="flex items-center gap-2">
+        <CustomTooltip content={t('quizEditor:preview.tooltip')}>
+          <Button
+            variant="outline"
+            disabled={!quiz.slides || quiz.slides.length === 0}
+            onClick={() => setPreviewOpen(true)}
+            className="text-lg"
+          >
+            {t('quizEditor:preview.text')}
+            <Eye className="w-7 h-7" />
+          </Button>
+        </CustomTooltip>
         <CustomTooltip content={t('quizEditor:startTheQuiz')}>
           <Button
             variant="outline"
