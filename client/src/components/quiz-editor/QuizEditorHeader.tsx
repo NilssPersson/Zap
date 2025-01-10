@@ -1,10 +1,12 @@
 import { type Quiz } from '@/models/Quiz';
 import { Link } from 'react-router-dom';
-import { Zap, WrenchIcon, SaveIcon } from 'lucide-react';
+import { Zap, WrenchIcon, SaveIcon, House, ZapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { CustomTooltip } from '../ui/custom-tooltip';
 import { cn } from '@/lib/utils';
+import { Separator } from '../ui/separator';
+import { useHostQuiz } from '@/hooks/useHostQuiz';
 
 interface QuizEditorHeaderProps {
   quiz: Quiz;
@@ -22,6 +24,16 @@ export default function QuizEditorHeader({
   isSaving,
 }: QuizEditorHeaderProps) {
   const { t } = useTranslation();
+  const { hostQuizEditor } = useHostQuiz();
+
+  const handleHostGame = async () => {
+    try {
+      onSaveClick();
+      await hostQuizEditor(quiz);
+    } catch (error) {
+      console.error('Error hosting quiz', error);
+    }
+  };
 
   return (
     <div className="min-h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 text-black font-display">
@@ -42,7 +54,17 @@ export default function QuizEditorHeader({
       </div>
 
       <div className="flex items-center gap-2">
-        <CustomTooltip content="Quiz Settings">
+        <CustomTooltip content={t('quizEditor:startTheQuiz')}>
+          <Button
+            variant="outline"
+            onClick={handleHostGame}
+            className="text-lg"
+          >
+            {t('homepage:startQuiz')}
+            <ZapIcon className="w-7 h-7" />
+          </Button>
+        </CustomTooltip>
+        <CustomTooltip content={t('quizEditor:quizSettings')}>
           <Button
             variant="outline"
             onClick={onSettingsClick}
@@ -52,12 +74,16 @@ export default function QuizEditorHeader({
             <WrenchIcon className="w-7 h-7" />
           </Button>
         </CustomTooltip>
+        <Separator orientation="vertical" className="h-8 bg-black/25 mx-2" />
         <Link to="/">
-          <Button variant="outline" className="text-lg">
-            {t('general:home')}
-          </Button>
+          <CustomTooltip content={t('quizEditor:goHome')}>
+            <Button variant="outline" className="text-lg">
+              {t('general:home')}
+              <House className="w-7 h-7" />
+            </Button>
+          </CustomTooltip>
         </Link>
-        <CustomTooltip content="Save Quiz">
+        <CustomTooltip content={t('quizEditor:saveQuiz')}>
           <Button
             size="sm"
             variant="outline"
