@@ -9,9 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-function LinkedInComponent() {
-  const { t } = useTranslation();
+interface LinkedInComponentProps {
+  readMore: boolean;
+}
 
+function LinkedInComponent({ readMore }: LinkedInComponentProps) {
+  const {t} = useTranslation()
   return (
     <div className="hidden lg:flex flex-col mt-4 items-center justify-center">
       <div className="text-center mb-6 ">
@@ -58,7 +61,23 @@ function LinkedInComponent() {
           ].map((person, index) => (
             <div
               key={index}
-              className="flex flex-col items-center text-center bg-[#F9F8FE] p-8 rounded-lg shadow-md w-[280px] h-[280px]" // Fixed width and height
+              className="
+              hover:scale-y-105 
+              hover:scale-x-105 
+              flex 
+              flex-col 
+              items-center 
+              text-center 
+              bg-[#F9F8FE] 
+              p-8 
+              rounded-lg 
+              shadow-md 
+              w-[280px] 
+              h-[280px] 
+              transition 
+              duration-300 
+              ease-in-out
+            "
             >
               <img
                 src={person.src}
@@ -83,16 +102,18 @@ function LinkedInComponent() {
             </div>
           ))}
         </div>
-        <div className="text-center mt-8">
-          <Link to="/about">
-            <Button
-              variant={location.pathname === '/about' ? 'default' : 'ghost'}
-              className=" mb-5 bg-primary p-4 text-2xl font-display text-gray-800"
-            >
-              {t('homepage:readmore')}
-            </Button>
-          </Link>
-        </div>
+        {readMore && (
+          <div className="text-center mt-8">
+            <Link to="/about">
+              <Button
+                variant={location.pathname === '/about' ? 'default' : 'ghost'}
+                className="mb-5 bg-primary p-4 text-2xl font-display text-gray-800"
+              >
+                {t('homepage:readmore')}
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
