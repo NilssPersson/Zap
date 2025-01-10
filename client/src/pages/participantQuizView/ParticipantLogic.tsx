@@ -263,7 +263,8 @@ export default function ParticipantLogic() {
             primaryColor={quizSettings.primaryColor}
             secondaryColor={quizSettings.secondaryColor}
             style={questions && questions[currentSlide - 1]?.backgroundStyle}
-            className="fixed inset-0 h-screen w-screen z-[-1] object-cover"
+            className="fixed inset-0 h-screen w-screen z-[-1] object-cover h-dvh"
+            isDynamic
           />
         )}
       </div>
