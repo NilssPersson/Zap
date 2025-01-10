@@ -62,7 +62,7 @@ export function Header() {
 
   const [isLargeScreen] = useState(window.innerWidth >= 1024); // Assuming 1024px is the breakpoint for large screens
 
-  if (inEditor || (inLobby && !showHeader)) {
+  if (inEditor || (inLobby && !showHeader) || inGame) {
     return null;
   }
 
