@@ -1,39 +1,39 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 export enum BackgroundStyle {
-    Waves = 'waves',
-    Blob = 'blob',
-    BlobInverted = 'blobInverted',
-    Circle = 'circle',
-    Solid = 'solid'
+  Waves = 'waves',
+  Blob = 'blob',
+  BlobInverted = 'blobInverted',
+  Circle = 'circle',
+  Solid = 'solid',
 }
 
 interface QuizBackgroundProps {
-    primaryColor: string;
-    secondaryColor: string;
-    backgroundColor: string;
-    className?: string;
-    style?: BackgroundStyle;
+  primaryColor: string;
+  secondaryColor: string;
+  backgroundColor: string;
+  className?: string;
+  style?: BackgroundStyle;
 }
 
-export function QuizBackground({ 
-    primaryColor = "#006a67", 
-    secondaryColor = "#498e77", 
-    backgroundColor = "#000B58", 
-    className,
-    style = BackgroundStyle.BlobInverted
+export function QuizBackground({
+  primaryColor = '#006a67',
+  secondaryColor = '#498e77',
+  backgroundColor = '#000B58',
+  className,
+  style = BackgroundStyle.BlobInverted,
 }: QuizBackgroundProps) {
-    const svgContent = useMemo(() => {
-        const getWavesSvg = () => {
-            const colors = [
-                backgroundColor,
-                primaryColor,
-                interpolateColor(primaryColor, secondaryColor, 0.33),
-                interpolateColor(primaryColor, secondaryColor, 0.66),
-                secondaryColor
-            ];
+  const svgContent = useMemo(() => {
+    const getWavesSvg = () => {
+      const colors = [
+        backgroundColor,
+        primaryColor,
+        interpolateColor(primaryColor, secondaryColor, 0.33),
+        interpolateColor(primaryColor, secondaryColor, 0.66),
+        secondaryColor,
+      ];
 
-            return `
+      return `
                 <svg id="visual" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" version="1.1">
                     <rect x="0" y="0" width="960" height="540" fill="${colors[0]}"></rect>
                     <path d="M0 333L22.8 337.5C45.7 342 91.3 351 137 356.8C182.7 362.7 228.3 365.3 274 369C319.7 372.7 365.3 377.3 411.2 373C457 368.7 503 355.3 548.8 345.3C594.7 335.3 640.3 328.7 686 327.2C731.7 325.7 777.3 329.3 823 339.7C868.7 350 914.3 367 937.2 375.5L960 384L960 541L937.2 541C914.3 541 868.7 541 823 541C777.3 541 731.7 541 686 541C640.3 541 594.7 541 548.8 541C503 541 457 541 411.2 541C365.3 541 319.7 541 274 541C228.3 541 182.7 541 137 541C91.3 541 45.7 541 22.8 541L0 541Z" fill="${colors[1]}"></path>
@@ -42,13 +42,13 @@ export function QuizBackground({
                     <path d="M0 500L22.8 498.3C45.7 496.7 91.3 493.3 137 494C182.7 494.7 228.3 499.3 274 502.2C319.7 505 365.3 506 411.2 504.2C457 502.3 503 497.7 548.8 497.3C594.7 497 640.3 501 686 503.8C731.7 506.7 777.3 508.3 823 508.7C868.7 509 914.3 508 937.2 507.5L960 507L960 541L937.2 541C914.3 541 868.7 541 823 541C777.3 541 731.7 541 686 541C640.3 541 594.7 541 548.8 541C503 541 457 541 411.2 541C365.3 541 319.7 541 274 541C228.3 541 182.7 541 137 541C91.3 541 45.7 541 22.8 541L0 541Z" fill="${colors[4]}"></path>
                 </svg>
             `;
-        };
+    };
 
-        switch (style) {
-            case 'waves':
-                return getWavesSvg();
-            case 'blob':
-                return `
+    switch (style) {
+      case 'waves':
+        return getWavesSvg();
+      case 'blob':
+        return `
                     <svg id="visual" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" version="1.1">
                         <rect x="0" y="0" width="960" height="540" fill="${backgroundColor}"></rect>
                         <g transform="translate(464.25559291652155 256.06743588977565)">
@@ -56,12 +56,23 @@ export function QuizBackground({
                         </g>
                     </svg>
                 `;
-            case 'blobInverted':
-                return `
-                    <svg id="visual" viewBox="0 0 1920 1080" width="1920" height="1080" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><rect x="0" y="0" width="1920" height="1080" fill="#001220"></rect><defs><linearGradient id="grad1_0" x1="43.8%" y1="0%" x2="100%" y2="100%"><stop offset="14.444444444444446%" stop-color="#001220" stop-opacity="1"></stop><stop offset="85.55555555555554%" stop-color="#001220" stop-opacity="1"></stop></linearGradient></defs><defs><linearGradient id="grad2_0" x1="0%" y1="0%" x2="56.3%" y2="100%"><stop offset="14.444444444444446%" stop-color="#001220" stop-opacity="1"></stop><stop offset="85.55555555555554%" stop-color="#001220" stop-opacity="1"></stop></linearGradient></defs><g transform="translate(1920, 0)"><path d="M0 378C-66.4 368.3 -132.7 358.5 -189 327.4C-245.3 296.2 -291.5 243.6 -321.3 185.5C-351.1 127.4 -364.6 63.7 -378 0L0 0Z" fill="#FBAE3C"></path></g><g transform="translate(0, 1080)"><path d="M0 -378C33 -311.4 66 -244.9 128 -221.7C190 -198.5 280.9 -218.7 327.4 -189C373.8 -159.3 375.9 -79.6 378 0L0 0Z" fill="#FBAE3C"></path></g></svg>
-                `;
-            case 'circle':
-                return `
+      case 'blobInverted':
+        return `
+                        <svg id="visual" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                            <rect x="0" y="0" width="1920" height="1080" fill="${backgroundColor}"></rect>
+                            <g transform="translate(1920, 0)">
+                                <path d="M0 378C-66.4 368.3 -132.7 358.5 -189 327.4C-245.3 296.2 -291.5 243.6 -321.3 185.5C-351.1 127.4 -364.6 63.7 -378 0L0 0Z" 
+                                      fill="${primaryColor}"></path>
+                            </g>
+                            <g transform="translate(0, 1080)">
+                                <path d="M0 -378C33 -311.4 66 -244.9 128 -221.7C190 -198.5 280.9 -218.7 327.4 -189C373.8 -159.3 375.9 -79.6 378 0L0 0Z" 
+                                      fill="${primaryColor}"></path>
+                            </g>
+                        </svg>
+                    `;
+
+      case 'circle':
+        return `
                     <svg id="visual" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" version="1.1">
                         <rect x="0" y="0" width="960" height="540" fill="${backgroundColor}"></rect>
                         <g fill="${primaryColor}">
@@ -73,46 +84,48 @@ export function QuizBackground({
                         </g>
                     </svg>
                 `;
-        }
-    }, [primaryColor, secondaryColor, backgroundColor, style]);
+    }
+  }, [primaryColor, secondaryColor, backgroundColor, style]);
 
-    const dataUrl = useMemo(() => {
-        return `data:image/svg+xml;base64,${btoa(svgContent || '')}`;
-    }, [svgContent]);
+  const dataUrl = useMemo(() => {
+    return `data:image/svg+xml;base64,${btoa(svgContent || '')}`;
+  }, [svgContent]);
 
-    return (
-        <div 
-            className={className} 
-            style={{ 
-                backgroundImage: `url("${dataUrl}")`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-            }}
-        />
-    );
+  return (
+    <div
+      className={className}
+      style={{
+        backgroundImage: `url("${dataUrl}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    />
+  );
 }
 
 // Helper function to interpolate between two colors
 function interpolateColor(color1: string, color2: string, factor: number) {
-    const c1 = hexToRgb(color1);
-    const c2 = hexToRgb(color2);
-    
-    const r = Math.round(c1.r + (c2.r - c1.r) * factor);
-    const g = Math.round(c1.g + (c2.g - c1.g) * factor);
-    const b = Math.round(c1.b + (c2.b - c1.b) * factor);
-    
-    return rgbToHex(r, g, b);
+  const c1 = hexToRgb(color1);
+  const c2 = hexToRgb(color2);
+
+  const r = Math.round(c1.r + (c2.r - c1.r) * factor);
+  const g = Math.round(c1.g + (c2.g - c1.g) * factor);
+  const b = Math.round(c1.b + (c2.b - c1.b) * factor);
+
+  return rgbToHex(r, g, b);
 }
 
 function hexToRgb(hex: string) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : { r: 0, g: 0, b: 0 };
+        b: parseInt(result[3], 16),
+      }
+    : { r: 0, g: 0, b: 0 };
 }
 
 function rgbToHex(r: number, g: number, b: number) {
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-} 
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}

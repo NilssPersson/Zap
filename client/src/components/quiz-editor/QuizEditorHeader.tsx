@@ -67,7 +67,7 @@ export default function QuizEditorHeader({
             variant="outline"
             disabled={!quiz.slides || quiz.slides.length === 0}
             onClick={() => setPreviewOpen(true)}
-            className="text-lg"
+            className="text-lg bg-blue-300"
           >
             {t('quizEditor:preview.text')}
             <Eye className="w-7 h-7" />
@@ -77,7 +77,7 @@ export default function QuizEditorHeader({
           <Button
             variant="outline"
             onClick={handleHostGame}
-            className="text-lg"
+            className="text-lg bg-green-500"
           >
             {t('homepage:startQuiz')}
             <ZapIcon className="w-7 h-7" />
