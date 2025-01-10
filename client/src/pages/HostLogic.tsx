@@ -4,7 +4,7 @@ import { getSlideComponents } from '@/slides/utils';
 import Countdown from 'react-countdown';
 import EndScreen from '@/slides/_specials/endscreen/EndScreen';
 import { useHostLogic } from '@/hooks/useHostLogic';
-import answerTempQeustion from '@/pages/participantQuizView/ParticipantLogic'
+import answerTempQeustion from '@/pages/participantQuizView/ParticipantLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
 
@@ -16,7 +16,7 @@ import {
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { global_values } from '@/config/values';
-
+import { QuizBackground } from '@/components/quiz-editor/QuizBackground';
 
 function HostLogic() {
   const { id } = useParams();
@@ -32,8 +32,6 @@ function HostLogic() {
     handleAddPoints,
     removeParticipant,
   } = useHostLogic(id);
-
-
 
   const [countdownEndDate, setCountdownEndDate] = useState<number | null>(null);
   const [currentSlideId, setCurrentSlideId] = useState<string | null>(null);
@@ -85,11 +83,19 @@ function HostLogic() {
 
   if (!ongoingQuiz.quiz.slides || !slide) {
     return (
-      <EndScreen
-        quiz={ongoingQuiz.quiz}
-        endQuiz={() => endQuiz(ongoingQuiz.id)}
-        participants={Object.values(ongoingQuiz.participants || {})}
-      />
+      <>
+        <QuizBackground
+          backgroundColor={ongoingQuiz.quiz.settings.backgroundColor}
+          primaryColor={ongoingQuiz.quiz.settings.primaryColor}
+          secondaryColor={ongoingQuiz.quiz.settings.secondaryColor}
+          className="inset-0 fixed z-[-1]"
+        />
+        <EndScreen
+          quiz={ongoingQuiz.quiz}
+          endQuiz={() => endQuiz(ongoingQuiz.id)}
+          participants={Object.values(ongoingQuiz.participants || {})}
+        />
+      </>
     );
   }
   const SlideComponent = getSlideComponents(slide);
@@ -173,6 +179,13 @@ function HostLogic() {
 
   return (
     <>
+      <QuizBackground
+        backgroundColor={ongoingQuiz.quiz.settings.backgroundColor}
+        primaryColor={ongoingQuiz.quiz.settings.primaryColor}
+        secondaryColor={ongoingQuiz.quiz.settings.secondaryColor}
+        style={slide.backgroundStyle}
+        className="inset-0 fixed z-[-1]"
+      />
       {!ongoingQuiz.isShowingCorrectAnswer ? (
         <>
           <SlideComponent.Host

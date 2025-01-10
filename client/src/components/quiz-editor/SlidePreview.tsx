@@ -24,9 +24,9 @@ const PHONE_HEIGHT = 812;
 export function SlidePreview({
   slide,
   className,
-  backgroundColor = '#000B58',
-  primaryColor = '#006a67',
-  secondaryColor = '#fff4b7',
+  backgroundColor = '#001220',
+  primaryColor = '#FBAE3C',
+  secondaryColor = '#498e77',
   whichPreview = 'Host',
   onSlideUpdate,
 }: SlidePreviewProps) {
