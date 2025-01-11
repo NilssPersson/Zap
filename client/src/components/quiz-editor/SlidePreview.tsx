@@ -18,8 +18,8 @@ interface SlidePreviewProps {
 const DESKTOP_WIDTH = 1920;
 const DESKTOP_HEIGHT = 1080;
 
-const PHONE_WIDTH = 375;
-const PHONE_HEIGHT = 812;
+const PHONE_WIDTH = 414;
+const PHONE_HEIGHT = 914;
 
 export function SlidePreview({
   slide,
