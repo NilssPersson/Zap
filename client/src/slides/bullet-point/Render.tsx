@@ -3,6 +3,7 @@ import { SlideTitle } from '@/slides/_components/SlideTitle';
 import { Textarea } from '@/components/ui/textarea';
 import { PlusIcon, TrashIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
 
 export function Render({
   slide,
@@ -93,13 +94,13 @@ export function Render({
           ))}
       </ul>
       {isEditable && (
-        <button
-          className="flex items-center text-primary text-4xl font-display"
+        <Button
+          className="flex items-center text-white text-4xl font-display p-8 [&_svg]:size-10 w-fit mx-auto"
           onClick={handleAddPoint}
         >
           <PlusIcon className="h-10 w-10 mr-2" />
           {t('quizEditor:addBulletPoint')}
-        </button>
+        </Button>
       )}
     </div>
   );

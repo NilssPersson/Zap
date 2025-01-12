@@ -62,6 +62,7 @@ export function SlidePreview({
         ] as React.ElementType<{
           slide: Slide;
           onSlideUpdate?: (slide: Slide) => void;
+          inPreview?: boolean;
         }>)
       : null;
 
@@ -93,7 +94,13 @@ export function SlidePreview({
         }}
       >
         <div className="w-full h-full flex items-center justify-center boarder-2 rounded-lg">
-          {Slide && <Slide slide={slide} onSlideUpdate={onSlideUpdate} />}
+          {Slide && (
+            <Slide
+              slide={slide}
+              onSlideUpdate={onSlideUpdate}
+              inPreview={true}
+            />
+          )}
         </div>
       </div>
     </div>
