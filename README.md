@@ -57,8 +57,8 @@ _Note: the repository name is outdated due to a rebranding of the project. It wi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/FKnorring/GameShack.git
-   cd GameShack
+   git clone https://github.com/FKnorring/Zap.git
+   cd Zap
    ```
 2. Install dependencies:
    ```bash
@@ -81,7 +81,7 @@ The project is organized into the following directories:
 
 ```plaintext
 
-GameShack/
+Zap/
 ├── src/
 │   ├── components/
 │   ├── hooks/
