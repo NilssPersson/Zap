@@ -14,8 +14,9 @@
   "play": "播放",
   "language": "语言",
   "chooseLanguage": "选择语言",
-  "english": "英语",
-  "swedish": "瑞典语",
+  "english": "English",
+  "swedish": "Svenska",
+  "chinese": "中文 (普通话)",
   "share": "分享",
   "delete": "删除",
   "randomize": "随机化",
@@ -63,5 +64,7 @@
   "Go": "开始！",
   "areYouSureDel": "确定要删除吗？",
   "deletePlayerText": "这将移除所有玩家名称和团队数据。",
-  "confirm": "确认"
+  "confirm": "确认",
+  "by": "制作",
+  "quizhostedsuccessfully": " 测验已开始"
 }

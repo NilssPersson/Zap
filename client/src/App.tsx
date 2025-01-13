@@ -10,9 +10,7 @@ import { TutorialOverlay } from './components/tutorial/TutorialOverlay';
 const environment = import.meta.env.VITE_ENVIRONMENT;
 
 const uri =
-  environment === 'DEV'
-    ? 'http://localhost:5173'
-    : 'https://www.zap-quiz.com/';
+  environment === 'DEV' ? 'http://localhost:5173' : 'https://www.zap-quiz.com/';
 
 function App() {
   return (

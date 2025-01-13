@@ -12,7 +12,9 @@ import fa from '@/assets/questionImages/fa.png';
 import locateit from '@/assets/questionImages/locateit.png';
 import match from '@/assets/questionImages/match.png';
 import rank from '@/assets/questionImages/rank.png';
+import more from '@/assets/questionImages/more.png';
 import { LocateIt, Matching, Rank, FA, Jeopardy } from '@/slides';
+import { Ellipsis } from 'lucide-react';
 
 export default function QuestionCarousel() {
   const [api, setApi] = useState<CarouselApi>();
@@ -66,6 +68,13 @@ export default function QuestionCarousel() {
       icon: Rank.Info.icon,
       iconColor: Rank.Info.iconColor,
     },
+    {
+      img: more,
+      title: t('homepage:questionDescriptions.more.title'),
+      text: t('homepage:questionDescriptions.more.description'),
+      icon: Ellipsis,
+      iconColor: 'black',
+    },      
     /*{
       img: dallebomb,
       title: t('questions:BOMB'),

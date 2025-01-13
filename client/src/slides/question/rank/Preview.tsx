@@ -48,6 +48,7 @@ function DraggableItem({
     : {};
 
   return (
+<<<<<<< HEAD
     <div
       ref={setNodeRef}
       {...listeners}
@@ -203,5 +204,11 @@ export function Preview({ slide, onSlideUpdate }: PreviewProps) {
         )}
       </div>
     </DndContext>
+=======
+    <BaseQuestionRender slide={slide}>
+      <SlideRank ranking={slide.ranking} answers={[]} />
+    </BaseQuestionRender>
+    
+>>>>>>> 0cc3587d435518100a10cb50ab8ed08ea721db67
   );
 }
