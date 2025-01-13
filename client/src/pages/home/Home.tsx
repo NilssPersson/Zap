@@ -65,7 +65,7 @@ function Home() {
   return (
     <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-screen w-full bg-[#F8F8F8]">
       <div className="flex-1 flex flex-col items-center justify-start mt-5 w-full">
-        {/* "Zap!" text */} 
+        {/* "Zap!" text */}
         <div className="flex-1 w-full sm:w-4/5 py-4">
           <div className="flex items-center justify-center gap-4 py-4">
             <WiggleText
@@ -95,7 +95,7 @@ function Home() {
         </div>
 
         {/* Container for Title and Carousel */}
-        <div className="flex-1 w-full ">
+        <div className="flex-1 w-full">
           <QuestionCarousel />;
         </div>
 
@@ -111,21 +111,21 @@ function Home() {
           </div>
         </div>
 
-        <div>
-          <AvatarCarousel avatars={avatarData}></AvatarCarousel>
-        </div>
-        {/* Avatar Carousel */}
-      </div>
 
-      <>
-        <div className="w-full overflow-x-auto hidden lg:block">
+        <div className="w-full overflow-x-auto hidden lg:block mt-8">
           <LinkedInComponent readMore={true} />
         </div>
 
         <div className="w-full block lg:hidden">
           <LinkedInPhone readMore={true} />
         </div>
-      </>
+
+        <div>
+          <AvatarCarousel avatars={avatarData}></AvatarCarousel>
+        </div>
+        {/* Avatar Carousel */}
+      </div>
+
 
       <div className="flex flex-col items-center w-full mt-10 mb-10">
         <h1 className="text-gray-800 font-display text-3xl text-center">
