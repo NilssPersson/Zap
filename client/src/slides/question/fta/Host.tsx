@@ -17,7 +17,7 @@ export function Host({
   quizCode: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full p-10 space-y-8 w-full">
+    <div className="flex flex-col items-center justify-center h-screen p-10 space-y-8 w-full">
       <div className="flex flex-col w-full">
         <SlideTitle title={slide.title} />
       </div>
