@@ -2,7 +2,6 @@ import {
   Slide,
   InfoSlide,
   MCQSASlide,
-  RankSlide,
   QuestionSlide,
   FTASlide,
   MatchingSlide,
@@ -11,7 +10,6 @@ import {
 import ImageInput from './_toolbar/inputs/ImageInput';
 import BackgroundInput from './_toolbar/inputs/BackgroundInput';
 import EmbedVideoInput from './_toolbar/inputs/EmbedVideoInput';
-import { RankOptionsInput } from './_toolbar/inputs/RankOptionsInput';
 import { QuestionSettingsInput } from './_toolbar/inputs/QuestionSettingsInput';
 import TitleInput from './_toolbar/inputs/TitleInput';
 import ContentInput from './_toolbar/inputs/ContentInput';
@@ -122,11 +120,6 @@ export const toolbarConfigs = {
   RANK: [
     ...baseToolbarConfig,
     ...baseQuestionToolbarConfig,
-    {
-      field: 'ranking' as keyof RankSlide,
-      label: 'Ranking',
-      component: RankOptionsInput,
-    },
   ],
 
   FTA: [
