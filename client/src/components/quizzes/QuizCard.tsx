@@ -152,7 +152,7 @@ export function MyQuizButtons({
           <DialogFooter>
             <div className="flex justify-end gap-2 mt-4">
               <DialogClose asChild>
-                <Button variant="outline">{t('general:cancel')}</Button>
+                <Button className='text-black' variant="outline">{t('general:cancel')}</Button>
               </DialogClose>
               <DialogClose asChild>
                 <Button
