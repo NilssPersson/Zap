@@ -7,7 +7,7 @@ import { useHostLogic } from '@/hooks/useHostLogic';
 import answerTempQeustion from '@/pages/participantQuizView/ParticipantLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
-import NoSleepComponent from '@/NoSleepComponent';
+
 
 import {
   getLocalStorageValue,
