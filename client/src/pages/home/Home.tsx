@@ -170,7 +170,7 @@ function Home() {
             <CardContent className="min-h-[300px] flex items-center justify-center">
               {/* Add content here */}
               <p className=" text-2xl text-gray-700 font-displayP">
-                No shared quizzes available yet!
+                No templates available yet!
               </p>
             </CardContent>
           </Card>
