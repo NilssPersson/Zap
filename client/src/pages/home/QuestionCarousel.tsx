@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -15,12 +15,12 @@ import rank from '@/assets/questionImages/rank.png';
 import { LocateIt, Matching, Rank, FA, Jeopardy } from '@/slides';
 
 export default function QuestionCarousel() {
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
   const { t } = useTranslation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api) return;
 
     setCount(api.scrollSnapList().length);
@@ -120,17 +120,17 @@ export default function QuestionCarousel() {
             {images.map((image, index) => (
               <CarouselItem key={index}>
                 <div className="flex justify-center flex-col items-center m-4 relative group">
-                  <div className="rounded-lg shadow-md w-[330px] md:w-[500px] lg:w-[800px] overflow-hidden relative">
+                  <div className="rounded-lg shadow-md w-full mx-16 max-w-[400px] md:max-w-[500px] lg:max-w-[800px] overflow-hidden relative">
                     <img
                       src={image.img}
                       alt={`Slide ${index + 1}`}
                       className="w-full h-[160px] md:h-[240px] lg:h-[370px] object-cover"
                     />
-                    <div className="flex flex-col bg-white h-[130px] md:h-[160px] lg:h-[180px] p-3 ">
-                      <p className="text-lg font-display text-left text-black md:text-xl lg:text-2xl">
+                    <div className="flex flex-col bg-white h-[140px] md:h-[160px] lg:h-[180px] py-1 px-3 md:p-5">
+                      <p className="text-lg font-display text-left text-black md:text-xl lg:text-2xl m-0 md:mb-1">
                         {image.title}
                       </p>
-                      <p className="text-sm font-display text-left text-gray-600 md:text-lg lg:text-xl pt-0">
+                      <p className="text-sm text-left text-gray-600 md:text-base lg:text-lg pt-0">
                         {image.text}
                       </p>
                     </div>
