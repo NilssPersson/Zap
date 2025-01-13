@@ -57,66 +57,7 @@ const mockParticipants: Participant[] = [
     score: [1000, 100065],
     collectionName: 'micah',
   },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
+  
 ];
 
 export function Preview({

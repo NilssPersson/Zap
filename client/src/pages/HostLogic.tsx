@@ -7,6 +7,7 @@ import { useHostLogic } from '@/hooks/useHostLogic';
 import answerTempQeustion from '@/pages/participantQuizView/ParticipantLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
+import NoSleepComponent from '@/NoSleepComponent';
 
 import {
   getLocalStorageValue,
@@ -105,6 +106,7 @@ function HostLogic() {
 
     return (
       <div className="flex flex-col absolute bottom-5 left-5 m-5">
+        <NoSleepComponent />
         {!ongoingQuiz.isShowingCorrectAnswer &&
           slide.timeLimit > 0 &&
           countdownEndDate && (
@@ -179,6 +181,7 @@ function HostLogic() {
 
   return (
     <>
+      <NoSleepComponent />
       <QuizBackground
         backgroundColor={ongoingQuiz.quiz.settings.backgroundColor}
         primaryColor={ongoingQuiz.quiz.settings.primaryColor}
