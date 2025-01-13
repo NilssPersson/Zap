@@ -127,10 +127,10 @@ export default function QuestionCarousel() {
                       className="w-full h-[160px] md:h-[240px] lg:h-[370px] object-cover"
                     />
                     <div className="flex flex-col bg-white h-[140px] md:h-[160px] lg:h-[180px] py-1 px-3 md:p-5">
-                      <p className="text-lg font-display text-left text-black md:text-xl lg:text-2xl m-0 md:mb-1">
+                      <p className="text-lg font-display text-black md:text-xl lg:text-2xl m-0 md:mb-1">
                         {image.title}
                       </p>
-                      <p className="text-sm text-left text-gray-600 md:text-base lg:text-lg pt-0">
+                      <p className="text-sm text-gray-600 md:text-base lg:text-lg pt-0 tracking-tight leading-tight">
                         {image.text}
                       </p>
                     </div>

@@ -46,7 +46,7 @@ const HowItWorks = () => {
                 <h1 className="text-2xl font-display text-black">
                   {t('homepage:stepTitles.0')}
                 </h1>
-                <p className="text-sm mt-2 text-gray-600">
+                <p className="text-sm mt-2 text-gray-600 leading-snug">
                   {t('homepage:stepText.0')}
                 </p>
               </div>
@@ -101,7 +101,7 @@ const HowItWorks = () => {
                 <h1 className="text-2xl font-display text-black">
                   {t('homepage:stepTitles.1')}
                 </h1>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-gray-600 leading-snug">
                   {t('homepage:stepText.1')}
                 </p>
               </div>
@@ -144,7 +144,7 @@ const HowItWorks = () => {
                 <h1 className=" font-display text-2xl  text-black">
                   {t('homepage:stepTitles.2')}
                 </h1>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-gray-600 leading-snug">
                   {t('homepage:stepText.2')}
                 </p>
               </div>
