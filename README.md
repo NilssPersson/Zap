@@ -104,6 +104,21 @@ GameShack/
 
 ## Developer Documentation
 
+### Environment Variables
+
+- In order to run the application, you need to create a `.env` file in the root directory.
+- The `.env` file should contain the following variables:
+  - `VITE_ENVIRONMENT`: `DEV` or `PROD`
+  - `VITE_FIREBASE_APIKEY`: The API key for the Firebase project.
+  - `VITE_FIREBASE_AUTHDOMAIN`: The auth domain for the Firebase project.
+  - `VITE_FIREBASE_PROJECTID`: The project ID for the Firebase project.
+  - `VITE_FIREBASE_STORAGEBUCKET`: The storage bucket for the Firebase project.
+  - `VITE_FIREBASE_MESSAGINGSENDERID`: The messaging sender ID for the Firebase project.
+  - `VITE_FIREBASE_APPID`: The app ID for the Firebase project.
+  - `VITE_FIREBASE_MEASUREMENTID`: The measurement ID for the Firebase project.
+  - `VITE_FIREBASE_DATABASEURL`: The database URL for the Firebase project.
+  - `VITE_QR_BASE_URL`: The base URL for the QR code generation ([ip]/play/).
+
 ### Hosting a Game
 
 - Navigate to the host interface and create a quiz by combining different slide types.
