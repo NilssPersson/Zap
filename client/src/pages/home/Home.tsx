@@ -29,7 +29,7 @@ const generateRandomString = (length: number): string => {
 
 // Generate 50 random strings of length 10
 const randomStrings = Array.from({ length: 50 }, () =>
-  generateRandomString(250)
+  generateRandomString(30)
 );
 
 const collectionNames = [
