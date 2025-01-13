@@ -194,7 +194,3 @@ Follow these steps to add a new language to the application:
 - [Filip von Knorring](https://www.linkedin.com/in/filip-v-4b9976139/) ([GitHub](https://github.com/FKnorring))
 - [Nils Persson](https://www.linkedin.com/in/nils-albin-persson/) ([GitHub](https://github.com/NilssPersson))
 - [Ramez Shakarna](https://www.linkedin.com/in/ramezshakarna/) ([GitHub](https://github.com/ramezio))
-
-```
-
-```
