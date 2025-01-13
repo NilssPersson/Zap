@@ -176,41 +176,44 @@ function ScoreBoard({ participants, slides, currentSlide }: ScoreBoardProps) {
   }, [participants, slides, currentSlide, isAnimating]);
 
   return (
-    <div className="flex-1 w-full flex-col items-center justify-center overflow-hidden p-4">
-      <div className="flex w-full flex-col items-center justify-center overflow-hidden p-4">
-        <AnimatePresence>
-          {(isAnimating ? processedParticipants : previousParticipants).map(
-            (participant, index) => (
-              <motion.div
-                key={participant.name}
-                layoutId={participant.name} // Ensure unique IDs for animation
-                initial={isAnimating ? false : { opacity: 1 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="flex items-center space-x-4 m-3 w-full max-w-md justify-start"
-              >
-                <span className="w-[20px] font-display text-component-background text-6xl mr-2">
-                  {index + 1}
+    <div className="flex flex-col items-center justify-center overflow-y-scroll p-4 mt-10">
+      <AnimatePresence>
+        {(isAnimating ? processedParticipants : previousParticipants).map(
+          (participant, index) => (
+            <motion.div
+              key={participant.name}
+              layoutId={participant.name} // Ensure unique IDs for animation
+              initial={isAnimating ? false : { opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex items-center space-x-4 m-3 w-full max-w-md justify-start"
+            >
+              <span className="w-[20px] font-display text-component-background text-6xl mr-2 ">
+                {index + 1}
+              </span>
+              <Avatar
+                width="4rem"
+                height="4rem"
+                avatarString={participant.avatar}
+                collectionName={participant.collectionName}
+              />
+              <div className="bg-component-background flex items-center justify-between font-display p-4 rounded-lg w-full flex-grow min-w-0">
+                <span className="text-textonwbg-grayonw text-3xl truncate">
+                  {participant.name}
                 </span>
-                <Avatar width="4rem" height='4rem' avatarString={participant.avatar} collectionName={participant.collectionName} />
-                <div className="bg-component-background flex items-center justify-between font-display p-4 rounded-lg w-full flex-grow min-w-0">
-                  <span className="text-textonwbg-grayonw text-3xl truncate">
-                    {participant.name}
-                  </span>
-                  <span className="text-textonwbg-grayonw text-3xl">
-                    <Counter
-                      value={participant.totalScore}
-                      previousValue={participant.lastScoreScore}
-                      shouldAnimate={isAnimating}
-                    />
-                  </span>
-                </div>
-              </motion.div>
-            )
-          )}
-        </AnimatePresence>
-      </div>
+                <span className="text-textonwbg-grayonw text-3xl">
+                  <Counter
+                    value={participant.totalScore}
+                    previousValue={participant.lastScoreScore}
+                    shouldAnimate={isAnimating}
+                  />
+                </span>
+              </div>
+            </motion.div>
+          )
+        )}
+      </AnimatePresence>
     </div>
   );
 }
