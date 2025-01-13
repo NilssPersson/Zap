@@ -7,7 +7,7 @@ const HowItWorks = () => {
   const { t } = useTranslation();
   return (
     <div className="py-6 w-full ">
-      <h1 className="text-4xl font-display text-center text-gray-700 my-2">
+      <h1 className="text-4xl font-display text-center text-gray-700 mt-2 mb-10">
         {t('homepage:getStarted')}
       </h1>
       <div className="max-w-7xl mx-auto px-4">

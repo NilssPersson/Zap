@@ -12,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import LinkedInComponent from './LinkedInComponent';
 import LinkedInPhone from './LinkedInPhone';
 import { Link } from 'react-router-dom';
+import { Footer } from '@/components/Footer';
 
 interface AvatarData {
   avatarString: string;
@@ -145,7 +146,7 @@ function Home() {
         </div>
 
 
-        <div className="w-full overflow-x-auto hidden lg:block mt-8">
+        <div className="w-full overflow-x-auto hidden lg:block my-8">
           <LinkedInComponent readMore={true} />
         </div>
 
@@ -175,6 +176,7 @@ function Home() {
           </Card>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
