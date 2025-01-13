@@ -1,7 +1,6 @@
 import {
   Slide,
   InfoSlide,
-  MCQMASlide,
   MCQSASlide,
   RankSlide,
   QuestionSlide,
@@ -12,7 +11,6 @@ import {
 import ImageInput from './_toolbar/inputs/ImageInput';
 import BackgroundInput from './_toolbar/inputs/BackgroundInput';
 import EmbedVideoInput from './_toolbar/inputs/EmbedVideoInput';
-import { MCQOptionsInput } from './_toolbar/inputs/MCQOptionsInput';
 import { RankOptionsInput } from './_toolbar/inputs/RankOptionsInput';
 import { QuestionSettingsInput } from './_toolbar/inputs/QuestionSettingsInput';
 import TitleInput from './_toolbar/inputs/TitleInput';
@@ -24,7 +22,6 @@ import { MatchingOptionsInput } from './_toolbar/inputs/MatchingOptionsInput';
 import { MCQSAPoints } from './_toolbar/inputs/MCQSAPoints';
 import { BombOptionsInput } from './_toolbar/inputs/BombOptionsInput';
 import { ImagePositionInput } from './_toolbar/inputs/ImagePositionInput';
-import { BulletPointSlideInput } from './_toolbar/inputs/BulletPointSlideInput';
 import { BulletPointStyleInput } from './_toolbar/inputs/BulletPointStyleInput';
 import { JeopardyInput } from './_toolbar/inputs/JeopardyInput';
 import { JeopardyScoreInput } from './_toolbar/inputs/JeopardyScoreInput';
@@ -110,11 +107,6 @@ export const toolbarConfigs = {
   MCQMA: [
     ...baseToolbarConfig,
     ...baseQuestionToolbarConfig,
-    {
-      field: 'options' as keyof MCQMASlide,
-      label: 'Options',
-      component: MCQOptionsInput,
-    },
   ],
 
   MCQSA: [
@@ -124,11 +116,6 @@ export const toolbarConfigs = {
       field: 'pointsAwarding' as keyof MCQSASlide,
       label: 'Points Awarding',
       component: MCQSAPoints,
-    },
-    {
-      field: 'options' as keyof MCQSASlide,
-      label: 'Options',
-      component: MCQOptionsInput,
     },
   ],
 
@@ -221,11 +208,6 @@ export const toolbarConfigs = {
       field: 'title',
       label: 'Title',
       component: TitleInput,
-    },
-    {
-      field: 'points',
-      label: 'Bullet Points',
-      component: BulletPointSlideInput,
     },
     {
       field: 'fontSize',
