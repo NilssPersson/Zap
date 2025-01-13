@@ -14,6 +14,7 @@ import Spinner from '@/components/Spinner';
 import ParticipantMenu from './components/ParticipantMenu';
 import { QuizBackground } from '@/components/quiz-editor/QuizBackground';
 import { QuizSettings } from '@/models/Quiz';
+import NoSleepComponent from '@/NoSleepComponent';
 
 function QuizView({
   questions,
@@ -87,7 +88,16 @@ function QuizView({
   );
 }
 
-export default function ParticipantLogic() {
+export default function ParticipantLogicWrapped() {
+  return (
+    <>
+      <NoSleepComponent />
+      <ParticipantLogic />
+    </>
+  );
+}
+
+function ParticipantLogic() {
   var { quizCode } = useParams();
   quizCode = quizCode?.toUpperCase();
 

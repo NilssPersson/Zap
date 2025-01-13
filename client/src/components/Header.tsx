@@ -162,8 +162,7 @@ export function Header() {
                 <>
                   <Link to="/play">
                     <Button
-                      variant="ghost"
-                      className="text-lg bg-green-600"
+                      className="text-lg text-white"
                       isInteractive
                     >
                       {t('general:play')}
@@ -199,8 +198,8 @@ export function Header() {
                     </Link>
                     <Link to="/play">
                       <Button
-                        className="text-2xl"
                         variant="link"
+                        className="text-2xl"
                         onClick={() => setSheetOpen(false)}
                       >
                         {t('general:play')}

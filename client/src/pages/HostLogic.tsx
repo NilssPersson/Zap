@@ -17,6 +17,16 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { global_values } from '@/config/values';
 import { QuizBackground } from '@/components/quiz-editor/QuizBackground';
+import NoSleepComponent from '@/NoSleepComponent';
+
+export default function HostLogicWrapped() {
+  return (
+    <>
+      <NoSleepComponent />
+      <HostLogic />
+    </>
+  );
+}
 
 function HostLogic() {
   const { id } = useParams();
@@ -227,5 +237,3 @@ function HostLogic() {
     </>
   );
 }
-
-export default HostLogic;
