@@ -46,10 +46,9 @@ Zap! supports the creation of quizzes with the following slide types:
 
 Zap! is built using modern technologies for optimal performance and maintainability:
 
-- **Figma**: For prototyping and design.
 - **TypeScript**: Primary programming language.
-- **shadcn**: UI component library.
 - **React**: Frontend framework.
+- **shadcn**: UI component library.
 - **Firebase**: Backend and database solution.
 
 ---
