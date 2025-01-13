@@ -22,20 +22,23 @@
 
 Zap! supports the creation of quizzes with the following slide types:
 
-1. **Information Slide**
+1. **Presentation Slides**
+   - Slides that are used to present information to the participants
+      - **Information Slide**: Presents information to players without interaction.
+      - **Bullet Points**: Displays a list of bullet points.
+      - **Score Slide**: Displays the scores and rankings of players.
 
-   - Presents information to players without interaction.
-
-2. **Score Slide**
-
-   - Displays the scores and rankings of players.
-
-3. **Question Slide**
+2. **Question Slides**
    - Interactive slides with the following question types:
-     - **Single Answer MCQ**: Players select one correct option.
-     - **Multiple Answer MCQ**: Players select multiple correct options.
-     - **Text Answer**: Players provide a text response.
-     - **Rank Answers**: Players arrange answers in the correct order.
+     - **Multiple Choice**: Players select one or more options out of a list of options.
+     - **Too Close To Call**: Players input a number and the closest number to the correct answer wins.
+     - **Ticking Time Bomb**: Players take turns answering questions before the timer runs out.
+     - **Fastest On The Buzzer**: The first player to press the buzzer gets to answer the question first.
+     - **Free Text**: Players can input any text as an answer.
+     - **Jeopardy**: Jeopardy style game where players answer questions to gain points.
+     - **LocateIt**: Players have to find a location on a map.
+     - **Meet Your Match**: Players have to match options to a given category.
+     - **Rank It Right**: Players have to rank options in the correct order.
 
 ---
 
