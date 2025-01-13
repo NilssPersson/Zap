@@ -42,7 +42,7 @@ const mockParticipants: Participant[] = [
     avatar: 'https://example.com/avatar4.png',
     name: 'Diana Prince',
     participantId: 'P004',
-    score: [0, 3089],
+    score: [1001, 3089],
     collectionName: 'micah',
   },
   {
@@ -54,97 +54,35 @@ const mockParticipants: Participant[] = [
     avatar: 'https://example.com/avatar5.png',
     name: 'Ethan Hunt',
     participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
-    collectionName: 'micah',
-  },
-  {
-    answers: [
-      { slideNumber: 1, answer: ['Agree'], time: '2024-11-18T10:08:00Z' },
-      { slideNumber: 3, answer: ['Disagree'], time: '2024-11-18T10:15:00Z' },
-    ],
-    hasAnswered: true,
-    avatar: 'https://example.com/avatar5.png',
-    name: 'Ethan Hunt',
-    participantId: 'P005',
-    score: [1000, 100065],
+    score: [1000, 3423],
     collectionName: 'micah',
   },
 ];
 
 export function Preview({
   slide,
-  onSlideChange,
+  onSlideUpdate,
 }: {
   slide: ScoreSlide;
-  onSlideChange: (slide: ScoreSlide) => void;
+  onSlideUpdate: (slide: ScoreSlide) => void;
 }) {
   const handleTitleChange = (newTitle: string) => {
-    if (onSlideChange) {
-      onSlideChange({ ...slide, title: newTitle });
+    if (onSlideUpdate) {
+      onSlideUpdate({ ...slide, title: newTitle });
     }
   };
   return (
-    <>
-      <div className="space-y-12 w-full p-15 mt-20">
-        <SlideTitle
-          title={slide.title}
-          isEditable
-          onTitleChange={handleTitleChange}
-        />
-        <ScoreBoard
-          slides={[slide] as Slide[]}
-          currentSlide={0}
-          participants={mockParticipants}
-        />
-      </div>
-    </>
+    <div className="space-y-12 w-full p-15 mt-20">
+      <SlideTitle
+        title={slide.title}
+        isEditable
+        onTitleChange={handleTitleChange}
+      />
+      <ScoreBoard
+        slides={[slide] as Slide[]}
+        currentSlide={0}
+        participants={mockParticipants}
+      />
+    </div>
   );
 }
