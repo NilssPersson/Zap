@@ -114,7 +114,7 @@ function LinkedInComponent({ readMore }: LinkedInComponentProps) {
           <h2 className="text-2xl font-display mb-2 text-gray-800">
             {t('about:who')}
           </h2>
-          <p className="text-lg text-gray-700 tracking-tighter leading-snug">
+          <p className="text-gray-700 tracking-tight">
             {t('about:introText')}
           </p>
         </div>
