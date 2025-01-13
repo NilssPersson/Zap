@@ -12,5 +12,6 @@ export function Preview({
     <BaseQuestionRender slide={slide}>
       <SlideRank ranking={slide.ranking} answers={[]} />
     </BaseQuestionRender>
+    
   );
 }
