@@ -12,7 +12,9 @@ import fa from '@/assets/questionImages/fa.png';
 import locateit from '@/assets/questionImages/locateit.png';
 import match from '@/assets/questionImages/match.png';
 import rank from '@/assets/questionImages/rank.png';
+import more from '@/assets/questionImages/more.png';
 import { LocateIt, Matching, Rank, FA, Jeopardy } from '@/slides';
+import { Ellipsis } from 'lucide-react';
 
 export default function QuestionCarousel() {
   const [api, setApi] = useState<CarouselApi>();
@@ -66,6 +68,13 @@ export default function QuestionCarousel() {
       icon: Rank.Info.icon,
       iconColor: Rank.Info.iconColor,
     },
+    {
+      img: more,
+      title: t('homepage:questionDescriptions.more.title'),
+      text: t('homepage:questionDescriptions.more.description'),
+      icon: Ellipsis,
+      iconColor: 'black',
+    },      
     /*{
       img: dallebomb,
       title: t('questions:BOMB'),
@@ -76,7 +85,7 @@ export default function QuestionCarousel() {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-[#F4F4F4]">
+    <div className="flex flex-col justify-center items-center w-full bg-[#F4F4F4] py-8">
       <h1 className="text-3xl font-display text-gray-700 mt-4 md:text-5xl">
         {t('homepage:questionCarouselText')}
       </h1>
@@ -126,11 +135,11 @@ export default function QuestionCarousel() {
                       alt={`Slide ${index + 1}`}
                       className="w-full h-[160px] md:h-[240px] lg:h-[370px] object-cover"
                     />
-                    <div className="flex flex-col bg-white h-[140px] md:h-[160px] lg:h-[180px] py-1 px-3 md:p-5">
-                      <p className="text-lg font-display text-black md:text-xl lg:text-2xl m-0 md:mb-1">
+                    <div className="flex flex-col bg-white h-[140px] py-1 px-3 md:p-5">
+                      <p className="text-lg font-display text-black lg:text-xl m-0 md:mb-1">
                         {image.title}
                       </p>
-                      <p className="text-sm text-gray-600 md:text-base lg:text-lg pt-0 tracking-tight leading-tight">
+                      <p className="text-sm lg:text-base text-gray-700 tracking-tight">
                         {image.text}
                       </p>
                     </div>

@@ -25,7 +25,6 @@ function App() {
           <AppProvider>
             <TutorialProvider>
               <Header />
-
               <AppRoutes />
               <OngoingQuizHandler />
               <Toaster />

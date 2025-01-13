@@ -51,9 +51,9 @@ export function Header() {
           inGame && 'hidden'
         )}
       >
-        <div className=" flex h-16 items-center px-1 overflow-hidden">
-          <div className={cn('mr-0 ml-2 md:flex w-full', inGame && 'hidden')}>
-            <nav className=" flex items-center space-x-6 font-medium w-full justify-between">
+        <div className="flex w-full h-16 items-center px-1 overflow-hidden justify-center">
+          <div className={cn('mr-0 ml-2 md:flex w-full max-w-7xl', inGame && 'hidden')}>
+            <nav className="flex items-center space-x-6 font-medium w-full justify-between">
               <Link
                 to="/"
                 className="flex items-center gap-2 text-2xl font-display"
@@ -162,8 +162,7 @@ export function Header() {
                 <>
                   <Link to="/play">
                     <Button
-                      variant="ghost"
-                      className="text-lg bg-green-600"
+                      className="text-lg text-white"
                       isInteractive
                     >
                       {t('general:play')}
@@ -199,8 +198,8 @@ export function Header() {
                     </Link>
                     <Link to="/play">
                       <Button
-                        className="text-2xl"
                         variant="link"
+                        className="text-2xl"
                         onClick={() => setSheetOpen(false)}
                       >
                         {t('general:play')}

@@ -15,6 +15,7 @@ export function Host({
   endQuiz,
   quizCode,
   slide,
+  inPreview = false,
 }: {
   participants: Participant[];
   slides: Slide[];
@@ -24,6 +25,7 @@ export function Host({
   endQuiz: (quizCode: string) => Promise<boolean>;
   quizCode: string;
   slide: ScoreSlide;
+  inPreview?: boolean;
 }) {
   const SlideComponent = getSlideComponents(slide);
   return (
@@ -34,7 +36,7 @@ export function Host({
           icon={SlideComponent.Info.icon}
         />
       </div>
-      <Confetti delayProp={5000} />
+      {!inPreview && <Confetti delayProp={5000} />}
       <ScoreBoard
         currentSlide={currentSlide}
         slides={slides}

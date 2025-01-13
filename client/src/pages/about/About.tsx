@@ -15,20 +15,20 @@ export default function About() {
       {/* Goals Section */}
       <div className='flex gap-4 flex-row w-7/12'>
         <div className="flex-1 max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
-          <h3 className="text-2xl font-display mb-1 text-gray-800">
+          <h3 className="text-2xl font-display mb-2 text-gray-800">
             {t('about:goalsTitle')}
           </h3>
-          <p className="text-lg text-gray-700 tracking-tighter leading-snug">
+          <p className="text-gray-700">
             {t('about:goalsText')}
           </p>
         </div>
 
         {/* Status Section */}
         <div className="flex-1 max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
-          <h3 className="text-2xl font-display mb-1 text-gray-800">
+          <h3 className="text-2xl font-display mb-2 text-gray-800">
             {t('about:statusTitle')}
           </h3>
-          <p className="text-lg text-gray-700 tracking-tighter leading-snug">
+          <p className="text-gray-700">
             {t('about:statusText')}
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function About() {
       {/* GitHub Link */}
       <div className="flex-1 text-center pb-10  mt-8">
         <a
-          href="https://github.com/FKnorring/GameShack"
+          href="https://github.com/FKnorring/Zap"
           target="_blank"
           rel="noopener noreferrer"
           className="text-3xl font-display flex items-center justify-center gap-2 text-blue-400 hover:text-blue-600 transition"

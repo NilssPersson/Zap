@@ -93,7 +93,16 @@ function QuizView({
   );
 }
 
-export default function ParticipantLogic() {
+export default function ParticipantLogicWrapped() {
+  return (
+    <>
+      <NoSleepComponent />
+      <ParticipantLogic />
+    </>
+  );
+}
+
+function ParticipantLogic() {
   var { quizCode } = useParams();
   quizCode = quizCode?.toUpperCase();
 
