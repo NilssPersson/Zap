@@ -189,11 +189,11 @@ Follow these steps to add a new language to the application:
 
 ## Contributors
 
-- Jacob Dillström
-- Elisabet Hansson
-- Filip von Knorring
-- Nils Persson
-- Ramez Shakarna
+- [Jacob Dillström](https://www.linkedin.com/in/jacob-dillstrom/) ([GitHub](https://github.com/Dillenzz))
+- [Elisabet Hansson](https://www.linkedin.com/in/lisa-hansson/) ([GitHub](https://github.com/eliha458))
+- [Filip von Knorring](https://www.linkedin.com/in/filip-v-4b9976139/) ([GitHub](https://github.com/FKnorring))
+- [Nils Persson](https://www.linkedin.com/in/nils-albin-persson/) ([GitHub](https://github.com/NilssPersson))
+- [Ramez Shakarna](https://www.linkedin.com/in/ramezshakarna/) ([GitHub](https://github.com/ramezio))
 
 ```
 

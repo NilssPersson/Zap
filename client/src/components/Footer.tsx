@@ -6,26 +6,31 @@ const teamMembers = [
     name: 'Lisa Hansson',
     linkedin: 'https://www.linkedin.com/in/lisa-hansson/',
     email: 'lisa.hansson@zap.com',
+    github: 'https://github.com/eliha458',
   },
   {
     name: 'Nils Persson',
     linkedin: 'https://www.linkedin.com/in/nils-albin-persson/',
     email: 'nils.persson@zap.com',
+    github: 'https://github.com/NilssPersson',
   },
   {
     name: 'Ramez Shakarna',
     linkedin: 'https://www.linkedin.com/in/ramezshakarna/',
     email: 'ramez.shakarna@zap.com',
+    github: 'https://github.com/ramezio',
   },
   {
     name: 'Filip von Knorring',
     linkedin: 'https://www.linkedin.com/in/filip-v-4b9976139/',
     email: 'filip.von.knorring@zap.com',
+    github: 'https://github.com/FKnorring',
   },
   {
     name: 'Jacob Dillström',
     linkedin: 'https://www.linkedin.com/in/jacob-dillstrom/',
     email: 'jacob.dillstrom@zap.com',
+    github: 'https://github.com/Dillenzz',
   },
 ]
 
@@ -79,6 +84,15 @@ export function Footer() {
                       <span>LinkedIn</span>
                     </a>
                     <a
+                      href={member.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-gray-500 hover:text-gray-700 transition-colors text-sm"
+                    >
+                      <Github size={18} />
+                      <span>GitHub</span>
+                    </a>
+                    <a
                       href={`mailto:${member.email}`}
                       className="flex items-center gap-1 text-gray-500 hover:text-gray-700 transition-colors text-sm"
                     >
@@ -104,6 +118,15 @@ export function Footer() {
                     >
                       <Linkedin size={18} />
                       <span>LinkedIn</span>
+                    </a>
+                    <a
+                      href={member.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-gray-500 hover:text-gray-700 transition-colors text-sm"
+                    >
+                      <Github size={18} />
+                      <span>GitHub</span>
                     </a>
                     <a
                       href={`mailto:${member.email}`}
