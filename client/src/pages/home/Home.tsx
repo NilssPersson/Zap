@@ -78,7 +78,7 @@ function Home() {
               {t('homepage:slogan')}
             </h1>
 
-            <h3 className="text-gray-500 w-4/5 lg:w-1/2 text-center text-lg mx-4 text-balance tracking-tight">
+            <h3 className="text-gray-500 w-4/5 lg:w-1/2 text-center text-lg mx-4 text-balance tracking-tight leading-snug">
               {t('homepage:inspotext')}
             </h3>
           </div>
