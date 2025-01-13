@@ -4,7 +4,6 @@ import { Zap, WrenchIcon, SaveIcon, House, ZapIcon, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 import { CustomTooltip } from '../ui/custom-tooltip';
-import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
 import { useHostQuiz } from '@/hooks/useHostQuiz';
 import { useState } from 'react';
