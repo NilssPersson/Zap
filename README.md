@@ -375,6 +375,99 @@ Firebase configuration is missing required fields:
 }
 ```
 
+#### Adding New Tutorials
+
+Tutorials are defined in `/src/data/tutorials.ts` and follow a structured format for guiding users through the application.
+
+1. Create a new tutorial object:
+   ```typescript
+   const yourTutorial: Tutorial = {
+     id: 'unique-tutorial-id',
+     name: 'Tutorial Display Name',
+     startTriggerId: 'element-id',
+     prerequisites: ['tutorial-id-1', 'tutorial-id-2'], // optional
+     steps: [
+       {
+         id: 'step-1',
+         title: 'Step Title',
+         content: 'Step instructions or information',
+         targetId: 'target-element-id',
+         placement: 'bottom', // 'top' | 'bottom' | 'left' | 'right'
+         nextTrigger: 'next-element-id', // optional
+       },
+       // more steps...
+     ],
+   };
+   ```
+
+2. Add your tutorial to `allTutorials` array:
+   ```typescript
+   export const allTutorials = [
+     quizManagerTutorial,
+     quizEditorTutorial,
+     yourTutorial,
+   ];
+   ```
+
+#### Tutorial Configuration Parameters
+
+- **prerequisites**: (optional) Array of tutorial IDs that must be completed before this tutorial can start
+  ```typescript
+  prerequisites: ['quiz-editor-intro', 'first-slide-tutorial']
+  ```
+
+- **startTriggerId**: ID of the element that must be rendered to trigger the tutorial
+  ```typescript
+  // Tutorial will only start when an element with id="quiz-editor" is present
+  startTriggerId: 'quiz-editor'
+  ```
+
+- **targetId**: ID of the element to highlight during the tutorial step
+  ```typescript
+  // The element with id="create-button" will be highlighted
+  targetId: 'create-button'
+  ```
+
+- **nextTrigger**: (optional) Forces user interaction with specified element to proceed
+  ```typescript
+  // User must interact with the element with id="save-button" to continue
+  nextTrigger: 'save-button'
+  ```
+
+Example tutorial with all features:
+```typescript
+export const editorTutorial: Tutorial = {
+  id: 'editor-tutorial',
+  name: 'Quiz Editor Tutorial',
+  startTriggerId: 'quiz-editor',
+  prerequisites: ['basic-tutorial'],
+  steps: [
+    {
+      id: 'welcome',
+      title: 'Welcome to the Editor',
+      content: 'Click the Create button to start.',
+      targetId: 'create-button',
+      placement: 'bottom',
+      nextTrigger: 'create-button', // User must click the create button
+    },
+    {
+      id: 'edit-title',
+      title: 'Enter a Title',
+      content: 'Type your quiz title here.',
+      targetId: 'title-input',
+      placement: 'right',
+      // No nextTrigger - automatically proceeds
+    },
+  ],
+};
+```
+
+**Important Notes:**
+- Elements referenced by `targetId` and `nextTrigger` must exist in the DOM
+- Use consistent ID naming across your components
+- Consider mobile responsiveness when choosing `placement`
+- Keep tutorial steps concise and focused
+
 ---
 
 ## Contributors
