@@ -139,6 +139,7 @@ VITE_FIREBASE_MEASUREMENTID=your_measurement_id
 ```plaintext
 Zap/
 ├── src/
+|   ├── config/      # Configuration files
 │   ├── components/  # Reusable UI components
 │   ├── hooks/       # Custom React hooks
 │   ├── contexts/    # Contexts and context providers
@@ -153,7 +154,7 @@ Zap/
 │   ├── main.tsx     # Entry point
 │   ├── App.tsx      # Main application component
 │   ├── index.css    # Global styles
-├── public/          # Public assets
+├── public/          # Public assets and locales
 ```
 
 ### Development Guide
@@ -333,6 +334,45 @@ Zap/
 4. Add the same keys to all language files to ensure full translation coverage.
 
 Note: The `name` property in `languages.ts` should reference a translation key in the `general.json` files, and the `value` should be the ISO language code (e.g., 'en', 'sv', 'cn').
+
+### Configuration Structure
+
+The configuration is organized in a modular structure:
+
+```plaintext
+config/
+├── core/
+│   ├── environment.ts   # Environment detection and variables
+│   ├── types.ts         # Configuration type definitions
+│   └── uri.ts          # URI and base URL handling
+├── features/
+│   ├── flags.ts        # Feature flags
+│   └── values.ts       # Global feature values
+├── game/
+│   ├── languages.ts    # Language configuration
+│   └── limits.ts       # Game limits and maximums
+├── services/
+│   ├── firebase.ts     # Firebase configuration
+│   └── kinde.ts        # Kinde authentication config
+└── index.ts           # Main configuration export
+```
+
+#### Environment Variables
+
+Environment variables are loaded with development-specific logging:
+
+```typescript
+// In development, missing variables are logged:
+VITE_FIREBASE_APIKEY=missing
+VITE_FIREBASE_DATABASEURL=missing
+
+// Required variables will show validation errors:
+Firebase configuration is missing required fields:
+{
+  apiKey: { status: 'missing', envVar: 'VITE_FIREBASE_APIKEY' },
+  databaseUrl: { status: 'missing', envVar: 'VITE_FIREBASE_DATABASEURL' }
+}
+```
 
 ---
 
