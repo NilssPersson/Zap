@@ -7,16 +7,17 @@
 ## Table of Contents
 
 - [User Guide](#user-guide)
-- [Features](#features)
+  - [Features](#features)
   - [Getting Started](#getting-started)
   - [Hosting a Game](#hosting-a-game)
   - [Playing a Game](#playing-a-game)
 - [Developer Guide](#developer-guide)
-- [Technologies](#technologies)
+  - [Technologies and Services](#technologies-and-services)
   - [Setup](#setup)
-- [Code Structure](#code-structure)
+  - [Code Structure](#code-structure)
   - [Development Guide](#development-guide)
   - [Internationalization](#internationalization)
+  - [Configuration Structure](#configuration-structure)
 - [Contributors](#contributors)
 
 ---
