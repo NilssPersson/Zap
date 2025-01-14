@@ -100,18 +100,39 @@ Using the `.env.example` file, you can copy its contents to a new `.env` file wi
 ```bash
 cp .env.example .env
 ```
-You can now fill in the variables with your own values in the created `.env` file. Optionally, manually create a `.env` file with the following variables:
+
+Fill in the variables in your `.env` file:
+
 ```
-VITE_ENVIRONMENT=DEV|PROD
+# App Configuration
+VITE_ENVIRONMENT=dev|prod              # Accepts variations like "dev", "development", "prod", "production"
+VITE_PORT=5173                         # Optional: Development server port (default: 5173)
+VITE_URI=https://your-domain.com/      # Optional: Production URI (ignored in dev environment)
+VITE_BASE_URL=/                        # Optional: Base URL for the app (default: /)
+VITE_ROUTER_BASE_NAME=                 # Optional: Router base name (default: "")
+VITE_LOAD_PATH_i18=/locales/{{lng}}/{{ns}}.json  # Optional: i18n load path
+
+# Kinde Authentication
+VITE_KINDE_CLIENT_ID=your_client_id    # Your Kinde client ID (default provided)
+VITE_KINDE_DOMAIN=your_kinde_domain    # Your Kinde domain (default provided)
+VITE_KINDE_REDIRECT_URI=               # Optional: Override redirect URI (defaults to URI)
+VITE_KINDE_LOGOUT_URI=                 # Optional: Override logout URI (defaults to URI)
+
+# Firebase Configuration
 VITE_FIREBASE_APIKEY=your_api_key
 VITE_FIREBASE_AUTHDOMAIN=your_auth_domain
 VITE_FIREBASE_PROJECTID=your_project_id
 VITE_FIREBASE_STORAGEBUCKET=your_storage_bucket
 VITE_FIREBASE_MESSAGINGSENDERID=your_sender_id
 VITE_FIREBASE_APPID=your_app_id
-VITE_FIREBASE_MEASUREMENTID=your_measurement_id
 VITE_FIREBASE_DATABASEURL=your_database_url
+VITE_FIREBASE_MEASUREMENTID=your_measurement_id
 ```
+
+**Important Notes:**
+- In development environment (`VITE_ENVIRONMENT=dev`), the URI will always be "http://localhost:5173" regardless of `VITE_URI`
+- In production environment, if `VITE_URI` is not set, it defaults to "https://www.zap-quiz.com/"
+- The environment variable accepts various formats (e.g., "dev", "DEV", "development", "DEVELOPMENT" for development)
 
 ### Code Structure
 

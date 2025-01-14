@@ -1,25 +1,28 @@
 import { initializeApp } from "firebase/app";
-import { getPerformance,  } from "firebase/performance";
+import { getPerformance } from "firebase/performance";
 import { getDatabase } from "firebase/database";
 import type { Database } from "firebase/database";
+import config from "@/config";
 
+/**
+ * Firebase configuration object
+ * Maps our config values to Firebase's expected format
+ */
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
-  //databaseURL: import.meta.env.VITE_FIREBASE_APIKEY,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGEBUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGINGSENDERID,
-  appId: import.meta.env.VITE_FIREBASE_APPID,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASEURL,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENTID,
+  apiKey: config.FIREBASE.API_KEY,
+  authDomain: config.FIREBASE.AUTH_DOMAIN,
+  projectId: config.FIREBASE.PROJECT_ID,
+  storageBucket: config.FIREBASE.STORAGE_BUCKET,
+  messagingSenderId: config.FIREBASE.MESSAGING_SENDER_ID,
+  appId: config.FIREBASE.APP_ID,
+  databaseURL: config.FIREBASE.DATABASE_URL,
+  measurementId: config.FIREBASE.MEASUREMENT_ID,
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database: Database = getDatabase(app);
 const perf = getPerformance(app);
 
-perf.dataCollectionEnabled = true;
-perf.instrumentationEnabled = true;
 
 export { database, perf };
