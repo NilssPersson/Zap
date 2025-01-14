@@ -375,7 +375,7 @@ Firebase configuration is missing required fields:
 }
 ```
 
-#### Adding New Tutorials
+### Adding New Tutorials
 
 Tutorials are defined in `/src/data/tutorials.ts` and follow a structured format for guiding users through the application.
 
