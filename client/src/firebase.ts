@@ -21,6 +21,7 @@ let perf: ReturnType<typeof getPerformance>;
  */
 export function initializeFirebase() {
   const firebaseConfig = {
+    apiKey: config.FIREBASE.API_KEY,
     authDomain: config.FIREBASE.AUTH_DOMAIN,
     projectId: config.FIREBASE.PROJECT_ID,
     storageBucket: config.FIREBASE.STORAGE_BUCKET,
