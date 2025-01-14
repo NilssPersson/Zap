@@ -24,5 +24,4 @@ const app = initializeApp(firebaseConfig);
 const database: Database = getDatabase(app);
 const perf = getPerformance(app);
 
-
 export { database, perf };
