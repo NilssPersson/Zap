@@ -3,6 +3,8 @@ import { MatchingSlide } from '@/models/Quiz';
 import { getColor } from '../base/QuizColors';
 import NextSlide from '@/slides/_components/NextSlide';
 import { Smartphone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 
 export function Host({
   slide,
@@ -17,6 +19,7 @@ export function Host({
   endQuiz: (quizCode: string) => Promise<boolean>;
   quizCode: string;
 }) {
+  const {t} = useTranslation()
   return (
     <div className="flex flex-col">
       <div className="flex flex-row justify-center pt-32 mb-10 ">
@@ -34,7 +37,7 @@ export function Host({
         ))}
       </div>
       <div className="flex flex-col items-center justify-center">
-        <h1 className='text-2xl font-display mt-4'>Look at your phone!</h1>
+        <h1 className='text-2xl font-display mt-4'>{t("questions:lookatphone")}</h1>
         <Smartphone size={128} color="white"></Smartphone>
       </div>
       
