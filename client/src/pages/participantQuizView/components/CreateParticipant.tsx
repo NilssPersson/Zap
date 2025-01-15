@@ -13,7 +13,7 @@ import useGetAuthenticatedUser from '@/hooks/useGetAuthenticatedUser';
 import { userService } from '@/services/users';
 import LanguageToggle from '@/components/Settings/LanguageToggle';
 import { useTranslation } from 'react-i18next';
-import { avatarCollections, collectionNames } from '@/utils'; // Adjust path to your collection exports
+import { avatarCollections, collectionNames } from '@/utils';
 
 function createRandomId(length: number = 10): string {
   const chars =
@@ -31,18 +31,19 @@ interface CreateParticipantProps {
     avatar: string,
     collectionName: string
   ) => void;
+  currentSlide: number;
 }
 
 function GuestAdvancedView({
   onSubmit,
   isSubmitting,
-  showError,
-  setShowError,
+  error,
+  setError,
 }: {
   onSubmit: (name: string, avatar: string, collection: string) => void;
   isSubmitting: boolean;
-  showError: boolean;
-  setShowError: (val: boolean) => void;
+  error: string;
+  setError: (val: string) => void;
 }) {
   const { t } = useTranslation(['participants', 'general']);
   const [guestName, setGuestName] = useState('');
@@ -85,7 +86,7 @@ function GuestAdvancedView({
 
   function handlePlay() {
     if (!guestName) {
-      setShowError(true);
+      setError('participants:nameError');
       return;
     }
     onSubmit(guestName, currentAvatarString, selectedCollectionName);
@@ -140,19 +141,19 @@ function GuestAdvancedView({
       <Input
         placeholder={t('participants:enter')}
         className={`text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg ${
-          showError && 'border-red-500 animate-shake'
+          error !== '' && 'border-red-500 animate-shake'
         }`}
         value={guestName}
         onChange={(e) => {
           setGuestName(e.target.value);
-          setShowError(false);
+          setError('');
         }}
         maxLength={15}
       />
-      {showError && (
+      {error !== '' && (
         <div className="flex justify-start items-center w-full text-red-500">
           <InfoIcon className="w-5 h-5 mr-1" />
-          <p className="font-display">{t('participants:nameError')}</p>
+          <p className="font-display">{t(error)}</p>
         </div>
       )}
 
@@ -174,6 +175,7 @@ function UserView({
   user,
   onSubmit,
   isSubmitting,
+  error,
 }: {
   user: {
     username: string;
@@ -182,6 +184,7 @@ function UserView({
   };
   onSubmit: () => void;
   isSubmitting: boolean;
+  error: string;
 }) {
   const { t } = useTranslation(['participants']);
 
@@ -193,6 +196,12 @@ function UserView({
         className="text-[#333333] text-center font-display md:text-lg text-lg py-8 px-12 w-full shadow-lg"
         value={user.username}
       />
+      {error !== '' && (
+        <div className="flex justify-start items-center w-full text-red-500">
+          <InfoIcon className="w-5 h-5 mr-1" />
+          <p className="font-display">{t(error)}</p>
+        </div>
+      )}
       <Button
         onClick={onSubmit}
         disabled={isSubmitting}
@@ -207,11 +216,12 @@ function UserView({
 
 export default function CreateParticipant({
   handleAddParticipant,
+  currentSlide,
 }: CreateParticipantProps) {
   const { user: authenticatedUser } = useGetAuthenticatedUser();
   const { t } = useTranslation(['participants']);
 
-  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState('');
   const [user, setUser] = useState<{
     username: string;
     avatar: string;
@@ -260,7 +270,11 @@ export default function CreateParticipant({
   // Called after user picks "Play" as them
   const handleSubmitMe = () => {
     if (!user.username) {
-      setShowError(true);
+      setError('participants:nameError');
+      return;
+    }
+    if (currentSlide !== 0) {
+      setError('participants:quizStartedError');
       return;
     }
 
@@ -280,7 +294,11 @@ export default function CreateParticipant({
     collection: string
   ) => {
     if (!name) {
-      setShowError(true);
+      setError('participants:nameError');
+      return;
+    }
+    if (currentSlide !== 0) {
+      setError('participants:quizStartedError');
       return;
     }
     if (addingUser) return;
@@ -314,14 +332,15 @@ export default function CreateParticipant({
                 user={user}
                 isSubmitting={addingUser}
                 onSubmit={handleSubmitMe}
+                error={error}
               />
             </TabsContent>
             <TabsContent value="guest">
               <GuestAdvancedView
                 onSubmit={handleSubmitGuest}
                 isSubmitting={addingUser}
-                showError={showError}
-                setShowError={setShowError}
+                error={error}
+                setError={setError}
               />
             </TabsContent>
           </div>
@@ -331,8 +350,8 @@ export default function CreateParticipant({
           <GuestAdvancedView
             onSubmit={handleSubmitGuest}
             isSubmitting={addingUser}
-            showError={showError}
-            setShowError={setShowError}
+            error={error}
+            setError={setError}
           />
         </div>
       )}

@@ -17,6 +17,7 @@
   "playAsUser": "Play as",
   "enter": "Enter name",
   "nameError": "Please enter a name",
+  "quizStartedError": "The quiz has already started!",
   "menu": "Settings",
   "lobbyView.title": "Waiting for the quiz to start...",
   "endedView.title": "The quiz has ended, thank you for playing!",
