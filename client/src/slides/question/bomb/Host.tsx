@@ -7,6 +7,7 @@ import { BombSlide } from '@/models/Quiz';
 import { ParticipantService } from '@/services/participant';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+import { stringSimilarity } from 'string-similarity-js';
 
 import { FaBomb } from 'react-icons/fa';
 import NextSlide from '@/slides/_components/NextSlide';
@@ -179,90 +180,98 @@ export function Host({
 
   useEffect(() => {
     if (currentParticipants) {
-      const updateParticipants = async () => {
+      const updateParticipants = async (): Promise<void> => {
         if (time <= 0 || isTransitioning || currentParticipants.length === 0)
           return;
 
         const currentParticipant = currentParticipants[0];
-        const lastTempAnswer = currentParticipant?.tempAnswer?.tempAnswer;
+        const lastTempAnswer: string | undefined =
+          currentParticipant?.tempAnswer?.tempAnswer;
 
-        if (
-          lastTempAnswer &&
-          answers.includes(lastTempAnswer.toUpperCase().trim()) &&
-          !usedAnswers.includes(lastTempAnswer.toUpperCase().trim()) &&
-          currentParticipant.participantId == turn
-        ) {
-          setIsCorrect('true');
+        // Helper function to find the most similar answer
+        const findMostSimilarAnswer = (
+          input: string
+        ): { answer: string; similarity: number } => {
+          return answers.reduce<{ answer: string; similarity: number }>(
+            (bestMatch, answer) => {
+              const similarity = stringSimilarity(input, answer);
+              return similarity > bestMatch.similarity
+                ? { answer, similarity }
+                : bestMatch;
+            },
+            { answer: '', similarity: 0 }
+          );
+        };
 
-          setUsedAnswers((prev) => {
-            const updatedAnswers = [...prev, lastTempAnswer.toUpperCase()];
+        if (lastTempAnswer) {
+          const normalizedAnswer = lastTempAnswer.toUpperCase().trim();
+          const mostSimilar = findMostSimilarAnswer(normalizedAnswer);
 
-            if (answers.length === updatedAnswers.length) {
-              sendAnswersToDatabase(
-                aliveParticipants,
-                deadParticipants,
-                updatedAnswers
-              );
-              setWinner(aliveParticipants);
-            }
+          if (
+            mostSimilar.similarity >= 0.8 && // Threshold for similarity
+            !usedAnswers.includes(mostSimilar.answer) &&
+            currentParticipant.participantId === turn
+          ) {
+            setIsCorrect('true');
 
-            return updatedAnswers;
-          });
+            setUsedAnswers((prev) => {
+              const updatedAnswers = [...prev, mostSimilar.answer];
 
-          setUserAnswer(lastTempAnswer);
-          setIsTransitioning(true);
+              if (answers.length === updatedAnswers.length) {
+                sendAnswersToDatabase(
+                  aliveParticipants,
+                  deadParticipants,
+                  updatedAnswers
+                );
+                setWinner(aliveParticipants);
+              }
 
-          // Update is turn logic
-          setTimeout(async () => {
-            setIsCorrect('');
-            setUserAnswer('');
-
-            // Get the first participant from the updated order
-            const nextParticipant = [
-              ...currentParticipants.slice(getNextParticipantIndex(1)),
-              ...currentParticipants.slice(0, getNextParticipantIndex(1)),
-            ][0];
-
-            // Compute the updated participants array
-            setCurrentParticipants((prevParticipants) => {
-              const nextIndex = getNextParticipantIndex(1); // Get the next participant index
-              return [
-                ...prevParticipants.slice(nextIndex),
-                ...prevParticipants.slice(0, nextIndex),
-              ];
+              return updatedAnswers;
             });
 
-            // Wait for the async operation to finish before continuing
-            await ParticipantService.removeTempAnswer(
-              quizCode,
-              currentParticipant.participantId
-            );
+            setUserAnswer(mostSimilar.answer);
+            setIsTransitioning(true);
 
-            handleChangeTurn(nextParticipant.participantId);
+            setTimeout(async () => {
+              setIsCorrect('');
+              setUserAnswer('');
 
-            setTime(slide.initialTime); // Reset the timer
-            setIsTransitioning(false); // Unlock transitions
-            setUserAnswer('');
-          }, 1200);
-        } else if (
-          lastTempAnswer &&
-          !answers.includes(lastTempAnswer.toUpperCase().trim())
-        ) {
-          setIsCorrect('false');
-          setUserAnswer(lastTempAnswer);
-        } else if (
-          lastTempAnswer &&
-          answers.includes(lastTempAnswer.toUpperCase().trim()) &&
-          usedAnswers.includes(lastTempAnswer.toUpperCase().trim())
-        ) {
-          setIsCorrect('used');
-          setUserAnswer(lastTempAnswer);
-          setIsTransitioning(false); // Reset transition lock
-          setTimeout(() => {});
+              const nextParticipant = [
+                ...currentParticipants.slice(getNextParticipantIndex(1)),
+                ...currentParticipants.slice(0, getNextParticipantIndex(1)),
+              ][0];
+
+              setCurrentParticipants((prevParticipants) => {
+                const nextIndex = getNextParticipantIndex(1);
+                return [
+                  ...prevParticipants.slice(nextIndex),
+                  ...prevParticipants.slice(0, nextIndex),
+                ];
+              });
+
+              await ParticipantService.removeTempAnswer(
+                quizCode,
+                currentParticipant.participantId
+              );
+
+              handleChangeTurn(nextParticipant.participantId);
+
+              setTime(slide.initialTime);
+              setIsTransitioning(false);
+              setUserAnswer('');
+            }, 1200);
+          } else if (mostSimilar.similarity < 0.8) {
+            setIsCorrect('false');
+            setUserAnswer(lastTempAnswer);
+          } else if (usedAnswers.includes(mostSimilar.answer)) {
+            setIsCorrect('used');
+            setUserAnswer(lastTempAnswer);
+            setIsTransitioning(false);
+          }
         }
       };
 
-      updateParticipants(); // Call the async function
+      updateParticipants();
     }
   }, [currentParticipants]);
 

@@ -14,7 +14,7 @@ export const Info: SlideInfo = {
   value: 'question:BOMB',
   icon: FaBomb,
   iconColor:"#111827",
-  label: 'Ticking time bomb',
+  label: "BOMB",
   slideType: SlideTypes.question,
   slideState: "Waiting",
   questionType: QuestionTypes.BOMB,

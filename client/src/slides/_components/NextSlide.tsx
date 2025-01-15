@@ -75,7 +75,7 @@ export default function NextSlide({
         {/* Settings Popup (Dialog) */}
         <DialogContent className="p-4 w-48 bg-background border border-primary shadow-lg rounded-md">
           <DialogHeader>
-            <DialogTitle className=" text-2xl font-display">
+            <DialogTitle className=" text-2xl font-display text-white">
               Settings
             </DialogTitle>
           </DialogHeader>
@@ -110,7 +110,7 @@ export default function NextSlide({
       <Dialog open={showConfirmEnd} onOpenChange={setShowConfirmEnd}>
         <DialogContent className="p-4 bg-background border border-primary shadow-lg rounded-md">
           <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogTitle className='text-white'>Are you sure?</DialogTitle>
           </DialogHeader>
 
           <div className="flex justify-between gap-4">

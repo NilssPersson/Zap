@@ -52,7 +52,7 @@ export function Host({
           </div>
         </div>
       )}
-       <h1 className='text-2xl font-display mt-4'>Look at your phone!</h1>
+       <h1 className='text-2xl font-display mt-4'>{t("questions:lookatphone")}</h1>
       <Smartphone size={128} color="white"></Smartphone>
       <NextSlide
         quizCode={quizCode}
