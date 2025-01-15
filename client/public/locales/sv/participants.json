@@ -17,6 +17,7 @@
   "playAsUser": "Spela som",
   "enter": "Ange namn",
   "nameError": "Vänligen ange ett namn",
+  "quizStartedError": "Quizzet har redan börjat!",
   "menu": "Inställningar",
   "lobbyView.title": "Väntar på att quizzet ska starta...",
   "endedView.title": "Quizzet har slutat, tack för att du spelade!",

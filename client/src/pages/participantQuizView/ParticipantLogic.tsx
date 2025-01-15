@@ -184,7 +184,8 @@ function ParticipantLogic() {
       !quizCode ||
       !participantName ||
       !participantAvatar ||
-      !participantCollection
+      !participantCollection ||
+      currentSlide !== 0
     )
       return;
     try {
@@ -236,7 +237,10 @@ function ParticipantLogic() {
   if (!participantId || !participantData) {
     return (
       <>
-        <CreateParticipant handleAddParticipant={handleAddParticipant} />
+        <CreateParticipant
+          handleAddParticipant={handleAddParticipant}
+          currentSlide={currentSlide}
+        />
       </>
     );
   }
