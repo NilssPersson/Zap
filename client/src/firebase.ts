@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getPerformance } from "firebase/performance";
 import { getDatabase } from "firebase/database";
 import type { Database } from "firebase/database";
@@ -12,6 +13,7 @@ class FirebaseError extends Error {
 }
 
 let app: ReturnType<typeof initializeApp>;
+let auth: ReturnType<typeof getAuth>;
 let database: Database;
 let perf: ReturnType<typeof getPerformance>;
 
@@ -41,6 +43,7 @@ export function initializeFirebase() {
 
   try {
     app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
     database = getDatabase(app);
     perf = getPerformance(app);
   } catch (error) {
@@ -54,8 +57,8 @@ export function initializeFirebase() {
  * Get Firebase services with initialization check
  */
 export function getFirebaseServices() {
-  if (!app || !database || !perf) {
+  if (!app || !auth || !database || !perf) {
     throw new FirebaseError('Firebase has not been initialized. Call initializeFirebase first.');
   }
-  return { database, perf };
+  return { auth, database, perf };
 }
