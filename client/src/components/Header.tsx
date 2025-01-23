@@ -133,7 +133,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        ' md:block transition-opacity duration-200 border-b-1  border-b-primary shadow shadow-black/10',
+        ' md:block transition-opacity duration-200 border-b  border-b-accent shadow shadow-black/10',
         inLobby && 'absolute top-0 left-0 right-0',
         inGame && 'hidden',
         sheetOpen ? 'bg-sheet text-white' : 'bg-background text-foreground'
