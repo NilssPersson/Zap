@@ -15,6 +15,7 @@ import filip from '@/assets/photos/filip.jpeg';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { MoveRight } from 'lucide-react';
 
 interface LinkedInPhoneProps {
   readMore: boolean;
@@ -65,21 +66,17 @@ export default function LinkedInPhone({ readMore }: LinkedInPhoneProps) {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-[#F9F8FE] py-6 px-4">
+    <div className="flex flex-col justify-center items-center w-full bg-background pt-20 px-4 pb-2">
       <div className="text-center">
-        <h1 className="text-3xl font-display mb-4 text-gray-800">
+        <h1 className="text-3xl font-display text-center text-foreground bg-secondary w-fit mx-auto p-2 rounded-lg">
           {t('about:who')}
         </h1>
       </div>
-      <div className="p-4 text-center justify-center items-center  rounded-lg  mb-4 bg-[#F9F8FE]">
-        <p className="text-2xl text-gray-700 font-display">
+      <div className="p-2 text-center justify-center items-center rounded-lg mb-4">
+        <p className="text-xl text-foreground font-display">
           {t('about:introText')}
         </p>
       </div>
-      {/* Section Heading */}
-      <h1 className="text-2xl font-display text-gray-800 mb-4">
-        {t('about:team')}
-      </h1>
 
       {/* Carousel */}
       <div className="w-full">
@@ -87,7 +84,7 @@ export default function LinkedInPhone({ readMore }: LinkedInPhoneProps) {
           <CarouselContent>
             {people.map((person, index) => (
               <CarouselItem key={index}>
-                <div className="flex flex-col items-center bg-white rounded-lg shadow-sm overflow-hidden w-[250px] mx-auto mb-1">
+                <div className="flex flex-col items-center bg-secondary rounded-lg shadow-sm overflow-hidden w-[250px] mx-auto mb-1">
                   <img
                     src={person.src}
                     alt={person.name}
@@ -101,7 +98,7 @@ export default function LinkedInPhone({ readMore }: LinkedInPhoneProps) {
                       className="flex items-center justify-center space-x-2 hover:text-blue-600"
                     >
                       <FaLinkedin size={24} color="#0A66C2" />
-                      <p className="text-lg font-display text-gray-700">
+                      <p className="text-xl font-display text-foreground">
                         {person.name}
                       </p>
                     </a>
@@ -113,7 +110,6 @@ export default function LinkedInPhone({ readMore }: LinkedInPhoneProps) {
         </Carousel>
       </div>
 
-      {/* Dot Indicator */}
       {count > 0 && (
         <div className="flex gap-2 mt-4">
           {Array.from({ length: count }, (_, i) => {
@@ -138,10 +134,11 @@ export default function LinkedInPhone({ readMore }: LinkedInPhoneProps) {
         <div className="text-center mt-8">
           <Link to="/about">
             <Button
-              variant={location.pathname === '/about' ? 'default' : 'ghost'}
-              className="mb-5 bg-primary p-4 text-2xl font-display text-gray-800"
+              isInteractive
+              className="mb-5 bg-primary p-4 text-2xl font-display text-white inline-flex items-center justify-center"
             >
               {t('homepage:readmore')}
+              <MoveRight strokeWidth={4} />
             </Button>
           </Link>
         </div>

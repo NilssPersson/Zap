@@ -6,7 +6,7 @@ export default function AboutPhone() {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col bg-white text-black p-4 h-screen overflow-auto pt-10">
+    <div className="flex flex-col bg-white text-black h-screen overflow-auto">
       {/* About Text Section */}
 
       {/* LinkedIn Component for Phone */}

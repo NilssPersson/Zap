@@ -6,21 +6,19 @@ export default function About() {
   const { t } = useTranslation();
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-dvh w-full bg-[#F8F8F8]">
+    <div className=" flex flex-col items-center justify-start overflow-auto  h-dvh w-full bg-background">
       {/* LinkedIn Component */}
-      <div className="flex-1 w-full pt-10">
+      <div className="flex-1 w-full">
         <LinkedInComponent readMore={false} />
       </div>
 
       {/* Goals Section */}
-      <div className='flex gap-4 flex-row w-7/12'>
+      <div className="flex gap-4 flex-row w-7/12">
         <div className="flex-1 max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
           <h3 className="text-2xl font-display mb-2 text-gray-800">
             {t('about:goalsTitle')}
           </h3>
-          <p className="text-gray-700">
-            {t('about:goalsText')}
-          </p>
+          <p className="text-gray-700">{t('about:goalsText')}</p>
         </div>
 
         {/* Status Section */}
@@ -28,9 +26,7 @@ export default function About() {
           <h3 className="text-2xl font-display mb-2 text-gray-800">
             {t('about:statusTitle')}
           </h3>
-          <p className="text-gray-700">
-            {t('about:statusText')}
-          </p>
+          <p className="text-gray-700">{t('about:statusText')}</p>
         </div>
       </div>
 
