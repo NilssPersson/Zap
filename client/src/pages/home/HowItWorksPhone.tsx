@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 const HowItWorksPhone = () => {
   const { t } = useTranslation();
   return (
-    <div className="py-6 w-full bg-gray-50">
-      <h1 className="text-3xl font-display text-center text-gray-700 mb-6">
+    <div className="w-full bg-background pb-2">
+      <h1 className="text-3xl font-display text-center text-foreground mb-6 bg-secondary w-fit mx-auto p-2 rounded-lg">
         {t('homepage:getStarted')}
       </h1>
       <div className="space-y-16 max-w-md mx-auto px-4">
@@ -23,7 +23,7 @@ const HowItWorksPhone = () => {
             className="w-full h-auto rounded-lg shadow-md"
           />
           {/* Content */}
-          <div className=" rounded-lg  p-4 ">
+          <div className=" rounded-lg p-1">
             <h2 className="text-xl font-display text-gray-900 mb-1">
               {t('homepage:stepTitles.0')}
             </h2>
@@ -47,7 +47,7 @@ const HowItWorksPhone = () => {
             className="w-full h-auto rounded-lg shadow-md"
           />
           {/* Content */}
-          <div className=" rounded-lg  p-4 ">
+          <div className=" rounded-lg  p-1 ">
             <h2 className="text-xl font-display text-gray-900 mb-1">
               {t('homepage:stepTitles.1')}
             </h2>
@@ -71,7 +71,7 @@ const HowItWorksPhone = () => {
             className="w-full h-auto rounded-lg shadow-md"
           />
           {/* Content */}
-          <div className=" rounded-lg  p-4 mt-4">
+          <div className=" rounded-lg  p-1">
             <h2 className="text-xl font-display text-gray-900 mb-1">
               {t('homepage:stepTitles.2')}
             </h2>

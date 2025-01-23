@@ -69,8 +69,8 @@ export default function QuestionCarousel() {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-background py-8">
-      <h1 className="text-3xl font-display text-secondary-foreground mt-4 md:text-5xl">
+    <div className="flex flex-col justify-center items-center w-full bg-background py-4">
+      <h1 className="text-3xl font-display text-center text-foreground mb-2 mt-6 bg-secondary w-fit mx-auto p-2 rounded-lg">
         {t('homepage:questionCarouselText')}
       </h1>
 
@@ -102,7 +102,7 @@ export default function QuestionCarousel() {
         </div>
       )}
 
-      <div className="w-full pb-3">
+      <div className="w-full">
         <Carousel
           setApi={setApi}
           increment={1}

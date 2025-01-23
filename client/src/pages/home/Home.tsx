@@ -76,12 +76,12 @@ function Home() {
             />
           </div>
           <div className="flex md:hidden flex-col flex-1 gap-2 items-center justify-center my-8 px-4">
-            <Link to="/play" className='w-full'>
+            <Link to="/play" className="w-full">
               <Button
                 className="w-full font-display lg:text-4xl text-2xl p-8 border-primary border-2 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
                 size="lg"
                 isInteractive
-                interactiveStyles='w-full'
+                interactiveStyles="w-full"
               >
                 {t('general:play')}
               </Button>
@@ -90,7 +90,7 @@ function Home() {
               className="w-full font-display lg:text-4xl text-2xl p-8 bg-green-500 border-2 border-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
               size="lg"
               isInteractive
-              interactiveStyles='w-full'
+              interactiveStyles="w-full"
               onClick={() => register()}
             >
               {t('general:register')}
@@ -111,8 +111,8 @@ function Home() {
                 className="w-full font-display lg:text-4xl text-2xl p-8 border-primary border-2 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
                 size="lg"
                 isInteractive
-                interactiveStyles='w-fit'
-            >
+                interactiveStyles="w-fit"
+              >
                 {t('general:play')}
               </Button>
             </Link>
@@ -120,7 +120,7 @@ function Home() {
               className="w-full font-display lg:text-4xl text-2xl p-8 bg-green-500 border-2 border-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
               size="lg"
               isInteractive
-              interactiveStyles='w-fit'
+              interactiveStyles="w-fit"
               onClick={() => register()}
             >
               {t('general:register')}
@@ -130,7 +130,7 @@ function Home() {
 
         {/* Container for Title and Carousel */}
         <div className="flex-1 w-full">
-          <QuestionCarousel />;
+          <QuestionCarousel />
         </div>
 
         <div className="w-full">
@@ -138,13 +138,11 @@ function Home() {
           <div className="hidden lg:block">
             <HowItWorks />
           </div>
-
           {/* Render HowItWorksPhone for smaller devices */}
           <div className="block lg:hidden">
             <HowItWorksPhone />
           </div>
         </div>
-
 
         <div className="w-full overflow-x-auto hidden lg:block my-8">
           <LinkedInComponent readMore={true} />
@@ -159,7 +157,6 @@ function Home() {
         </div>
         {/* Avatar Carousel */}
       </div>
-
 
       <div className="flex flex-col items-center w-full mt-10 mb-10">
         <h1 className="text-gray-800 font-display text-3xl text-center">
