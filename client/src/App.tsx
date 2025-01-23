@@ -10,6 +10,7 @@ import { TutorialOverlay } from './components/tutorial/TutorialOverlay';
 import config from '@/config';
 import ErrorBoundary from './components/errors/ErrorBoundary';
 import { initializeFirebase } from './firebase';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 function App() {
   const [error, setError] = useState<Error | null>(null);
@@ -18,7 +19,9 @@ function App() {
     try {
       initializeFirebase();
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Failed to initialize app'));
+      setError(
+        err instanceof Error ? err : new Error('Failed to initialize app')
+      );
     }
   }, []);
 
@@ -36,15 +39,17 @@ function App() {
             redirectUri={config.KINDE.REDIRECT_URI}
             logoutUri={config.KINDE.LOGOUT_URI}
           >
-            <AppProvider>
-              <TutorialProvider>
-                <Header />
-                <AppRoutes />
-                <OngoingQuizHandler />
-                <Toaster />
-                <TutorialOverlay disabled={false} />
-              </TutorialProvider>
-            </AppProvider>
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              <AppProvider>
+                <TutorialProvider>
+                  <Header />
+                  <AppRoutes />
+                  <OngoingQuizHandler />
+                  <Toaster />
+                  <TutorialOverlay disabled={false} />
+                </TutorialProvider>
+              </AppProvider>
+            </ThemeProvider>
           </KindeProvider>
         </main>
       </div>

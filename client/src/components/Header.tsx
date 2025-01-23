@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
-import { Menu, Zap, LogIn, ChevronDown } from 'lucide-react';
+import { Menu, Zap, LogIn, ChevronDown, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -11,7 +11,6 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetHeader,
   SheetTrigger,
 } from '@/components/ui/sheet';
 import {
@@ -20,9 +19,11 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import LanguageToggle from '@/components/Settings/LanguageToggle';
+import { ThemeSelector } from './ThemeSelector';
 
 export function Header() {
   const location = useLocation();
+
   const { isAuthenticated, login, register, logout } = useKindeAuth();
 
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ export function Header() {
     return (
       <header
         className={cn(
-          'bg-black/100 md:block transition-opacity duration-200 border-b-2  border-b-primary shadow shadow-black/20 z-50',
+          'bg-white md:block transition-opacity duration-200 border-b-2  border-b-primary shadow shadow-black/20 z-50',
           inLobby && 'absolute top-0 left-0 right-0',
           inGame && 'hidden'
         )}
@@ -132,20 +133,21 @@ export function Header() {
   return (
     <header
       className={cn(
-        'bg-black/100 md:block transition-opacity duration-200 border-b-2  border-b-primary shadow shadow-black/20 z-50',
+        ' md:block transition-opacity duration-200 border-b-1  border-b-primary shadow shadow-black/10',
         inLobby && 'absolute top-0 left-0 right-0',
-        inGame && 'hidden'
+        inGame && 'hidden',
+        sheetOpen ? 'bg-sheet text-white' : 'bg-background text-foreground'
       )}
     >
       <div className="container flex h-16 items-center px-1 overflow-hidden">
         <div className={cn('mr-0 md:flex w-full', inGame && 'hidden')}>
-          <nav className="flex items-center space-x-6 font-medium w-full justify-between">
+          <nav className="flex  w-full justify-between">
             <Link
               to="/"
-              className="flex items-center gap-2 text-2xl font-display"
+              className="flex items-center pl-4 text-2xl font-display"
             >
-              <Zap className="text-yellow-400" size={32} />
-              <span className="fancy-wrap">Zap!</span>
+              <Zap className="text-yellow-400" size={26} />
+              <span>Zap</span>
             </Link>
 
             <div className="flex items-center font-display gap-1">
@@ -164,28 +166,33 @@ export function Header() {
               ) : (
                 <>
                   <Link to="/play">
-                    <Button className="text-lg text-white" isInteractive>
+                    <Button
+                      className="text-lg text-white bg-green-500"
+                      isInteractive
+                    >
                       {t('general:play')}
                     </Button>
                   </Link>
                   <LanguageToggle fixed={false} />
+                  <ThemeSelector />
                 </>
               )}
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger
-                  className="ml-2 mr-3 text-2xl"
-                  onClick={() => setSheetOpen(true)}
+                  className="ml-2 mr-3 text-2xl focus:outline-none focus:ring-0"
+                  onClick={() => setSheetOpen(!sheetOpen)}
                 >
-                  <Menu />
+                  {sheetOpen ? (
+                    <X className="z-50" size={24} />
+                  ) : (
+                    <Menu className="" size={24} />
+                  )}
                 </SheetTrigger>
+
                 <SheetContent
-                  className="w-full border-none font-display text-xl text-white overflow-y-auto"
+                  className="w-full border-none font-display text-xl text-white overflow-y-auto mt-16"
                   onOpenAutoFocus={(event) => event.preventDefault()}
                 >
-                  <SheetHeader className="flex flex-row items-center justify-center space-x-1 pt-6">
-                    <Zap className="text-yellow-400" size={25} />
-                    <span className="fancy-wrap text-2xl">Zap!</span>
-                  </SheetHeader>
                   <SheetDescription className="flex flex-col space-y-2 text-left pt-6">
                     <Link to="/">
                       <Button
@@ -232,7 +239,7 @@ export function Header() {
                           }}
                         />
                       </CollapsibleTrigger>
-                      <CollapsibleContent className="px-5 pt-2">
+                      <CollapsibleContent className="px-4 pt-2">
                         <div className="grid gap-1">
                           <Link to="/tools/team-generator">
                             <Button
@@ -276,7 +283,7 @@ export function Header() {
                         </Button>
                       </div>
                     ) : (
-                      <div className="pt-10 flex flex-col space-y-2">
+                      <div className="pt-10 flex flex-col space-y-2 w-4/5 mx-auto">
                         <Button
                           className="text-lg"
                           onClick={() => login()}

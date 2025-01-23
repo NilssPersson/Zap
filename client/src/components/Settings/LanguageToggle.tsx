@@ -5,7 +5,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Languages } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import LanguageRadioGroup from './LanguageRadio';
@@ -25,12 +25,13 @@ export default function LanguageToggle({ fixed = true }: LanguageToggleProps) {
           variant="ghost"
           size="sm"
           className={cn(
-            fixed &&
-              'fixed top-4 right-4 z-50 bg-white text-black p-2 h-7 font-display'
+            fixed
+              ? 'fixed top-4 right-4 z-50 bg-white text-black p-2 h-7 font-display '
+              : 'border border-black/10 rounded-full'
           )}
         >
+          <Globe className="h-4 w-4" strokeWidth={2} />
           {i18n.language.toUpperCase()}
-          <Languages className="h-4 w-4" strokeWidth={2} />
         </Button>
       </PopoverTrigger>
 
