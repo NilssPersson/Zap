@@ -1,6 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
-import { Menu, Zap, LogIn, ChevronDown, X } from 'lucide-react';
+import {
+  Menu,
+  Zap,
+  LogIn,
+  ChevronDown,
+  X,
+  Sun,
+  Moon,
+  Monitor,
+} from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -20,9 +29,11 @@ import {
 } from '@/components/ui/collapsible';
 import LanguageToggle from '@/components/Settings/LanguageToggle';
 import { ThemeSelector } from './ThemeSelector';
+import { useTheme } from '@/components/ThemeProvider';
 
 export function Header() {
   const location = useLocation();
+  const { setTheme, theme } = useTheme();
 
   const { isAuthenticated, login, register, logout } = useKindeAuth();
 
@@ -98,6 +109,7 @@ export function Header() {
                   </Button>
                 </Link>
                 <Tools />
+                <ThemeSelector />
                 {!isAuthenticated && (
                   <>
                     <Button
@@ -174,7 +186,6 @@ export function Header() {
                     </Button>
                   </Link>
                   <LanguageToggle fixed={false} />
-                  <ThemeSelector />
                 </>
               )}
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -271,6 +282,34 @@ export function Header() {
                         </div>
                       </CollapsibleContent>
                     </Collapsible>
+                    <div className="flex justify-between items-center">
+                      <h1 className="text-2xl text-primary pl-4 pt-2">
+                        {t('general:theme')}
+                      </h1>
+                      <div className="flex gap-3 border border-primary rounded-full p-2">
+                        <Monitor
+                          className={cn(
+                            'w-4 h-4',
+                            theme === 'system' && 'text-primary'
+                          )}
+                          onClick={() => setTheme('system')}
+                        />
+                        <Sun
+                          className={cn(
+                            'w-4 h-4',
+                            theme === 'light' && 'text-primary border-primary'
+                          )}
+                          onClick={() => setTheme('light')}
+                        />
+                        <Moon
+                          className={cn(
+                            'w-4 h-4',
+                            theme === 'dark' && 'text-primary border-primary'
+                          )}
+                          onClick={() => setTheme('dark')}
+                        />
+                      </div>
+                    </div>
                     {isAuthenticated ? (
                       <div className="pt-10">
                         <Button
