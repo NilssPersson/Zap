@@ -14,7 +14,7 @@ interface AvatarCarouselProps {
 const AvatarCarousel: React.FC<AvatarCarouselProps> = ({ avatars }) => {
   const { t } = useTranslation();
   return (
-    <div className="w-full flex flex-col items-center text-center text-gray-800 bg-[#F4F4F4] py-10">
+    <div className="w-full flex flex-col items-center text-center text-foreground bg-secondary py-10">
       <h1 className="font-display lg:text-4xl text-2xl mb-6">
         {t('homepage:avatarText')}
       </h1>
@@ -28,29 +28,6 @@ const AvatarCarousel: React.FC<AvatarCarouselProps> = ({ avatars }) => {
             ease: 'linear',
           }}
         >
-          {/* Map the avatar list twice to create seamless scrolling */}
-          {avatars.map((avatar, index) => (
-            <div key={index} className="flex flex-col items-center">
-              {/* Small Screen Avatar (Visible on small screens only) */}
-              <div className="lg:hidden">
-                <Avatar
-                  width="4rem"
-                  height="4rem"
-                  avatarString={avatar.avatarString}
-                  collectionName={avatar.collectionName}
-                />
-              </div>
-
-              {/* Large Screen Avatar (Visible on large screens only) */}
-              <div className="hidden lg:block">
-                <Avatar
-                  avatarString={avatar.avatarString}
-                  collectionName={avatar.collectionName}
-                />
-              </div>
-            </div>
-          ))}
-          {/* Duplicate the same avatars again for seamless scrolling */}
           {avatars.map((avatar, index) => (
             <div
               key={index + avatars.length}

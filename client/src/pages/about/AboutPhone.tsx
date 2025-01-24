@@ -1,38 +1,41 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'lucide-react';
-import LinkedInPhone from '@/pages/home/LinkedInPhone'; // Import LinkedInPhone component
+import LinkedInPhone from '@/pages/home/LinkedInPhone';
+import { FaBullseye, FaSignal } from 'react-icons/fa';
 
 export default function AboutPhone() {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col bg-white text-black h-screen overflow-auto">
-      {/* About Text Section */}
-
-      {/* LinkedIn Component for Phone */}
+    <div className="flex flex-col bg-background text-black h-screen overflow-auto">
       <div className="w-full mb-4">
-        <LinkedInPhone readMore={false} />{' '}
-        {/* Use LinkedInPhone component here */}
+        <LinkedInPhone readMore={false} />
       </div>
 
       {/* Goals Section */}
-      <div className="bg-gray-200 p-4 rounded-lg shadow-lg w-full mb-4">
-        <h3 className="text-xl font-bold font-display mb-3">
-          {t('about:goalsTitle')}
-        </h3>
-        <p className="text-md text-gray-700 font-display">
-          {t('about:goalsText')}
-        </p>
+      <div className="flex w-full mb-4 p-2">
+        <div className="px-2 pt-1">
+          <FaBullseye size={18} color="#fb923c" />
+        </div>
+        <div className="pr-4 w-full mb-4 text-foreground">
+          <h3 className="text-xl font-display mb-1 font-bold">
+            {t('about:goalsTitle')}
+          </h3>
+          <p className="text-md font-display">{t('about:goalsText')}</p>
+        </div>
       </div>
 
       {/* Status Section */}
-      <div className="bg-gray-200 p-4 rounded-lg shadow-lg w-full mb-4">
-        <h3 className="text-xl font-bold font-display mb-3">
-          {t('about:statusTitle')}
-        </h3>
-        <p className="text-md text-gray-700 font-display">
-          {t('about:statusText')}
-        </p>
+      <div className="flex w-full mb-4 p-2">
+        <div className="px-2 pt-1">
+          <FaSignal size={18} color="#8b5cf6" />
+        </div>
+        <div className="pr-4 w-full mb-4 text-foreground">
+          <h3 className="text-xl font-display mb-1 font-bold">
+            {t('about:statusTitle')}
+          </h3>
+          <p className="text-md font-display">{t('about:statusText')}</p>
+        </div>
       </div>
 
       {/* GitHub Link */}

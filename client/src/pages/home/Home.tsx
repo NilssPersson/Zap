@@ -1,17 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { WiggleText } from '@/components/WiggleText';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import QuestionCarousel from '@/pages/home/QuestionCarousel';
 import AvatarCarousel from './AvatarCarousel';
 import { useTranslation } from 'react-i18next';
-
 import HowItWorks from './HowItWorks';
 import HowItWorksPhone from './HowItWorksPhone';
-
 import { Card, CardContent } from '@/components/ui/card';
 import LinkedInComponent from './LinkedInComponent';
 import LinkedInPhone from './LinkedInPhone';
-import { Link } from 'react-router-dom';
 import { Footer } from '@/components/Footer';
 
 interface AvatarData {
@@ -29,7 +25,6 @@ const generateRandomString = (length: number): string => {
   return result;
 };
 
-// Generate 50 random strings of length 10
 const randomStrings = Array.from({ length: 25 }, () =>
   generateRandomString(30)
 );
@@ -65,71 +60,31 @@ function Home() {
   const { t } = useTranslation();
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-screen w-full bg-[#F8F8F8]">
-      <div className="flex-1 flex flex-col items-center justify-start mt-5 w-full">
-        {/* "Zap!" text */}
-        <div className="flex-1 w-full sm:w-4/5 py-4">
-          <div className="flex items-center justify-center gap-4 py-4">
-            <WiggleText
-              text="Zap!"
-              className="text-center text-6xl font-bold font-display fancy-wrap"
-            />
-          </div>
-          <div className="flex md:hidden flex-col flex-1 gap-2 items-center justify-center my-8 px-4">
-            <Link to="/play" className="w-full">
-              <Button
-                className="w-full font-display lg:text-4xl text-2xl p-8 border-primary border-2 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
-                size="lg"
-                isInteractive
-                interactiveStyles="w-full"
-              >
-                {t('general:play')}
-              </Button>
-            </Link>
-            <Button
-              className="w-full font-display lg:text-4xl text-2xl p-8 bg-green-500 border-2 border-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
-              size="lg"
-              isInteractive
-              interactiveStyles="w-full"
-              onClick={() => register()}
-            >
-              {t('general:register')}
-            </Button>
-          </div>
-          <div className="mt-5 mb-2 flex flex-col justify-center items-center gap-y-3 mx-auto">
-            <h1 className="w-4/5 lg:w-1/2 text-3xl md:text-5xl font-display text-center text-gray-800 mx-4 text-balance">
+    <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-screen w-full bg-background">
+      <div className="flex-1 flex flex-col items-center justify-start w-full">
+        <div className="flex-1 w-full sm:w-4/5 py-4 bg-background items-center justify-center flex flex-col">
+          <div className="mt-20 mb-2 flex flex-col gap-y-3 mx-auto items-center justify-center">
+            <h1 className="w-4/5 lg:w-1/2 text-4xl md:text-5xl font-display text-foreground mx-4 text-center">
               {t('homepage:slogan')}
             </h1>
 
-            <h3 className="text-gray-500 w-4/5 lg:w-1/2 text-center text-lg mx-4 text-balance tracking-tight leading-snug">
+            <h3 className="text-foreground w-4/5 lg:w-1/2 text-lg mx-4 leading-snug text-center">
               {t('homepage:inspotext')}
             </h3>
           </div>
-          <div className="hidden md:flex flex-1 md:flex-row gap-4 items-center justify-center my-8 px-4">
-            <Link to="/play">
-              <Button
-                className="w-full font-display lg:text-4xl text-2xl p-8 border-primary border-2 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
-                size="lg"
-                isInteractive
-                interactiveStyles="w-fit"
-              >
-                {t('general:play')}
-              </Button>
-            </Link>
-            <Button
-              className="w-full font-display lg:text-4xl text-2xl p-8 bg-green-500 border-2 border-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 rounded-2xl"
-              size="lg"
-              isInteractive
-              interactiveStyles="w-fit"
-              onClick={() => register()}
-            >
-              {t('general:register')}
-            </Button>
-          </div>
+          <Button
+            className="w-full mt-10 font-display lg:text-3xl text-xl bg-green-500 border-2 border-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2"
+            size="lg"
+            isInteractive
+            interactiveStyles="w-fit"
+            onClick={() => register()}
+          >
+            {t('general:register')}
+          </Button>
         </div>
 
         {/* Container for Title and Carousel */}
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full mt-20">
           <QuestionCarousel />
         </div>
 
@@ -158,15 +113,15 @@ function Home() {
         {/* Avatar Carousel */}
       </div>
 
-      <div className="flex flex-col items-center w-full mt-10 mb-10">
-        <h1 className="text-gray-800 font-display text-3xl text-center">
+      <div className="flex flex-col items-center w-full py-10 bg-primary">
+        <h1 className="text-foreground font-display text-3xl text-center">
           Try out our templates!
         </h1>
-        <div className="w-full max-w-7xl mt-8">
-          <Card className="bg-[#F9F8FE] shadow-lg">
-            <CardContent className="min-h-[300px] flex items-center justify-center">
+        <div className="w-full max-w-7xl mt-8 p-2">
+          <Card className="bg-card shadow-lg px-5">
+            <CardContent className="min-h-[200px] flex items-center justify-center">
               {/* Add content here */}
-              <p className=" text-2xl text-gray-700 font-displayP">
+              <p className=" text-2xl text-gray-700 font-display">
                 No templates available yet!
               </p>
             </CardContent>
