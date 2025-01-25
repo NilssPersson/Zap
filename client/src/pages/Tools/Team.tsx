@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Shuffle } from 'lucide-react';
+import { Shuffle, Wrench } from 'lucide-react';
 import {
   DynamicInputList,
   InputItem,
@@ -28,6 +28,7 @@ export default function Team() {
   const [teams, setTeams] = useState<string[][]>([]);
   const [isShuffling, setIsShuffling] = useState(false);
   const [shuffledNames, setShuffledNames] = useState<string[]>([]);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // Add effect to watch for changes in currentItems
   useEffect(() => {
@@ -140,6 +141,7 @@ export default function Team() {
     if (validPlayers.length >= 2) {
       setIsShuffling(true);
       setTeams([]);
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
 
       // Animate shuffling names for 1.5 seconds
       const shuffleInterval = setInterval(() => {
@@ -166,11 +168,10 @@ export default function Team() {
         <div className="space-y-4">
           <Card>
             <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <Label className="text-3xl font-display">
-                  {t('general:teamGenerator')}
-                </Label>
-              </div>
+              <Label className="text-3xl font-display flex items-center">
+                <Wrench className="w-6 h-6 mr-1" strokeWidth={3} />
+                {t('general:teamGenerator')}
+              </Label>
 
               <div className="my-6 space-y-2">
                 <div className="flex justify-between items-center px-1 font-display">
@@ -197,20 +198,18 @@ export default function Team() {
                 listLabel={t('general:playerNames')}
                 clearItems={clearItems}
               />
-              {!isShuffling && (
-                <div className="mt-4 w-full flex justify-center">
-                  <Button
-                    size="lg"
-                    onClick={randomizeTeams}
-                    disabled={isShuffling}
-                  >
-                    <Shuffle
-                      className={`w-4 h-4 ${isShuffling ? 'animate-spin' : ''}`}
-                    />
-                    {t('general:randomize')}
-                  </Button>
-                </div>
-              )}
+              <div className="mt-4 w-full flex justify-center">
+                <Button
+                  size="lg"
+                  onClick={randomizeTeams}
+                  disabled={isShuffling}
+                >
+                  <Shuffle
+                    className={`w-4 h-4 ${isShuffling ? 'animate-spin' : ''}`}
+                  />
+                  {t('general:randomize')}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -227,7 +226,7 @@ export default function Team() {
               >
                 <Card>
                   <CardContent className="pt-6">
-                    <h3 className="text-lg font-bold mb-4">
+                    <h3 className="text-2xl font-display mb-2">
                       {t('general:randomizing')}...
                     </h3>
                     <motion.ul
@@ -238,7 +237,7 @@ export default function Team() {
                       {shuffledNames.map((name, index) => (
                         <motion.li
                           key={index}
-                          className="text-xl"
+                          className="text-xl font-display"
                           initial={{ x: -20, opacity: 0 }}
                           animate={{
                             x: 0,
@@ -268,8 +267,8 @@ export default function Team() {
                         <h3 className="text-xl font-display mb-1">
                           {t('general:team')} {index + 1}
                         </h3>
-                        <ul
-                          className="grid grid-cols-2 gap-y-1 auto-rows-min grid-flow-col"
+                        <div
+                          className="grid grid-cols-3 gap-y-1 auto-rows-min grid-flow-col"
                           style={{
                             gridTemplateRows: 'repeat(2, minmax(0, auto))',
                             gridAutoFlow: team.length > 6 ? 'row' : 'column',
@@ -283,10 +282,10 @@ export default function Team() {
                               transition={{ delay: playerIndex * 0.1 }}
                               className="text-lg font-display truncate"
                             >
-                              - {player}
+                              {player}
                             </motion.li>
                           ))}
-                        </ul>
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
@@ -295,6 +294,7 @@ export default function Team() {
             )}
           </AnimatePresence>
         </div>
+        <div ref={bottomRef} />
       </div>
     </div>
   );
