@@ -305,7 +305,7 @@ export default function SpinWheel() {
   };
 
   return (
-    <div className="mx-auto p-2">
+    <div className="mx-auto p-2 overflow-hidden">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="flex flex-col gap-8">
           <div className="space-y-4">
@@ -378,7 +378,7 @@ export default function SpinWheel() {
           </Card>
         </div>
 
-        <div className="space-y-4 w-full">
+        <div className="space-y-4 w-full max-w-2xl mx-auto">
           <div className="relative aspect-square">
             <motion.div
               className="w-full h-full"
@@ -457,7 +457,7 @@ export default function SpinWheel() {
             </div>
 
             <Button
-              className="font-display absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-12 h-12 p-0"
+              className="font-display absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full w-12 h-12 lg:w-24 lg:h-24 lg:text-2xl p-0"
               onClick={spinWheel}
               disabled={
                 wheelItems.filter((item) => item.text !== '').length < 2
