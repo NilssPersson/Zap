@@ -27,13 +27,14 @@ export default function RandomNumber() {
 
   const generateNumber = () => {
     if (isRolling) return;
-    
+
     setIsRolling(true);
     setResult(null);
 
     // Generate random number after animation
     setTimeout(() => {
-      const randomNum = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+      const randomNum =
+        Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
       setResult(randomNum);
       setIsRolling(false);
     }, 3000);
@@ -60,7 +61,7 @@ export default function RandomNumber() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-2">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <Card>
@@ -97,34 +98,52 @@ export default function RandomNumber() {
                   key="rolling"
                   className="absolute inset-0"
                   style={{
-                    transformStyle: "preserve-3d",
-                    transformOrigin: "center center",
+                    transformStyle: 'preserve-3d',
+                    transformOrigin: 'center center',
                   }}
-                  initial={{ rotateX: 0, rotateY: 0, rotateZ: 0, y: 0, scale: 1 }}
+                  initial={{
+                    rotateX: 0,
+                    rotateY: 0,
+                    rotateZ: 0,
+                    y: 0,
+                    scale: 1,
+                  }}
                   animate={rollAnimation}
                   transition={{
                     duration: 3,
                     times: [0, 0.4, 0.8, 1],
-                    ease: "easeInOut"
+                    ease: 'easeInOut',
                   }}
                 >
                   <div className={styles['dice-container']}>
-                    <div className={`${styles['dice-face']} ${styles['dice-front']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-front']}`}
+                    >
                       <RandomDiceFace />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-back']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-back']}`}
+                    >
                       <RandomDiceFace />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-right']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-right']}`}
+                    >
                       <RandomDiceFace />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-left']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-left']}`}
+                    >
                       <RandomDiceFace />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-top']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-top']}`}
+                    >
                       <RandomDiceFace />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-bottom']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-bottom']}`}
+                    >
                       <RandomDiceFace />
                     </div>
                   </div>
@@ -144,27 +163,39 @@ export default function RandomNumber() {
                   key="idle"
                   className="absolute inset-0 flex items-center justify-center"
                   style={{
-                    transformStyle: "preserve-3d",
-                    transform: "rotateX(-25deg) rotateY(-25deg)",
+                    transformStyle: 'preserve-3d',
+                    transform: 'rotateX(-25deg) rotateY(-25deg)',
                   }}
                 >
                   <div className={styles['dice-container']}>
-                    <div className={`${styles['dice-face']} ${styles['dice-front']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-front']}`}
+                    >
                       <Dice1 className="w-full h-full" />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-back']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-back']}`}
+                    >
                       <Dice6 className="w-full h-full" />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-right']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-right']}`}
+                    >
                       <Dice3 className="w-full h-full" />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-left']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-left']}`}
+                    >
                       <Dice4 className="w-full h-full" />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-top']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-top']}`}
+                    >
                       <Dice2 className="w-full h-full" />
                     </div>
-                    <div className={`${styles['dice-face']} ${styles['dice-bottom']}`}>
+                    <div
+                      className={`${styles['dice-face']} ${styles['dice-bottom']}`}
+                    >
                       <Dice5 className="w-full h-full" />
                     </div>
                   </div>
@@ -185,4 +216,4 @@ export default function RandomNumber() {
       </div>
     </div>
   );
-} 
+}

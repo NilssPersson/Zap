@@ -3,18 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Trash2, Shuffle } from 'lucide-react';
+import { Shuffle } from 'lucide-react';
 import {
   DynamicInputList,
   InputItem,
 } from '@/components/ui/dynamic-input-list';
 import { Slider } from '@/components/ui/slider';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTools } from '@/contexts/Tools/context';
 
@@ -112,23 +106,6 @@ export default function Team() {
     setCurrentItems(finalItems);
   };
 
-  const handleQuickAdd = (values: string[]) => {
-    const newItems = values.map((text, index) => ({
-      id: Date.now() + index.toString(),
-      text,
-      team: undefined,
-    }));
-
-    newItems.push({
-      id: Date.now() + values.length.toString(),
-      text: '',
-      team: undefined,
-    });
-
-    setItems(newItems);
-    setCurrentItems(newItems);
-  };
-
   const removeItem = (id: string) => {
     if (items.length <= 1) return;
 
@@ -184,51 +161,21 @@ export default function Team() {
   const maxTeams = Math.max(2, validItemsCount);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-2">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <Card>
             <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-4">
-                <Label className="text-lg">{t('general:playerNames')}</Label>
-                <div className="flex items-center gap-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={clearItems}
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          {t('general:clear')}
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t('general:tools.clearTooltip')}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  {teams.length > 0 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={randomizeTeams}
-                      disabled={isShuffling}
-                    >
-                      <Shuffle
-                        className={`w-4 h-4 mr-2 ${isShuffling ? 'animate-spin' : ''}`}
-                      />
-                      {t('general:randomize')}
-                    </Button>
-                  )}
-                </div>
+              <div className="flex items-center justify-between">
+                <Label className="text-3xl font-display">
+                  {t('general:teamGenerator')}
+                </Label>
               </div>
 
-              <div className="my-6 space-y-4">
-                <div className="flex justify-between items-center">
+              <div className="my-6 space-y-2">
+                <div className="flex justify-between items-center px-1 font-display">
                   <Label>{t('general:numberOfTeams')}</Label>
-                  <span className="font-bold">{numberOfTeams}</span>
+                  <span>{numberOfTeams}</span>
                 </div>
                 <Slider
                   value={[numberOfTeams]}
@@ -247,11 +194,23 @@ export default function Team() {
                 onItemChange={handleInputChange}
                 onItemRemove={removeItem}
                 inputPlaceholder={t('general:teamTitle')}
-                quickAddPlaceholder="Player1, Player2, Player3..."
-                onQuickAdd={handleQuickAdd}
                 listLabel={t('general:playerNames')}
-                quickAddLabel={t('general:spinWheel.quickAdd')}
+                clearItems={clearItems}
               />
+              {!isShuffling && (
+                <div className="mt-4 w-full flex justify-center">
+                  <Button
+                    size="lg"
+                    onClick={randomizeTeams}
+                    disabled={isShuffling}
+                  >
+                    <Shuffle
+                      className={`w-4 h-4 ${isShuffling ? 'animate-spin' : ''}`}
+                    />
+                    {t('general:randomize')}
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -305,12 +264,12 @@ export default function Team() {
                 >
                   {teams.map((team, index) => (
                     <Card key={index}>
-                      <CardContent className="pt-6">
-                        <h3 className="text-lg font-bold mb-2">
+                      <CardContent className="p-4">
+                        <h3 className="text-xl font-display mb-1">
                           {t('general:team')} {index + 1}
                         </h3>
                         <ul
-                          className="grid grid-cols-3 gap-x-4 gap-y-1 auto-rows-min grid-flow-col"
+                          className="grid grid-cols-2 gap-y-1 auto-rows-min grid-flow-col"
                           style={{
                             gridTemplateRows: 'repeat(2, minmax(0, auto))',
                             gridAutoFlow: team.length > 6 ? 'row' : 'column',
@@ -322,9 +281,9 @@ export default function Team() {
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: playerIndex * 0.1 }}
-                              className="text-2xl font-bold truncate"
+                              className="text-lg font-display truncate"
                             >
-                              {player}
+                              - {player}
                             </motion.li>
                           ))}
                         </ul>

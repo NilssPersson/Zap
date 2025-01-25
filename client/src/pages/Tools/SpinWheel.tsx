@@ -141,27 +141,6 @@ export default function SpinWheel() {
     setWheelItems(newItems);
     setCurrentItems(newItems);
   };
-  const handleQuickAdd = (values: string[]) => {
-    const newItems = values.map((text, index) => ({
-      id: Date.now() + index.toString(),
-      text,
-      percentage: 100 / values.length,
-      color: COLORS[index % COLORS.length],
-      used: false,
-    }));
-
-    newItems.push({
-      id: Date.now() + values.length.toString(),
-      text: '',
-      percentage: 0,
-      color: COLORS[values.length % COLORS.length],
-      used: false,
-    });
-
-    const normalizedItems = normalizePercentages(newItems);
-    setWheelItems(normalizedItems);
-    setCurrentItems(normalizedItems);
-  };
 
   const handlePercentageChange = (id: string, value: string) => {
     const newPercentage = parseFloat(value) || 0;
@@ -333,7 +312,7 @@ export default function SpinWheel() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-2">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="flex flex-col gap-8">
           <div className="space-y-4">
@@ -383,9 +362,8 @@ export default function SpinWheel() {
                   onItemRemove={removeItem}
                   onPercentageChange={handlePercentageChange}
                   inputPlaceholder={t('general:spinWheel.title')}
-                  onQuickAdd={handleQuickAdd}
                   listLabel={t('general:spinWheel.items')}
-                  quickAddLabel={t('general:spinWheel.quickAdd')}
+                  clearItems={clearItems}
                 />
               </CardContent>
             </Card>
