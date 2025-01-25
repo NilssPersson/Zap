@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6 } from 'lucide-react';
+import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Dices } from 'lucide-react';
 import styles from './RandomNumber.module.css';
 
 const diceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6];
@@ -61,19 +61,22 @@ export default function RandomNumber() {
   };
 
   return (
-    <div className="container mx-auto p-2">
+    <div className="mx-auto p-2">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <Card>
             <CardContent className="pt-6">
-              <div className="space-y-4">
+              <Label className="text-3xl font-display flex items-center">
+                <Dices className="w-6 h-6 mr-1" strokeWidth={3} />
+                {t('general:randomNumber')}
+              </Label>
+              <div className="space-y-2 font-display">
                 <div>
                   <Label>{t('general:minNumber')}</Label>
                   <Input
                     type="number"
                     value={minNumber}
                     onChange={(e) => handleMinChange(e.target.value)}
-                    className="mt-1"
                   />
                 </div>
                 <div>
@@ -156,7 +159,9 @@ export default function RandomNumber() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}
                 >
-                  <span className="text-6xl font-bold">{result}</span>
+                  <span className="text-6xl font-display text-foreground">
+                    {result}
+                  </span>
                 </motion.div>
               ) : (
                 <motion.div
@@ -208,7 +213,7 @@ export default function RandomNumber() {
             size="lg"
             onClick={generateNumber}
             disabled={isRolling || minNumber > maxNumber}
-            className="w-48"
+            className="w-48 font-display"
           >
             {t('general:roll')}
           </Button>
