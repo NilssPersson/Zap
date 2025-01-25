@@ -5,19 +5,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Trash2 } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   DynamicInputList,
   InputItem,
 } from '@/components/ui/dynamic-input-list';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { useTools } from '@/contexts/Tools/context';
+import { FaLifeRing } from 'react-icons/fa';
 
 const COLORS = [
   '#FF6B6B',
@@ -38,20 +32,21 @@ interface WheelItem extends InputItem {
   used?: boolean;
 }
 
-const tempUsers: WheelItem[] = ['Bob', 'Samantha', 'Chris', 'Chloe'].map(
+const tempUsers: WheelItem[] = ['Bob', 'Samantha', 'Chris', 'Chloe', ''].map(
   (name, index) => ({
     id: Date.now().toString() + index, // Ensure unique ID
     text: name,
-    percentage: 100 / 4, // Equal distribution for 4 users
+    percentage: 25,
     color: COLORS[index % COLORS.length], // Cycle through the color palette
     used: false,
   })
 );
+
 export default function SpinWheel() {
   const { t } = useTranslation();
   const { showAdvanced, setShowAdvanced, currentItems, setCurrentItems } =
     useTools();
-  const [wheelItems, setWheelItems] = useState<WheelItem[]>([]); // Default to an empty array
+  const [wheelItems, setWheelItems] = useState<WheelItem[]>(tempUsers); // Default to an empty array
 
   // Set the wheelItems whenever currentItems changes
   useEffect(() => {
@@ -66,8 +61,6 @@ export default function SpinWheel() {
           used: false,
         }))
       );
-    } else {
-      setWheelItems(tempUsers); // Fallback to tempUsers when no currentItems
     }
   }, [currentItems]); // Trigger when currentItems change
 
@@ -312,46 +305,27 @@ export default function SpinWheel() {
   };
 
   return (
-    <div className="container mx-auto p-2">
+    <div className="mx-auto p-2">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="flex flex-col gap-8">
           <div className="space-y-4">
             <Card>
               <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <Label className="text-lg font-display">
-                    {t('general:spinWheel.items')}
+                <div className="flex items-center justify-between mb-6">
+                  <Label className="text-3xl font-display flex items-center">
+                    <FaLifeRing className="w-6 h-6 mr-2" />
+                    {t('general:spinWheel')}
                   </Label>
-                  <div className="flex items-center space-x-2">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={clearItems}
-                            className="mr-2"
-                          >
-                            <Trash2 className="font-display w-4 h-4 mr-2" />
-                            {t('general:clear')}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="font-display">
-                            {t('general:tools.clearTooltip')}
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <Switch
-                      id="advanced"
-                      checked={showAdvanced}
-                      onCheckedChange={setShowAdvanced}
-                    />
-                    <Label className="font-display" htmlFor="advanced">
-                      {t('general:spinWheel.advancedSettings')}
-                    </Label>
-                  </div>
+                </div>
+                <div className="flex items-center space-x-2 my-4">
+                  <Switch
+                    id="advanced"
+                    checked={showAdvanced}
+                    onCheckedChange={setShowAdvanced}
+                  />
+                  <Label className="font-display" htmlFor="advanced">
+                    {t('general:spinWheel.advancedSettings')}
+                  </Label>
                 </div>
 
                 <DynamicInputList
@@ -361,8 +335,8 @@ export default function SpinWheel() {
                   onItemChange={handleInputChange}
                   onItemRemove={removeItem}
                   onPercentageChange={handlePercentageChange}
-                  inputPlaceholder={t('general:spinWheel.title')}
-                  listLabel={t('general:spinWheel.items')}
+                  inputPlaceholder={t('general:teamTitle')}
+                  listLabel={t('general:playerNames')}
                   clearItems={clearItems}
                 />
               </CardContent>
@@ -404,7 +378,7 @@ export default function SpinWheel() {
           </Card>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           <div className="relative aspect-square">
             <motion.div
               className="w-full h-full"
@@ -475,7 +449,7 @@ export default function SpinWheel() {
             {/* Pointer */}
             <div className="absolute -right-4 top-1/2 transform -translate-y-1/2">
               <div
-                className="w-8 h-8 bg-white shadow-lg"
+                className="w-8 h-8 bg-foreground shadow-lg"
                 style={{
                   clipPath: 'polygon(100% 0, 100% 100%, 0 50%)',
                 }}
@@ -499,8 +473,8 @@ export default function SpinWheel() {
       <AnimatePresence>
         {winner && !isSpinning && (
           <Dialog open={showModal} onOpenChange={() => setShowModal(false)}>
-            <DialogContent className="w-full">
-              <p className="text-center font-display text-9xl text-black">
+            <DialogContent className="w-[90%]">
+              <p className="text-center font-display text-6xl text-foreground">
                 {winner?.text}
               </p>
 

@@ -116,7 +116,7 @@ export function DynamicInputList({
                 max="100"
                 value={Math.round((item.percentage || 0) * 10) / 10}
                 onChange={(e) => onPercentageChange(item.id, e.target.value)}
-                className="w-20"
+                className="w-12"
               />
               <span>%</span>
             </div>
