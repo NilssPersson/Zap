@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'lucide-react';
 import LinkedInPhone from '@/pages/home/LinkedInPhone';
 import { FaBullseye, FaSignal } from 'react-icons/fa';
+import { Meteors } from '@/components/ui/meteors';
+import { StarsBackground } from '@/components/ui/stars-background';
 
 export default function AboutPhone() {
   const { t } = useTranslation();
@@ -39,16 +41,23 @@ export default function AboutPhone() {
       </div>
 
       {/* GitHub Link */}
-      <div className="text-center w-full mt-6">
-        <a
-          href="https://github.com/FKnorring/Zap"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xl pb-6 font-display flex items-center justify-center gap-2 text-blue-400 hover:text-blue-600 transition"
-        >
-          {t('about:github')}
-          <Link size={20} />
-        </a>
+      <div className="flex w-full items-center justify-center">
+        <div className="w-full relative h-32 overflow-hidden">
+          {/* Static Content */}
+          <a
+            href="https://github.com/FKnorring/Zap"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-12 text-2xl font-display flex items-center justify-center gap-2 text-blue-400 hover:text-blue-600 transition relative z-10"
+          >
+            {t('about:github')}
+            <Link size={20} />
+          </a>
+
+          {/* Meteors */}
+          <StarsBackground />
+          <Meteors number={10} />
+        </div>
       </div>
     </div>
   );

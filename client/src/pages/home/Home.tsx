@@ -62,7 +62,7 @@ function Home() {
   return (
     <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-screen w-full bg-background">
       <div className="flex-1 flex flex-col items-center justify-start w-full">
-        <div className="flex-1 w-full sm:w-4/5 py-4 bg-background items-center justify-center flex flex-col">
+        <div className="flex-1 w-full py-4 bg-primary items-center justify-center flex flex-col">
           <div className="mt-20 mb-2 flex flex-col gap-y-3 mx-auto items-center justify-center">
             <h1 className="w-4/5 lg:w-1/2 text-4xl md:text-5xl font-display text-foreground mx-4 text-center">
               {t('homepage:slogan')}
@@ -73,7 +73,7 @@ function Home() {
             </h3>
           </div>
           <Button
-            className="w-full mt-10 font-display lg:text-3xl text-xl bg-green-500 border-2 border-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2"
+            className="w-full mt-10 font-display lg:text-3xl text-xl bg-green-500 border-2 border-green-500 text-white hover:bg-white hover:text-black hover:border-black hover:border-2 mb-16"
             size="lg"
             isInteractive
             interactiveStyles="w-fit"
@@ -83,8 +83,20 @@ function Home() {
           </Button>
         </div>
 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          className="rotate-180 scale-x-[-1] -mt-1"
+        >
+          <path
+            fill="#fbaf3c"
+            fill-opacity="1"
+            d="M0,128L48,133.3C96,139,192,149,288,138.7C384,128,480,96,576,74.7C672,53,768,43,864,58.7C960,75,1056,117,1152,154.7C1248,192,1344,224,1392,240L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+          ></path>
+        </svg>
+
         {/* Container for Title and Carousel */}
-        <div className="flex-1 w-full mt-20">
+        <div className="flex-1 w-full mt-6">
           <QuestionCarousel />
         </div>
 

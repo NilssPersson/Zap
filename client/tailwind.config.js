@@ -78,6 +78,14 @@ export default {
             opacity: '0',
           },
         },
+        meteor: {
+          '0%': { transform: 'rotate(215deg) translateX(0)', opacity: '1' },
+          '70%': { opacity: '1' },
+          '100%': {
+            transform: 'rotate(215deg) translateX(-500px)',
+            opacity: '0',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -87,6 +95,7 @@ export default {
         'collapsible-down': 'collapsible-down 0.2s ease-out',
         'collapsible-up': 'collapsible-up 0.2s ease-out',
         flash: 'flash 150ms ease-out forwards',
+        'meteor-effect': 'meteor 5s linear infinite',
       },
       colors: {
         primary: 'hsl(var(--primary))',
