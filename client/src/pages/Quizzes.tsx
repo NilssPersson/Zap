@@ -147,7 +147,7 @@ function Quizzes() {
 
   return (
     <div className="h-screen overflow-y-auto bg-background text-foreground">
-      <div className="flex flex-col items-center w-full p-5 lg:p-10 h-full">
+      <div className="flex flex-col items-center w-full p-5 lg:p-10 h-full ">
         {/* My Quizzes Section */}
         <div className="w-full flex-col">
           <div className="flex-row flex items-center justify-between">

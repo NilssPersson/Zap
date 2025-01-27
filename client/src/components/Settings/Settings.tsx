@@ -26,6 +26,7 @@ import { Switch } from '@/components/ui/switch';
 import { useAppContext } from '@/contexts/App/context';
 import { Separator } from '@/components/ui/separator';
 import LanguageRadio from './LanguageRadio';
+import ThemeSelect from './ThemeSelect';
 
 export default function Settings() {
   const { t } = useTranslation();
@@ -69,7 +70,7 @@ export default function Settings() {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[220px] p-3 ">
+      <PopoverContent className="w-[220px] p-3 border-border">
         <div className="grid gap-2">
           {isAuthenticated && (
             <>
@@ -105,7 +106,7 @@ export default function Settings() {
               />
             </CollapsibleTrigger>
 
-            <CollapsibleContent className="px-4 py-3 rounded bg-gray-200">
+            <CollapsibleContent className="px-4 py-3 rounded bg-secondary">
               <div className="grid gap-2 font-display ">
                 <LanguageRadio setOpen={() => null} />
               </div>
@@ -137,7 +138,7 @@ export default function Settings() {
                     }}
                   />
                 </CollapsibleTrigger>
-                <CollapsibleContent className="px-2 py-2 bg-gray-200 rounded">
+                <CollapsibleContent className="px-2 py-2 bg-secondary rounded">
                   <div className="grid gap-2">
                     <Profile />
                   </div>
@@ -171,7 +172,7 @@ export default function Settings() {
                     }}
                   />
                 </CollapsibleTrigger>
-                <CollapsibleContent className="px-4 py-3 rounded bg-gray-200">
+                <CollapsibleContent className="px-4 py-3 rounded bg-secondary">
                   <div className="grid gap-4">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="tutorial-toggle">
@@ -194,6 +195,8 @@ export default function Settings() {
                   </div>
                 </CollapsibleContent>
               </Collapsible>
+
+              <ThemeSelect />
 
               <div>
                 <Button

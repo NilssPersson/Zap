@@ -29,7 +29,7 @@ export default function Tools() {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[220px] p-3">
+      <PopoverContent className="w-[180px] p-2 border-border">
         <div className="grid gap-2">
           <Button
             variant="ghost"
@@ -68,4 +68,4 @@ export default function Tools() {
       </PopoverContent>
     </Popover>
   );
-} 
+}

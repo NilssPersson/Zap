@@ -109,8 +109,9 @@ export function Header() {
                   </Button>
                 </Link>
                 <Tools />
-                <ThemeSelector />
-                {!isAuthenticated && (
+                {isAuthenticated ? (
+                  <Settings />
+                ) : (
                   <>
                     <Button
                       variant="ghost"
@@ -126,12 +127,9 @@ export function Header() {
                     >
                       {t('general:register')}
                     </Button>
+                    <ThemeSelector />
+                    <LanguageToggle fixed={false} />
                   </>
-                )}
-                {isAuthenticated ? (
-                  <Settings />
-                ) : (
-                  <LanguageToggle fixed={false} />
                 )}
               </div>
             </nav>

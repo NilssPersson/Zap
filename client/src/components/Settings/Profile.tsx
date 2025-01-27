@@ -165,10 +165,12 @@ function Profile() {
         </div>
 
         <div className="grid w-full items-center justify-center  gap-1">
-          <Label htmlFor="username">{t('general:username')}</Label>
+          <Label htmlFor="username" className="font-display">
+            {t('general:username')}
+          </Label>
           <Input
             placeholder={t('general:username')}
-            className="text-[#333333] text-center w-[160px] border-gray-400 rounded-md font-display text-lg md:text-lg shadow-lg"
+            className=" text-center w-[160px] border-gray-400 rounded-md font-display text-lg md:text-lg shadow-lg"
             value={username}
             id="username"
             maxLength={15}
@@ -178,7 +180,10 @@ function Profile() {
           />
         </div>
 
-        <Button onClick={handleUpdate} className="font-display w-[160px]">
+        <Button
+          onClick={handleUpdate}
+          className="font-display w-[160px] text-xl"
+        >
           {t('general:update')}
         </Button>
       </div>
