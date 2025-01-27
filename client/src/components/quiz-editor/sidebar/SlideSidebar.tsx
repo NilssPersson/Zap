@@ -28,7 +28,7 @@ interface SlideSidebarProps {
 export function SlideSidebar(props: SlideSidebarProps) {
   return (
     <SlideSidebarProvider {...props}>
-      <aside className=" bg-white h-full border-r  shadow-md flex flex-col overflow-hidden">
+      <aside className=" bg-background h-full  shadow-md flex flex-col overflow-hidden">
         <SlideList />
       </aside>
     </SlideSidebarProvider>

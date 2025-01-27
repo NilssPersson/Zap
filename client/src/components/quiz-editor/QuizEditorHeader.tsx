@@ -40,7 +40,7 @@ export default function QuizEditorHeader({
   };
 
   return (
-    <div className="min-h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 text-black">
+    <div className="min-h-16 bg-background border-b border-border flex items-center justify-between px-4 text-foreground">
       <QuizPreview
         quiz={quiz}
         isOpen={previewOpen}
@@ -52,7 +52,7 @@ export default function QuizEditorHeader({
           className="flex items-center text-2xl font-display rounded-full p-1"
         >
           <Zap className="text-yellow-400 " size={26} />
-          <span className="fancy-wrap text-white">Zap!</span>
+          <span className="font-display">Zap</span>
         </Link>
         <h1 className="text-2xl font-display">{quiz.quiz_name}</h1>
         {hasUnsavedChanges && (

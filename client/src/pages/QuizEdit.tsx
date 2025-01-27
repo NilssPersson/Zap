@@ -9,7 +9,6 @@ import {
 import { Editor } from '@/components/quiz-editor/Editor';
 import { Toolbar } from '@/components/quiz-editor/Toolbar';
 import QuizEditorHeader from '@/components/quiz-editor/QuizEditorHeader';
-import { QuizBackground } from '@/components/quiz-editor/QuizBackground';
 import { QuizSettingsToolbar } from '@/components/quiz-editor/QuizSettingsToolbar';
 import { quizDefaults } from '@/components/quiz-editor/utils/quiz-defaults';
 import Spinner from '@/components/Spinner';
@@ -58,12 +57,6 @@ function QuizEdit() {
       />
 
       <div id="quiz-editor-container" className="flex-1 flex overflow-hidden">
-        <QuizBackground
-          primaryColor={quiz.primary_color}
-          secondaryColor={quiz.secondary_color}
-          backgroundColor={quiz.background_color}
-          className="absolute inset-0 -z-10"
-        />
         <ResizablePanelGroup
           direction="horizontal"
           style={{ height: 'inherit' }}
@@ -118,7 +111,7 @@ function QuizEdit() {
 
           {(activeSlide || showSettings) && (
             <ResizablePanel
-              className="bg-white"
+              className="bg-background"
               defaultSize={20}
               order={3}
               minSize={12}

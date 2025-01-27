@@ -52,18 +52,18 @@ export function QuizPreview({ isOpen, setIsOpen, quiz }: QuizPreviewProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-[75%] min-w-[75%] h-fit text-black ">
+      <DialogContent className="max-w-[75%] min-w-[75%] h-fit text-foreground border-border">
         <DialogHeader>
           <div className="flex justify-between items-center">
             <div>
-              <DialogTitle className="!font-normal font-display text-3xl">
+              <DialogTitle className="!font-normal font-display text-3xl text-foreground">
                 {quiz.quiz_name}
               </DialogTitle>
               <DialogDescription className="font-display text-md">
                 {t('preview.description')}
               </DialogDescription>
             </div>
-            <div className="text-xl text-muted-foreground w-20 bg-gray-200 rounded-full p-1 text-center mr-4 flex items-center justify-center font-display">
+            <div className="text-xl text-muted-foreground w-20 bg-secondary rounded-full p-1 text-center mr-4 flex items-center justify-center font-display">
               {currentSlideIndex + 1} / {quiz.slides.length}
             </div>
           </div>
@@ -79,7 +79,7 @@ export function QuizPreview({ isOpen, setIsOpen, quiz }: QuizPreviewProps) {
             />
           </div>
           <div className="grid gap-2 text-white justify-center items-center">
-            <div className="grid rounded-2xl overflow-hidden border-[12px] border-gray-200 bg-gray-200">
+            <div className="grid rounded-2xl overflow-hidden border-[12px] border-secondary bg-secondary">
               <div className="grid rounded-xl overflow-hidden">
                 <SlidePreview
                   slide={quiz.slides[currentSlideIndex]}

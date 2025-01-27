@@ -12,7 +12,7 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
   const config = getToolbarConfig(slide);
 
   return (
-    <div className="h-full  p-4 flex flex-col gap-4 overflow-y-auto text-black">
+    <div className="h-full  p-4 flex flex-col gap-4 overflow-y-auto text-foreground">
       <div className="flex items-center gap-2 text-muted-foreground justify-between">
         <div className="flex text-left gap-2 items-center">
           <SlideComponent.Info.icon
@@ -20,7 +20,7 @@ export function Toolbar({ slide, onSlideUpdate }: ToolbarProps) {
             strokeWidth={3}
             className="h-5 w-5"
           />
-          <span className="text-xl text-black font-display">
+          <span className="text-xl font-display">
             {SlideComponent.Info.label}
           </span>
         </div>

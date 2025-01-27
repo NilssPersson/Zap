@@ -25,46 +25,30 @@ export function Editor({
 
   if (!slide) {
     return (
-      <div className=" bg-gray-100 h-full text-4xl font-display text-black flex items-center justify-center">
+      <div className="bg-secondary h-full text-4xl font-display text-foreground flex items-center justify-center">
         {t('quizEditor:selectSlide')}
       </div>
     );
   }
 
   return (
-    <div className="p-4 h-full flex flex-col bg-white">
-      <div className="flex items-center justify-center space-x-4">
+    <div className="p-4 h-full flex flex-col bg-background text-foreground">
+      <div className="flex items-center justify-center space-x-4 font-display">
         <Tabs
           value={whichPreview}
           onValueChange={setWhichPreview}
-          className="pb-4 "
+          className="pb-4"
         >
           <TabsList>
-            <TabsTrigger
-              className={`text-xl font-display ${whichPreview === 'Preview' ? 'bg-primary text-white' : ''}`}
-              value="Preview"
-            >
-              {t('general:preview')}
-            </TabsTrigger>
-            <TabsTrigger
-              className={`text-xl font-display ${whichPreview === 'Host' ? 'bg-primary text-white' : ''}`}
-              value="Host"
-            >
-              {t('general:host')}
-            </TabsTrigger>
+            <TabsTrigger value="Preview">{t('general:preview')}</TabsTrigger>
+            <TabsTrigger value="Host">{t('general:host')}</TabsTrigger>
             {slide.type !== SlideTypes.info &&
               slide.type !== SlideTypes.bulletPoint && (
                 <>
-                  <TabsTrigger
-                    className={`text-xl font-display ${whichPreview === 'Participant' ? 'bg-primary text-white' : ''}`}
-                    value="Participant"
-                  >
+                  <TabsTrigger value="Participant">
                     {t('general:participant')}
                   </TabsTrigger>
-                  <TabsTrigger
-                    className={`text-xl font-display ${whichPreview === 'HostAnswer' ? 'bg-primary text-white' : ''}`}
-                    value="HostAnswer"
-                  >
+                  <TabsTrigger value="HostAnswer">
                     {t('general:hostAnswer')}
                   </TabsTrigger>
                 </>
@@ -73,7 +57,7 @@ export function Editor({
         </Tabs>
       </div>
 
-      <div className="flex-1 flex items-center justify-center bg-gray-200 rounded-lg p-4">
+      <div className="flex-1 flex items-center justify-center rounded-lg p-4">
         <div
           className={cn(
             'w-full boarder-2 rounded-lg',

@@ -51,7 +51,7 @@ export function QuizSettingsToolbar({
   const { t } = useTranslation();
 
   return (
-    <div className="h-full p-4 flex flex-col gap-4 overflow-y-auto text-black">
+    <div className="h-full p-4 flex flex-col gap-4 overflow-y-auto text-foreground">
       <div className="flex items-center justify-between">
         <div className="text-2xl font-display flex flex-row items-center gap-1">
           <WrenchIcon className="w-6 h-6" />
