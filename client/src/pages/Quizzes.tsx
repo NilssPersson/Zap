@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import CreateQuizPopover from '@/components/quizzes/CreateQuizPopover';
 import QuizList from '@/components/quizzes/QuizList';
@@ -8,8 +8,6 @@ import { Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { SharedQuizzes } from '@/models/Quiz';
 import { useAppContext } from '@/contexts/App/context';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
 import { quizService } from '@/services/quizzes';
 import { useTranslation } from 'react-i18next';
 
@@ -142,41 +140,28 @@ function Quizzes() {
     handleDeleteQuiz,
     handleShareQuiz,
     handleCopyQuiz,
-    ongoingQuiz,
   } = useQuizzesPage();
 
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
 
   return (
-    <div className="h-screen overflow-y-auto bg-white ">
-      <div className="flex flex-col items-center w-full bg-white p-5 lg:p-10 h-full">
+    <div className="h-screen overflow-y-auto bg-background text-foreground">
+      <div className="flex flex-col items-center w-full p-5 lg:p-10 h-full">
         {/* My Quizzes Section */}
         <div className="w-full flex-col">
-          <div className="flex-col b-2 mb-4 lg:mb-0 flex lg:flex-row items-center justify-between">
-            <h1 className="font-display text-5xl text-black mb-4">
-              {t('homepage:myQuizzes')}
-            </h1>
+          <div className="flex-row flex items-center justify-between">
+            <h1 className="font-display text-5xl">{t('homepage:myQuizzes')}</h1>
             <CreateQuizPopover onCreateQuiz={handleCreateQuiz} />
           </div>
 
-          <Card className="bg-[#F9F8FE] shadow-lg w-full" id="quiz-manager-container">
-            <CardHeader>
-              <CardTitle className="flex justify-between items-center">
-                {ongoingQuiz && (
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate(`/quizzes/${ongoingQuiz.id}/lobby`)}
-                  >
-                    {t('homepage:gotoOngoing')}
-                  </Button>
-                )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="min-h-[300px]">
+          <Card
+            className="w-full border-none shadow-none"
+            id="quiz-manager-container"
+          >
+            <CardContent className="p-0 pt-4">
               {quizzesLoading ? (
-                <div className="flex justify-center items-center h-[300px]">
+                <div className="flex justify-center items-center">
                   <Loader2 className="animate-spin" />
                 </div>
               ) : (
@@ -200,8 +185,8 @@ function Quizzes() {
 
         {/* Shared Quizzes Section */}
         <div className="w-full flex-col mt-10">
-          <div className="mb-2 flex justify-between items-center flex-col lg:flex-row">
-            <h1 className="font-display text-5xl text-black mb-2">
+          <div className="mb-2 flex justify-between items-center flex-row">
+            <h1 className="font-display text-5xl mb-2">
               {t('homepage:sharedQuizzes')}
             </h1>
             <Input
@@ -209,11 +194,11 @@ function Quizzes() {
               placeholder={t('homepage:searchShared')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm font-display text-black"
+              className="max-w-sm font-display"
               aria-label={t('homepage:searchShared')}
             />
           </div>
-          <Card className="bg-[#F9F8FE] shadow-lg">
+          <Card className="w-full border-none shadow-none">
             <CardContent className="min-h-[300px]">
               {sharedQuizzesLoading ? (
                 <div className="flex justify-center items-center h-[300px]">
@@ -232,11 +217,11 @@ function Quizzes() {
 
         <div className="w-full flex-col mt-10 pb-10 ">
           <div className="mb-2">
-            <h1 className="font-display text-5xl text-black mb-2">
+            <h1 className="font-display text-5xl mb-2">
               {t('homepage:templates')}
             </h1>
           </div>
-          <Card className="bg-[#F9F8FE] shadow-lg">
+          <Card className="w-full border-none shadow-none">
             <CardContent className="min-h-[300px]">
               {sharedQuizzesLoading ? (
                 <div className="flex justify-center items-center h-[300px]">

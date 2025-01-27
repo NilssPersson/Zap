@@ -8,7 +8,7 @@ interface TeamInfoProps {
 export default function TeamInfo({ participant }: TeamInfoProps) {
   const totalScore = participant.score.reduce((sum, score) => sum + score, 0);
   return (
-    <div className=" fixed bottom-2 left-1/2 transform -translate-x-1/2 bg-white text-[#333333] flex justify-between items-center p-2 w-[90%] max-w-xl rounded-lg shadow-md">
+    <div className=" fixed bottom-2 left-1/2 transform -translate-x-1/2 bg-background text-foreground flex justify-between items-center p-2 w-[90%] max-w-xl rounded-lg shadow-md">
       <div className="flex items-center">
         <Avatar
           avatarString={participant.avatar}

@@ -6,7 +6,14 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Languages, LogIn } from 'lucide-react';
+import {
+  ChevronDown,
+  Languages,
+  LogIn,
+  Sun,
+  Moon,
+  Monitor,
+} from 'lucide-react';
 import {
   Dialog,
   DialogTrigger,
@@ -18,15 +25,18 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import LanguageRadio from '@/components/Settings/LanguageRadio';
+import { useTheme } from '@/components/ThemeProvider';
+import { cn } from '@/lib/utils';
 
 interface ParticipantMenuProps {
-  onLeave: () => void; // This will call handleRemoveParticipant from parent
+  onLeave: () => void;
 }
 
 export default function ParticipantMenu({ onLeave }: ParticipantMenuProps) {
   const { t } = useTranslation();
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const { setTheme, theme } = useTheme();
 
   return (
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -43,7 +53,7 @@ export default function ParticipantMenu({ onLeave }: ParticipantMenuProps) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-48 p-3">
+      <PopoverContent className="w-48 p-3 border-border">
         <div className="space-y-2 font-display">
           <Button
             variant="ghost"
@@ -64,10 +74,36 @@ export default function ParticipantMenu({ onLeave }: ParticipantMenuProps) {
           </Button>
 
           {langOpen && (
-            <div className="rounded bg-gray-100 p-2">
+            <div className="rounded bg-secondary p-2">
               <LanguageRadio setOpen={setLangOpen} />
             </div>
           )}
+
+          <div className="flex justify-between items-center">
+            <h1 className="text-md pl-2 pt-2 text-center">
+              {t('general:theme')}
+            </h1>
+            <div className="flex gap-3 border border-primary rounded-full p-2">
+              <Monitor
+                className={cn('w-3 h-3', theme === 'system' && 'text-primary')}
+                onClick={() => setTheme('system')}
+              />
+              <Sun
+                className={cn(
+                  'w-3 h-3',
+                  theme === 'light' && 'text-primary border-primary'
+                )}
+                onClick={() => setTheme('light')}
+              />
+              <Moon
+                className={cn(
+                  'w-3 h-3',
+                  theme === 'dark' && 'text-primary border-primary'
+                )}
+                onClick={() => setTheme('dark')}
+              />
+            </div>
+          </div>
 
           <Dialog>
             <DialogTrigger className="flex w-full items-center gap-2">
@@ -78,9 +114,9 @@ export default function ParticipantMenu({ onLeave }: ParticipantMenuProps) {
             </DialogTrigger>
             <DialogContent
               onClick={(e) => e.stopPropagation()}
-              className="w-4/5 rounded-lg"
+              className="w-4/5 rounded-lg border-border"
             >
-              <DialogHeader className="text-black">
+              <DialogHeader className="text-foreground">
                 <DialogTitle>{t('participants:leaveTitle')}</DialogTitle>
                 <DialogDescription>
                   {t('participants:leaveDescription')}
@@ -89,9 +125,7 @@ export default function ParticipantMenu({ onLeave }: ParticipantMenuProps) {
               <DialogFooter>
                 <div className="flex justify-end gap-2 mt-4">
                   <DialogClose asChild>
-                    <Button variant="outline" className="text-black">
-                      {t('general:cancel')}
-                    </Button>
+                    <Button variant="outline">{t('general:cancel')}</Button>
                   </DialogClose>
                   <DialogClose asChild>
                     <Button

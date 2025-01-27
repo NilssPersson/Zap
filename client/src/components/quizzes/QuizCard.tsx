@@ -1,10 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card';
 import { InfoSlide, UserQuizzes } from '@/models/Quiz';
 import {
   Dialog,
@@ -43,18 +38,19 @@ export function QuizCard({ quiz, onClick, children }: QuizCardProps) {
   };
   return (
     <Card
-      className={`${onClick ? 'cursor-pointer' : ''} bg-[#FFFFFF]`}
+      className={`${onClick ? 'cursor-pointer' : ''} bg-background border-border`}
       onClick={onClick}
     >
-      <CardTitle className="text-lg mr-auto px-6 pb-1 pt-4 font-display flex items-center justify-between">
-        {quiz.quizName}
+      <CardTitle className="text-xl mr-auto px-6 pb-1 pt-4 font-display flex items-center justify-between">
+        <div className="truncate flex-1">
+          <h1 className="truncate">{quiz.quizName}</h1>
+        </div>
         {quiz.isShared && (
-          <span className="bg-primary text-white p-1 rounded flex flex-row">
+          <span className="bg-primary text-white p-1 rounded flex flex-row ml-2">
             <Share className="w-4 h-4" />
           </span>
         )}
       </CardTitle>
-
 
       <CardContent>
         <div className="aspect-video w-full rounded overflow text-white relative">
@@ -117,7 +113,7 @@ export function MyQuizButtons({
               <MoreHorizontal className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="border-border">
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
@@ -125,7 +121,7 @@ export function MyQuizButtons({
               }}
             >
               <Share className="w-4 h-4 cursor-pointer" />
-              <span className="cursor-pointer">{t('general:share')}</span>
+              {quiz.isShared ? t('general:unshare') : t('general:share')}
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -151,7 +147,9 @@ export function MyQuizButtons({
           <DialogFooter>
             <div className="flex justify-end gap-2 mt-4">
               <DialogClose asChild>
-                <Button className='text-black' variant="outline">{t('general:cancel')}</Button>
+                <Button className="text-black" variant="outline">
+                  {t('general:cancel')}
+                </Button>
               </DialogClose>
               <DialogClose asChild>
                 <Button

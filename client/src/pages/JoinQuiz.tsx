@@ -13,7 +13,6 @@ export default function JoinQuiz() {
   const [quizCode, setQuizCode] = useState('');
   const [showError, setShowError] = useState(false);
   const { t } = useTranslation(['participants']);
-
   const navigate = useNavigate();
 
   async function checkCode() {
@@ -59,7 +58,7 @@ export default function JoinQuiz() {
                   window.scrollTo({ top: -1, behavior: 'smooth' });
                 }, 1)
               }
-              className={`text-[#333333] text-center font-display py-8 w-full 
+              className={` text-center font-display py-8 w-full 
               text-4xl md:text-5xl lg:text-3xl border-2
               ${showError && 'border-red-500 animate-shake'}`}
               value={quizCode}

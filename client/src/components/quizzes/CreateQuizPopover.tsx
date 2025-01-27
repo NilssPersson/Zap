@@ -42,14 +42,13 @@ function CreateQuizPopover({ onCreateQuiz }: CreateQuizPopoverProps) {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button id="create-quiz-button" className='rounded-3xl shadow-lg outline'>
-          <span className="flex just items-center gap-2 py-4 text-lg">
+        <Button id="create-quiz-button">
+          <span className="flex font-display gap-2 py-4 text-lg">
             {t('homepage:createQuiz')}
-           
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 mt-1">
+      <PopoverContent className="w-80 mt-1 border-border">
         <div className="flex flex-col gap-4" id="create-quiz-input">
           <Input
             placeholder={t('homepage:quizName')}

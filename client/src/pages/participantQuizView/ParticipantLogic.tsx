@@ -250,7 +250,7 @@ function ParticipantLogic() {
       <NoSleepComponent />
       <div className="h-dvh flex flex-col w-full font-display">
         {/* Top */}
-        <div className="grid grid-cols-3 items-center p-2 w-full bg-[#F4F3F2] text-[#333333]">
+        <div className="grid grid-cols-3 items-center p-2 w-full bg-background text-foreground">
           <div className="flex items-center">
             <ParticipantMenu onLeave={handleRemoveParticipant} />
           </div>

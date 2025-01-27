@@ -120,17 +120,17 @@ function GuestAdvancedView({
 
       <div className="flex items-center justify-center">
         <ArrowBigLeft
-          className="cursor-pointer mx-2"
+          className="cursor-pointer mx-1"
           size={32}
           fill="gray"
           color="black"
           onClick={goToPreviousCollection}
         />
-        <p className="w-[70px] text-center font-display select-none text-black text-2xl">
+        <p className="w-[70px] text-center font-display select-none text-foreground text-xl">
           {t(`general:${selectedCollectionName}`)}
         </p>
         <ArrowBigRight
-          className="cursor-pointer mx-2"
+          className="cursor-pointer mx-1"
           size={32}
           fill="gray"
           color="black"
@@ -140,7 +140,7 @@ function GuestAdvancedView({
 
       <Input
         placeholder={t('participants:enter')}
-        className={`text-[#333333] text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg ${
+        className={`text-center font-display md:text-2xl text-2xl py-8 px-12 w-full shadow-lg ${
           error !== '' && 'border-red-500 animate-shake'
         }`}
         value={guestName}
@@ -317,7 +317,7 @@ export default function CreateParticipant({
 
       {user.isLoggedIn ? (
         <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val)}>
-          <div className="bg-component-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
+          <div className="bg-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
             <TabsList className="flex-1 w-full pt-4 pb-8 rounded-lg">
               <TabsTrigger className="bg-white rounded w-full" value="me">
                 {t('playAsUser')} {user.username}
@@ -346,7 +346,7 @@ export default function CreateParticipant({
           </div>
         </Tabs>
       ) : (
-        <div className="bg-component-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
+        <div className="bg-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
           <GuestAdvancedView
             onSubmit={handleSubmitGuest}
             isSubmitting={addingUser}
