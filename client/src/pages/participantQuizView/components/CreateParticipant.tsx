@@ -319,12 +319,10 @@ export default function CreateParticipant({
         <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val)}>
           <div className="bg-background mx-auto rounded-lg flex flex-col items-center justify-center p-6">
             <TabsList className="flex-1 w-full pt-4 pb-8 rounded-lg">
-              <TabsTrigger className="bg-white rounded w-full" value="me">
+              <TabsTrigger value="me">
                 {t('playAsUser')} {user.username}
               </TabsTrigger>
-              <TabsTrigger className="bg-white rounded w-full" value="guest">
-                {t('playAsGuest')}
-              </TabsTrigger>
+              <TabsTrigger value="guest">{t('playAsGuest')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="me">

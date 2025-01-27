@@ -46,7 +46,7 @@ export function ParticipantAnswers({
           </div>
         </PopoverTrigger>
         <PopoverContent>
-          <div className="bg-white p-4 rounded shadow-lg text-black">
+          <div className="bg-background p-4 rounded shadow-lg text-foreground">
             <h1 className="text-lg font-display">Participants</h1>
             {participants.map((participant) => (
               <div

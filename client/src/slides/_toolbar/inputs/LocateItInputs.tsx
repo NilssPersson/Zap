@@ -157,7 +157,7 @@ export function LocateItInputs({
           {t('showAdvanced')}
         </Button>
         {showAdvanced && (
-          <div className="px-2 bg-white rounded-md pb-2">
+          <div className="px-2 bg-secondary text-foreground rounded-md pb-2">
             {slide.awardPointsLocation !== 'CLOSEST' && (
               <div className="flex flex-col space-y-1 ">
                 <div className="flex flex-row items-center pt-2 space-x-1">
