@@ -1,46 +1,69 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'lucide-react';
+import LinkedInPhone from '@/pages/home/LinkedInPhone';
+import { FaBullseye, FaSignal } from 'react-icons/fa';
+import { Meteors } from '@/components/ui/meteors';
+import { StarsBackground } from '@/components/ui/stars-background';
 import LinkedInComponent from '@/pages/home/LinkedInComponent';
 
-export default function About() {
+export default function AboutPage() {
   const { t } = useTranslation();
 
   return (
-    <div className=" flex flex-col items-center justify-start overflow-auto  h-dvh w-full bg-background">
+    <div className="flex flex-col bg-background text-foreground h-screen overflow-hidden">
       {/* LinkedIn Component */}
-      <div className="flex-1 w-full">
+      <div className="w-full mb-4 block lg:hidden">
+        <LinkedInPhone readMore={false} />
+      </div>
+
+      <div className="w-full hidden lg:block pt-20">
         <LinkedInComponent readMore={false} />
       </div>
 
       {/* Goals Section */}
-      <div className="flex gap-4 flex-row w-7/12">
-        <div className="flex-1 max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
-          <h3 className="text-2xl font-display mb-2 text-gray-800">
+      <div className="flex w-full p-6 max-w-4xl mx-auto">
+        <div className="px-2 pt-1">
+          <FaBullseye size={18} color="#fb923c" />
+        </div>
+        <div className="pr-4 w-full mb-4 text-foreground">
+          <h3 className="text-xl font-display mb-1 font-bold">
             {t('about:goalsTitle')}
           </h3>
-          <p className="text-gray-700">{t('about:goalsText')}</p>
+          <p className="text-md font-display">{t('about:goalsText')}</p>
         </div>
+      </div>
 
-        {/* Status Section */}
-        <div className="flex-1 max-w-4xl p-6 rounded-lg bg-[#F9F8FE] shadow-md my-6">
-          <h3 className="text-2xl font-display mb-2 text-gray-800">
+      {/* Status Section */}
+      <div className="flex w-full mb-4 p-6 max-w-4xl mx-auto">
+        <div className="px-2 pt-1">
+          <FaSignal size={18} color="#8b5cf6" />
+        </div>
+        <div className="pr-4 w-full mb-4 text-foreground">
+          <h3 className="text-xl font-display mb-1 font-bold">
             {t('about:statusTitle')}
           </h3>
-          <p className="text-gray-700">{t('about:statusText')}</p>
+          <p className="text-md font-display">{t('about:statusText')}</p>
         </div>
       </div>
 
       {/* GitHub Link */}
-      <div className="flex-1 text-center pb-10  mt-8">
-        <a
-          href="https://github.com/FKnorring/Zap"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-3xl font-display flex items-center justify-center gap-2 text-blue-400 hover:text-blue-600 transition"
-        >
-          {t('about:github')}
-          <Link size={28} />
-        </a>
+      <div className="flex w-full items-center justify-center bottom-0 absolute">
+        <div className="w-full relative h-32 overflow-hidden">
+          {/* Static Content */}
+          <a
+            href="https://github.com/FKnorring/Zap"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-12 text-2xl font-display flex items-center justify-center gap-2 text-blue-400 hover:text-blue-600 transition relative z-10"
+          >
+            {t('about:github')}
+            <Link size={20} />
+          </a>
+
+          {/* Meteors */}
+          <StarsBackground />
+          <Meteors number={10} />
+        </div>
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ export default function QuestionCarousel() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full bg-background">
-      <h1 className="text-3xl font-display text-center text-foreground mb-2 bg-secondary w-fit mx-auto p-2 rounded-lg">
+      <h1 className="text-3xl lg:text-5xl font-display text-center text-foreground mb-2 bg-secondary w-fit mx-auto p-2 rounded-lg">
         {t('homepage:questionCarouselText')}
       </h1>
 

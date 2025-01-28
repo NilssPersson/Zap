@@ -64,11 +64,11 @@ function Home() {
       <div className="flex-1 flex flex-col items-center justify-start w-full">
         <div className="flex-1 w-full py-4 bg-primary items-center justify-center flex flex-col">
           <div className="mt-20 mb-2 flex flex-col gap-y-3 mx-auto items-center justify-center">
-            <h1 className="w-4/5 lg:w-1/2 text-4xl md:text-5xl font-display text-foreground mx-4 text-center">
+            <h1 className="w-4/5 lg:w-1/2 text-4xl md:text-8xl font-display text-foreground mx-4 text-center">
               {t('homepage:slogan')}
             </h1>
 
-            <h3 className="text-foreground w-4/5 lg:w-1/2 text-lg mx-4 leading-snug text-center">
+            <h3 className="text-foreground w-4/5 lg:w-1/2 text-lg mx-4 leading-snug text-center lg:text-2xl">
               {t('homepage:inspotext')}
             </h3>
           </div>
@@ -86,7 +86,8 @@ function Home() {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1440 320"
-          className="rotate-180 scale-x-[-1] -mt-1"
+          preserveAspectRatio="none"
+          className="rotate-180 scale-x-[-1] -mt-1 w-full h-[80px] object-cover"
         >
           <path
             fill="#fbaf3c"

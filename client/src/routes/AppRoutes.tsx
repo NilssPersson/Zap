@@ -5,7 +5,7 @@ import Spinner from '@/components/Spinner';
 import { useTutorialTrigger } from '@/hooks/useTutorialTrigger';
 import ErrorBoundary from '@/components/errors/ErrorBoundary';
 
-const AboutPage = React.lazy(() => import('@/pages/about/index'));
+const AboutPage = React.lazy(() => import('@/pages/about/About'));
 const Home = React.lazy(() => import('@/pages/home/Home'));
 const Tools = React.lazy(() => import('@/pages/Tools/Tools'));
 const Quizzes = React.lazy(() => import('@/pages/Quizzes'));
@@ -29,12 +29,26 @@ export function AppRoutes() {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
-        <Route path="/" element={wrapInErrorBoundary(isAuthenticated ? <Quizzes /> : <Home />)} />
+        <Route
+          path="/"
+          element={wrapInErrorBoundary(
+            isAuthenticated ? <Quizzes /> : <Home />
+          )}
+        />
         <Route path="/about" element={wrapInErrorBoundary(<AboutPage />)} />
         <Route path="/play" element={wrapInErrorBoundary(<JoinQuiz />)} />
-        <Route path="/quizzes/:id/edit" element={wrapInErrorBoundary(<QuizEdit />)} />
-        <Route path="/play/:quizCode/" element={wrapInErrorBoundary(<ParticipantLogic />)} />
-        <Route path="/quizzes/:id/lobby" element={wrapInErrorBoundary(<HostLogic />)} />
+        <Route
+          path="/quizzes/:id/edit"
+          element={wrapInErrorBoundary(<QuizEdit />)}
+        />
+        <Route
+          path="/play/:quizCode/"
+          element={wrapInErrorBoundary(<ParticipantLogic />)}
+        />
+        <Route
+          path="/quizzes/:id/lobby"
+          element={wrapInErrorBoundary(<HostLogic />)}
+        />
         <Route path="/profile" element={wrapInErrorBoundary(<Profile />)} />
         <Route path="/tools/:tool" element={wrapInErrorBoundary(<Tools />)} />
       </Routes>

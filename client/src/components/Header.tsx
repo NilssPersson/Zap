@@ -149,7 +149,7 @@ export function Header() {
         sheetOpen ? 'bg-sheet text-white' : 'bg-background text-foreground'
       )}
     >
-      <div className="container flex h-16 items-center px-1 overflow-hidden">
+      <div className=" flex h-16 items-center px-1 overflow-hidden">
         <div className={cn('mr-0 md:flex w-full', inGame && 'hidden')}>
           <nav className="flex  w-full justify-between">
             <Link
