@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 export function Participant({
   answerTempQuestion,
+  inPreview,
 }: {
   answerTempQuestion: (answer: string) => void;
+  inPreview: boolean;
 }) {
   const { t } = useTranslation(['participants']);
 
@@ -20,9 +22,9 @@ export function Participant({
     return () => clearInterval(timer);
   }, [time]);
 
-  if (time > 0) {
+  if (time > 0 && !inPreview) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center font-display">
+      <div className="flex items-center justify-center font-display bg-background p-4 rounded-lg text-lg text-center w-4/5">
         <h1>{t('dontPress')}</h1>
       </div>
     );
