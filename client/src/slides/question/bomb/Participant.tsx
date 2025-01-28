@@ -74,27 +74,29 @@ export function Participant({
 
   return (
     <div
-      className={`flex flex-col h-full p-10 ${shake ? 'animate-shake' : ''}`}
+      className={`flex flex-col h-full w-full p-10 ${shake ? 'animate-shake' : ''}`}
     >
-      <h1 className="text-6xl font-display font-bold text-center mb-12">
+      <h1 className="text-3xl font-display font-bold text-center mb-12 bg-background text-foreground p-4 rounded-lg">
         {slide.title}
       </h1>
       <div className="flex flex-col items-center justify-center w-full">
         <div
-          className={`p-8 rounded-md shadow-lg text-black font-display text-3xl mb-8 w-3/4 max-w-lg ${turn === participantData?.participantId ? 'bg-white' : 'bg-gray-300'}`}
+          className={`p-6 rounded-md shadow-lg text-foreground font-display text-3xl mb-8 w-4/5 max-w-xl ${turn === participantData?.participantId ? 'bg-background' : 'bg-gray-300'}`}
         >
           <Input
             value={userAnswer}
             onChange={handleInputChange}
             placeholder={t('participants:enterAnswer')}
-            className="mb-6 w-full p-4 text-xl border border-gray-300 rounded-md"
+            className="mb-4 w-full p-4 text-xl border rounded-md"
             autoCorrect="off"
             disabled={disableInput}
           />
           <Button
             onClick={handleCheckAnswer}
-            className="w-full p-4 text-xl font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            className="w-full p-4 text-xl text-white bg-blue-500 rounded-md hover:bg-blue-600"
             disabled={disableInput}
+            isInteractive
+            inGrid
           >
             {t('participants:send')}
           </Button>
