@@ -47,19 +47,11 @@ export default function QuizEditorHeader({
         setIsOpen={setPreviewOpen}
       />
       <div className="flex items-center gap-6">
-        <Link
-          to="/"
-          className="flex items-center text-2xl font-display rounded-full p-1"
-        >
+        <div className="flex items-center text-2xl font-display rounded-full p-1">
           <Zap className="text-yellow-400 " size={26} />
           <span className="font-display">Zap</span>
-        </Link>
+        </div>
         <h1 className="text-2xl font-display">{quiz.quiz_name}</h1>
-        {hasUnsavedChanges && (
-          <span className="text-md text-red-500">
-            {t('quizEditor:unsavedChanges')}
-          </span>
-        )}
       </div>
 
       <div className="flex items-center gap-2">
@@ -100,7 +92,10 @@ export default function QuizEditorHeader({
             <WrenchIcon className="w-7 h-7" />
           </Button>
         </CustomTooltip>
-        <Separator orientation="vertical" className="h-8 bg-black/25 mx-2" />
+        <Separator
+          orientation="vertical"
+          className="h-8 bg-foreground/10 mx-2"
+        />
         <Link to="/">
           <CustomTooltip content={t('quizEditor:goHome')}>
             <Button variant="outline">
@@ -112,12 +107,14 @@ export default function QuizEditorHeader({
         <CustomTooltip content={t('quizEditor:saveQuiz')}>
           <Button
             id="save-quiz-button"
-            variant={hasUnsavedChanges ? 'default' : 'outline'}
             onClick={onSaveClick}
+            isAnimated={hasUnsavedChanges}
             disabled={isSaving || !hasUnsavedChanges}
+            variant={hasUnsavedChanges ? 'default' : 'outline'}
+            className={hasUnsavedChanges ? 'text-black' : 'text-foreground'}
           >
             {t('quizEditor:save')}
-            <SaveIcon className="w-6 h-6" />
+            <SaveIcon className="w-5 h-5" />
           </Button>
         </CustomTooltip>
       </div>

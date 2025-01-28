@@ -41,6 +41,7 @@ export interface ButtonProps
   isInteractive?: boolean;
   interactiveStyles?: string;
   inGrid?: boolean;
+  isAnimated?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -49,6 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant,
       size,
+      isAnimated = false,
       asChild = false,
       isInteractive = false,
       interactiveStyles = '',
@@ -58,6 +60,27 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : 'button';
+
+    if (isAnimated) {
+      return (
+        <motion.div
+          animate={{
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: 'loop',
+          }}
+        >
+          <Comp
+            className={cn(buttonVariants({ variant, size, className }))}
+            ref={ref}
+            {...props}
+          />
+        </motion.div>
+      );
+    }
 
     // If isInteractive is true, wrap the button in a motion.div to apply scale effects
     if (isInteractive) {

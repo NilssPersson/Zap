@@ -52,7 +52,7 @@ export function QuizPreview({ isOpen, setIsOpen, quiz }: QuizPreviewProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-[75%] min-w-[75%] h-fit text-foreground border-border">
+      <DialogContent className="max-w-[75%] min-w-[75%] h-fit text-foreground border-border  ">
         <DialogHeader>
           <div className="flex justify-between items-center">
             <div>

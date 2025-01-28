@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ClosestSlide } from "@/models/Quiz";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ClosestSlide } from '@/models/Quiz';
+import { InfoIcon } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ClosestViewProps {
   slide: ClosestSlide;
@@ -10,8 +11,8 @@ interface ClosestViewProps {
 }
 
 export function Participant({ slide, answerQuestion }: ClosestViewProps) {
-  const [value, setValue] = useState("");
-  const { t } = useTranslation(["questions"]);
+  const [value, setValue] = useState('');
+  const { t } = useTranslation(['questions']);
 
   const handleSubmit = () => {
     const numericValue = parseFloat(value);
@@ -22,25 +23,29 @@ export function Participant({ slide, answerQuestion }: ClosestViewProps) {
 
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-5 m-4 rounded-md h-full">
-      <div className="flex flex-col items-center justify-center p-8 space-y-5 bg-white rounded-lg">
-        <h1 className="text-3xl font-display text-center text-[#333333]">
+      <div className="flex flex-col items-center justify-center p-8 space-y-5 bg-background rounded-lg">
+        <h1 className="text-3xl font-display text-center text-foreground">
           {slide.title}
         </h1>
         <Input
-          type="number"
-          placeholder={t("closest.enterGuess")}
+          placeholder={t('closest.enterGuess')}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="font-display text-3xl text-[#333333] bg-[#F4F3F2]"
+          className="font-display text-2xl"
         />
-
-        <Button 
+        {isNaN(parseFloat(value)) && value !== '' && (
+          <div className="flex justify-start items-center w-full text-red-500">
+            <InfoIcon className="w-5 h-5 mr-1" />
+            <p className="font-display">{t('general:notANumber')}</p>
+          </div>
+        )}
+        <Button
           onClick={handleSubmit}
-          disabled={value === "" || isNaN(parseFloat(value))}
+          disabled={value === '' || isNaN(parseFloat(value))}
         >
-          {t("closest.submitGuess")}
+          {t('closest.submitGuess')}
         </Button>
       </div>
     </div>
   );
-} 
+}

@@ -5,6 +5,7 @@ import { FaBullseye, FaCalendar, FaSignal } from 'react-icons/fa';
 import { Meteors } from '@/components/ui/meteors';
 import { StarsBackground } from '@/components/ui/stars-background';
 import LinkedInComponent from '@/pages/home/LinkedInComponent';
+import { useTheme } from '@/components/ThemeProvider';
 
 const points = [
   {
@@ -29,6 +30,7 @@ const points = [
 
 export default function AboutPage() {
   const { t } = useTranslation();
+  const { theme } = useTheme();
 
   return (
     <div className="flex flex-col bg-background text-foreground h-screen overflow-y-auto">
@@ -54,8 +56,13 @@ export default function AboutPage() {
         </div>
       ))}
 
+      {/* Transition to dark */}
+      {theme === 'light' && (
+        <div className="flex w-full items-center justify-center pt-6 bg-gradient-to-b from-transparent to-black" />
+      )}
+
       {/* GitHub Link */}
-      <div className="flex w-full items-center justify-center pt-4">
+      <div className="flex w-full items-center justify-center pt-4 bg-black">
         <div className="w-full relative h-32 overflow-hidden">
           {/* Static Content */}
           <a

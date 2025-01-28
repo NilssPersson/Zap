@@ -22,6 +22,7 @@
   "unshare": "Sluta dela",
   "delete": "Radera",
   "randomize": "Slumpa",
+  "notANumber": "Måste vara ett nummer",
   "update": "Uppdatera",
   "username": "Användarnamn",
   "nextSlide": "Nästa slide",

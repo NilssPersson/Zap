@@ -21,6 +21,7 @@
   "share": "Share",
   "unshare": "Unshare",
   "delete": "Delete",
+  "notANumber": "Must be a number",
   "randomize": "Randomize",
   "update": "Update",
   "username": "Username",

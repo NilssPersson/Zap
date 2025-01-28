@@ -66,9 +66,16 @@ export default function LinkedInPhone({ readMore }: LinkedInPhoneProps) {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-background pt-20 px-4 pb-2">
+    <div className="relative flex flex-col justify-center items-center w-full pt-10 px-4 pb-5">
+      {!readMore && (
+        <>
+          <div className="absolute inset-0 dark:bg-grid-white/[0.1] bg-grid-black/[0.1]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white dark:to-black"></div>
+        </>
+      )}
+
       <div className="text-center">
-        <h1 className="text-3xl font-display text-center text-foreground bg-secondary w-fit mx-auto p-2 rounded-lg">
+        <h1 className="text-3xl font-display text-center text-foreground bg-secondary w-fit mx-auto p-2 rounded-lg ">
           {t('about:who')}
         </h1>
       </div>

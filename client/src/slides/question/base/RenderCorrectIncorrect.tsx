@@ -89,7 +89,7 @@ export default function ParticipantCorrect({ children, participant }: Props) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center h-full pb-10',
+        'flex flex-col items-center justify-center h-full pb-10 text-white',
         config.bgColor
       )}
     >
@@ -97,7 +97,7 @@ export default function ParticipantCorrect({ children, participant }: Props) {
       <h1 className="text-3xl font-display text-center">{config.title}</h1>
       {config.icon}
       <p className="text-xl mt-0 font-display">{config.message}</p>
-      <div className="text-xl bg-[#F4F3F2] w-[65%] text-black font-display rounded p-2 text-center mt-4">
+      <div className="text-xl bg-background w-[65%] text-foreground font-display rounded p-2 text-center mt-4">
         <h2>{config.quote}</h2>
       </div>
     </div>
