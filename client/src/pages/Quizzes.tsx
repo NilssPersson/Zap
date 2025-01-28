@@ -147,7 +147,7 @@ function Quizzes() {
 
   return (
     <div className="h-screen overflow-y-auto bg-background text-foreground">
-      <div className="flex flex-col items-center w-full p-5 lg:p-10 h-full ">
+      <div className="flex flex-col items-center w-full p-5 lg:p-10 h-full max-w-[1800px] mx-auto">
         {/* My Quizzes Section */}
         <div className="w-full flex-col">
           <div className="flex-row flex items-center justify-between">
@@ -156,7 +156,7 @@ function Quizzes() {
           </div>
 
           <Card
-            className="w-full border-none shadow-none"
+            className="w-full border-none shadow-none bg-transparent"
             id="quiz-manager-container"
           >
             <CardContent className="p-0 pt-4">
@@ -198,7 +198,7 @@ function Quizzes() {
               aria-label={t('homepage:searchShared')}
             />
           </div>
-          <Card className="w-full border-none shadow-none">
+          <Card className="w-full border-none shadow-none bg-transparent">
             <CardContent className="min-h-[300px]">
               {sharedQuizzesLoading ? (
                 <div className="flex justify-center items-center h-[300px]">
@@ -221,7 +221,7 @@ function Quizzes() {
               {t('homepage:templates')}
             </h1>
           </div>
-          <Card className="w-full border-none shadow-none">
+          <Card className="w-full border-none shadow-none bg-transparent">
             <CardContent className="min-h-[300px]">
               {sharedQuizzesLoading ? (
                 <div className="flex justify-center items-center h-[300px]">
