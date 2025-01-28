@@ -463,20 +463,18 @@ export function Host({
 
   if (!gameStarted) {
     return (
-      <div className="h-screen flex flex-col items-center justify-between mb-10">
-        <div className="mt-10 rounded-md bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center text-center">
+      <div className="h-screen flex flex-col items-center justify-center space-y-20">
+        <div className="mt-10 rounded-md bg-background text-foreground mb-4 flex justify-center font-display text-4xl items-center text-center">
           <FaBomb size={32} className="ml-4" />
           <h1 className="p-6 text-5xl max-w-screen-lg">{slide.title}</h1>
         </div>
 
-        <div className="space-y-10 mx-10">
-          <Button
-            className="text-5xl p-16 mx-10 rounded-full font-display"
-            onClick={initializeHeartsAndTime}
-          >
-            Start
-          </Button>
-        </div>
+        <Button
+          className="font-display text-6xl p-12"
+          onClick={initializeHeartsAndTime}
+        >
+          Start
+        </Button>
       </div>
     );
   }
@@ -490,14 +488,14 @@ export function Host({
     return (
       <div className="h-screen flex flex-col items-center justify-start gap-16">
         {/* Title moved outside of the motion.div */}
-        <div className="mt-10  rounded-lg bg-[#F4F3F2] text-black mb-4 flex justify-center font-display text-4xl items-center max-w-[60%] break-words text-center">
+        <div className="mt-10  rounded-lg bg-background text-black mb-4 flex justify-center font-display text-4xl items-center max-w-[60%] break-words text-center">
           <FaBomb className="ml-4"></FaBomb>
-          <h1 className="p-4">{slide.title}</h1>
+          <h1 className="p-4 text-foreground">{slide.title}</h1>
           <button
             onClick={() => {
               setShowRatio(!showRatio); // Toggle the state
             }}
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-2"
+            className="bg-blue-500 text-foreground font-bold py-2 px-4 rounded mr-2"
           >
             Show
           </button>
@@ -535,7 +533,7 @@ export function Host({
                     width: '100%', // Ensure full width for content
                   }}
                 >
-                  <div className="m-4 p-4 items-center bg-component-background rounded-lg grid grid-cols-2 gap-4">
+                  <div className="m-4 p-4 items-center bg-background text-foreground rounded-lg grid grid-cols-2 gap-4">
                     {/* Timer stays in the first column */}
                     <div className="flex flex-col items-center font-display">
                       <motion.div
@@ -551,13 +549,13 @@ export function Host({
                         <FaBomb
                           size={128}
                           style={{
-                            color: time <= 5 ? '#8B0000' : 'black',
+                            color: time <= 5 ? '#8B0000' : 'green',
                             filter: time <= 5 ? 'brightness(0.8)' : 'none',
                           }}
-                          className="text-black translate-x-3"
+                          className="text-foreground translate-x-3"
                         />
                         <h2
-                          className="absolute inset-0 flex items-center justify-center text-white text-5xl font-bold pointer-events-none"
+                          className="absolute inset-0 flex items-center justify-center text-foreground text-5xl font-bold pointer-events-none"
                           style={{
                             transform: '',
                           }}
@@ -597,23 +595,23 @@ export function Host({
                         width="8em"
                         height="8rem"
                       />
-                      <h1 className="text-black font-display mt-2 text-4xl">
+                      <h1 className="text-foreground font-display mt-2 text-4xl">
                         {currentParticipants[0].name}
                       </h1>
                     </motion.div>
                   </div>
 
                   <div
-                    className={`p-8 mt-16 rounded-md text-black font-display text-6xl  ${
+                    className={`p-8 mt-16 rounded-md text-foreground font-display text-6xl  ${
                       userAnswer === ''
-                        ? 'bg-white' // White background for empty answer
+                        ? 'bg-background' // White background for empty answer
                         : isCorrect === 'true'
                           ? 'bg-green-500' // Green for 'true'
                           : isCorrect === 'false'
                             ? 'bg-red-500' // Red for 'false'
                             : isCorrect === 'used'
                               ? 'bg-yellow-500' // Yellow for 'used'
-                              : 'bg-white' // Default to white
+                              : 'bg-background' // Default to white
                     }`}
                   >
                     {userAnswer === '' ? t('questions:answering') : userAnswer}
@@ -629,7 +627,7 @@ export function Host({
               top: '0%',
             }}
           >
-            <h1 className="text-6xl font-display mb-4">
+            <h1 className="text-4xl font-display mb-4 bg-background text-foreground p-4 rounded-lg">
               {usedAnswers.length} / {answers.length}
             </h1>
           </div>

@@ -25,7 +25,7 @@ export function Host({
 
   return (
     <div className="flex flex-col items-center">
-      <div className="bg-white rounded p-4 mb-10 mt-20 text-wrap text-center flex-row flex items-center">
+      <div className="bg-background rounded-lg p-4 mb-10 mt-20 text-wrap text-center flex-row flex items-center">
         <SlideTitleSpecial
           title={slide.title}
           icon={SlideComponent.Info.icon}
@@ -52,7 +52,9 @@ export function Host({
           </div>
         </div>
       )}
-       <h1 className='text-2xl font-display mt-4'>{t("questions:lookatphone")}</h1>
+      <h1 className="text-2xl font-display mt-4">
+        {t('questions:lookatphone')}
+      </h1>
       <Smartphone size={128} color="white"></Smartphone>
       <NextSlide
         quizCode={quizCode}

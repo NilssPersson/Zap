@@ -30,7 +30,7 @@ export function Host({
   const SlideComponent = getSlideComponents(slide);
   return (
     <div className="flex flex-col items-center mt-20">
-      <div className="bg-white rounded p-4 mb-10 mt-20 text-wrap text-center flex-row flex items-center">
+      <div className="bg-background rounded p-4 mb-10 mt-20 text-wrap text-center flex-row flex items-center">
         <SlideTitleSpecial
           title={slide.title}
           icon={SlideComponent.Info.icon}

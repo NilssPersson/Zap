@@ -52,7 +52,7 @@ function DraggableItem({
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="flex items-center w-full p-3 rounded-lg shadow-md bg-[#F4F3F2] text-4xl font-display cursor-grab"
+      className="flex items-center w-full p-3 rounded-lg shadow-md bg-background text-4xl font-display cursor-grab"
       style={style}
     >
       <input
@@ -63,7 +63,7 @@ function DraggableItem({
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
         placeholder={t('quizEditor:rankPlaceholder')}
-        className="flex w-[80%] bg-transparent border-dashed text-black border-2 border-black p-2"
+        className="flex w-[80%] bg-transparent border-dashed text-foreground border-2 border-muted-foreground p-2"
       />
     </div>
   );
@@ -167,7 +167,7 @@ export function Preview({ slide, onSlideUpdate }: PreviewProps) {
           {currentRanking.map((text, index) => (
             <div key={index} className="flex items-center w-full space-x-4">
               <h2
-                className="font-display text-5xl text-center text-[#F4F3F2] w-16"
+                className="font-display text-5xl text-center text-foreground bg-background rounded-lg py-2 w-16"
                 style={{ textAlign: 'center' }}
               >
                 {index + 1}

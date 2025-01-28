@@ -8,7 +8,6 @@ import answerTempQeustion from '@/pages/participantQuizView/ParticipantLogic';
 import { ParticipantAnswers } from '@/slides/_components/ParticipantAnswers';
 import Spinner from '@/components/Spinner';
 
-
 import {
   getLocalStorageValue,
   setLocalStorageValue,
@@ -216,6 +215,7 @@ function HostLogic() {
             changeTurn={changeTurn}
             updateSlideUsedAnswers={updateSlideUsedAnswers}
             currentSlideTime={ongoingQuiz.currentSlideTime}
+            inPreview={false}
           />
           {!inLobby && (
             <ParticipantAnswers

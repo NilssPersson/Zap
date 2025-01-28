@@ -34,7 +34,7 @@ export default function TextInput<T extends Slide>({
           value={value}
           onChange={(e) => onSlideUpdate({ ...slide, [field]: e.target.value })}
           placeholder={placeholder}
-          className="min-h-[50px] text-black"
+          className="min-h-[50px]"
         />
       ) : (
         <Input

@@ -12,7 +12,7 @@ export function BaseQuestionRender({
     <div className="flex-1 flex flex-col space-y-12 w-full justify-center mb-10">
       <div className="flex flex-row justify-center items-center">
         <div className="space-y-8">
-          <div className="flex flex-row justify-center pt-32 ">
+          <div className="flex flex-row justify-center p-4 bg-background rounded-lg text-foreground">
             <SlideTitle title={slide.title} />
           </div>
 

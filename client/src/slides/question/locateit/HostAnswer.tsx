@@ -123,7 +123,7 @@ export function HostAnswer({
                     shouldFocus
                     className="touch-action-none will-change-transform select-none"
                   >
-                    <div className="text-lg flex flex-col items-center font-display text-black">
+                    <div className="text-lg flex flex-col items-center font-display text-black ">
                       <p>
                         {participant.name}
                         {': ' + participant.score}

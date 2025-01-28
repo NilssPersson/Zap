@@ -55,9 +55,11 @@ export function HostAnswer({
 
   return (
     <div className="flex flex-1">
-      <div className="flex-1 flex flex-col items-center gap-4 justify-center">
-        <h1 className="text-5xl font-display">{t('correctAnswer')}</h1>
-        <h1 className="text-9xl font-display">{slide.correctAnswer}</h1>
+      <div className="flex-1 flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 bg-background text-foreground p-8 rounded-lg mt-40 mb-32">
+          <h1 className="text-5xl font-display">{t('correctAnswer')}:</h1>
+          <h1 className="text-9xl font-display">{slide.correctAnswer}</h1>
+        </div>
 
         {hasValidGuesses && (
           <div className="flex flex-col items-center">
@@ -135,7 +137,7 @@ export function HostAnswer({
                     </div>
 
                     <div className="flex flex-col justify-center text-center text-2xl font-display">
-                    <span className="mb-4">{t('closest.last')}</span>
+                      <span className="mb-4">{t('closest.last')}</span>
                       {/* Adjust this number as needed */}
                       <span>{t('closest.difference')}</span>
                       <span>{furthest.diff.toFixed(2)}</span>

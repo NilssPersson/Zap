@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 export function Participant({
   answerTempQuestion,
-  inPreview,
+  inPreview = false,
 }: {
   answerTempQuestion: (answer: string) => void;
   inPreview: boolean;
@@ -24,8 +24,10 @@ export function Participant({
 
   if (time > 0 && !inPreview) {
     return (
-      <div className="flex items-center justify-center font-display bg-background p-4 rounded-lg text-lg text-center w-4/5">
-        <h1>{t('dontPress')}</h1>
+      <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center font-display bg-background p-4 rounded-lg text-lg text-center w-4/5">
+          <h1>{t('dontPress')}</h1>
+        </div>
       </div>
     );
   } else {

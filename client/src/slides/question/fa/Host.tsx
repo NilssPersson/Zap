@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FASlide, Participant, ParticipantAnswer } from '@/models/Quiz';
 import { Button } from '@/components/ui/button';
 import Avatar from '@/Avatar';
@@ -8,16 +8,17 @@ import { usePathOnValue } from '@/hooks/usePathOnValue';
 import { BaseQuestionRender } from '../base/QuestionRender';
 import { useTranslation } from 'react-i18next';
 import NextSlide from '@/slides/_components/NextSlide';
-import Spinner from '@/components/Spinner';
 
 export function Host({
   slide,
-  participants,
+  participants = [],
   onNextSlide,
   onPrevSlide,
   endQuiz,
   answerTempQuestion,
   quizCode,
+  inPreview = false,
+  currentSlide,
 }: {
   slide: FASlide;
   participants: Participant[];
@@ -26,6 +27,8 @@ export function Host({
   endQuiz: (quizCode: string) => Promise<boolean>;
   answerTempQuestion: (participantId: string, quizCode: string) => void;
   quizCode: string;
+  inPreview: boolean;
+  currentSlide: number;
 }) {
   const [participantsQueue, setParticipantsQueue] = useState<Participant[]>([]);
   const { t } = useTranslation(['questions']);
@@ -39,14 +42,9 @@ export function Host({
     return () => clearInterval(timer);
   }, [time]);
   const {
-    ongoingQuizzes: { resources: ongoingQuizzes, optimisticUpdate },
+    ongoingQuizzes: { optimisticUpdate },
   } = useAppContext();
 
-  const ongoingQuiz = useMemo(
-    () => ongoingQuizzes.find((quiz) => quiz.id === quizCode),
-    [ongoingQuizzes, quizCode]
-  );
-  if (!ongoingQuiz) return <Spinner />;
   const updateParticipants = useCallback(
     (id: string, participants: { [key: string]: Participant }) => {
       optimisticUpdate(
@@ -70,6 +68,7 @@ export function Host({
 
   // Add participants once they have answered
   useEffect(() => {
+    if (!participants.length) return;
     setParticipantsQueue([]);
     setParticipantsQueue((currentQueue) => {
       const updatedQueue = [...currentQueue];
@@ -117,7 +116,7 @@ export function Host({
   }
 
   const setCorrectAnswer = async (participant: Participant) => {
-    const participantsObj = ongoingQuiz.participants;
+    const participantsObj = participants;
 
     const updatedParticipants = Object.entries(participantsObj).reduce(
       (acc, [id, p]) => {
@@ -125,14 +124,14 @@ export function Host({
 
         // Check if there's already an answer for the current slide
         const hasAnswerForSlide = answers.some(
-          (answer) => answer.slideNumber === ongoingQuiz.currentSlide - 1
+          (answer) => answer.slideNumber === currentSlide - 1
         );
 
         if (!hasAnswerForSlide) {
           // Only add a new answer if there's no existing answer for the slide
           answers.push({
             answer: id === participant.participantId ? ['correct'] : [''],
-            slideNumber: ongoingQuiz.currentSlide - 1,
+            slideNumber: currentSlide - 1,
             time: p.tempAnswer?.time || new Date().toISOString(),
           });
         }
@@ -157,32 +156,40 @@ export function Host({
   };
 
   const setFalseAnswer = async (participant: Participant) => {
-    const participantsObj = ongoingQuiz.participants;
+    const participantsObj = participants;
 
     // Create a new ParticipantAnswer object
     const newAnswer: ParticipantAnswer = {
-      slideNumber: ongoingQuiz.currentSlide - 1,
+      slideNumber: currentSlide - 1,
       answer: ['incorrect'],
       time: participant.tempAnswer?.time || new Date().toISOString(),
     };
-    const prevAnswers = participantsObj[participant.participantId].answers
-      ? participantsObj[participant.participantId].answers
-      : [];
+    const prevAnswers = participant.answers || [];
 
     // Update the participant's answers array
     const updatedParticipant = {
-      ...participantsObj[participant.participantId],
-      answers: [...prevAnswers, newAnswer], // Use existingAnswers to avoid issues
+      ...participant,
+      answers: [...prevAnswers, newAnswer],
       hasAnswered: true,
     };
 
-    const updatedParticipants = {
-      ...participantsObj,
-      [participant.participantId]: updatedParticipant,
-    };
+    const updatedParticipants = participantsObj.map(
+      (p) =>
+        p.participantId === participant.participantId
+          ? { ...p, ...updatedParticipant } // Merge the updated participant data into the existing object
+          : p // Keep the existing participant if there's no match
+    );
+
+    const updatedParticipantsObj = updatedParticipants.reduce<{
+      [id: string]: Participant;
+    }>((acc, participant) => {
+      acc[participant.participantId] = participant; // Use participantId as the key
+      return acc;
+    }, {});
+
     try {
       await optimisticUpdate(quizCode, {
-        participants: updatedParticipants,
+        participants: updatedParticipantsObj,
       });
       removeFromQueue(participant.participantId);
     } catch (error) {
@@ -190,7 +197,7 @@ export function Host({
     }
   };
 
-  if (time > 0) {
+  if (time > 0 && !inPreview) {
     return (
       <div className="flex flex-1 flex-col text-center justify-center gap-20">
         <div>

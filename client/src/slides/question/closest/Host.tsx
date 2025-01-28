@@ -22,7 +22,7 @@ export function Host({
 }: HostProps) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center p-8 space-y-5 bg-white rounded-lg">
+      <div className="flex flex-col items-center justify-center p-8 space-y-5 bg-background rounded-lg">
         <SlideTitleSpecial title={slide.title} icon={Target} />
       </div>
 

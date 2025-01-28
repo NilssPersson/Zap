@@ -18,10 +18,10 @@ export function Host({
 }) {
   return (
     <div className="flex flex-col items-center justify-center h-screen p-10 space-y-8 w-full">
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col bg-background text-foreground rounded-lg p-4  text-center">
         <SlideTitle title={slide.title} />
       </div>
-      <div>
+      <div className="flex flex-col bg-background text-foreground rounded-lg p-4  text-center">
         <SlideContent content={slide.content} />
       </div>
 

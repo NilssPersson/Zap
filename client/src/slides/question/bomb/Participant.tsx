@@ -79,7 +79,16 @@ export function Participant({
       <h1 className="text-3xl font-display font-bold text-center mb-12 bg-background text-foreground p-4 rounded-lg">
         {slide.title}
       </h1>
-      <div className="flex flex-col items-center justify-center w-full">
+      {turn === participantData?.participantId && counter > 0 && (
+        <div className="mt-4 mb-12 text-center">
+          <p
+            className={`text-6xl font-bold ${counter <= 5 ? 'text-red-600' : 'text-white'}`}
+          >
+            {counter}
+          </p>
+        </div>
+      )}
+      <div className="flex flex-col items-center justify-center w-full ">
         <div
           className={`p-6 rounded-md shadow-lg text-foreground font-display text-3xl mb-8 w-4/5 max-w-xl ${turn === participantData?.participantId ? 'bg-background' : 'bg-gray-300'}`}
         >
@@ -106,15 +115,6 @@ export function Participant({
             </p>
           )}
         </div>
-        {turn === participantData?.participantId && counter > 0 && (
-          <div className="mt-4 text-center">
-            <p
-              className={`text-6xl font-bold ${counter <= 5 ? 'text-red-600' : 'text-white'}`}
-            >
-              {counter}s
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );

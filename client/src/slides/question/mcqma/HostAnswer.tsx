@@ -115,8 +115,8 @@ export function HostAnswer({
 
   return (
     <div className="flex flex-col items-center h-full  w-full">
-      <div className="bg-white rounded p-6 mb-16 mt-10">
-        <h1 className="text-4xl text-black font-display">{slide.title}</h1>
+      <div className="bg-background rounded p-6 mb-16 mt-10">
+        <h1 className="text-4xl text-foreground font-display">{slide.title}</h1>
       </div>
       <div className="w-full flex flex-col m-4 items-center">
         <AnswerCount />

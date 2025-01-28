@@ -22,19 +22,19 @@ export function Host({
 
   return (
     <div className="flex flex-col items-center">
-      <div className="bg-white rounded p-4 mb-10 mt-20 text-wrap text-center flex-col flex items-center ">
+      <div className="bg-background text-foreground rounded p-4 mb-4 mt-20 text-wrap text-center flex-col flex items-center ">
         <div className="flex flex-row items-center">
           <img
             src={markerIcon}
             alt="Marker Icon"
             className="w-20 h-20 rounded-full "
           />
-          <h1 className="text-7xl text-black font-display">{slide.title}</h1>
+          <h1 className="text-7xl font-display">{slide.title}</h1>
         </div>
 
-        <p className="text-black font-display text-3xl">{slide.content}</p>
+        <p className="font-display text-3xl">{slide.content}</p>
       </div>
-      <p className="font-display text-xl items-center flex">
+      <p className="font-display text-xl items-center flex bg-background text-foreground p-4 rounded-lg">
         <InfoIcon size={20} className="inline mr-2" />
         {slide.awardPointsLocation == AwardPointsLocation.CLOSEST
           ? t('closestWinsDescription')
@@ -57,7 +57,9 @@ export function Host({
           </div>
         </div>
       )}
-      <h1 className="text-2xl font-display mt-4">{t("questions:lookatphone")}</h1>
+      <h1 className="text-2xl font-display mt-4">
+        {t('questions:lookatphone')}
+      </h1>
       <Smartphone size={128} color="white"></Smartphone>
       <NextSlide
         quizCode={quizCode}
