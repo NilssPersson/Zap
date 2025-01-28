@@ -23,7 +23,7 @@ export default function Tools() {
   };
 
   return (
-    <div className="bg-background pt-8 overflow-y-auto h-screen">
+    <div className="bg-background pt-20 overflow-y-auto h-screen">
       <ToolsProvider>
         <div className="flex flex-col mx-2 justify-center items-center">
           <Tabs

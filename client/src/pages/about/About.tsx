@@ -35,7 +35,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col bg-background text-foreground h-screen overflow-y-auto">
       {/* LinkedIn Component */}
-      <div className="w-full mb-4 block lg:hidden">
+      <div className="w-full mb-4 block lg:hidden pt-14">
         <LinkedInPhone readMore={false} />
       </div>
 

@@ -63,7 +63,7 @@ function Home() {
     <div className="flex-1 flex flex-col items-center justify-start overflow-auto overflow-x-hidden h-screen w-full bg-background">
       <div className="flex-1 flex flex-col items-center justify-start w-full">
         <div className="flex-1 w-full py-4 bg-primary items-center justify-center flex flex-col">
-          <div className="mt-20 mb-2 flex flex-col gap-y-3 mx-auto items-center justify-center">
+          <div className="mt-36 mb-2 flex flex-col gap-y-3 mx-auto items-center justify-center">
             <h1 className="lg:w-3/5 text-4xl md:text-8xl font-display text-foreground mx-4 text-center">
               {t('homepage:slogan')}
             </h1>

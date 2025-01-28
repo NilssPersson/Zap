@@ -27,7 +27,7 @@ export default function LanguageToggle({ fixed = true }: LanguageToggleProps) {
           className={cn(
             fixed
               ? 'fixed top-4 right-4 z-50 bg-background text-foreground p-2 h-7 font-display border-border '
-              : 'border border-border rounded-full'
+              : 'border border-border rounded-full bg-background text-foreground'
           )}
         >
           <Globe className="h-4 w-4" strokeWidth={2} />

@@ -30,6 +30,7 @@ import {
 import LanguageToggle from '@/components/Settings/LanguageToggle';
 import { ThemeSelector } from './ThemeSelector';
 import { useTheme } from '@/components/ThemeProvider';
+import LanguageRadio from './Settings/LanguageRadio';
 
 export function Header() {
   const location = useLocation();
@@ -40,6 +41,7 @@ export function Header() {
   const { t } = useTranslation();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
   const inLobby = location.pathname.endsWith('/lobby');
   const inGame = location.pathname.startsWith('/play');
@@ -57,17 +59,11 @@ export function Header() {
       <header
         className={cn(
           'transition-opacity duration-200 border-b border-b-foreground/10  bg-background text-foreground',
-          inLobby && 'absolute top-0 left-0 right-0',
-          inGame && 'hidden'
+          inLobby && 'absolute top-0 left-0 right-0'
         )}
       >
         <div className="flex w-full h-16 items-center px-1 overflow-hidden justify-center">
-          <div
-            className={cn(
-              'mr-0 ml-2 md:flex w-full max-w-7xl',
-              inGame && 'hidden'
-            )}
-          >
+          <div className={cn('mr-0 ml-2 md:flex w-full max-w-7xl')}>
             <nav className="flex items-center space-x-6 font-medium w-full justify-between">
               <Link
                 to="/"
@@ -143,13 +139,13 @@ export function Header() {
   return (
     <header
       className={cn(
-        'md:block transition-opacity duration-200 border-b border-b-foreground/10',
-        inLobby && 'absolute top-0 left-0 right-0',
-        inGame && 'hidden',
-        sheetOpen ? 'bg-sheet text-white' : 'bg-background text-foreground'
+        'fixed top-0 left-0 right-0 z-50 transition-opacity duration-200 border-b border-b-foreground/20',
+        sheetOpen
+          ? 'bg-sheet text-white'
+          : 'backdrop-blur-lg bg-opacity-10 bg-background/60 text-foreground'
       )}
     >
-      <div className=" flex h-16 items-center px-1 overflow-hidden">
+      <div className="flex h-14 items-center overflow-hidden">
         <div className={cn('mr-0 md:flex w-full', inGame && 'hidden')}>
           <nav className="flex  w-full justify-between">
             <Link
@@ -183,7 +179,6 @@ export function Header() {
                       {t('general:play')}
                     </Button>
                   </Link>
-                  <LanguageToggle fixed={false} />
                 </>
               )}
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -199,10 +194,10 @@ export function Header() {
                 </SheetTrigger>
 
                 <SheetContent
-                  className="w-full border-none font-display text-xl text-white overflow-y-auto mt-16"
+                  className="w-full border-none font-display text-xl text-white overflow-y-auto mt-14"
                   onOpenAutoFocus={(event) => event.preventDefault()}
                 >
-                  <SheetDescription className="flex flex-col space-y-2 text-left pt-6">
+                  <SheetDescription className="flex flex-col space-y-2 text-left pt-10">
                     <Link to="/">
                       <Button
                         className="text-2xl "
@@ -280,34 +275,6 @@ export function Header() {
                         </div>
                       </CollapsibleContent>
                     </Collapsible>
-                    <div className="flex justify-between items-center">
-                      <h1 className="text-2xl text-primary pl-4 pt-2">
-                        {t('general:theme')}
-                      </h1>
-                      <div className="flex gap-3 border border-primary rounded-full p-2">
-                        <Monitor
-                          className={cn(
-                            'w-4 h-4',
-                            theme === 'system' && 'text-primary'
-                          )}
-                          onClick={() => setTheme('system')}
-                        />
-                        <Sun
-                          className={cn(
-                            'w-4 h-4',
-                            theme === 'light' && 'text-primary border-primary'
-                          )}
-                          onClick={() => setTheme('light')}
-                        />
-                        <Moon
-                          className={cn(
-                            'w-4 h-4',
-                            theme === 'dark' && 'text-primary border-primary'
-                          )}
-                          onClick={() => setTheme('dark')}
-                        />
-                      </div>
-                    </div>
                     {isAuthenticated ? (
                       <div className="pt-10">
                         <Button
@@ -320,18 +287,77 @@ export function Header() {
                         </Button>
                       </div>
                     ) : (
-                      <div className="pt-10 flex flex-col space-y-2 w-4/5 mx-auto">
-                        <Button
-                          className="text-lg"
-                          onClick={() => login()}
-                          variant="link"
+                      <>
+                        <Collapsible
+                          open={isLanguageOpen}
+                          onOpenChange={setIsLanguageOpen}
                         >
-                          {t('general:login')}
-                        </Button>
-                        <Button className="text-lg" onClick={() => register()}>
-                          {t('general:register')}
-                        </Button>
-                      </div>
+                          <CollapsibleTrigger className="text-primary text-2xl flex flex-row w-full items-center px-4 pt-1 font-display rounded">
+                            <div className="flex items-center pr-1">
+                              {t('general:language')}
+                            </div>
+
+                            <ChevronDown
+                              className="w-5 h-5"
+                              strokeWidth={3}
+                              style={{
+                                transition: 'transform 0.2s ease',
+                                transform: isLanguageOpen
+                                  ? 'rotate(180deg)'
+                                  : 'none',
+                              }}
+                            />
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="px-6 pt-2">
+                            <LanguageRadio setOpen={() => null} />
+                          </CollapsibleContent>
+                        </Collapsible>
+                        <div className="flex justify-between items-center">
+                          <h1 className="text-2xl text-primary pl-4 pt-2">
+                            {t('general:theme')}
+                          </h1>
+                          <div className="flex gap-3 border border-primary rounded-full p-2">
+                            <Monitor
+                              className={cn(
+                                'w-4 h-4',
+                                theme === 'system' && 'text-primary'
+                              )}
+                              onClick={() => setTheme('system')}
+                            />
+                            <Sun
+                              className={cn(
+                                'w-4 h-4',
+                                theme === 'light' &&
+                                  'text-primary border-primary'
+                              )}
+                              onClick={() => setTheme('light')}
+                            />
+                            <Moon
+                              className={cn(
+                                'w-4 h-4',
+                                theme === 'dark' &&
+                                  'text-primary border-primary'
+                              )}
+                              onClick={() => setTheme('dark')}
+                            />
+                          </div>
+                        </div>
+                        <div className="pt-10 flex flex-col space-y-2 w-4/5 mx-auto pb-16">
+                          <Button
+                            className="text-lg"
+                            onClick={() => login()}
+                            variant="link"
+                          >
+                            {t('general:login')}
+                          </Button>
+                          <Button
+                            className="text-lg"
+                            onClick={() => register()}
+                          >
+                            {t('general:register')}
+                          </Button>
+                        </div>
+                      </>
                     )}
                   </SheetDescription>
                 </SheetContent>
