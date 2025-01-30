@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import {
   Tooltip,
@@ -9,8 +9,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
 export interface InputItem {
   id: string;
   text: string;
@@ -42,7 +42,11 @@ export function DynamicInputList({
   clearItems,
 }: DynamicInputListProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [activePercentage, setActivePercentage] = useState<{
+    [key: string]: string;
+  }>({});
   const { t } = useTranslation();
+
   useEffect(() => {
     if (items.length === 0) {
       onItemChange(Date.now().toString(), '');
@@ -55,18 +59,33 @@ export function DynamicInputList({
   ) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      // If there's a next input, focus it
       if (index < items.length - 1 && inputRefs.current[index + 1]) {
         inputRefs.current[index + 1]?.focus();
       }
-      // If we're on the last input and it has content, a new input will be created and focused
       if (index === items.length - 1 && items[index].text !== '') {
-        // Wait for the new input to be created
         setTimeout(() => {
           inputRefs.current[index + 1]?.focus();
         }, 0);
       }
     }
+  };
+
+  const handleFocus = (item: InputItem) => {
+    setActivePercentage((prev) => ({
+      ...prev,
+      [item.id]: item.percentage?.toString() || '',
+    }));
+  };
+
+  const handleBlur = (item: InputItem) => {
+    if (onPercentageChange && activePercentage[item.id]) {
+      onPercentageChange(item.id, activePercentage[item.id]);
+    }
+    setActivePercentage((prev) => {
+      const newState = { ...prev };
+      delete newState[item.id];
+      return newState;
+    });
   };
 
   return (
@@ -114,9 +133,19 @@ export function DynamicInputList({
                 type="number"
                 min="0"
                 max="100"
-                value={Math.round((item.percentage || 0) * 10) / 10}
-                onChange={(e) => onPercentageChange(item.id, e.target.value)}
-                className="w-12"
+                value={
+                  activePercentage[item.id] ??
+                  Math.round((item.percentage || 0) * 10) / 10
+                }
+                onFocus={() => handleFocus(item)}
+                onBlur={() => handleBlur(item)}
+                onChange={(e) =>
+                  setActivePercentage((prev) => ({
+                    ...prev,
+                    [item.id]: e.target.value,
+                  }))
+                }
+                className="max-w-16 w-fit"
               />
               <span>%</span>
             </div>

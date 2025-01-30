@@ -13,20 +13,87 @@ interface WheelProps {
   isSpinning: boolean;
   rotation: number;
   idleRotation: number;
-  spinWheel: () => void;
   wheelItems: WheelItem[];
-  calculateRotation: (index: number) => number;
+  setWinner: (winner: WheelItem | null) => void;
+  setPreviousIdleRotation: (value: number) => void;
+  setIsSpinning: (value: boolean) => void;
+  setIdleRotation: (value: number) => void;
+  setRotation: (value: number) => void;
+  setShowModal: (value: boolean) => void;
+  previousIdleRotation: number;
 }
 
 export default function Wheel({
   isSpinning,
   rotation,
   idleRotation,
-  spinWheel,
   wheelItems,
-  calculateRotation,
+  setWinner,
+  setPreviousIdleRotation,
+  setIsSpinning,
+  setIdleRotation,
+  setRotation,
+  setShowModal,
+  previousIdleRotation,
 }: WheelProps) {
   const { t } = useTranslation();
+
+  const spinWheel = () => {
+    if (isSpinning) return;
+
+    setWinner(null);
+    setPreviousIdleRotation(idleRotation); // Save current idle rotation
+    setIsSpinning(true);
+
+    const spinDuration = 3000; // 3 seconds
+    const extraSpins = 5; // Number of full rotations
+    const randomAngle = Math.random() * 360; // Random final position
+    const totalRotation = 360 * extraSpins + randomAngle;
+
+    setRotation(rotation + totalRotation);
+
+    // Calculate winner after spin
+    setTimeout(() => {
+      setIsSpinning(false);
+      const finalAngle = (rotation + totalRotation) % 360;
+      const adjustedIdleRotation =
+        (previousIdleRotation + (finalAngle - previousIdleRotation)) % 360;
+      setIdleRotation(adjustedIdleRotation); // Continue smoothly
+      const winningItem = getWinningItem(finalAngle);
+      if (winningItem) {
+        setWinner(winningItem);
+        setShowModal(true); // Show modal
+      }
+    }, spinDuration);
+  };
+
+  const getWinningItem = (finalAngle: number): WheelItem | null => {
+    const normalizedAngle = (360 - (finalAngle % 360) + 90) % 360;
+    let currentAngle = 0;
+
+    const validItems = wheelItems.filter(
+      (item) => item.text !== '' && !item.used
+    );
+
+    for (const item of validItems) {
+      currentAngle += item.percentage * 3.6;
+      if (normalizedAngle <= currentAngle) {
+        return item;
+      }
+    }
+
+    return validItems[0] || null;
+  };
+
+  function calculateRotation(index: number): number {
+    const validItems = wheelItems.filter((item) => item.text !== '');
+    let totalPercentage = 0;
+    for (let i = 0; i < index; i++) {
+      totalPercentage += validItems[i].percentage;
+    }
+    return (totalPercentage / 100) * 360;
+  }
+
   return (
     <div className="space-y-4 w-full max-w-2xl mx-auto">
       <div className="relative aspect-square">

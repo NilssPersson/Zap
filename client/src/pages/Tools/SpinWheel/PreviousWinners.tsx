@@ -12,14 +12,36 @@ interface WheelItem extends InputItem {
 
 interface PreviousWinnersProps {
   wheelItems: WheelItem[];
-  resetUsedItems: () => void;
+  setWheelItems: (items: WheelItem[]) => void;
+  setWinner: (winner: WheelItem | null) => void;
+  setRotation: (value: number) => void;
+  setIdleRotation: (value: number) => void;
 }
 
 export default function PreviousWinners({
   wheelItems,
-  resetUsedItems,
+  setWheelItems,
+  setWinner,
+  setRotation,
+  setIdleRotation,
 }: PreviousWinnersProps) {
   const { t } = useTranslation();
+
+  const resetUsedItems = () => {
+    const newItems = wheelItems.map((item) => ({ ...item, used: false }));
+    const validItems = newItems.filter((item) => item.text !== '');
+    const newPercentage = 100 / validItems.length;
+
+    const normalizedItems = newItems.map((item) =>
+      item.text !== '' ? { ...item, percentage: newPercentage } : item
+    );
+
+    setWheelItems(normalizedItems);
+    setWinner(null);
+    setRotation(0);
+    setIdleRotation(0);
+  };
+
   return (
     <Card>
       <CardContent className="pt-6">

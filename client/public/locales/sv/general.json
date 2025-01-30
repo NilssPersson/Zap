@@ -46,6 +46,8 @@
   "spinWheel": "Snurra Hjulet",
   "randomNumber": "Slumptal",
   "minNumber": "Minsta Tal",
+  "close": "Stäng",
+  "spinWheel.removeWinner": "Ta bort vinnare",
   "maxNumber": "Största Tal",
   "roll": "Kasta Tärning!",
   "randomizing": "Slumpar...",
