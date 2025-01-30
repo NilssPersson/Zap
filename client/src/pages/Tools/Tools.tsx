@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import Team from './Team';
-import SpinWheel from './SpinWheel';
+import SpinWheel from './SpinWheel/SpinWheel';
 import RandomNumber from './RandomNumber';
 import { ToolsProvider } from '@/contexts/Tools/context';
 
