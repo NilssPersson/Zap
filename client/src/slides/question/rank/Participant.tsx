@@ -11,9 +11,9 @@ import {
 } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { RankSlide } from '@/models/Quiz';
-import { rankColors } from '../base/QuizColors';
 import { getSlideComponents } from '@/slides/utils';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface RankViewProps {
   slide: RankSlide;
@@ -38,7 +38,7 @@ function DraggableItem({ text, index }: { text: string; index: number }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="flex items-center w-full p-2.5 rounded-lg shadow-md bg-[#F4F3F2] text-xl font-display cursor-grab text-black"
+      className="flex items-center w-full p-2.5 rounded-lg shadow-md bg-secondary text-xl font-display cursor-grab text-foreground"
       style={style}
     >
       {text}
@@ -73,6 +73,7 @@ function DroppableContainer({
 
 export function Participant({ slide, answerQuestion }: RankViewProps) {
   const [currentRanking, setCurrentRanking] = useState<string[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Randomize the ranking on the first render
@@ -116,9 +117,11 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="flex flex-col items-center justify-center h-screen w-full p-4">
         <div className="flex flex-col items-center w-full max-w-md space-y-4">
-          <div className="bg-white items-center rounded text-wrap p-3 max-w-4/5 flex flex-row space-x-1">
-            <SlideComponent.Info.icon className="w-8 h-8 text-black mr-2" />
-            <h1 className="text-3xl text-black font-display">{slide.title}</h1>
+          <div className="bg-background items-center rounded-lg text-wrap p-3 max-w-4/5 flex flex-row space-x-1">
+            <SlideComponent.Info.icon className="w-7 h-7 text-foreground mr-2" />
+            <h1 className="text-3xl text-foreground font-display">
+              {slide.title}
+            </h1>
           </div>
           <div className="flex flex-col w-full space-y-3 pb-5">
             {currentRanking.map((text, index) => (
@@ -127,12 +130,7 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
                 className="rounded-lg flex items-center w-full space-x-4"
               >
                 {/* Display the index with proper alignment */}
-                <h2
-                  style={{
-                    backgroundColor: rankColors(),
-                  }}
-                  className="font-display text-2xl font-bold text-center p-2.5 rounded-lg text-[#F4F3F2] w-14"
-                >
+                <h2 className="bg-secondary font-display text-2xl font-bold text-center p-2.5 rounded-lg text-foreground w-14">
                   {index + 1}
                 </h2>
                 <DroppableContainer index={index}>
@@ -147,7 +145,7 @@ export function Participant({ slide, answerQuestion }: RankViewProps) {
             isInteractive
             className="w-full h-12 text-xl font-display text-white"
           >
-            Submit Answer
+            {t('general:answer')}
           </Button>
         </div>
       </div>

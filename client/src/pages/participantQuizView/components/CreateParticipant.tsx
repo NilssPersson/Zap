@@ -312,7 +312,7 @@ export default function CreateParticipant({
   };
 
   return (
-    <div className="flex items-center justify-center h-screen w-full">
+    <div className="flex items-center justify-center h-screen w-full bg-[url('/assets/bg-mobile.svg')] bg-cover bg-no-repeat bg-center">
       <LanguageToggle />
 
       {user.isLoggedIn ? (

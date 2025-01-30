@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { Zap, ChevronDown, Monitor, Sun, Moon, LogIn } from 'lucide-react';
+import { Zap, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   Sheet,
@@ -15,10 +15,11 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import LanguageRadio from '../Settings/LanguageRadio';
-import { useTheme } from '@/components/ThemeProvider';
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { cn } from '@/lib/utils';
 import AnimatedHamburgerButton from '@/components/ui/animatedHamburgerButton';
+import ThemeToggle from '../Settings/ThemeToggle';
+import Settings from '../Settings/Settings';
 
 interface SmallHeaderProps {
   locationPath: string;
@@ -26,11 +27,10 @@ interface SmallHeaderProps {
 
 export default function SmallHeader({ locationPath }: SmallHeaderProps) {
   const { t } = useTranslation();
-  const { isAuthenticated, logout } = useKindeAuth();
+  const { isAuthenticated, logout, login, register } = useKindeAuth();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
 
   return (
     <header
@@ -62,14 +62,7 @@ export default function SmallHeader({ locationPath }: SmallHeaderProps) {
                       {t('general:home')}
                     </Button>
                   </Link>
-                  <Button
-                    className="text-lg text-red-500"
-                    variant="ghost"
-                    onClick={logout}
-                  >
-                    <LogIn size={16} transform="rotate(180)" />
-                    {t('general:logout')}
-                  </Button>
+                  <Settings />
                 </>
               ) : (
                 <>
@@ -171,57 +164,62 @@ export default function SmallHeader({ locationPath }: SmallHeaderProps) {
                         </div>
                       </CollapsibleContent>
                     </Collapsible>
-                    <Collapsible
-                      open={isLanguageOpen}
-                      onOpenChange={setIsLanguageOpen}
-                    >
-                      <CollapsibleTrigger className="text-primary text-2xl flex flex-row w-full items-center px-4 pt-1 font-display rounded">
-                        <div className="flex items-center pr-1">
-                          {t('general:language')}
+                    {isAuthenticated ? (
+                      <Button
+                        className="text-2xl text-red-500  bg-transparent"
+                        variant="outline"
+                        onClick={() => logout()}
+                      >
+                        {t('general:logout')}
+                      </Button>
+                    ) : (
+                      <>
+                        <Collapsible
+                          open={isLanguageOpen}
+                          onOpenChange={setIsLanguageOpen}
+                        >
+                          <CollapsibleTrigger className="text-primary text-2xl flex flex-row w-full items-center px-4 pt-1 font-display rounded">
+                            <div className="flex items-center pr-1">
+                              {t('general:language')}
+                            </div>
+                            <ChevronDown
+                              className="w-5 h-5"
+                              strokeWidth={3}
+                              style={{
+                                transition: 'transform 0.2s ease',
+                                transform: isLanguageOpen
+                                  ? 'rotate(180deg)'
+                                  : 'none',
+                              }}
+                            />
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="px-6 pt-2">
+                            <LanguageRadio setOpen={() => null} />
+                          </CollapsibleContent>
+                        </Collapsible>
+                        <div className="flex justify-between items-center">
+                          <h1 className="text-2xl text-primary pl-4 pt-2">
+                            {t('general:theme')}
+                          </h1>
+                          <ThemeToggle />
                         </div>
-                        <ChevronDown
-                          className="w-5 h-5"
-                          strokeWidth={3}
-                          style={{
-                            transition: 'transform 0.2s ease',
-                            transform: isLanguageOpen
-                              ? 'rotate(180deg)'
-                              : 'none',
-                          }}
-                        />
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="px-6 pt-2">
-                        <LanguageRadio setOpen={() => null} />
-                      </CollapsibleContent>
-                    </Collapsible>
-                    <div className="flex justify-between items-center">
-                      <h1 className="text-2xl text-primary pl-4 pt-2">
-                        {t('general:theme')}
-                      </h1>
-                      <div className="flex gap-3 border border-primary rounded-full p-2">
-                        <Monitor
-                          className={cn(
-                            'w-4 h-4',
-                            theme === 'system' && 'text-primary'
-                          )}
-                          onClick={() => setTheme('system')}
-                        />
-                        <Sun
-                          className={cn(
-                            'w-4 h-4',
-                            theme === 'light' && 'text-primary'
-                          )}
-                          onClick={() => setTheme('light')}
-                        />
-                        <Moon
-                          className={cn(
-                            'w-4 h-4',
-                            theme === 'dark' && 'text-primary'
-                          )}
-                          onClick={() => setTheme('dark')}
-                        />
-                      </div>
-                    </div>
+                        <div className="flex flex-col items-center pt-10 w-full gap-1">
+                          <Button
+                            className="text-xl text-primary  bg-transparent w-4/5"
+                            variant="ghost"
+                            onClick={() => login()}
+                          >
+                            {t('general:login')}
+                          </Button>
+                          <Button
+                            className="text-2xl bg-primary text-white w-4/5"
+                            onClick={() => register()}
+                          >
+                            {t('general:register')}
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </SheetDescription>
                 </SheetContent>
               </Sheet>

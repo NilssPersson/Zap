@@ -45,7 +45,10 @@ export default function AboutPage() {
 
       {/* Points */}
       {points.map((point) => (
-        <div className="flex w-full px-8 py-6 max-w-4xl mx-auto">
+        <div
+          className="flex w-full px-8 py-6 max-w-4xl mx-auto"
+          key={point.title}
+        >
           <div className="px-2 pt-1">
             <point.icon size={18} color={point.color} />
           </div>

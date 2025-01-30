@@ -6,12 +6,10 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 
-
 export function HostAnswer({
   slide,
   participants = [],
-  
- 
+  handleAddPoints,
 }: {
   slide: FTASlide;
   participants: Participant[];
@@ -29,9 +27,9 @@ export function HostAnswer({
     participants.map((participant) => {
       const latestAnswer =
         participant.answers.length > 0
-          ? participant.answers[participant.answers.length - 1].answer
+          ? participant.answers[participant.answers.length - 1].answer[0]
           : '??';
-      const similarity = stringSimilarity(latestAnswer[0], slide.correctAnswer);
+      const similarity = stringSimilarity(latestAnswer, slide.correctAnswer);
       return {
         name: participant.name,
         avatar: participant.avatar,
@@ -53,7 +51,14 @@ export function HostAnswer({
     );
   };
 
-  
+  const submitPoints = () => {
+    const pointsData = latestAnswers.map((entry) => ({
+      participantId: entry.id,
+      awardPoints: entry.points,
+    }));
+    handleAddPoints(pointsData, true, true);
+  };
+
   return (
     <div className="flex flex-col items-center">
       {/* Slide Title */}
@@ -88,7 +93,7 @@ export function HostAnswer({
               <h1
                 className="font-display text-gray-600 pl-1 text-wrap"
                 style={{
-                  fontSize: `${Math.max(2.5 - entry.answer.length / 1, 2.5)}rem`,
+                  fontSize: `${Math.max(2.5 - entry.answer.length / 10, 2)}rem`,
                 }}
               >
                 {entry.answer}
@@ -98,7 +103,7 @@ export function HostAnswer({
             <div
               className={cn('flex items-center space-x-2 p-2 rounded-md', {
                 'bg-green-500 text-white': entry.points,
-                'bg-white text-black ': !entry.points,
+                'bg-white text-black': !entry.points,
               })}
             >
               <Label
@@ -118,6 +123,12 @@ export function HostAnswer({
       </div>
 
       {/* Next Slide Button */}
+      <button
+        className="p-2 mt-6 bg-primary text-white rounded"
+        onClick={submitPoints}
+      >
+        Next Slide
+      </button>
     </div>
   );
 }

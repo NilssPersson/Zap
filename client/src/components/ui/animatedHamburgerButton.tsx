@@ -8,7 +8,7 @@ export default function AnimatedHamburgerButton({
 }) {
   return (
     <MotionConfig transition={{ duration: 0.4, ease: 'easeInOut' }}>
-      <motion.button
+      <motion.div
         initial={false}
         className="relative h-6 w-6 rounded-lg"
         animate={active ? 'open' : 'closed'}
@@ -77,7 +77,7 @@ export default function AnimatedHamburgerButton({
             },
           }}
         />
-      </motion.button>
+      </motion.div>
     </MotionConfig>
   );
 }

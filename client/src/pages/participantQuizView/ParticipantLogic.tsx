@@ -82,6 +82,7 @@ function QuizView({
         <div className="fixed inset-0 bg-white/60 animate-flash pointer-events-none z-50" />
       )}
       <SlideComponent.Participant
+        inPreview={false}
         slide={currentQuestion as never}
         answerQuestion={answerQuestion as never}
         answerTempQuestion={answerTempQuestion as never}

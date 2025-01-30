@@ -16,6 +16,7 @@ const ParticipantLogic = React.lazy(
 );
 const Profile = React.lazy(() => import('@/components/Settings/Profile'));
 const HostLogic = React.lazy(() => import('@/pages/HostLogic'));
+const NotFound = React.lazy(() => import('./NotFound'));
 
 export function AppRoutes() {
   const { isAuthenticated } = useKindeAuth();
@@ -51,6 +52,7 @@ export function AppRoutes() {
         />
         <Route path="/profile" element={wrapInErrorBoundary(<Profile />)} />
         <Route path="/tools/:tool" element={wrapInErrorBoundary(<Tools />)} />
+        <Route path="*" element={wrapInErrorBoundary(<NotFound />)} />
       </Routes>
     </Suspense>
   );

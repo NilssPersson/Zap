@@ -6,14 +6,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import {
-  ChevronDown,
-  Languages,
-  LogIn,
-  Sun,
-  Moon,
-  Monitor,
-} from 'lucide-react';
+import { ChevronDown, Languages, LogIn } from 'lucide-react';
 import {
   Dialog,
   DialogTrigger,
@@ -25,8 +18,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import LanguageRadio from '@/components/Settings/LanguageRadio';
-import { useTheme } from '@/components/ThemeProvider';
-import { cn } from '@/lib/utils';
+import ThemeToggle from '@/components/Settings/ThemeToggle';
 
 interface ParticipantMenuProps {
   onLeave: () => void;
@@ -36,7 +28,6 @@ export default function ParticipantMenu({ onLeave }: ParticipantMenuProps) {
   const { t } = useTranslation();
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const { setTheme, theme } = useTheme();
 
   return (
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -83,26 +74,7 @@ export default function ParticipantMenu({ onLeave }: ParticipantMenuProps) {
             <h1 className="text-md pl-2 pt-2 text-center">
               {t('general:theme')}
             </h1>
-            <div className="flex gap-3 border border-primary rounded-full p-2">
-              <Monitor
-                className={cn('w-3 h-3', theme === 'system' && 'text-primary')}
-                onClick={() => setTheme('system')}
-              />
-              <Sun
-                className={cn(
-                  'w-3 h-3',
-                  theme === 'light' && 'text-primary border-primary'
-                )}
-                onClick={() => setTheme('light')}
-              />
-              <Moon
-                className={cn(
-                  'w-3 h-3',
-                  theme === 'dark' && 'text-primary border-primary'
-                )}
-                onClick={() => setTheme('dark')}
-              />
-            </div>
+            <ThemeToggle />
           </div>
 
           <Dialog>
