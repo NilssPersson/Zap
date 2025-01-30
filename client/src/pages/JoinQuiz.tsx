@@ -37,7 +37,7 @@ export default function JoinQuiz() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-8 ">
+    <div className="flex flex-col items-center justify-center h-screen p-8 bg-[url('/assets/bg-mobile.svg')] bg-cover bg-no-repeat bg-center ">
       <Button
         onClick={() => navigate('/')}
         variant={'link'}

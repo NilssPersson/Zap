@@ -87,7 +87,7 @@ function LinkedInComponent({ readMore }: LinkedInComponentProps) {
             >
               <img
                 src={person.src}
-                alt={person.name}
+                alt="Picture of the team member"
                 className="w-32 h-32 rounded-full shadow object-cover mx-auto"
               />
               <div className="flex flex-col justify-between items-center">

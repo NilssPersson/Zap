@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { KindeProvider } from '@kinde-oss/kinde-auth-react';
-import { Header } from './components/Header';
+import { Header } from './components/Header/Header';
 import { AppRoutes } from './routes/AppRoutes';
 import { Toaster } from 'sonner';
 import { AppProvider } from './contexts/App/provider';
@@ -31,7 +31,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-dvh inset-0 fixed bg-background bg-[url('/assets/bg-mobile.svg')] md:bg-[url('/assets/bg-desktop.svg')] bg-cover bg-no-repeat bg-center text-white">
+      <div className="min-h-dvh inset-0 fixed bg-background text-white">
         <main className="min-h-dvh max-h-dvh flex flex-col relative">
           <KindeProvider
             clientId={config.KINDE.CLIENT_ID}

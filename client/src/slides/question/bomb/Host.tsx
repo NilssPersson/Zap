@@ -633,7 +633,6 @@ export function Host({
           </div>
 
           {/* Ratio Display */}
-
           <div
             className="absolute flex flex-col justify-center items-center overflow-y-hidden"
             style={{

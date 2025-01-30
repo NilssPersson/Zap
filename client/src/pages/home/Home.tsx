@@ -10,53 +10,8 @@ import LinkedInComponent from './LinkedInComponent';
 import LinkedInPhone from './LinkedInPhone';
 import { Footer } from '@/components/Footer';
 
-interface AvatarData {
-  avatarString: string;
-  collectionName: string;
-}
-
-const generateRandomString = (length: number): string => {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-};
-
-const randomStrings = Array.from({ length: 25 }, () =>
-  generateRandomString(30)
-);
-
-const collectionNames = [
-  'botttsNeutral',
-  'thumbs',
-  'micah',
-  'adventurerNeutral',
-];
-
-// Generate random avatar data by iterating through collection names
-const generateRandomAvatarData = (): AvatarData[] => {
-  const avatarData: AvatarData[] = [];
-
-  for (const randomString of randomStrings) {
-    for (const collectionName of collectionNames) {
-      avatarData.push({
-        avatarString: randomString,
-        collectionName: collectionName,
-      });
-    }
-  }
-
-  return avatarData;
-};
-
-const avatarData = generateRandomAvatarData();
-
-function Home() {
+export default function Home() {
   const { register } = useKindeAuth();
-
   const { t } = useTranslation();
 
   return (
@@ -121,9 +76,8 @@ function Home() {
         </div>
 
         <div>
-          <AvatarCarousel avatars={avatarData}></AvatarCarousel>
+          <AvatarCarousel />
         </div>
-        {/* Avatar Carousel */}
       </div>
 
       <div className="flex flex-col items-center w-full py-10 bg-primary">
@@ -145,5 +99,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;
